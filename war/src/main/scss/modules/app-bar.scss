@@ -87,3 +87,8 @@
     height: 2rem !important;
   }
 }
+
+.jenkins-build-caption-parent {
+  display: flex;
+  justify-content: space-between;
+}
