@@ -33,7 +33,17 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" />
      <l:breadcrumb title="${%Console Output}" />
     <l:main-panel>
-      <t:buildCaption>${%Console Output}</t:buildCaption>
+      <div class="jenkins-app-bar">
+        <div class="jenkins-app-bar__content">
+          <t:buildCaption>${%Console Output}</t:buildCaption>
+        </div>
+        <div class="jenkins-app-bar__controls">
+          <a class="jenkins-button" href="consoleText" download="${it.project.displayName} ${it.displayName} logs">
+            <l:icon src="symbol-download" />
+            ${%Download}
+          </a>
+        </div>
+      </div>
       <j:set var="threshold" value="${h.getSystemProperty('hudson.consoleTailKB')?:'150'}" />
       <!-- Show at most last 150KB (can override with system property) unless consoleFull is set -->
       <j:set var="offset" value="${empty(consoleFull) ? it.logText.length()-threshold*1024 : 0}" />
