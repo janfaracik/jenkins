@@ -23,18 +23,19 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout title="${it.displayName} Config">
     <st:include page="sidepanel.jelly" />
     <l:breadcrumb title="${%Edit Build Information}" />
     <l:main-panel>
-      <div class="behavior-loading"><l:spinner text="${%LOADING}"/></div>
+      <l:app-bar title="${%Edit Build Information}" />
       <f:form method="post" action="configSubmit" name="config">
         <j:set var="readOnlyMode" value="${!h.hasPermission(it,it.UPDATE)}"/>
-        <f:entry title="${%DisplayName}" help="/help/run-config/displayName.html">
-          <f:textbox name="displayName" value="${it.hasCustomDisplayName()?it.displayName:''}"/>
+        <j:set var="originalDisplayName" value="#${it.number}" />
+        <f:entry title="${%DisplayName}" description="${%DisplayNameDescription(originalDisplayName)}">
+          <f:textbox name="displayName" value="${it.hasCustomDisplayName()?it.displayName:''}" placeholder="${originalDisplayName}" />
         </f:entry>
-        <f:entry title="${%Description}" help="/help/run-config/description.html">
+        <f:entry title="${%Description}" description="${%DescriptionDescription}">
           <f:textarea name="description" value="${it.description}" codemirror-mode="${app.markupFormatter.codeMirrorMode}" codemirror-config="${app.markupFormatter.codeMirrorConfig}" previewEndpoint="/markupFormatter/previewDescription"/>
         </f:entry>
 
