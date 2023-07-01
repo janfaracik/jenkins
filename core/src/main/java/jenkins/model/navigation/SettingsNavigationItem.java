@@ -1,6 +1,9 @@
 package jenkins.model.navigation;
 
+import hudson.model.AdministrativeMonitor;
+import java.util.List;
 import jenkins.management.Badge;
+import jenkins.model.Jenkins;
 
 public class SettingsNavigationItem implements NavigationItem {
 
@@ -21,6 +24,11 @@ public class SettingsNavigationItem implements NavigationItem {
 
     @Override
     public Badge getBadge() {
-        return new Badge("2", "2 notifications", Badge.Severity.DANGER);
+        Jenkins jenkins = Jenkins.get();
+        List<AdministrativeMonitor> activeAdministrativeMonitors = jenkins.getActiveAdministrativeMonitors();
+
+        return new Badge(String.valueOf(activeAdministrativeMonitors.size()),
+                activeAdministrativeMonitors.size() + " notifications",
+                Badge.Severity.DANGER);
     }
 }

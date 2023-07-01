@@ -1,6 +1,7 @@
 package jenkins.model.navigation;
 
 import jenkins.management.Badge;
+import jenkins.model.Jenkins;
 
 public class PluginsNavigationItem implements NavigationItem {
 
@@ -21,6 +22,8 @@ public class PluginsNavigationItem implements NavigationItem {
 
     @Override
     public Badge getBadge() {
-        return new Badge("3", "3 updates available", Badge.Severity.WARNING);
+        Jenkins jenkins = Jenkins.get();
+
+        return jenkins.getUpdateCenter().getBadge();
     }
 }
