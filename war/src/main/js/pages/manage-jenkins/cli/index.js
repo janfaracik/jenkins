@@ -11,7 +11,7 @@ document.querySelectorAll("[data-modal='true']").forEach((e) => {
     );
 
     showModal(content, {
-      maxWidth: "550px",
+      maxWidth: "750px",
       title: title,
     });
   });

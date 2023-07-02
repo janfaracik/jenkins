@@ -24,12 +24,16 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+  <div class="jenkins-description">
+    <j:out value="${h.escape(command.longDescription)}"/>
+  </div>
   <j:set var="commanda" value="${command.name}"/>
   <j:set var="args" value="${command.singleLineSummary}"/>
   <st:include page="example.jelly"/>
-  <pre>
-    <j:out value="${h.escape(command.longDescription)}"/>
-    <j:set var="usage" value="${command.usage}"/>
-    <j:if test="${!empty usage}"><br/>${command.usage}</j:if>
-  </pre>
+  <j:set var="usage" value="${command.usage}"/>
+  <j:if test="${!empty usage}">
+    <pre class="banana">
+      ${command.usage}
+    </pre>
+  </j:if>
 </j:jelly>

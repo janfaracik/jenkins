@@ -222,17 +222,17 @@ public class BuildCommand extends CLICommand {
     @Override
     protected void printUsageSummary(PrintStream stderr) {
         stderr.println(
-            "Starts a build, and optionally waits for a completion.\n" +
-            "Aside from general scripting use, this command can be\n" +
+            "Starts a build, and optionally waits for a completion. " +
+            "Aside from general scripting use, this command can be " +
             "used to invoke another job from within a build of one job.\n" +
-            "With the -s option, this command changes the exit code based on\n" +
-            "the outcome of the build (exit code 0 indicates a success)\n" +
+            "With the -s option, this command changes the exit code based on " +
+            "the outcome of the build (exit code 0 indicates a success) " +
             "and interrupting the command will interrupt the job.\n" +
-            "With the -f option, this command changes the exit code based on\n" +
-            "the outcome of the build (exit code 0 indicates a success)\n" +
-            "however, unlike -s, interrupting the command will not interrupt\n" +
+            "With the -f option, this command changes the exit code based on " +
+            "the outcome of the build (exit code 0 indicates a success) " +
+            "however, unlike -s, interrupting the command will not interrupt " +
             "the job (exit code 125 indicates the command was interrupted).\n" +
-            "With the -c option, a build will only run if there has been\n" +
+            "With the -c option, a build will only run if there has been " +
             "an SCM change."
         );
     }

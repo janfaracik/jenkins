@@ -52,13 +52,21 @@
 @use "./pages/setupWizardFirstUser";
 @use "./pages/setupWizardConfigureInstance";
 
+.banana {
+  background: transparent;
+  padding: 0;
+  font-family: var(--font-family-sans);
+  font-size: 1rem;
+  margin: 0;
+}
+
 .copyable-thing {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: var(--section-padding);
-  padding: 0.5rem;
+  padding: 0.5rem 0.6rem;
 
   &::before {
     content: "";
@@ -66,7 +74,6 @@
     inset: 0;
     border-radius: 0.8rem;
     background: var(--item-background--hover);
-    opacity: 0.5;
     z-index: -1;
   }
 
@@ -75,5 +82,17 @@
     background: none;
     padding: 0 0 0 0.5rem;
     font-size: var(--font-size-sm);
+  }
+}
+
+.jenkins-modal {
+
+  .copyable-thing {
+    padding: 0.75rem 1.5rem;
+    margin: -0.5rem -1.5rem 1rem -1.5rem;
+
+    &::before {
+      border-radius: 0;
+    }
   }
 }
