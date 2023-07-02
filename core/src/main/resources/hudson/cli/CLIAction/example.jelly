@@ -24,6 +24,9 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <pre id="example">java -jar <a href="${rootURL}/jnlpJars/jenkins-cli.jar">jenkins-cli.jar</a> -s ${h.inferHudsonURL(request)} <j:if test="${!it.webSocketSupported}">-http </j:if>${commandArgs}</pre>
+  <div class="copyable-thing">
+    <pre id="example"><span style="font-weight: 600">java</span><st:nbsp /><span class="jenkins-!-color-purple">-jar</span> jenkins-cli.jar <span class="jenkins-!-color-purple">-s</span> ${h.inferHudsonURL(request)} <j:if test="${!it.webSocketSupported}">-http </j:if><span class="jenkins-!-color-green">${commanda}</span>${args}</pre>
+    <l:copyButton iconOnly="true" />
+  </div>
 </j:jelly>
 
