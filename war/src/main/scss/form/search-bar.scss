@@ -9,7 +9,7 @@
 
   &__input {
     appearance: none;
-    background: var(--item-background--hover);
+    background: var(--layer-1);
     border: none;
     outline: none;
     border-radius: 0.625rem;
@@ -286,7 +286,7 @@
     &:hover,
     &:focus {
       &::before {
-        background-color: var(--item-background--hover);
+        background-color: var(--layer-1);
       }
     }
 
@@ -354,7 +354,7 @@
 }
 
 .jenkins-search__results-item--selected {
-  background: var(--item-background--hover);
+  background: var(--layer-1);
   animation: pulse 1s ease-in-out forwards;
 
   @keyframes pulse {

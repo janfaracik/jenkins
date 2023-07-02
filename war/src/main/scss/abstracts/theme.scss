@@ -13,11 +13,11 @@ $colors: (
   "red": #e6001f,
   "yellow": #ffb31a,
   "white": #ffffff,
-  "black": #14141f
+  "black": color-mix(in srgb, var())
 );
 
 $semantics: (
-  "accent": var(--blue),
+  "accent": var(--red),
   "text": var(--black),
   "error": var(--red),
   "warning": var(--orange),
@@ -43,6 +43,11 @@ $semantics: (
   --line-height-base: 1.5;
   --line-height-heading: 1.2;
 
+  // Layers
+  --layer-1: color-mix(in srgb, var(--accent-color) 5%, hsl(240, 0%, 99.9999%));
+  --secondary: color-mix(in srgb, var(--accent-color) 30%, hsl(0, 0%, 60%));
+  --layer-05: color-mix(in srgb, var(--layer-1), transparent);
+
   // Color palette
   --very-light-grey: #f8f8f8;
   --light-grey: hsl(240, 20%, 96.5%);
@@ -50,7 +55,6 @@ $semantics: (
   --dark-grey: #4d545d;
 
   // branding
-  --secondary: hsl(240, 10%, 50%);
   --focus: #3fb3f7;
   --focus-btn-primary: #{color.change(#0b6aa2, $alpha: 0.5)};
   --focus-btn-secondary: #{color.change(#0b6aa2, $alpha: 0.5)};
@@ -96,7 +100,7 @@ $semantics: (
   --header-item-border-radius: 4px;
 
   // Breadcrumbs bar
-  --breadcrumbs-bar-background: hsla(240, 20%, 96.5%, 0.8);
+  --breadcrumbs-bar-background: var(--layer-1);
 
   // Footer
   --footer-background: hsla(240, 20%, 96.5%, 0.8);
@@ -156,7 +160,7 @@ $semantics: (
   --configure-job-help-area-bg-color: var(--medium-translucent);
 
   // Table
-  --table-background: var(--panel-header-bg-color);
+  --table-background: var(--layer-1);
   --table-header-foreground: var(--text-color);
   --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
@@ -239,7 +243,7 @@ $semantics: (
   --card-border-width: 2px;
 
   // Tab bar
-  --tabs-background: var(--panel-header-bg-color);
+  --tabs-background: var(--layer-1);
   --tabs-item-background: transparent;
   --tabs-item-foreground: var(--text-color);
   --tabs-item-background--hover: rgba(0, 0, 0, 0.05);
@@ -274,8 +278,8 @@ $semantics: (
   --tab-baseline-default-display: none;
 
   // Side panel
-  --panel-header-bg-color: var(--light-grey);
-  --panel-border-color: var(--light-grey);
+  --panel-header-bg-color: var(--layer-1);
+  --panel-border-color: var(--layer-1);
   --side-panel-hover-color: var(--panel-border-color);
   --task-link-bg-color--active: var(--panel-border-color);
   --task-link-bg-color--hover: var(--very-light-grey);
@@ -299,7 +303,7 @@ $semantics: (
 
   --form-label-font-weight: 500;
   --form-input-padding: 0.5rem;
-  --form-input-border-radius: 6px;
+  --form-input-border-radius: 0.66rem;
   --form-input-glow: 0 0 0 10px transparent;
   --form-input-glow--focus: 0 0 0 5px var(--focus-input-glow);
   --pre-background: rgba(0, 0, 0, 0.05);
@@ -346,15 +350,15 @@ $semantics: (
   --call-to-action-text-color: var(--alert-info-text-color);
 
   // Default button
-  --button-background: hsla(240, 25%, 75%, 0.1);
-  --button-background--hover: hsla(240, 25%, 75%, 0.175);
-  --button-background--active: hsla(240, 25%, 75%, 0.25);
-  --button-box-shadow--focus: hsla(240, 25%, 75%, 0.1);
+  --button-background: var(--layer-1);
+  --button-background--hover: var(--layer-05);
+  --button-background--active: var(--layer-2);
+  --button-box-shadow--focus: var(--layer-05);
 
   // Variables for sidebar items, card items
-  --item-background--hover: hsla(240, 25%, 75%, 0.15);
-  --item-background--active: hsla(240, 25%, 75%, 0.225);
-  --item-box-shadow--focus: hsla(240, 25%, 75%, 0.105);
+  --item-background--hover: var(--layer-05);
+  --item-background--active: var(--layer-1);
+  --item-box-shadow--focus: var(--layer-05);
 
   // Deprecated
   --primary: var(--accent-color); // Use var(--accent-color) instead
