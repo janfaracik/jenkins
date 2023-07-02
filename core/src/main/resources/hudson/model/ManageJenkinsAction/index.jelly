@@ -46,7 +46,7 @@ THE SOFTWARE.
         </j:forEach>
         <st:include page="downgrade.jelly" it="${app}" />
       </section>
-
+<p>
       <j:forEach var="category" items="${app.categorizedManagementLinks.entrySet()}">
         <section class="jenkins-section jenkins-section--bottom-padding">
           <h2 class="jenkins-section__title">${category.key.label}</h2>
