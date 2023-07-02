@@ -51,3 +51,40 @@
 @use "./pages/plugin-manager";
 @use "./pages/setupWizardFirstUser";
 @use "./pages/setupWizardConfigureInstance";
+
+.error-drop {
+  position: relative;
+  min-height: 60vh;
+  overflow: hidden;
+  margin: -100px -100px 4rem -100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--red);
+  font-size: 5rem;
+  font-weight: 100;
+
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  &::before {
+    //background: var(--red);
+    opacity: 0.1;
+  }
+
+  &::after {
+    inset: -100vmax;
+    background-image: url("/jenkins/images/rage.svg");
+    background-size: 3rem;
+    rotate: 45deg;
+    filter: saturate(0);
+    //mix-blend-mode: overlay;
+  }
+}
+
+.oops {
+}

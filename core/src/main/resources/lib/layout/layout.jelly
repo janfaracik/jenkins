@@ -64,6 +64,10 @@ THE SOFTWARE.
       Do not include Bootstrap 3 grid. When a plugin wants to use a more recent version of Bootstrap then
       the bundled grid will cause conflicts.
     </st:attribute>
+    <st:attribute name="nobreadcrumb" use="optional">
+      Do not include Bootstrap 3 grid. When a plugin wants to use a more recent version of Bootstrap then
+      the bundled grid will cause conflicts.
+    </st:attribute>
   </st:documentation>
 <l:view contentType="text/html;charset=UTF-8">
 <st:setHeader name="Expires" value="0" />
@@ -190,7 +194,7 @@ THE SOFTWARE.
     </j:if>
 
     <div id="page-body" class="app-page-body-thing">
-      <j:if test="${layoutType!='full-screen'}">
+      <j:if test="${layoutType!='full-screen' and attrs.nobreadcrumb != true}">
         <l:breadcrumbBar>
           <j:set var="mode" value="breadcrumbs" />
           <d:invokeBody/>
