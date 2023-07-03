@@ -121,10 +121,6 @@ a {
   }
 }
 
-p a {
-  text-decoration: underline;
-}
-
 a.lowkey:link {
   text-decoration: none;
   color: inherit;
@@ -227,7 +223,6 @@ pre {
   line-height: 1.66;
 
   a {
-    font-weight: inherit;
     word-wrap: break-word;
   }
 }
@@ -549,10 +544,6 @@ pre.console {
   p:last-of-type {
     margin-bottom: 0;
   }
-}
-
-.help a {
-  text-decoration: underline;
 }
 
 .help .from-plugin {
