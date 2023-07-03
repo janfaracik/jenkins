@@ -189,13 +189,14 @@ THE SOFTWARE.
                     logout="${%logout}"/>
     </j:if>
 
+    <j:if test="${layoutType!='full-screen'}">
+      <l:breadcrumbBar>
+        <j:set var="mode" value="breadcrumbs" />
+        <d:invokeBody/>
+      </l:breadcrumbBar>
+    </j:if>
+    
     <div id="page-body" class="app-page-body-thing">
-      <j:if test="${layoutType!='full-screen'}">
-        <l:breadcrumbBar>
-          <j:set var="mode" value="breadcrumbs" />
-          <d:invokeBody/>
-        </l:breadcrumbBar>
-      </j:if>
       <div class="app-page-body">
         <j:if test="${layoutType=='two-column'}">
           <div id="side-panel" class="app-page-body__sidebar">
