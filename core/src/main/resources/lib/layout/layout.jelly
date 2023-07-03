@@ -195,7 +195,7 @@ THE SOFTWARE.
         <d:invokeBody/>
       </l:breadcrumbBar>
     </j:if>
-    
+
     <div id="page-body" class="app-page-body-thing">
       <div class="app-page-body">
         <j:if test="${layoutType=='two-column'}">

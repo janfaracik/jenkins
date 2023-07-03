@@ -45,19 +45,18 @@ body {
 /* -------------------------------------- */
 
 .app-page-body-thing {
-  //width: calc(100vw - (var(--section-padding) * 4));
-  //margin: 0 auto;
-  //width: 100%;
-  //max-width: 2400px;
   padding: var(--section-padding);
 }
 
 .app-page-body {
   display: flex;
   align-items: stretch;
-  justify-content: stretch;
-  flex-wrap: wrap-reverse;
+  justify-content: center;
   gap: var(--section-padding);
+
+  @media (width <= 600px) {
+    flex-wrap: wrap-reverse;;
+  }
 
   &__sidebar {
     min-width: 300px;

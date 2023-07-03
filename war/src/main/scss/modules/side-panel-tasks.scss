@@ -25,12 +25,6 @@ $background-outset: 0.7rem;
 }
 
 #side-panel {
-  .jenkins-app-bar {
-    //margin-top: var(--section-padding);
-    //margin-left: var(--section-padding);
-    //margin-right: var(--section-padding);
-  }
-
   & > #tasks > .jenkins-search-container {
     margin-left: -$background-outset;
     margin-right: -$background-outset;

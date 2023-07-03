@@ -19,7 +19,7 @@
 .page-footer__flex-row > *:not(script) {
   display: flex;
   align-items: center;
-  padding: var(--section-padding) 0;
+  padding-top: var(--section-padding);
   gap: calc(var(--section-padding) / 2);
 }
 
