@@ -39,6 +39,7 @@
 
       &:not(:has(.app-page-body__sidebar)) {
         .app-page-body__content {
+          width: 100%;
           max-width: 80vw;
           margin: auto;
         }
