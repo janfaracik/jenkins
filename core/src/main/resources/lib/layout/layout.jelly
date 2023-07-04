@@ -196,8 +196,8 @@ THE SOFTWARE.
       </l:breadcrumbBar>
     </j:if>
 
-    <div id="page-body" class="app-page-body-thing">
-      <div class="app-page-body">
+    <div id="page-body" class="app-page-body">
+      <div class="app-page-body__inner">
         <j:if test="${layoutType=='two-column'}">
           <div id="side-panel" class="app-page-body__sidebar">
             <j:set var="mode" value="side-panel" />

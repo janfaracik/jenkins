@@ -44,29 +44,18 @@ body {
 
 /* -------------------------------------- */
 
-.app-page-body-thing {
-  padding: var(--section-padding);
-}
-
 .app-page-body {
-  display: flex;
-  align-items: stretch;
-  justify-content: center;
-  gap: var(--section-padding);
+  padding: var(--section-padding);
 
-  @media (width <= 600px) {
-    flex-wrap: wrap-reverse;;
-  }
+  &__inner {
+    display: grid;
+    gap: var(--section-padding);
 
-  &__sidebar {
-    min-width: 300px;
-    width: 18vw;
-    max-width: 300px;
-    flex-shrink: 0;
-  }
-
-  &__content {
-    flex-grow: 1;
+    @media (width >= 900px) {
+      &:has(.app-page-body__sidebar) {
+        grid-template-columns: minmax(200px, 310px) 1fr;
+      }
+    }
   }
 }
 
