@@ -1252,6 +1252,69 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         return Collections.unmodifiableList(plugins);
     }
 
+    @ExportedBean
+    public static class Lemonworld {
+        private final PluginWrapper plugin;
+        private final List<PluginWrapper> dependents;
+
+        public Lemonworld(PluginWrapper plugin) {
+            this.plugin = plugin;
+            this.dependents = new ArrayList<>();
+        }
+
+        @Exported
+        public PluginWrapper getPlugin() {
+            return plugin;
+        }
+
+        @Exported
+        public List<PluginWrapper> getDependents() {
+            return dependents;
+        }
+    }
+
+    @Exported
+    public List<Lemonworld> getPlugins2() {
+        List<Lemonworld> wrapper = new ArrayList<>();
+
+        for (PluginWrapper pluginWrapper: getPlugins()) {
+            if (pluginWrapper.getMandatoryDependents().isEmpty() && pluginWrapper.getImpliedDependents().isEmpty()) {
+                wrapper.add(new Lemonworld(pluginWrapper));
+            }
+        }
+        for (PluginWrapper pluginWrapper: getPlugins()) {
+            if (pluginWrapper.getMandatoryDependents().size() > 0 || pluginWrapper.getImpliedDependents().size() > 0) {
+                try {
+                    List<Lemonworld> lemon = wrapper.stream().filter(e -> {
+                        String shortName = e.getPlugin().getShortName();
+
+                        List<String> dependencies = new ArrayList<>();
+
+                        pluginWrapper.getMandatoryDependents().stream()
+                                .forEach(f -> dependencies.add(f));
+                        pluginWrapper.getImpliedDependents().stream()
+                                .forEach(f -> dependencies.add(f));
+
+                        System.out.println("I am a parent: " + shortName);
+                        for (String dep : dependencies) {
+                            System.out.println("you are like a child: " + dep);
+                        }
+
+                        return dependencies.stream().anyMatch(f -> f.equals(shortName));
+                    }).collect(Collectors.toList());
+
+                    for (Lemonworld lemo: lemon) {
+                        lemo.dependents.add(pluginWrapper);
+                    }
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        }
+
+        return wrapper;
+    }
+
     public List<FailedPlugin> getFailedPlugins() {
         return failedPlugins;
     }

@@ -336,6 +336,8 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
       var dependentsDiv = pluginMetadata.dependentsDiv;
       var dependentSpans = pluginMetadata.dependents;
 
+      console.log(pluginTR.jenkinsPluginMetadata)
+
       // Go through each dependent <span> element. If disabled should be hidden, show the spans where
       // the dependent is enabled and hide the others. Otherwise show them all.
       for (var i = 0; i < dependentSpans.length; i++) {
