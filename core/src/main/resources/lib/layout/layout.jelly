@@ -187,9 +187,7 @@ THE SOFTWARE.
                     searchPlaceholder="${%search}"
                     searchHelpUrl="${%searchBox.url}"
                     logout="${%logout}"/>
-    </j:if>
 
-    <j:if test="${layoutType!='full-screen'}">
       <l:breadcrumbBar>
         <j:set var="mode" value="breadcrumbs" />
         <d:invokeBody/>
