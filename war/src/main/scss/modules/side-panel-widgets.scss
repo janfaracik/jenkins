@@ -6,6 +6,7 @@
   border-right: none;
   border-color: var(--panel-border-color);
   border-width: 1px;
+  margin-left: calc(var(--section-padding) * -1);
 }
 
 #side-panel .pane-header {
@@ -23,7 +24,7 @@
   background-color: var(--panel-header-bg-color);
   border-radius: 0;
   border-width: 1px;
-  padding: 0.5rem 1.25rem;
+  padding: 0.5rem 1rem;
 }
 
 #side-panel .pane-header-title {

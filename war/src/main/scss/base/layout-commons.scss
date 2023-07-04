@@ -36,6 +36,13 @@
       &:has(.app-page-body__sidebar) {
         grid-template-columns: minmax(200px, 310px) 1fr;
       }
+
+      &:not(:has(.app-page-body__sidebar)) {
+        .app-page-body__content {
+          max-width: 80vw;
+          margin: auto;
+        }
+      }
     }
   }
 }
