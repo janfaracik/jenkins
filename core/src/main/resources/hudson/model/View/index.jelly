@@ -29,6 +29,82 @@ THE SOFTWARE.
         <st:include page="sidepanel.jelly" />
         <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
         <l:main-panel>
+          <j:if test="${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app)}">
+            <div class="rotating-title"><p>Afternoon Jan</p><p>Jenkins</p></div>
+          </j:if>
+          <div class="jenkins-app-bar">
+            <div class="jenkins-app-bar__content">
+              <h1 class="testheading">
+                <j:set var="iconClass" value="${it.owner.iconColor.getIconClassName()}" />
+                <j:if test="${iconClass != null}">
+                  <l:icon src="${iconClass}" />
+                </j:if>
+                ${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app) ? '%Dashboard' : it.owner.displayName}
+              </h1>
+            </div>
+            <div class="jenkins-app-bar__controls">
+              <st:include page="tasks-new.jelly" it="${it.owner}" optional="true">
+                <!-- made overridable for ViewGroup that doesn't allow modifications -->
+                <a class="jenkins-button" href="${rootURL}/${it.viewUrl}newJob">
+                  <l:icon src="symbol-add" />
+                  ${%New project}
+                </a>
+              </st:include>
+              <j:if test="${it.isEditable()}">
+                <!-- /configure URL on Jenkins object is overloaded with Jenkins's system config, so always use the explicit name. -->
+                <a class="jenkins-button" href="${rootURL}/${it.viewUrl}configure">
+                  ${%Configure}
+                </a>
+              </j:if>
+              <l:overflowButton>
+                <a href="${it.class.name=='hudson.model.AllView' ? rootURL + '/asynchPeople/' : rootURL + '/' + it.viewUrl + 'asynchPeople/' }"
+                   class="jenkins-dropdown__item">
+                  <div class="jenkins-dropdown__item__icon">
+                    <l:icon src="symbol-people" />
+                  </div>
+                  ${%People}
+                </a>
+                <a href="${rootURL}/${it.viewUrl}builds"
+                   class="jenkins-dropdown__item">
+                  <div class="jenkins-dropdown__item__icon">
+                    <l:icon src="symbol-build-history" />
+                  </div>
+                  ${%Build history}
+                </a>
+                <div class="jenkins-dropdown__separator" />
+                <j:if test="${app.fingerprintMap.ready}">
+                  <a href="${rootURL}/projectRelationship"
+                     class="jenkins-dropdown__item">
+                    <div class="jenkins-dropdown__item__icon">
+                      <l:icon src="symbol-project-relationship" />
+                    </div>
+                    ${%Project Relationship}
+                  </a>
+                  <a href="${rootURL}/fingerprintCheck"
+                     class="jenkins-dropdown__item">
+                    <div class="jenkins-dropdown__item__icon">
+                      <l:icon src="symbol-fingerprint" />
+                    </div>
+                    ${%Check File Fingerprint}
+                  </a>
+                </j:if>
+                <div class="jenkins-dropdown__separator" />
+                <j:if test="${it.owner.canDelete(it)}">
+                  <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
+                                      href="doDelete"
+                                      message="${%delete.view(it.displayName)}"
+                                      permission="${it.DELETE}"
+                                      post="true">
+                    <div class="jenkins-dropdown__item__icon">
+                      <l:icon src="symbol-trash" />
+                    </div>
+                    ${%Delete view}
+                  </l:confirmationLink>
+                </j:if>
+              </l:overflowButton>
+            </div>
+          </div>
+
           <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">
             <!-- allow the owner to take over the top section, but we also need the default to be backward compatible -->
             <div id="view-message">
