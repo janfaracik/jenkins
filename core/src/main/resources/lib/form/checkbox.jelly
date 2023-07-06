@@ -84,9 +84,13 @@ THE SOFTWARE.
            checkUrl="${attrs.checkUrl}" checkDependsOn="${attrs.checkDependsOn}" json="${attrs.json}"
            disabled="${readOnlyMode ? 'true' : null}"
            checked="${value ? 'true' : null}"/>
-    <label class="attach-previous ${attrs.title == null ? 'js-checkbox-label-empty' : ''}"
-           title="${attrs.tooltip}">${attrs.title}</label>
+    <label class="attach-previous ${attrs.title == null ? 'js-checkbox-label-empty' : ''}">
+      ${attrs.title}
+    </label>
   </span>
+  <j:if test="${attrs.description != null}">
+    <div class="jenkins-checkbox__description">${attrs.description}</div>
+  </j:if>
   <j:if test="${customizedFields != null and attrs.field != null and value != default}">
     <j:mute>${customizedFields.add(name)}</j:mute>
   </j:if>

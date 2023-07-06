@@ -169,3 +169,16 @@ $min-button-size: 36px;
     }
   }
 }
+
+div.listview-jobs {
+  max-height: 300px;
+  overflow: auto;
+  border: 2px solid var(--item-background--hover);
+  border-radius: 0.66rem;
+  padding: 1rem 1rem 0;
+  margin-bottom: calc(var(--section-padding) / 2);
+
+  .jenkins-checkbox {
+    margin-bottom: 1rem;
+  }
+}

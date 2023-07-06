@@ -84,6 +84,8 @@ THE SOFTWARE.
       <div class="help-sibling" style="width:100%">
         <j:set var="help" value="${descriptor.helpFile}" />
 
+        <f:class-entry descriptor="${descriptor}" />
+
         <div class="repeated-chunk__header">
           <div class="${attrs.disableDragAndDrop or readOnlyMode ? '' : 'dd-handle'}"/>
 
@@ -99,8 +101,6 @@ THE SOFTWARE.
         <j:if test="${help!=null}">
           <f:helpArea />
         </j:if>
-
-        <f:class-entry descriptor="${descriptor}" />
 
         <d:invokeBody/>
       </div>

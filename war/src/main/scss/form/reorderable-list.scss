@@ -154,6 +154,10 @@ div.to-be-removed {
         }
       }
     }
+
+    &:last-child {
+      margin-bottom: -0.4rem !important;
+    }
   }
 
   // TODO: Update/remove when .jenkins-button PR is merged
