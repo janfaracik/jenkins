@@ -10,7 +10,7 @@ import org.jenkinsci.Symbol;
 
 public class DescriptionWidget extends Widget {
 
-    @Extension()
+    @Extension(ordinal = 201)
     @Symbol("description")
     public static final class ViewFactoryImpl extends WidgetFactory<View, DescriptionWidget> {
         @Override

@@ -1,14 +1,13 @@
-/* global replaceDescription */
 (function () {
   document.addEventListener("DOMContentLoaded", function () {
     const widget = document.getElementById("description");
     const placeholder = document.querySelector(".app-description-widget__placeholder");
-    let descriptionLink = document.querySelector("#description-link");
+    const descriptionLink = document.querySelector("#description-link");
     descriptionLink.addEventListener("click", function (e) {
       e.preventDefault();
       let url = descriptionLink.getAttribute("data-url");
       let description = descriptionLink.getAttribute("data-description");
-      const height = (widget.offsetHeight - 58) + "px";
+      const height = Math.max(widget.offsetHeight - 58, 60) + "px";
 
       if (placeholder) {
         placeholder.remove();
@@ -25,8 +24,13 @@
 
 function replaceDescription(initialDescription, submissionUrl, height) {
   const d = document.getElementById("description");
-  d.firstElementChild.nextElementSibling.innerHTML =
-    "<div class='jenkins-spinner'></div>";
+  const spinnerParent = document.createElement("div");
+  spinnerParent.classList.add("app-description-widget__spinner");
+  const spinner = document.createElement("div");
+  spinner.classList.add("jenkins-spinner");
+  spinnerParent.appendChild(spinner);
+  d.appendChild(spinnerParent);
+
   let parameters = {};
   if (initialDescription !== undefined && submissionUrl !== undefined) {
     parameters = {

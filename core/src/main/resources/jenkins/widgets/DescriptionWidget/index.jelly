@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
-  <div class="card app-description-widget">
+  <div class="jenkins-widget app-description-widget">
     <j:if test="${empty(view.description)}">
       <div class="app-description-widget__placeholder">
         ${%No description}
