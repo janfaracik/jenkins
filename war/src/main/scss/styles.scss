@@ -54,11 +54,11 @@
 
 .card {
   border-radius: 1rem;
-  //background: var(--card-background);
-  //border: var(--card-border-width) solid var(--card-border-color);
+  background: var(--card-background);
+  border: var(--card-border-width) solid var(--card-border-color);
 
 
-  background: hsl(240, 6%, 18%);
+  //background: hsl(240, 6%, 18%);
 
   margin-bottom: var(--section-padding);
   font-size: 15px;
