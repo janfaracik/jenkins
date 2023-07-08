@@ -169,3 +169,82 @@ $min-button-size: 36px;
     }
   }
 }
+
+$widget-padding: 1.125rem;
+
+.card {
+  border-radius: 1rem;
+  background: var(--card-background);
+  border: var(--card-border-width) solid var(--card-border-color);
+  margin-top: var(--section-padding);
+  font-size: 0.9375rem;
+  margin-left: var(--section-padding);
+  -webkit-font-smoothing: subpixel-antialiased;
+  line-height: 1.66;
+}
+
+.app-description-widget {
+  &__placeholder {
+    color: var(--text-color-secondary);
+    margin: $widget-padding;
+
+    & + .app-description-widget__editor {
+      margin-top: - calc($widget-padding * 2);
+    }
+  }
+
+  &__editor {
+    display: flex;
+    flex-direction: column;
+
+    #description {
+      padding: $widget-padding;
+    }
+
+    #description-link {
+      height: 0;
+      opacity: 0;
+      transition: var(--standard-transition);
+      min-height: 0;
+      padding: 0;
+      filter: blur(2px);
+      scale: 90%;
+    }
+
+    .jenkins-input {
+      border: none;
+      background: transparent;
+      font-size: 0.9375rem;
+      line-height: 1.66;
+      margin: -$widget-padding;
+      margin-bottom: 0;
+      padding: $widget-padding $widget-padding 0;
+      box-shadow: none;
+      width: calc(100% + ($widget-padding * 2));
+    }
+
+    .jenkins-form-item {
+      margin-bottom: 0;
+    }
+
+    .textarea-preview-container {
+      display: none;
+    }
+
+    .jenkins-button {
+      width: 100%;
+      box-sizing: border-box;
+      height: 40px;
+    }
+  }
+
+  &:hover {
+    #description-link {
+      height: 40px;
+      margin-top: $widget-padding;
+      opacity: 1;
+      filter: blur(0);
+      scale: 100%;
+    }
+  }
+}

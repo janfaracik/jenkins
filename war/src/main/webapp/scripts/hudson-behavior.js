@@ -1966,36 +1966,6 @@ function xor(a, b) {
   return !a != !b;
 }
 
-// used by editableDescription.jelly to replace the description field with a form
-// eslint-disable-next-line no-unused-vars
-function replaceDescription(initialDescription, submissionUrl) {
-  var d = document.getElementById("description");
-  d.firstElementChild.nextElementSibling.innerHTML =
-    "<div class='jenkins-spinner'></div>";
-  let parameters = {};
-  if (initialDescription !== undefined && submissionUrl !== undefined) {
-    parameters = {
-      description: initialDescription,
-      submissionUrl: submissionUrl,
-    };
-  }
-  fetch("./descriptionForm", {
-    method: "post",
-    headers: crumb.wrap({}),
-    body: objectToUrlFormEncoded(parameters),
-  }).then((rsp) => {
-    rsp.text().then((responseText) => {
-      d.innerHTML = responseText;
-      evalInnerHtmlScripts(responseText, function () {
-        Behaviour.applySubtree(d);
-        d.getElementsByTagName("TEXTAREA")[0].focus();
-      });
-      layoutUpdateCallback.call();
-      return false;
-    });
-  });
-}
-
 /**
  * Indicates that form fields from rows [s,e) should be grouped into a JSON object,
  * and attached under the element identified by the specified id.

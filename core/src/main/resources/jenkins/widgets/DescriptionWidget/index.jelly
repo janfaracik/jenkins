@@ -24,10 +24,14 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
-  <div class="card">
+  <div class="card app-description-widget">
     <j:if test="${empty(view.description)}">
-      <div style="opacity: 0.5">${%No description}</div>
+      <div class="app-description-widget__placeholder">
+        ${%No description}
+      </div>
     </j:if>
-    <t:editableDescription it="${view}" permission="${view.CONFIGURE}" />
+    <div class="app-description-widget__editor">
+      <t:editableDescription it="${view}" permission="${view.CONFIGURE}" />
+    </div>
   </div>
 </j:jelly>
