@@ -84,12 +84,12 @@ THE SOFTWARE.
         <!-- RequireUpperBoundDeps between checks-api, echarts-api, font-awesome-api, and junit -->
         <groupId>io.jenkins.plugins</groupId>
         <artifactId>plugin-util-api</artifactId>
-        <version>3.2.1</version>
+        <version>3.3.0</version>
       </dependency>
       <dependency>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>ant</artifactId>
-        <version>487.vd79d090d4ea_e</version>
+        <version>497.v94e7d9fffa_b_9</version>
       </dependency>
       <dependency>
         <!-- RequireUpperBoundDeps via mailer and junit -->
@@ -116,7 +116,7 @@ THE SOFTWARE.
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>jenkins-test-harness</artifactId>
-      <version>2010.v1888f1a_cd45a_</version>
+      <version>2034.v41c9cb_349299</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -173,7 +173,7 @@ THE SOFTWARE.
     <dependency>
       <groupId>org.jenkins-ci.modules</groupId>
       <artifactId>instance-identity</artifactId>
-      <version>142.v04572ca_5b_265</version>
+      <version>173.va_37c494ec4e5</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -197,7 +197,7 @@ THE SOFTWARE.
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>junit</artifactId>
-      <version>1207.va_09d5100410f</version>
+      <version>1214.va_2f9db_3e6de0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
