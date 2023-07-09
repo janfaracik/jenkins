@@ -15,4 +15,19 @@
     width: 2.5rem;
     height: 2.5rem;
   }
+
+  .content {
+    color: var(--text-color-secondary);
+    margin-top: -0.5rem;
+
+    a {
+      font-weight: inherit;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 2px;
+    }
+
+    &:empty {
+      display: none;
+    }
+  }
 }

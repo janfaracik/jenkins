@@ -23,9 +23,14 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core">
-    ${%description_1}
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <j:set var="content">
     <j:if test="${it.hasPermission(it.CONFIGURE)}">
-        ${%description_2}
+      <div>
+        Create a <a href="newJob">new job</a> or <a href="configure">add some existing jobs</a>
+      </div>
     </j:if>
+  </j:set>
+
+  <l:notice text="${%description}" icon="symbol-list" content="${content}" />
 </j:jelly>
