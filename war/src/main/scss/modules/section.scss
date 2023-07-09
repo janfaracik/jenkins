@@ -38,22 +38,6 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: var(--section-padding);
-
-  //@media screen and (min-width: 800px) {
-  //  grid-template-columns: 1fr 1fr;
-  //}
-  //
-  //@media screen and (min-width: 1300px) {
-  //  grid-template-columns: 1fr 1fr 1fr;
-  //}
-  //
-  //@media screen and (min-width: 1800px) {
-  //  grid-template-columns: 1fr 1fr 1fr 1fr;
-  //}
-
-  &--1 {
-    grid-template-columns: 1fr !important;
-  }
 }
 
 .jenkins-section__item a {
