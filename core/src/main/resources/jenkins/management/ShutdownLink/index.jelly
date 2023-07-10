@@ -30,7 +30,10 @@ THE SOFTWARE.
         <l:main-panel>
             <l:app-bar title="Power" />
 
-            <button class="jenkins-button bigbuttonthing">
+            <l:confirmationLink class="jenkins-button bigbuttonthing"
+                                href="${rootURL}/reload"
+                                post="true"
+                                message="Do you want to reload???">
                 <div>
                     <l:icon src="symbol-reload" />
                 </div>
@@ -38,9 +41,9 @@ THE SOFTWARE.
                     Reload configuration from disk
                 </div>
                 <div>Discard all the loaded data in memory and reload everything from file system. Useful when you modified config files directly on disk.</div>
-            </button>
+            </l:confirmationLink>
 
-            <button class="jenkins-button bigbuttonthing">
+            <l:confirmationLink class="jenkins-button bigbuttonthing">
                 <div>
                     <l:icon src="symbol-power" />
                 </div>
@@ -48,7 +51,7 @@ THE SOFTWARE.
                     Prepare for shutdown
                 </div>
                 <div>Stops executing new builds, so that the system can be eventually shut down safely.</div>
-            </button>
+            </l:confirmationLink>
         </l:main-panel>
     </l:layout>
 </j:jelly>
