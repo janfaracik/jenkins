@@ -28,7 +28,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
 <l:layout title="${%Nodes}">
-  <st:include page="sidepanel.jelly" />
+  <st:include page="sidepanel.jelly" it="${app}" />
   <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
   <l:main-panel>
     <l:app-bar title="${%Nodes}">
@@ -39,6 +39,9 @@ THE SOFTWARE.
             ${%New Node}
           </a>
         </j:if>
+      <a class="jenkins-button" href="new">
+        ${%Node monitoring}
+      </a>
       <l:hasAdministerOrManage>
         <form method="post" action="updateNow" class="jenkins-!-display-contents">
           <button tooltip="${%Refresh status}" class="jenkins-button">

@@ -51,3 +51,20 @@
 @use "./pages/plugin-manager";
 @use "./pages/setupWizardFirstUser";
 @use "./pages/setupWizardConfigureInstance";
+
+.bigbuttonthing {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem;
+  font-size: 1rem;
+  padding: 1rem;
+
+  div:first-of-type {
+    grid-row: span 2;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
