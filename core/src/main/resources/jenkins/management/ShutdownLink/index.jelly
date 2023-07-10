@@ -33,6 +33,7 @@ THE SOFTWARE.
             <l:confirmationLink class="jenkins-button bigbuttonthing"
                                 href="${rootURL}/reload"
                                 post="true"
+                                title="Reload question title"
                                 message="Do you want to reload???">
                 <div>
                     <l:icon src="symbol-reload" />

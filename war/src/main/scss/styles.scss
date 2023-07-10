@@ -59,7 +59,7 @@
   grid-template-columns: auto 1fr;
   gap: 0.5rem 1.15rem;
   font-size: 1rem;
-  padding: 1.15rem;
+  padding: 1.15rem 1.15rem 1rem 1.15rem;
   margin-bottom: calc(var(--section-padding) / 2);
   align-items: start;
   line-height: 1.25rem;
@@ -78,7 +78,8 @@
 
   div:last-of-type {
     color: var(--text-color-secondary);
-    max-width: 80ch;
+    max-width: 75ch;
     white-space: pre-wrap;
+    line-height: 1.5;
   }
 }
