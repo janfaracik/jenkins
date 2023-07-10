@@ -30,25 +30,25 @@ THE SOFTWARE.
         <l:main-panel>
             <l:app-bar title="Power" />
 
-            <a class="jenkins-button bigbuttonthing">
+            <button class="jenkins-button bigbuttonthing">
                 <div>
                     <l:icon src="symbol-reload" />
                 </div>
                 <div>
-                    Reload
+                    Reload configuration from disk
                 </div>
-                <div>blurb goes here</div>
-            </a>
+                <div>Discard all the loaded data in memory and reload everything from file system. Useful when you modified config files directly on disk.</div>
+            </button>
 
-            <a class="jenkins-button bigbuttonthing">
+            <button class="jenkins-button bigbuttonthing">
                 <div>
                     <l:icon src="symbol-power" />
                 </div>
                 <div>
                     Prepare for shutdown
                 </div>
-                <div>blurb goes here</div>
-            </a>
+                <div>Stops executing new builds, so that the system can be eventually shut down safely.</div>
+            </button>
         </l:main-panel>
     </l:layout>
 </j:jelly>
