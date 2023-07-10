@@ -61,7 +61,7 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
 
     @Override
     public String getUrlName() {
-        return "/manage/configure";
+        return "/manage";
     }
 
     @Override
