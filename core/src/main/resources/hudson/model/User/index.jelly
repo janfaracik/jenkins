@@ -23,16 +23,39 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:layout title="${it.displayName}">
-    <st:include page="sidepanel.jelly" />
+  <l:layout title="${it.displayName}" type="one-column">
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
-      <h1>
-        <span class="icon-lg">
-          <l:icon src="${h.getUserAvatar(it, '48x48')}" />
-        </span>
-        ${it.fullName}
-      </h1>
+      <div class="jenkins-app-bar">
+        <div class="jenkins-app-bar__content">
+          <h1 class="space-invader">
+            <l:icon src="${h.getUserAvatar(it, '48x48')}" />
+            ${it.fullName}
+          </h1>
+        </div>
+        <div class="jenkins-app-bar__controls">
+          <a class="jenkins-button" href="my-views">
+            Views
+          </a>
+          <a class="jenkins-button" href="configure">
+            Configure
+          </a>
+          <j:if test="${it.canDelete()}">
+            <l:overflowButton>
+              <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
+                                  href="doDelete"
+                                  message="${%delete.logrecorder(it.displayName)}"
+                                  post="true">
+                <div class="jenkins-dropdown__item__icon">
+                  <l:icon src="symbol-trash" />
+                </div>
+                ${%Delete user}
+              </l:confirmationLink>
+            </l:overflowButton>
+          </j:if>
+        </div>
+      </div>
+
       <t:editableDescription permission="${app.ADMINISTER}" />
       <div>
         ${%Jenkins User ID}: ${it.id}
@@ -50,6 +73,9 @@ THE SOFTWARE.
           </j:forEach>
         </ul>
       </j:if>
+
+      <!-- TODO consider adding a BuildTimelineWidget (cf. Job, View, Computer) -->
+      <t:buildListTable builds="${it.builds}"/>
     </l:main-panel>
   </l:layout>
 </j:jelly>
