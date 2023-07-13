@@ -38,6 +38,7 @@ THE SOFTWARE.
           <l:task title="${item.displayName}"
                   href="${rootURL}/manage/${item.urlName}"
                   icon="${item.iconFileName}"
+                  badge="${item.badge}"
                   requiresConfirmation="${item.requiresConfirmation}"
                   post="${item.requiresPOST}" confirmationMessage="${%sure}" />
         </j:forEach>
