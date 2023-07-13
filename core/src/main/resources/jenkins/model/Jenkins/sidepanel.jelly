@@ -34,8 +34,12 @@ THE SOFTWARE.
 
       <j:forEach var="category" items="${it.categorizedManagementLinks.entrySet()}">
         <h2 class="jenkins-side-nav__heading">${category.key.label}</h2>
-        <j:forEach var="m" items="${category.value}">
-          <l:task title="${m.displayName}" href="${rootURL}/manage/${m.urlName}" icon="${m.iconFileName}" />
+        <j:forEach var="item" items="${category.value}">
+          <l:task title="${item.displayName}"
+                  href="${rootURL}/manage/${item.urlName}"
+                  icon="${item.iconFileName}"
+                  requiresConfirmation="${item.requiresConfirmation}"
+                  post="${item.requiresPOST}" confirmationMessage="${%sure}" />
         </j:forEach>
       </j:forEach>
     </div>
