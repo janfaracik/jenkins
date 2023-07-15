@@ -145,3 +145,14 @@ $background-outset: 0.7rem;
     }
   }
 }
+
+.nodeswidgetview {
+  display: flex;
+  gap: var(--section-padding);
+  overflow: hidden;
+
+  .sidebars {
+    min-width: 300px;
+    flex-shrink: 0;
+  }
+}
