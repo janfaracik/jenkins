@@ -2676,6 +2676,11 @@ public class Queue extends ResourceController implements Saveable {
          */
         private boolean isPending;
 
+        @Override
+        public String getDisplayName() {
+            return super.getDisplayName();
+        }
+
         /**
          * Reasons why the last call to {@link #maintain} left this buildable (but not blocked or executing).
          * May be null but not empty.
