@@ -57,8 +57,8 @@ THE SOFTWARE.
       If given, this page is made available to users who have one or more of the specified permissions.
       (The permissions will be checked against the "it" object.)
     </st:attribute>
-    <st:attribute name="type" use="optional" since="2.53">
-      Available values: two-column (by default), one-column (full-width size) or full-screen.
+    <st:attribute name="type" use="optional">
+      Available values: two-column (by default), one-column (full-width size) or full-screen (since 2.53).
     </st:attribute>
     <st:attribute name="nogrid" use="optional">
       Do not include Bootstrap 3 grid. When a plugin wants to use a more recent version of Bootstrap then
@@ -233,13 +233,15 @@ THE SOFTWARE.
                               clazz="jenkins-button--tertiary jenkins_ver"
                               icon="${null}"
                               tooltip="${null}">
-              <a class="jenkins-dropdown__item" href="${rootURL}/manage/about">
-                <div class="jenkins-dropdown__item__icon">
-                  <l:icon src="symbol-jenkins" />
-                </div>
-                ${%About Jenkins}
-              </a>
-              <div class="jenkins-dropdown__separator"></div>
+              <l:hasPermission permission="${app.SYSTEM_READ}">
+                <a class="jenkins-dropdown__item" href="${rootURL}/manage/about">
+                  <div class="jenkins-dropdown__item__icon">
+                    <l:icon src="symbol-jenkins" />
+                  </div>
+                  ${%About Jenkins}
+                </a>
+                <div class="jenkins-dropdown__separator"></div>
+              </l:hasPermission>
               <a class="jenkins-dropdown__item" href="https://www.jenkins.io/participate/" rel="noopener noreferrer" target="_blank">
                 <div class="jenkins-dropdown__item__icon">
                   <l:icon src="symbol-heart" />
