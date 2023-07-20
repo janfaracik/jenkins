@@ -38,27 +38,6 @@ function generateColorIndex(seed, maximum) {
   return random;
 }
 
-function shuffleList(list, seed) {
-  // Create a copy of the original list
-  var shuffledList = list.slice();
-
-  // Set the random seed
-  var random = function() {
-    var x = Math.sin(seed++) * 10000;
-    return x - Math.floor(x);
-  };
-
-  // Perform the Fisher-Yates shuffle
-  for (var i = shuffledList.length - 1; i > 0; i--) {
-    var j = Math.floor(random() * (i + 1));
-    var temp = shuffledList[i];
-    shuffledList[i] = shuffledList[j];
-    shuffledList[j] = temp;
-  }
-
-  return shuffledList;
-}
-
 function init() {
   behaviorShim.specify(".jenkins-avatar", "-avatar-", 1000, (avatar) => {
     const fullname = avatar.dataset.fullname;
