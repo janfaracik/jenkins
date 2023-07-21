@@ -48,7 +48,7 @@ THE SOFTWARE.
       // Animate in the header background based on scroll position
       content.addEventListener("scroll", () => {
           console.log(content.scrollTop)
-        header.style.setProperty("--opacity-thing", content.scrollTop / 50);
+        header.style.setProperty("--opacity-thing", content.scrollTop);
       });
     })
   </script>
