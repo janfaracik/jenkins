@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+Copyright (c) 2023 Jenkins contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,32 +23,18 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:layout>
-    <l:header title="Jenkins">
-      <!--meta http-equiv="refresh" content="5" /-->
-    </l:header>
-    <l:side-panel />
-    <l:main-panel>
-      <h1>${%Error}</h1>
-      <p>
-        ${%message(it.home)}
-      </p>
-      <table>
-        <tr>
-          <td>${%This Jenkins}:</td>
-          <td>${it.id}</td>
-        </tr>
-        <tr>
-          <td>${%Other Jenkins}:</td>
-          <td>${it.collidingId}</td>
-        </tr>
-      </table>
-      <div>
-        <form method="post" action="${rootURL}/ignore">
-          <f:submit value="${%label}" />
-        </form>
-      </div>
-    </l:main-panel>
-  </l:layout>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+  <st:documentation>
+    <st:attribute name="text" use="required">
+      Sets the text for the notice. HTML isn't supported.
+    </st:attribute>
+    <st:attribute name="icon" use="required">
+      Sets the icon for the notice. Supports Jenkins Symbols and regular images.
+    </st:attribute>
+  </st:documentation>
+
+  <div class="jenkins-notice">
+    <l:icon src="${attrs.icon}" />
+    <div>${attrs.text}</div>
+  </div>
 </j:jelly>
