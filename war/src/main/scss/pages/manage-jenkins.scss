@@ -1,3 +1,5 @@
+@use "../abstracts/mixins";
+
 .manage-messages a,
 .manage-messages a:visited {
   color: inherit !important;
@@ -62,4 +64,93 @@
 
 .manage-messages .alert form span {
   margin: 0 0 0 4px !important;
+}
+
+.jenkins-treeview__group {
+    display: grid;
+    justify-content: stretch;
+    margin: -10px;
+
+    .jenkins-treeview__group-inner {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 10px;
+    }
+
+    .jenkins-treeview__folder,
+    .jenkins-treeview__item {
+      @include mixins.item;
+      display: flex;
+      align-items: center;
+      appearance: none;
+      outline: none;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      margin: 0;
+      -webkit-font-smoothing: subpixel-antialiased;
+      padding: 0.25rem 0.2rem;
+      border-radius: 0.66rem;
+      font-weight: 400 !important;
+      color: var(--text-color) !important;
+      text-decoration: none;
+      height: 1.5625rem;
+      z-index: 1;
+    }
+
+    .jenkins-treeview__folder {
+      gap: 0.25rem;
+
+      .iconthing {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1rem;
+        height: 0.875rem;
+        rotate: 90deg;
+        color: var(--text-color-secondary);
+        transition: rotate var(--standard-transition);
+
+        svg {
+          width: 0.875rem;
+          height: 0.875rem;
+          margin-left: 1px;
+        }
+      }
+
+      &--collapsed {
+        .iconthing {
+          rotate: 0deg;
+        }
+      }
+    }
+
+    .jenkins-treeview__item {
+      padding-left: 6px;
+    }
+
+    .jenkins-treeview__group {
+      grid-template-rows: 1fr;
+      transition: var(--standard-transition);
+      position: relative;
+      padding-left: 18px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 20px;
+        top: 12px;
+        bottom: 12px;
+        width: 2px;
+        background: var(--item-background--hover);
+        border-radius: 100px;
+      }
+
+      &--collapsed {
+        grid-template-rows: 0fr;
+        opacity: 0;
+        scale: 0.95;
+      }
+    }
 }

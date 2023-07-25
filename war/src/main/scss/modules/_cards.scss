@@ -1,4 +1,6 @@
-$card-padding: 1rem;
+@use "../abstracts/mixins";
+
+$card-padding: calc(1rem + 2px);
 
 .jenkins-card {
   position: relative;
@@ -10,12 +12,51 @@ $card-padding: 1rem;
   &__title {
     display: flex;
     align-items: center;
-    justify-content: start;
-    padding: $card-padding;
+    justify-content: space-between;
+    padding: calc($card-padding - 3px) $card-padding;
     font-size: var(--font-size-sm) !important;
     font-weight: 500;
     width: 100%;
     z-index: 1;
+
+    &__actions {
+      display: flex;
+      gap: 0.5rem;
+      margin: -3px -8px 0 0;
+    }
+
+    &__action {
+      @include mixins.item;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.625rem;
+      height: 1.625rem;
+      transition: var(--standard-transition);
+      color: var(--text-color-secondary) !important;
+      text-decoration: none !important;
+
+      &::before, &::after {
+        opacity: 0;
+      }
+
+      svg {
+        width: 1.125rem;
+        height: 1.125rem;
+        color: var(--color);
+        transition: color var(--standard-transition);
+      }
+
+      &:hover {
+        opacity: 0.6;
+      }
+
+      &:active {
+        opacity: 0.3;
+        scale: 0.9;
+      }
+    }
   }
 
   &__content {
@@ -38,5 +79,11 @@ $card-padding: 1rem;
     border: var(--card-border-width) solid var(--card-border-color);
     z-index: 1;
     pointer-events: none;
+  }
+
+  &:hover {
+    .jenkins-card__title__action {
+      --color: var(--console-output-color);
+    }
   }
 }

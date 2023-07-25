@@ -23,15 +23,25 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
   <st:documentation>
     <st:attribute name="title"/>
     <st:attribute name="id"/>
+    <st:attribute name="expandLink"/>
+    <st:attribute name="controls"/>
   </st:documentation>
 
   <div class="jenkins-card" id="${attrs.id}">
     <div class="jenkins-card__title">
-      ${attrs.title}
+      <div>
+        ${attrs.title}
+      </div>
+      <div class="jenkins-card__title__actions">
+        <j:out value="${attrs.controls}" />
+        <a href="${attrs.expandLink}" tooltip="${%Expand}" class="jenkins-card__title__action">
+          <l:icon src="symbol-expand" />
+        </a>
+      </div>
     </div>
     <div class="jenkins-card__content">
       <d:invokeBody />
