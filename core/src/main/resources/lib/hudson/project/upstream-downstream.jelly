@@ -39,7 +39,7 @@ THE SOFTWARE.
     <d:tag name="list"> <!-- @title, @items and @up -->
       <j:if test="${!empty(items)}">
         <l:card title="${title}">
-          <ul class="permalinks-list">
+          <ul class="app-job-card__list">
             <j:forEach var="item" items="${items}">
               <j:if test="${h.hasPermission(item,item.READ)}">
                 <li>

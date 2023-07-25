@@ -31,25 +31,10 @@ THE SOFTWARE.
 
   <div class="jenkins-card" id="${attrs.id}">
     <div class="jenkins-card__title">
-      <div class="jenkins-card__title__backplate"></div>
       ${attrs.title}
     </div>
     <div class="jenkins-card__content">
       <d:invokeBody />
     </div>
   </div>
-
-  <script>
-    const cards = document.querySelectorAll(".jenkins-card");
-    cards.forEach(card => {
-      const header = card.querySelector(".jenkins-card__title");
-      const content = card.querySelector(".jenkins-card__content");
-
-      // Animate in the header background based on scroll position
-      content.addEventListener("scroll", () => {
-          console.log(content.scrollTop)
-        header.style.setProperty("--opacity-thing", content.scrollTop);
-      });
-    })
-  </script>
 </j:jelly>

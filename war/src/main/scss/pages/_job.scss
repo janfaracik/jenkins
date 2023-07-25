@@ -1,4 +1,4 @@
-.permalinks-list {
+.app-job-card__list {
   padding: 0;
   list-style-type: none;
   margin: 0;
@@ -12,8 +12,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-weight: 400 !important;
-    text-decoration-thickness: 2px;
+    font-weight: 500 !important;
     line-height: 1.6;
   }
 }
