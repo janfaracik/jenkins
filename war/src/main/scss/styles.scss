@@ -44,6 +44,7 @@
 @use "./modules/table";
 @use "./modules/tabs";
 @use "./modules/tooltips";
+@use "./pages/job";
 @use "./pages/about";
 @use "./pages/dashboard";
 @use "./pages/icon-legend";
@@ -54,8 +55,8 @@
 
 .jenkins-card {
 
-  margin-left: var(--section-padding);
-  margin-right: calc(var(--section-padding) * -0.5);
+  //margin-left: var(--section-padding);
+  //margin-right: calc(var(--section-padding) * -0.5);
 
   --card-background: var(--table-background);
   --card-border-color: var(--table-background);
@@ -63,6 +64,7 @@
   position: relative;
   border-radius: 1rem;
   margin-bottom: calc(var(--section-padding) / 2);
+  width: 390px;
 
   background: var(--card-background);
   border: 2px solid var(--card-border-color);

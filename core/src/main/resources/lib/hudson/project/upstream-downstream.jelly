@@ -39,17 +39,18 @@ THE SOFTWARE.
 
     <d:tag name="list"> <!-- @title, @items and @up -->
       <j:if test="${!empty(items)}">
-        <h2>${title}</h2>
-        <ul style="list-style-type: none;">
-          <j:forEach var="item" items="${items}">
-          <j:if test="${h.hasPermission(item,item.READ)}">
-            <li>
-              <t:jobLink job="${item}"/>
-              <local:relationship lhs="${up ? item : it}" rhs="${up ? it : item}"/>
-            </li>
-            </j:if>
-          </j:forEach>
-        </ul>
+        <l:card title="${title}">
+          <ul class="permalinks-list">
+            <j:forEach var="item" items="${items}">
+              <j:if test="${h.hasPermission(item,item.READ)}">
+                <li>
+                  <t:jobLink job="${item}"/>
+                  <local:relationship lhs="${up ? item : it}" rhs="${up ? it : item}"/>
+                </li>
+              </j:if>
+            </j:forEach>
+          </ul>
+        </l:card>
       </j:if>
     </d:tag>
   </d:taglib>
