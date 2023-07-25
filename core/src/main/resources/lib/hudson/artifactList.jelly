@@ -100,7 +100,7 @@ THE SOFTWARE.
             </table>
           </j:case>
           <j:case value="tree">
-            <div data-type="treeview" data-treeview-data="${artifacts}">
+            <div class="wannaknowiwashere" data-type="treeview" data-treeview-data="${artifacts}">
 
             </div>
           </j:case>
