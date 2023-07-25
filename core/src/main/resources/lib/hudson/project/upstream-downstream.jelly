@@ -30,7 +30,6 @@ THE SOFTWARE.
   <d:taglib uri="local">
     <d:tag name="relationship">
       <j:if test="${lhs.fingerprintConfigured and rhs.fingerprintConfigured}">
-        <st:nbsp/>
         <a href="${rootURL}/projectRelationship?lhs=${h.urlEncode(lhs.name)}&amp;rhs=${h.urlEncode(rhs.name)}">
           <l:icon class="icon-fingerprint icon-sm"/>
         </a>
