@@ -24,11 +24,6 @@
 
 package hudson.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.console.AnnotatedLargeText;
 import java.io.File;
@@ -36,15 +31,14 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+
 import jenkins.model.Jenkins;
 import org.apache.commons.jelly.XMLOutput;
 import org.junit.Rule;
@@ -54,6 +48,9 @@ import org.jvnet.hudson.test.Issue;
 import org.jvnet.localizer.LocaleProvider;
 import org.kohsuke.stapler.framework.io.ByteBuffer;
 import org.mockito.Mockito;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class RunTest {
     private static final String SAMPLE_BUILD_OUTPUT = "Sample build output abc123.\n";
@@ -163,7 +160,7 @@ public class RunTest {
     @SuppressWarnings("deprecation")
     @Test
     public void getLogReturnsAnEmptyListWhenCalledWith0() throws Exception {
-        Job j = Mockito.mock(Job.class);
+        Job j = mock(Job.class);
         File tempBuildDir = tmp.newFolder();
         Mockito.when(j.getBuildDir()).thenReturn(tempBuildDir);
         Run<? extends Job<?, ?>, ? extends Run<?, ?>> r = new Run(j, 0) {};
@@ -179,7 +176,7 @@ public class RunTest {
     @SuppressWarnings("deprecation")
     @Test
     public void getLogReturnsAnRightOrder() throws Exception {
-        Job j = Mockito.mock(Job.class);
+        Job j = mock(Job.class);
         File tempBuildDir = tmp.newFolder();
         Mockito.when(j.getBuildDir()).thenReturn(tempBuildDir);
         Run<? extends Job<?, ?>, ? extends Run<?, ?>> r = new Run(j, 0) {};
@@ -204,7 +201,7 @@ public class RunTest {
     @SuppressWarnings("deprecation")
     @Test
     public void getLogReturnsAllLines() throws Exception {
-        Job j = Mockito.mock(Job.class);
+        Job j = mock(Job.class);
         File tempBuildDir = tmp.newFolder();
         Mockito.when(j.getBuildDir()).thenReturn(tempBuildDir);
         Run<? extends Job<?, ?>, ? extends Run<?, ?>> r = new Run(j, 0) {};
@@ -224,9 +221,9 @@ public class RunTest {
 
     @Test
     public void compareRunsFromSameJobWithDifferentNumbers() throws Exception {
-        final Jenkins group = Mockito.mock(Jenkins.class);
+        final Jenkins group = mock(Jenkins.class);
         Mockito.when(group.getFullName()).thenReturn("j");
-        final Job j = Mockito.mock(Job.class);
+        final Job j = mock(Job.class);
 
         Mockito.when(j.getParent()).thenReturn(group);
         Mockito.when(j.getFullName()).thenReturn("Mock job");
@@ -246,10 +243,10 @@ public class RunTest {
     @Issue("JENKINS-42319")
     @Test
     public void compareRunsFromDifferentParentsWithSameNumber() throws Exception {
-        final Jenkins group1 = Mockito.mock(Jenkins.class);
-        final Jenkins group2 = Mockito.mock(Jenkins.class);
-        final Job j1 = Mockito.mock(Job.class);
-        final Job j2 = Mockito.mock(Job.class);
+        final Jenkins group1 = mock(Jenkins.class);
+        final Jenkins group2 = mock(Jenkins.class);
+        final Job j1 = mock(Job.class);
+        final Job j2 = mock(Job.class);
         Mockito.when(j1.getParent()).thenReturn(group1);
         Mockito.when(j1.getFullName()).thenReturn("Mock job");
         Mockito.when(j2.getParent()).thenReturn(group2);
@@ -296,7 +293,7 @@ public class RunTest {
             }
             ps.print("Finished: SUCCESS.\n");
 
-            final Run<? extends Job<?, ?>, ? extends Run<?, ?>> r = new Run(Mockito.mock(Job.class)) {
+            final Run<? extends Job<?, ?>, ? extends Run<?, ?>> r = new Run(mock(Job.class)) {
                 @NonNull
                 @Override
                 public AnnotatedLargeText<?> getLogText() {
@@ -309,7 +306,7 @@ public class RunTest {
                     return buf.newInputStream();
                 }
             };
-            final XMLOutput xmlOutput = Mockito.mock(XMLOutput.class);
+            final XMLOutput xmlOutput = mock(XMLOutput.class);
             Mockito.when(xmlOutput.asWriter()).thenReturn(writer);
             r.writeLogTo(offset, xmlOutput);
             assertEquals(expectedOutput, writer.toString());

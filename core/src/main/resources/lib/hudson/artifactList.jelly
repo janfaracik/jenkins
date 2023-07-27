@@ -100,9 +100,7 @@ THE SOFTWARE.
             </table>
           </j:case>
           <j:case value="tree">
-            <div class="wannaknowiwashere" data-type="treeview" data-treeview-data="${artifacts}">
-
-            </div>
+            <l:treeview items="${artifacts.asTree()}" />
           </j:case>
         </j:switch>
       </l:card>

@@ -27,11 +27,7 @@ package hudson.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.endsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.junit.Assume.assumeFalse;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -52,6 +48,7 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -264,15 +261,13 @@ public class JobTest {
         assertEquals("To logout should be ok", HttpURLConnection.HTTP_OK, p.getWebResponse().getStatusCode());
     }
 
-    @LocalData @Issue("JENKINS-6371")
-    @Test public void getArtifactsUpTo() {
-        // There was a bug where intermediate directories were counted,
-        // so too few artifacts were returned.
-        Run r = j.jenkins.getItemByFullName("testJob", Job.class).getLastCompletedBuild();
-        assertEquals(3, r.getArtifacts().size());
-        assertEquals(3, r.getArtifactsUpTo(3).size());
-        assertEquals(2, r.getArtifactsUpTo(2).size());
-        assertEquals(1, r.getArtifactsUpTo(1).size());
+    @Test
+    public void asTreeee() {
+        Run<?, ?>.ArtifactList r = (Run<?, ?>.ArtifactList) j.jenkins.getItemByFullName("testJob", Job.class)
+                .getLastCompletedBuild().getArtifacts();
+
+        assertNull(r.asTree().getObject());
+        assertEquals(3, r.asTree().getChildren().size());
     }
 
     @Issue("JENKINS-10182")

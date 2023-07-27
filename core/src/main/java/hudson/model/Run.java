@@ -87,24 +87,10 @@ import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import jenkins.model.ArtifactManager;
@@ -1276,6 +1262,68 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         private int idSeq = 0;
     }
 
+    @ExportedBean
+    public static class NodeThing<T> {
+        private final T object;
+        private final List<NodeThing<T>> children;
+
+        public NodeThing(T object, List<NodeThing<T>> children) {
+            this.object = object;
+            this.children = children;
+        }
+
+        @Exported(visibility = 3)
+        public T getObject() {
+            return object;
+        }
+
+        @Exported(visibility = 3)
+        public List<NodeThing<T>> getChildren() {
+            return children;
+        }
+
+        @Override
+        public String toString() {
+            return "NodeThing{" +
+                    "object=" + object +
+                    ", children=" + children +
+                    '}';
+        }
+    }
+
+    @ExportedBean
+    public static class ArtifactLink {
+        private final String relativePath;
+        private final String name;
+        private final String href;
+
+        public ArtifactLink(String relativePath, String name, String href) {
+            this.relativePath = relativePath;
+            this.name = name;
+            this.href = href;
+        }
+
+        @Exported(visibility = 3)
+        public String getRelativePath() {
+            return relativePath;
+        }
+
+        @Exported(visibility = 3)
+        public String getName() {
+            return name;
+        }
+
+        @Exported(visibility = 3)
+        public String getHref() {
+            return href;
+        }
+
+        @Override
+        public String toString() {
+            return relativePath;
+        }
+    }
+
     public final class ArtifactList extends ArrayList<Artifact> {
         private static final long serialVersionUID = 1L;
         /**
@@ -1304,6 +1352,50 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
 
         public Map<Artifact, String> getTree() {
             return tree;
+        }
+
+        public NodeThing<ArtifactLink> generateNestedNodes(Iterator<Artifact> artifacts) {
+            NodeThing<ArtifactLink> root = new NodeThing<>(null, new ArrayList<>());
+
+            System.out.println(artifacts);
+
+            while (artifacts.hasNext()) {
+                Artifact artifact = artifacts.next();
+                String[] segments = artifact.relativePath.split("/");
+                addNode(root, Arrays.stream(segments)
+                        .map(e -> new ArtifactLink(artifact.relativePath, e, artifact.href))
+                        .collect(Collectors.toList()));
+            }
+
+            return root;
+        }
+
+        private void addNode(NodeThing<ArtifactLink> parent, List<ArtifactLink> segments) {
+            if (segments.isEmpty()) {
+                return;
+            }
+
+            ArtifactLink segment = segments.get(0);
+            NodeThing<ArtifactLink> newNode = null;
+
+            for (NodeThing<ArtifactLink> child : parent.getChildren()) {
+                if (child.getObject().equals(segment)) {
+                    newNode = child;
+                    break;
+                }
+            }
+
+            if (newNode == null) {
+                newNode = new NodeThing<>(segment, new ArrayList<>());
+                parent.getChildren().add(newNode);
+            }
+
+            segments.remove(0);
+            addNode(newNode, segments);
+        }
+
+        public NodeThing<ArtifactLink> asTree() {
+            return generateNestedNodes(iterator());
         }
 
         public void computeDisplayName() {
