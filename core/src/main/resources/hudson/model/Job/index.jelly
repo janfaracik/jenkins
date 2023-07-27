@@ -54,6 +54,10 @@ THE SOFTWARE.
       </j:if>
       <t:editableDescription permission="${it.CONFIGURE}"/>
 
+      <template id="buildwithparams">
+        <st:include page="index.jelly" class="hudson.model.ParametersDefinitionProperty" />
+      </template>
+
       <st:include page="jobpropertysummaries.jelly" />
       <!-- inject main part here -->
       <st:include page="main.jelly" />

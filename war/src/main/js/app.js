@@ -13,3 +13,19 @@ Tooltips.init();
 StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
+
+import { createElementFromHtml } from "@/util/dom";
+
+document.querySelector("[href='/jenkins/job/Alien/build?delay=0sec']").addEventListener("click", (e) => {
+  e.preventDefault()
+  const template = document.querySelector("#buildwithparams");
+//   const title = template.getAttribute("data-title");
+  const content = createElementFromHtml(
+    "<div>" + template.innerHTML + "</div>",
+  );
+
+  dialog.modal(content, {
+    maxWidth: "1000px",
+    title: 'Build with parameters',
+  });
+});
