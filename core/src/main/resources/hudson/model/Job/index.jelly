@@ -40,6 +40,50 @@ THE SOFTWARE.
             <l:breakable value="${it.displayName}"/>
           </h1>
         </div>
+        <div class="jenkins-app-bar__controls">
+          <j:set var="url" value="${h.getNearestAncestorUrl(request,it)}"/>
+          <j:if test="${it.buildable}">
+            <j:set var="id" value="${h.generateId()}"/>
+            <j:choose>
+              <j:when test="${it.parameterized}">
+                <a class="jenkins-button jenkins-!-build-color" href="${url}/build?delay=0sec">
+                  <l:icon src="symbol-play" />
+                  ${it.buildNowText}
+                </a>
+              </j:when>
+              <j:otherwise>
+                <button class="jenkins-button jenkins-!-build-color">
+                  <l:icon src="symbol-play" />
+                  ${it.buildNowText}
+                </button>
+              </j:otherwise>
+            </j:choose>
+          </j:if>
+          <j:choose>
+            <j:when test="${h.hasPermission(it,it.CONFIGURE)}">
+              <a class="jenkins-button" href="${url}/configure">
+                ${%Configure}
+              </a>
+            </j:when>
+            <j:when test="${h.hasPermission(it,it.EXTENDED_READ)}">
+              <a class="jenkins-button" href="${url}/configure">
+                ${%View Configuration}
+              </a>
+            </j:when>
+          </j:choose>
+          <l:overflowButton>
+            <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
+                                href="${url}"
+                                message="${%delete.confirm(it.pronoun, it.displayName)}"
+                                post="true"
+                                destructive="true">
+              <div class="jenkins-dropdown__item__icon">
+                <l:icon src="symbol-trash" />
+              </div>
+              ${%delete(it.pronoun)}
+            </l:confirmationLink>
+          </l:overflowButton>
+        </div>
       </div>
 
       <j:if test="${(it.fullName!=it.fullDisplayName) and (it.class.name!='hudson.matrix.MatrixConfiguration')}"> <!-- TODO rather check for TopLevelItem (how to do this from Jelly?) -->
