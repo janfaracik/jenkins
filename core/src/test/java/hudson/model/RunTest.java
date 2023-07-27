@@ -24,6 +24,9 @@
 
 package hudson.model;
 
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.console.AnnotatedLargeText;
 import java.io.File;
@@ -31,14 +34,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
-
 import jenkins.model.Jenkins;
 import org.apache.commons.jelly.XMLOutput;
 import org.junit.Rule;
@@ -48,9 +48,6 @@ import org.jvnet.hudson.test.Issue;
 import org.jvnet.localizer.LocaleProvider;
 import org.kohsuke.stapler.framework.io.ByteBuffer;
 import org.mockito.Mockito;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 public class RunTest {
     private static final String SAMPLE_BUILD_OUTPUT = "Sample build output abc123.\n";

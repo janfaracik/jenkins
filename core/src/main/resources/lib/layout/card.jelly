@@ -38,9 +38,11 @@ THE SOFTWARE.
       </div>
       <div class="jenkins-card__title__actions">
         <j:out value="${attrs.controls}" />
-        <a href="${attrs.expandLink}" tooltip="${%Expand}" class="jenkins-card__title__action">
-          <l:icon src="symbol-expand" />
-        </a>
+        <j:if test="${attrs.expandLink != null}">
+          <a href="${attrs.expandLink}" tooltip="${%Expand}" class="jenkins-card__title__action">
+            <l:icon src="symbol-expand" />
+          </a>
+        </j:if>
       </div>
     </div>
     <div class="jenkins-card__content">

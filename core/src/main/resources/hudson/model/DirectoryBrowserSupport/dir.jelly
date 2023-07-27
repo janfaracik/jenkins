@@ -67,7 +67,7 @@ THE SOFTWARE.
                 <j:set var="x" value="${f.get(f.size()-1)}"/>
                 <tr>
                   <td>
-                    <l:icon class="${x.iconClassName} icon-sm"/>
+                    <l:icon src="${x.folder ? 'symbol-folder' : h.tryGetFileIcon(x.title)}" class="icon-sm" />
                   </td>
                   <td>
                     <j:forEach var="t" items="${f}" varStatus="st">

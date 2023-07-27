@@ -90,7 +90,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import jenkins.model.ArtifactManager;
@@ -1354,48 +1353,9 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
             return tree;
         }
 
-        public NodeThing<ArtifactLink> generateNestedNodes(Iterator<Artifact> artifacts) {
-            NodeThing<ArtifactLink> root = new NodeThing<>(null, new ArrayList<>());
-
-            System.out.println(artifacts);
-
-            while (artifacts.hasNext()) {
-                Artifact artifact = artifacts.next();
-                String[] segments = artifact.relativePath.split("/");
-                addNode(root, Arrays.stream(segments)
-                        .map(e -> new ArtifactLink(artifact.relativePath, e, artifact.href))
-                        .collect(Collectors.toList()));
-            }
-
-            return root;
-        }
-
-        private void addNode(NodeThing<ArtifactLink> parent, List<ArtifactLink> segments) {
-            if (segments.isEmpty()) {
-                return;
-            }
-
-            ArtifactLink segment = segments.get(0);
-            NodeThing<ArtifactLink> newNode = null;
-
-            for (NodeThing<ArtifactLink> child : parent.getChildren()) {
-                if (child.getObject().equals(segment)) {
-                    newNode = child;
-                    break;
-                }
-            }
-
-            if (newNode == null) {
-                newNode = new NodeThing<>(segment, new ArrayList<>());
-                parent.getChildren().add(newNode);
-            }
-
-            segments.remove(0);
-            addNode(newNode, segments);
-        }
-
         public NodeThing<ArtifactLink> asTree() {
-            return generateNestedNodes(iterator());
+//            return generateNestedNodes(iterator());
+            return null;
         }
 
         public void computeDisplayName() {

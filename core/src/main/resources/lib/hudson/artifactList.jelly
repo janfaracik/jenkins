@@ -68,36 +68,33 @@ THE SOFTWARE.
         </j:if>
       </j:set>
 
+
+
       <l:card title="${caption}" expandLink="${baseURL}artifact/" controls="${controls}">
         <j:switch on="${view}">
           <j:case value="building">
             ${%building}
           </j:case>
           <j:case value="list">
-            <table class="fileList">
+            <div class="jenkins-treeview__group">
               <j:forEach var="f" items="${artifacts}">
-                <tr>
-                  <td>
-                    <l:icon class="icon-document icon-sm"/>
-                  </td>
-                  <td>
-                    <a href="${baseURL}artifact/${f.href}">${f.displayPath}</a>
-                  </td>
-                  <td class="fileSize">
-                    ${h.humanReadableByteSize(f.getFileSize())}
-                  </td>
-                  <td>
-                    <j:if test="${app.fingerprintMap.ready}">
-                      <a href="${baseURL}artifact/${f.href}/*fingerprint*/">
-                        <l:icon class="icon-fingerprint icon-sm"/>
-                      </a>
-                      <st:nbsp/>
-                    </j:if>
-                    <a href="${baseURL}artifact/${f.href}/*view*/">${%view}</a>
-                  </td>
-                </tr>
+                <div class="jenkins-treeview__item blood">
+                  <a href="${baseURL}artifact/${f.href}">
+                    <l:icon src="${h.tryGetFileIcon(f.displayPath)}" class="icon-sm" />
+                    ${f.displayPath}
+                  </a>
+                  <span>${h.humanReadableByteSize(f.getFileSize())}</span>
+                  <j:if test="${app.fingerprintMap.ready}">
+                    <a href="${baseURL}artifact/${f.href}/*fingerprint*/">
+                      <l:icon class="icon-fingerprint icon-sm"/>
+                    </a>
+                  </j:if>
+                  <a href="${baseURL}artifact/${f.href}/*view*/">
+                    <l:icon class="symbol-external icon-sm"/>
+                  </a>
+                </div>
               </j:forEach>
-            </table>
+            </div>
           </j:case>
           <j:case value="tree">
             <l:treeview items="${artifacts.asTree()}" />

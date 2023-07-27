@@ -155,6 +155,7 @@ import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.SimplePageDecorator;
 import jenkins.util.SystemProperties;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyTagException;
 import org.apache.commons.jelly.Script;
@@ -2454,5 +2455,29 @@ public class Functions {
     @Restricted(NoExternalUse.class)
     public static String generateItemId() {
         return String.valueOf(Math.floor(Math.random() * 3000));
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static String tryGetFileIcon(String filename) {
+        switch (FilenameUtils.getExtension(filename)) {
+            case "jpg":
+            case "jpeg":
+            case "bmp":
+            case "png":
+            case "gif":
+            case "svg":
+                return "symbol-image";
+            case "xml":
+            case "json":
+            case "html":
+                return "symbol-code-working";
+            case "java":
+            case "war":
+            case "jar":
+            case "class":
+                return "symbol-java";
+            default:
+                return "symbol-document-text";
+        }
     }
 }
