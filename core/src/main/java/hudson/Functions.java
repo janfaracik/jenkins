@@ -2476,6 +2476,10 @@ public class Functions {
             case "jar":
             case "class":
                 return "symbol-java";
+            case "properties":
+            case "manifest":
+            case "mf":
+                return "symbol-settings";
             default:
                 return "symbol-document-text";
         }
