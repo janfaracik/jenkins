@@ -72,6 +72,8 @@ THE SOFTWARE.
             </j:when>
           </j:choose>
           <l:overflowButton>
+            <st:include page="actions.jelly" />
+            <div class="jenkins-dropdown__separator"></div>
             <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
                                 href="${url}"
                                 title="${%delete.confirm(it.displayName)}"
