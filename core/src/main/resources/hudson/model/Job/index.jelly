@@ -74,13 +74,13 @@ THE SOFTWARE.
           <l:overflowButton>
             <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
                                 href="${url}"
-                                message="${%delete.confirm(it.pronoun, it.displayName)}"
+                                title="${%delete.confirm(it.displayName)}"
                                 post="true"
                                 destructive="true">
               <div class="jenkins-dropdown__item__icon">
                 <l:icon src="symbol-trash" />
               </div>
-              ${%delete(it.pronoun)}
+              ${%Delete project}
             </l:confirmationLink>
           </l:overflowButton>
         </div>
