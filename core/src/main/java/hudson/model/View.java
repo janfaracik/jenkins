@@ -1089,28 +1089,13 @@ public abstract class View extends AbstractModelObject implements AccessControll
         return FormValidation.ok();
     }
 
-    /**
-     * An API REST method to get the allowed {$link TopLevelItem}s and its categories.
-     *
-     * @return A {@link Categories} entity that is shown as JSON file.
-     */
-    @Restricted(DoNotUse.class)
-    public Categories doItemCategories(StaplerRequest req, StaplerResponse rsp, @QueryParameter String iconStyle) throws IOException, ServletException {
-        getOwner().checkPermission(Item.CREATE);
+    public Categories getItemCategories() {
+        getOwner().checkPermission(hudson.model.Item.CREATE);
 
-        rsp.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        rsp.addHeader("Pragma", "no-cache");
-        rsp.addHeader("Expires", "0");
         Categories categories = new Categories();
         int order = 0;
-        String resUrl;
 
-        if (StringUtils.isNotBlank(iconStyle)) {
-            resUrl = req.getContextPath() + Jenkins.RESOURCE_PATH;
-        } else {
-            resUrl = null;
-        }
-        for (TopLevelItemDescriptor descriptor : DescriptorVisibilityFilter.apply(getOwner().getItemGroup(), Items.all2(Jenkins.getAuthentication2(), getOwner().getItemGroup()))) {
+        for (hudson.model.TopLevelItemDescriptor descriptor : hudson.model.DescriptorVisibilityFilter.apply(getOwner().getItemGroup(), hudson.model.Items.all2(Jenkins.getAuthentication2(), getOwner().getItemGroup()))) {
             ItemCategory ic = ItemCategory.getCategory(descriptor);
             Map<String, Serializable> metadata = new HashMap<>();
 
@@ -1123,12 +1108,10 @@ public abstract class View extends AbstractModelObject implements AccessControll
             String iconClassName = descriptor.getIconClassName();
             if (StringUtils.isNotBlank(iconClassName)) {
                 metadata.put("iconClassName", iconClassName);
-                if (resUrl != null) {
-                    Icon icon = IconSet.icons
-                            .getIconByClassSpec(String.join(" ", iconClassName, iconStyle));
-                    if (icon != null) {
-                        metadata.put("iconQualifiedUrl", icon.getQualifiedUrl(resUrl));
-                    }
+                Icon icon = IconSet.icons
+                        .getIconByClassSpec(String.join(" ", iconClassName, "48x48"));
+                if (icon != null) {
+                    metadata.put("iconQualifiedUrl", icon.getQualifiedUrl(""));
                 }
             }
 

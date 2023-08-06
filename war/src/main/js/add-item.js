@@ -173,7 +173,9 @@ $.when(getItems()).done(function (data) {
       item.setAttribute("role", "radio");
       item.setAttribute("aria-checked", "false");
 
+
       var label = item.appendChild(document.createElement("label"));
+      label.classList.add("deepend")
 
       var radio = label.appendChild(document.createElement("input"));
       radio.type = "radio";
@@ -183,14 +185,16 @@ $.when(getItems()).done(function (data) {
       var displayName = label.appendChild(document.createElement("span"));
       displayName.className = "label";
 
+
+      var iconDiv = drawIcon(elem);
+      displayName.appendChild(iconDiv);
+
       displayName.appendChild(document.createTextNode(elem.displayName));
 
       var desc = item.appendChild(document.createElement("div"));
       desc.className = "desc";
       desc.innerHTML = checkForLink(elem.description);
 
-      var iconDiv = drawIcon(elem);
-      item.appendChild(iconDiv);
 
       function select(e) {
         e.preventDefault();

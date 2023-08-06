@@ -23,53 +23,80 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
-  <j:getStatic var="permission" className="hudson.model.Item" field="CREATE"/>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <j:getStatic var="permission" className="hudson.model.Item" field="CREATE"/>
 
-  <l:layout type="one-column" permission="${permission}" title="${%NewJob(it.newPronoun)}">
-    <l:header>
-      <link rel="stylesheet" href="${resURL}/jsbundles/add-item.css" type="text/css" />
-      <script src="${resURL}/jsbundles/add-item.js" type="text/javascript" defer="true" />
-    </l:header>
+    <l:layout type="one-column" permission="${permission}" title="${%NewJob(it.newPronoun)}">
+        <l:header>
+            <link rel="stylesheet" href="${resURL}/jsbundles/add-item.css" type="text/css"/>
+            <script src="${resURL}/jsbundles/add-item.js" type="text/javascript" defer="true"/>
+        </l:header>
 
-    <l:main-panel>
-    <div id="add-item-panel" style="display: none;">
-          <form method="post" action="createItem" name="createItem" id="createItem">
-            <div class="header">
-              <div class="add-item-name">
-                <label for="name" class="h3">${%ItemName.label}</label>
-                <input name="name" class="jenkins-input" id="name" data-valid="false" type="text" tabindex="0" />
-                <div class="input-help">&#187; ${%ItemName.help}</div>
-                <div id="itemname-required" class="input-validation-message input-message-disabled">&#187; ${%ItemName.validation.required}</div>
-                <div id="itemname-invalid" class="input-validation-message input-message-disabled"></div>
-                <div id="itemtype-required" class="input-validation-message input-message-disabled">&#187; ${%ItemType.validation.required}</div>
-              </div>
+        <l:main-panel>
+            <div id="add-item-panel">
+                <h1>${%New project}</h1>
+                <form method="post" action="createItem" name="createItem" id="createItem">
+
+                    <div class="header">
+                        <div class="add-item-name">
+                            <label for="name" class="jenkins-form-label">${%ItemName.label}</label>
+                            <input name="name" class="jenkins-input" id="name" data-valid="false" type="text"
+                                   tabindex="0"/>
+                            <div class="input-help">&#187; ${%ItemName.help}</div>
+                            <div id="itemname-required" class="input-validation-message input-message-disabled">&#187;
+                                ${%ItemName.validation.required}
+                            </div>
+                            <div id="itemname-invalid" class="input-validation-message input-message-disabled"></div>
+                            <div id="itemtype-required" class="input-validation-message input-message-disabled">&#187;
+                                ${%ItemType.validation.required}
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/>
+
+                    <div class="jenkins-form-label">
+                        ${%Type}
+                    </div>
+                    <div class="oceansounds">
+                        <j:forEach var="category" items="${it.itemCategories.items}">
+                            <j:forEach var="item" items="${category.items}">
+                                <input id="type-${item.class}" type="radio" name="mode" value="${item.class}"
+                                       style="display: none"/>
+                                <label for="type-${item.class}" class="deepend">
+                                    <div class="deepend__icon">
+                                        <l:icon src="${item.iconClassName ?: item.iconFilePathPattern.replace(':size', '48x48')}"/>
+                                    </div>
+                                    <div class="deepend__details">
+                                        <div>${item.displayName}</div>
+                                        <div>${item.description}</div>
+                                    </div>
+                                </label>
+                            </j:forEach>
+                        </j:forEach>
+                    </div>
+
+                    <br/>
+
+                    <j:if test="${!empty(app.itemMap)}">
+                        <div class="item-copy">
+                            <p class="jenkins-form-label">${%CopyOption.description}</p>
+                            <div class="add-item-copy">
+                                <j:set var="descriptor" value="${it.descriptor}"/>
+                                <f:textbox id="from" data-valid="false" name="from"
+                                           placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
+                            </div>
+                        </div>
+                    </j:if>
+
+                    <br/>
+
+                    <f:bottomButtonBar>
+                        <st:include page="newJobButtonBar.jelly"/>
+                    </f:bottomButtonBar>
+                </form>
             </div>
-
-            <div id="items" class="categories flat" role="radiogroup" aria-labelledby="Items" data-valid="false" />
-
-            <j:if test="${!empty(app.itemMap)}">
-              <div class="item-copy">
-                <p class="description">${%CopyOption.description}</p>
-                <div class="add-item-copy">
-                  <input type="radio" name="mode" value="copy" />
-                  <div class="icon">
-                    <img src="${resURL}/images/48x48/copy.png" />
-                  </div>
-                  <label>${%CopyOption.label}</label>
-                  <j:set var="descriptor" value="${it.descriptor}" />
-                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
-                </div>
-              </div>
-            </j:if>
-
-            <div class="footer">
-              <div class="btn-decorator">
-                <st:include page="newJobButtonBar.jelly"/>
-              </div>
-            </div>
-          </form>
-      </div>
-    </l:main-panel>
-  </l:layout>
+        </l:main-panel>
+    </l:layout>
 </j:jelly>
