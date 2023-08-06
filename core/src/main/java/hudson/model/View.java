@@ -41,6 +41,10 @@ import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Descriptor.FormException;
 import hudson.model.listeners.ItemListener;
+import hudson.model.testtest.BaseViewThing;
+import hudson.model.testtest.DuplicateProjectThing;
+import hudson.model.testtest.GithubProjectThing;
+import hudson.model.testtest.UseTypeThing;
 import hudson.scm.ChangeLogSet;
 import hudson.search.CollectionSearchIndex;
 import hudson.search.SearchIndexBuilder;
@@ -1087,6 +1091,10 @@ public abstract class View extends AbstractModelObject implements AccessControll
 
         // looks good
         return FormValidation.ok();
+    }
+
+    public List<BaseViewThing> getThings() {
+        return List.of(new UseTypeThing(), new DuplicateProjectThing(), new GithubProjectThing());
     }
 
     public Categories getItemCategories() {

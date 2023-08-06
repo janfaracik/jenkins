@@ -1,0 +1,24 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:t="/lib/hudson">
+  <h1>${from.displayName}</h1>
+
+  <st:include page="newJobName.jelly"/>
+
+  <j:forEach var="item" items="${from.itemMap.values()}">
+    <input id="type-${item.displayName}" type="radio" name="mode" value="${item.displayName}" />
+    <label for="type-${item.displayName}" class="deepend">
+      <div class="deepend__icon">
+        <t:ballColorTd it="${item.iconColor}" />
+      </div>
+      <div class="deepend__details">
+        <div>${item.displayName}</div>
+        <j:set var="lBuild" value="${item.lastSuccessfulBuild ?: item.lastFailedBuild}"/>
+        <j:if test="${lBuild!=null}">
+          <div>
+            Last built ${lBuild.durationString}
+          </div>
+        </j:if>
+      </div>
+    </label>
+  </j:forEach>
+</j:jelly>
