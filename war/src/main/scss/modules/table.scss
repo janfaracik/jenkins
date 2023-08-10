@@ -1,8 +1,6 @@
 @use "../abstracts/mixins";
 
 .jenkins-table {
-  --table-padding: 0.55rem;
-
   width: 100%;
   background: var(--table-background);
   border-radius: calc(var(--table-border-radius) + 2px);
@@ -70,7 +68,7 @@
         vertical-align: middle;
         padding: var(--table-padding) 0 var(--table-padding) 1.6rem;
         font-weight: 500;
-        height: 3rem;
+        height: var(--min-row-height);
 
         &:first-of-type {
           padding-left: calc(var(--table-padding) * 2);
@@ -126,7 +124,7 @@
     padding-left: 0 !important;
     text-align: right !important;
     white-space: nowrap;
-    width: 4rem;
+    width: var(--min-row-width);
   }
 
   &__cell--checkbox {
@@ -161,44 +159,6 @@
     img {
       width: 1.5rem !important;
       height: 1.5rem !important;
-    }
-  }
-
-  &--medium {
-    --table-padding: 0.4rem !important;
-
-    tbody > tr > td {
-      height: 40px;
-    }
-
-    .jenkins-table__button,
-    .jenkins-table__link,
-    .jenkins-table__icon {
-      svg,
-      .build-status-icon__wrapper,
-      img {
-        width: 1.3rem !important;
-        height: 1.3rem !important;
-      }
-    }
-  }
-
-  &--small {
-    --table-padding: 0.2rem;
-
-    tbody > tr > td {
-      height: 34px;
-    }
-
-    .jenkins-table__button,
-    .jenkins-table__link,
-    .jenkins-table__icon {
-      svg,
-      .build-status-icon__wrapper,
-      img {
-        width: 1rem !important;
-        height: 1rem !important;
-      }
     }
   }
 
