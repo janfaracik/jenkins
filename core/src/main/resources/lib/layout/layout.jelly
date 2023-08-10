@@ -266,10 +266,10 @@ THE SOFTWARE.
           <j:forEach var="nav" items="${pd.getVisibleItems()}">
             <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(nav.url)}" />
             <j:set var="tooltip">
-              <st:include it="${nav}" page="jumplist.jelly" optional="true"/>
+              <st:include it="${nav}" page="jumplist.jelly" optional="true" />
             </j:set>
 
-            <j:if test="${tooltip.length () == 0}">
+            <j:if test="${tooltip.length() == 0}">
               <j:set var="tooltip">
                 <div>${nav.displayName}</div>
                 <j:if test="${nav.badge != null}">
