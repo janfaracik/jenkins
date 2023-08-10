@@ -51,7 +51,7 @@ function registerTooltip(element) {
         },
         TOOLTIP_BASE,
         type
-      )
+      ),
     );
   }
 
@@ -70,7 +70,7 @@ function registerTooltip(element) {
         },
         TOOLTIP_BASE,
         type
-      )
+      ),
     );
   }
 }
@@ -94,8 +94,8 @@ function hoverNotification(text, element) {
           }, 3000);
         },
       },
-      TOOLTIP_BASE
-    )
+      TOOLTIP_BASE,
+    ),
   );
   tooltip.show();
 }
@@ -107,7 +107,7 @@ function init() {
     1000,
     (element) => {
       registerTooltip(element);
-    }
+    },
   );
 
   window.hoverNotification = hoverNotification;
