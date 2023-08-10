@@ -302,16 +302,9 @@ pre.console {
   padding-top: 0;
 }
 
-.setting-name,
-.setting-main > input:not([type="file"]),
-.setting-main > textarea {
+.setting-name {
   vertical-align: middle;
   margin-top: 0;
-}
-
-.setting-main > .yui-button {
-  clear: both;
-  float: right;
 }
 
 .expanding-input {

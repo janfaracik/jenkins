@@ -779,7 +779,7 @@ function registerRegexpValidator(e, regexp, message) {
     .querySelector(".validation-error-area");
   if (!tr) {
     console.warn(
-      "Couldn't find the expected parent element (.setting-main) for element",
+      "Couldn't find the expected parent element (.validation-error-area) for element",
       e.closest(".jenkins-form-item"),
     );
     return;
@@ -820,7 +820,7 @@ function registerMinMaxValidator(e) {
     .querySelector(".validation-error-area");
   if (!tr) {
     console.warn(
-      "Couldn't find the expected parent element (.setting-main) for element",
+      "Couldn't find the expected parent element (.validation-error-area) for element",
       e.closest(".jenkins-form-item"),
     );
     return;
@@ -1838,10 +1838,6 @@ function rowvgStartEachRow(recursive, f) {
     1000,
     function (label) {
       var labelParent = label.parentElement.parentElement;
-
-      if (!labelParent.classList.contains("setting-main")) {
-        return;
-      }
 
       function findSettingName(formGroup) {
         for (var i = 0; i < formGroup.childNodes.length; i++) {

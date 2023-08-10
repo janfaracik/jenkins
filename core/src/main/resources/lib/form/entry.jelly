@@ -85,7 +85,7 @@ THE SOFTWARE.
             <j:out value="${escapeEntryTitleAndDescription ? h.escape(attrs.description) : attrs.description}"/>
           </f:description>
         </j:if>
-        <div class="setting-main">
+        <div>
           <d:invokeBody />
         </div>
         <div class="validation-error-area">
@@ -98,13 +98,13 @@ THE SOFTWARE.
       <j:otherwise>
         <j:choose>
           <j:when test="${attrs.help!=null}">
-            <div class="setting-main help-sibling" style="display: inline-flex; align-items: center;">
+            <div class="help-sibling" style="display: inline-flex; align-items: center;">
               <d:invokeBody />
               <f:helpLink url="${attrs.help}" featureName="${attrs.title}"/>
             </div>
           </j:when>
           <j:otherwise>
-            <div class="setting-main help-sibling">
+            <div class="help-sibling">
               <d:invokeBody />
             </div>
           </j:otherwise>

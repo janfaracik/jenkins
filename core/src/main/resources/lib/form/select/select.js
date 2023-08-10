@@ -14,16 +14,7 @@ function updateListBox(listBox, url, config) {
       return listBox.parentNode.querySelector(".validation-error-area");
     }
     function getStatusForDivBasedForms() {
-      var settingMain = listBox.closest(".setting-main");
-      if (!settingMain) {
-        console.warn(
-          "Couldn't find the expected validation element (.validation-error-area) for element",
-          listBox.parentNode,
-        );
-        return;
-      }
-
-      return settingMain.nextElementSibling;
+      return listBox.closest(".jenkins-form-item").querySelector(".validation-error-area");
     }
 
     return listBox.parentNode.tagName === "TD"
