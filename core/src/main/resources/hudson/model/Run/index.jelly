@@ -48,11 +48,7 @@ THE SOFTWARE.
         <t:editableDescription permission="${it.UPDATE}" />
       </div>
 
-      <div style="float: right; box-shadow: 0 0 0 2px rgba(0, 0, 100, 0.05); width: 360px; padding: 1rem; border-radius: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
-        <div style="font-weight: 550; margin-bottom: 6px">
-          ${%Details}
-        </div>
-
+      <l:card title="Details">
         <div class="populism">
           <st:include page="description.jelly" it="${it.causes.0}" />
         </div>
@@ -87,26 +83,24 @@ THE SOFTWARE.
           });
         </script>
 
-
-
-          <div class="populism">
-            <div class="populism__icon">
-              <l:icon src="symbol-timer" />
-            </div>
-            <j:choose>
-              <j:when test="${it.building}">
-                ${%beingExecuted(it.executor.timestampString)}
-              </j:when>
-              <j:otherwise>
-                ${%Took} ${it.durationString}
-              </j:otherwise>
-            </j:choose>
+        <div class="populism">
+          <div class="populism__icon">
+            <l:icon src="symbol-timer" />
           </div>
+          <j:choose>
+            <j:when test="${it.building}">
+              ${%beingExecuted(it.executor.timestampString)}
+            </j:when>
+            <j:otherwise>
+              ${%Took} ${it.durationString}
+            </j:otherwise>
+          </j:choose>
+        </div>
 
         <j:if test="${!empty(app.nodes) or (it.builtOnStr != null and it.builtOnStr != '')}">
           ${%on} <t:node value="${it.builtOn}" valueStr="${it.builtOnStr}"/>
         </j:if>
-      </div>
+      </l:card>
 
       <table style="margin-top: 1em; margin-left:1em;">
         <t:artifactList build="${it}" caption="${%Build Artifacts}"
