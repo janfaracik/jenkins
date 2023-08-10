@@ -23,4 +23,26 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<st:include it="${it.primaryView}" page="sidepanel.jelly" xmlns:st="jelly:stapler" />
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <l:side-panel>
+    <l:app-bar title="${%Settings}" />
+
+    <div id="tasks">
+      <l:search-bar placeholder="${%Search}" id="settings-search-bar" />
+
+      <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
+
+      <j:forEach var="category" items="${it.categorizedManagementLinks.entrySet()}">
+        <h2 class="jenkins-side-nav__heading">${category.key.label}</h2>
+        <j:forEach var="item" items="${category.value}">
+          <l:task title="${item.displayName}"
+                  href="${rootURL}/manage/${item.urlName}"
+                  icon="${item.iconFileName}"
+                  badge="${item.badge}"
+                  requiresConfirmation="${item.requiresConfirmation}"
+                  post="${item.requiresPOST}" confirmationMessage="${%sure}" />
+        </j:forEach>
+      </j:forEach>
+    </div>
+  </l:side-panel>
+</j:jelly>
