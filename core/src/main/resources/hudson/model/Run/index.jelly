@@ -1,0 +1,126 @@
+<!--
+The MIT License
+
+Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Matthew R. Harrah,
+Tom Huybrechts, id:cactusman, Romain Seguy
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt">
+  <l:layout title="${it.fullDisplayName}">
+    <st:include page="sidepanel.jelly" />
+
+    <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
+    <l:main-panel>
+      <div class="jenkins-app-bar">
+        <div class="jenkins-app-bar__content">
+          <t:buildCaption>${it.displayName}</t:buildCaption>
+        </div>
+        <div class="jenkins-app-bar__controls">
+          <l:overflowButton>
+            <l:hasPermission permission="${it.UPDATE}">
+              <st:include page="logKeep.jelly" />
+            </l:hasPermission>
+            <st:include page="delete.jelly" />
+          </l:overflowButton>
+        </div>
+      </div>
+
+      <div>
+        <t:editableDescription permission="${it.UPDATE}" />
+      </div>
+
+      <div style="float: right; box-shadow: 0 0 0 2px rgba(0, 0, 100, 0.05); width: 360px; padding: 1rem; border-radius: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="font-weight: 550; margin-bottom: 6px">
+          ${%Details}
+        </div>
+
+        <div class="populism">
+          <st:include page="description.jelly" it="${it.causes.0}" />
+        </div>
+
+        <div class="populism">
+          <j:set var="minutes" value="${360 * (it.timestamp.time.minutes / 60)}" />
+          <i:formatDate var="hours" value="${it.timestamp.time}" pattern="h" />
+          <j:set var="hours" value="${360 * (hours / 12) + (30 * (it.timestamp.time.minutes / 60))}" />
+
+          <div class="populism__icon">
+            <div class="cssclock" style="--hours: ${hours}deg; --minutes: ${minutes}deg">
+              <span class="hours"></span>
+              <span class="minutes"></span>
+            </div>
+          </div>
+          <div class="hideything">
+            <span>${%startedAgo(it.timestampString)}</span>
+            <span class="jenkins-hidden">
+              Started <i:formatDate value="${it.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
+            </span>
+          </div>
+        </div>
+
+        <script>
+          const hideything = document.querySelector(".hideything");
+          const firstSpan = hideything.querySelector("span:first-of-type");
+          const secondSpan = hideything.querySelector("span:last-of-type");
+
+          hideything.addEventListener("click", () => {
+            firstSpan.classList.toggle("jenkins-hidden");
+            secondSpan.classList.toggle("jenkins-hidden");
+          });
+        </script>
+
+
+
+          <div class="populism">
+            <div class="populism__icon">
+              <l:icon src="symbol-timer" />
+            </div>
+            <j:choose>
+              <j:when test="${it.building}">
+                ${%beingExecuted(it.executor.timestampString)}
+              </j:when>
+              <j:otherwise>
+                ${%Took} ${it.durationString}
+              </j:otherwise>
+            </j:choose>
+          </div>
+
+        <j:if test="${!empty(app.nodes) or (it.builtOnStr != null and it.builtOnStr != '')}">
+          ${%on} <t:node value="${it.builtOn}" valueStr="${it.builtOnStr}"/>
+        </j:if>
+      </div>
+
+      <table style="margin-top: 1em; margin-left:1em;">
+        <t:artifactList build="${it}" caption="${%Build Artifacts}"
+          permission="${it.ARTIFACTS}" />
+
+        <!-- give actions a chance to contribute summary item -->
+        <j:forEach var="a" items="${it.allActions}">
+          <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />
+        </j:forEach>
+
+        <st:include page="summary.jelly" optional="true" />
+      </table>
+
+      <st:include page="main.jelly" optional="true" />
+    </l:main-panel>
+  </l:layout>
+</j:jelly>
