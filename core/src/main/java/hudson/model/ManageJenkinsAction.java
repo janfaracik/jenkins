@@ -48,10 +48,7 @@ import org.kohsuke.stapler.StaplerResponse;
 public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
     @Override
     public String getIconFileName() {
-        if (Jenkins.get().hasAnyPermission(Jenkins.MANAGE, Jenkins.SYSTEM_READ))
-            return "symbol-settings";
-        else
-            return null;
+        return null;
     }
 
     @Override

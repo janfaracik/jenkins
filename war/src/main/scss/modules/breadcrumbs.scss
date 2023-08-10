@@ -9,7 +9,7 @@
   align-self: start;
   padding: 0 0 0 calc(var(--section-padding) - 0.37rem);
   margin-top: 45px;
-  margin-bottom: -30px;
+  margin-bottom: -20px;
   margin-left: var(--section-padding);
 
   &::before {
@@ -17,7 +17,7 @@
     position: absolute;
     inset: -5px -7px;
     left: calc(var(--section-padding) - 12px);
-    background: rgba(white, 0.75);
+    background: color-mix(in srgb, var(--background), transparent);
     border-radius: 0.9rem;
     backdrop-filter: blur(30px);
   }
