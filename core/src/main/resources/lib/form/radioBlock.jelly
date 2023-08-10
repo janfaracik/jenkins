@@ -64,7 +64,7 @@ THE SOFTWARE.
                  id="${name}-${value}"
                  name="${name}"
                  value="${value}"
-                 class="jenkins-radio__input radio-block-control block-control"
+                 class="jenkins-radio__input radio-block-control"
                  checked="${checked ? 'true' : null}"
                  disabled="${readOnlyMode ? 'true' : null}"
           />
