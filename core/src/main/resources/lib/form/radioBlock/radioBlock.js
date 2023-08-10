@@ -9,24 +9,20 @@ var radioBlockSupport = {
   },
 
   // update one block based on the status of the given radio button
-  updateSingleButton: function (radio, blockStart, blockEnd) {
-    var show = radio.checked;
+  updateSingleButton: function (radio, blockStart) {
+    const show = radio.checked;
+    const formContainer = blockStart.parentElement.querySelector(".form-container");
 
-    let n;
-    if (blockStart.getAttribute("hasHelp") == "true") {
-      n = blockStart.nextElementSibling;
-    } else {
-      n = blockStart;
-    }
-    while ((n = n.nextElementSibling) != blockEnd) {
+    if (formContainer) {
       if (show) {
-        n.classList.remove("form-container--hidden");
-        n.style.position = "";
+        formContainer.classList.remove("form-container--hidden");
+        formContainer.style.position = "";
       } else {
-        n.classList.add("form-container--hidden");
-        n.style.position = "absolute";
+        formContainer.classList.add("form-container--hidden");
+        formContainer.style.position = "absolute";
       }
     }
+
     layoutUpdateCallback.call();
   },
 };
@@ -75,7 +71,7 @@ Behaviour.specify(
     })();
 
     var u = function () {
-      g.updateSingleButton(r, s, e);
+      g.updateSingleButton(r, s);
     };
     g.buttons.push(u);
 
