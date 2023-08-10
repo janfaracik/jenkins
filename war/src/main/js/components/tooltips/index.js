@@ -19,6 +19,16 @@ function registerTooltip(element) {
     element._tippy.destroy();
   }
 
+  let type = {};
+  if (element.hasAttribute("data-tooltip-type")) {
+    type = {
+      theme: "sidebar",
+      animation: "sidebar",
+      placement: "right",
+      offset: [0, 7],
+    };
+  }
+
   if (
     element.hasAttribute("tooltip") &&
     !element.hasAttribute("data-html-tooltip")
@@ -40,6 +50,7 @@ function registerTooltip(element) {
           },
         },
         TOOLTIP_BASE,
+        type
       ),
     );
   }
@@ -58,6 +69,7 @@ function registerTooltip(element) {
           },
         },
         TOOLTIP_BASE,
+        type
       ),
     );
   }
