@@ -27,7 +27,7 @@ THE SOFTWARE.
   <l:side-panel>
     <l:app-bar title="${%Settings}" />
 
-    <div id="tasks">
+    <div id="tasks" class="hidebreadcrumbs">
       <l:search-bar placeholder="${%Search}" id="settings-search-bar" />
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
@@ -44,5 +44,7 @@ THE SOFTWARE.
         </j:forEach>
       </j:forEach>
     </div>
+
+    <div class="behavior-loading"><l:spinner text="${%Loading}"/></div>
   </l:side-panel>
 </j:jelly>

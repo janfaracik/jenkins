@@ -492,7 +492,7 @@ pre.console {
 
   &--stuck {
     .bottom-sticker-inner {
-      backdrop-filter: blur(15px);
+      backdrop-filter: blur(10px);
 
       &::before {
         opacity: 0.75 !important;

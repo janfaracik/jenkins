@@ -53,18 +53,10 @@
   display: flex !important;
   align-items: center;
   justify-content: center;
-  inset: 0;
+  inset: 0 50px 0 420px;
   z-index: 999;
-  backdrop-filter: blur(15px);
+  background: var(--background);
   transition: var(--standard-transition);
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--background);
-    opacity: 0.95;
-  }
 
   .jenkins-spinner {
     animation: fade-in-jenkins-spinner 0.4s ease;

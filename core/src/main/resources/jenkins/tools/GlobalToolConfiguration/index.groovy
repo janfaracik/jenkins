@@ -15,10 +15,6 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName) {
     l.main_panel {
         l.app_bar(title: my.displayName)
 
-        div(class:"behavior-loading") {
-            l.spinner(text: _("LOADING"))
-        }
-
         f.form(method:"post",name:"config",action:"configure", class: "jenkins-form") {
             Functions.getSortedDescriptorsForGlobalConfigByDescriptor(my.FILTER).each { Descriptor descriptor ->
                 set("descriptor",descriptor)

@@ -1,5 +1,30 @@
 @use "../abstracts/mixins";
 
+body:has(.hidebreadcrumbs) {
+  .jenkins-breadcrumbs {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  #page-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
+    .app-page-body__sidebar {
+      margin-top: -10px;
+      width: 300px;
+    }
+
+    #main-panel {
+      min-width: calc(100vw - 550px) !important;
+      padding: 0 !important;
+      padding-top: 10px !important;
+      flex-grow: 0 !important;
+    }
+  }
+}
+
 .jenkins-breadcrumbs {
   position: sticky;
   top: var(--section-padding);

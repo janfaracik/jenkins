@@ -50,7 +50,7 @@ $semantics: (
   --dark-grey: #4d545d;
 
   // branding
-  --secondary: hsl(240, 10%, 50%);
+  --secondary: hsl(240, 20%, 55%);
   --focus: #3fb3f7;
   --focus-btn-primary: #{color.change(#0b6aa2, $alpha: 0.5)};
   --focus-btn-secondary: #{color.change(#0b6aa2, $alpha: 0.5)};
@@ -286,9 +286,6 @@ $semantics: (
   --input-border: #c3ccd1;
   --input-border-hover: #5c7889;
   --input-hidden-password-bg-color: #f9f9f9;
-  --form-item-max-width: min(65vw, 1600px);
-  --form-item-max-width--medium: min(50vw, 1400px);
-  --form-item-max-width--small: min(35vw, 1200px);
 
   @media screen and (max-width: breakpoints.$tablet-breakpoint) {
     --section-padding: 1.25rem;
