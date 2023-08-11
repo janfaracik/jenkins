@@ -54,6 +54,13 @@ $dropdown-padding: 0.4rem;
       background-color: var(--text-color-secondary);
       opacity: 0.1;
     }
+
+    // Hide the separator if the next element is also a selector,
+    // or if the selector is the last child in its parent
+    &:has(+ .jenkins-dropdown__separator),
+    &:last-child {
+      display: none;
+    }
   }
 
   &__heading {
