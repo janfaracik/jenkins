@@ -25,6 +25,21 @@ body:has(.hidebreadcrumbs) {
   }
 }
 
+
+body:has(.hidebreadcrumbs2) {
+  .jenkins-breadcrumbs {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.widgeeeets {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 20px;
+  margin-top: -10px;
+}
+
 .jenkins-breadcrumbs {
   position: sticky;
   top: var(--section-padding);
