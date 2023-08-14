@@ -1,37 +1,116 @@
 .alert {
+  --banner-background: red;
+  --banner-color: var(--background);
+
   font-size: var(--font-size-sm);
   padding: calc(var(--section-padding) / 2) calc(var(--section-padding) / 1.5);
   margin-bottom: var(--section-padding);
   border-radius: 0.66rem;
-  color: var(--background);
+  background: var(--banner-background);
+  color: var(--banner-color);
   font-weight: 500;
-}
 
-.alert a {
-  color: inherit;
-  text-decoration: underline;
-  font-weight: 550;
+  p {
+    color: inherit;
+  }
 
-  &:hover,
-  &:focus,
-  &:active {
+  a {
+    color: inherit;
     text-decoration: underline;
-    text-decoration-thickness: 2px;
+    font-weight: 550;
+
+    &:hover,
+    &:focus,
+    &:active {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+    }
+  }
+
+  &[class*="alert-"] {
+    .jenkins-button {
+      color: currentColor !important;
+      background: transparent;
+
+      &::before {
+        background: currentColor !important;
+        opacity: 0.1;
+      }
+
+      &::after {
+        box-shadow: 0 0 0 0.66rem currentColor;
+        opacity: 0;
+      }
+
+      &:hover {
+        &::before {
+          opacity: 0.2;
+        }
+      }
+
+      &:active,
+      &:focus {
+        &::before {
+          opacity: 0.25;
+        }
+
+        &::after {
+          box-shadow: 0 0 0 0.33rem currentColor;
+          opacity: 0.1;
+        }
+      }
+    }
+
+    .jenkins-button--primary {
+      color: var(--banner-background) !important;
+
+      &::before {
+        background: var(--banner-color) !important;
+        opacity: 1;
+      }
+
+      &::after {
+        box-shadow: 0 0 0 0.66rem var(--banner-color);
+        opacity: 0;
+      }
+
+      &:hover {
+        &::before {
+          opacity: 0.9;
+        }
+      }
+
+      &:active,
+      &:focus {
+        &::before {
+          opacity: 0.8;
+        }
+
+        &::after {
+          box-shadow: 0 0 0 0.33rem var(--banner-color);
+          opacity: 0.25;
+        }
+      }
+    }
+  }
+
+  & + & {
+    margin-bottom: calc(var(--section-padding) / 2) !important;
   }
 }
 
 .alert-success {
-  background: var(--success-color);
+  --banner-background: var(--success-color);
 }
 
 .alert-info {
-  background: var(--accent-color);
+  --banner-background: var(--accent-color);
 }
 
 .alert-warning {
-  background: var(--warning-color);
+  --banner-background: var(--warning-color);
 }
 
 .alert-danger {
-  background: var(--destructive-color);
+  --banner-background: var(--destructive-color);
 }
