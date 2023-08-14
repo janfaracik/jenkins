@@ -159,6 +159,10 @@
     mask-position: center;
     transition: var(--elastic-transition);
     transform: scale(0);
+
+    @media (prefers-contrast: more) {
+      mask-size: 12px 12px;
+    }
   }
 
   &:empty {

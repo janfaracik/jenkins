@@ -452,8 +452,11 @@ pre.console {
   width: calc(
     100% + calc(var(--section-padding) * 2)
   ); /* it needs to occupy the entire width or else the underlying content will see through */
-
   z-index: 998; /* behind top-sticker */
+
+  @media (prefers-contrast: more) {
+    border-top: 2px solid var(--text-color);
+  }
 }
 
 .bottom-sticker-inner {

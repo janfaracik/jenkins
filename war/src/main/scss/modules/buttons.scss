@@ -20,12 +20,13 @@
   text-decoration: none !important;
   background: transparent;
   color: var(--text-color) !important;
-  border-radius: 0.66rem;
   cursor: pointer;
   min-height: 36px;
   white-space: nowrap;
   gap: 1ch;
   transition: var(--standard-transition);
+  //https://blogs.windows.com/msedgedev/2020/09/17/styling-for-windows-high-contrast-with-new-standards-for-forced-colors/
+  forced-color-adjust: none;
 
   &::before {
     background: var(--button-background);
@@ -40,6 +41,12 @@
     opacity: 0.5;
     filter: saturate(0.6);
     cursor: not-allowed;
+  }
+
+  @media (prefers-contrast: more) {
+    &::before {
+      border: 2px solid var(--text-color);
+    }
   }
 }
 

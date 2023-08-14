@@ -57,6 +57,10 @@ $semantics: (
   --focus-btn-danger: #{color.change(#cc0003, $alpha: 0.5)};
   --focus-input-border: #063f61;
   --focus-input-glow: #{color.change(#0b6aa2, $alpha: 0.25)};
+  @media (prefers-contrast: more) {
+    --focus-input-border: var(--text-color);
+    --focus-input-glow: var(--text-color-secondary);
+  }
 
   // State colors
   --primary-hover: #0587d4;
@@ -285,6 +289,10 @@ $semantics: (
   --input-color: var(--white);
   --input-border: #c3ccd1;
   --input-border-hover: #5c7889;
+  @media (prefers-contrast: more) {
+    --input-border: var(--text-color);
+    --input-border-hover: var(--text-color);
+  }
   --input-hidden-password-bg-color: #f9f9f9;
   --form-item-max-width: min(65vw, 1600px);
   --form-item-max-width--medium: min(50vw, 1400px);
