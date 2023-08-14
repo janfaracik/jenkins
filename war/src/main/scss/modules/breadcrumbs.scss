@@ -44,6 +44,12 @@
         margin-right: 0 !important;
         transition: var(--standard-transition);
 
+        @media (prefers-contrast: more) {
+          text-decoration: underline;
+          text-decoration-thickness: 2px;
+          text-underline-offset: 2px;
+        }
+
         &::before,
         &::after {
           inset: -0.25rem -0.6rem;
