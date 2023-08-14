@@ -1,7 +1,7 @@
 @mixin link {
   text-decoration: none;
   text-underline-offset: 2px;
-  text-decoration-thickness: 1.5px;
+  text-decoration-thickness: 2px;
   font-weight: 500;
 
   &:link {
@@ -21,6 +21,14 @@
   &:active {
     color: var(--link-color--active);
     text-decoration: var(--link-text-decoration--active);
+  }
+
+  @media (prefers-contrast: more) {
+    text-decoration: underline;
+
+    &:hover{
+      text-decoration-thickness: 3px;
+    }
   }
 }
 
