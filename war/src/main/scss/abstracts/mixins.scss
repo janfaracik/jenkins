@@ -1,8 +1,8 @@
 @mixin link {
-  text-decoration: none;
+  text-decoration: var(--link-text-decoration);
+  font-weight: var(--link-font-weight);
   text-underline-offset: 2px;
   text-decoration-thickness: 2px;
-  font-weight: 500;
 
   &:link {
     color: var(--link-color);
