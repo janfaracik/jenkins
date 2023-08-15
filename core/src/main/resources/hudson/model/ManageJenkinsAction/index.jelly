@@ -38,6 +38,16 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
+      <div class="booter">
+        <div class="logotings">
+          <div class="jenkinscircle mouse" value="5">
+
+          </div>
+          <img src="${imagesURL}/svgs/logo-jenkins.svg" class="mouse" value="7" />
+        </div>
+        <h1>Jenkins</h1>
+      </div>
+
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 
       <section class="manage-messages">

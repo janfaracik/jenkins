@@ -51,3 +51,48 @@
 @use "./pages/plugin-manager";
 @use "./pages/setupWizardFirstUser";
 @use "./pages/setupWizardConfigureInstance";
+
+.booter {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  z-index: 1000;
+
+  h1 {
+    font-size: 1.25rem;
+    margin: 0;
+    position: absolute;
+    bottom: calc(var(--section-padding) * 2);
+    font-family: "Georgia", serif;
+    font-weight: 600;
+    color: var(--text-color-secondary);
+  }
+
+  .logotings {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    //border: 5px solid red;
+  }
+
+  .jenkinscircle {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #d33833;
+    border: 3px solid #231f20;
+    box-shadow: inset 3px 3px 0 #ef3d3a;
+    border-radius: 100%;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  img {
+    width: auto;
+    height: 140px;
+    grid-column: 1;
+    grid-row: 1;
+  }
+}
