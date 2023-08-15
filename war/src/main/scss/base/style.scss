@@ -25,13 +25,13 @@
  */
 
 /* Panel */
-@media (min-width: 1600px) {
+@media (width >= 1600px) {
   body#jenkins.j-hide-left #main-panel {
     max-width: 75%;
   }
 }
 
-@media (min-width: 2000px) {
+@media (width >= 2000px) {
   body#jenkins.j-hide-left #main-panel {
     max-width: 85%;
   }
@@ -47,10 +47,6 @@ td {
 
 dt {
   font-weight: bold;
-}
-
-::selection {
-  background: var(--selection-color);
 }
 
 .fixed-width {
@@ -79,6 +75,17 @@ td.no-wrap {
 #main-table {
   padding: 0;
   border-collapse: collapse;
+}
+
+#safe-restart-msg {
+  font-weight: bold;
+  color: white;
+  background-color: var(--warning);
+  text-align: center;
+  margin-bottom: var(--section-padding);
+  padding: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: var(--form-input-border-radius);
 }
 
 #shutdown-msg {
@@ -121,6 +128,7 @@ a {
   svg {
     width: 16px;
     height: 16px;
+    flex: 0 0 auto;
     color: var(--text-color) !important;
   }
 }
@@ -309,6 +317,7 @@ pre.console {
 
 .expanding-input {
   display: flex;
+  align-items: center;
 }
 
 .expanding-input__input {
@@ -317,13 +326,6 @@ pre.console {
 
 .expanding-input__button {
   flex-shrink: 1;
-}
-
-.expanding-input__button input {
-  border: 2px solid var(--input-border) !important;
-  border-radius: var(--form-input-border-radius) !important;
-  min-width: 0 !important;
-  height: 100%;
 }
 
 /* div that looks like a hyperlink */
@@ -363,7 +365,10 @@ pre.console {
   padding: 4px 0;
   margin-left: 0;
   border-bottom: 1px solid #090;
-  font: bold 12px Helvetica, Arial, sans-serif;
+  font:
+    bold 12px Helvetica,
+    Arial,
+    sans-serif;
 }
 
 #foldertab li {
@@ -728,7 +733,8 @@ table.parameters > tbody:hover {
 }
 
 #buildHistory .build-rss-links {
-  float: right;
+  display: flex;
+  justify-content: end;
 }
 
 #buildHistory .build-rss-links a {
@@ -1251,11 +1257,11 @@ table.progress-bar.red td.progress-bar-done {
 }
 
 .logrecord-metadata-new {
-  color: #8a8;
+  color: var(--green);
 }
 
 .logrecord-metadata-old {
-  color: #aaa;
+  color: var(--text-color-secondary);
 }
 
 /* ========================= matrix configuration table ================== */
