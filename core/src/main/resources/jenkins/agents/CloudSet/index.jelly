@@ -77,10 +77,10 @@ THE SOFTWARE.
             <section class="empty-state-section">
               <j:choose>
                 <j:when test="${it.cloudAvailable}">
-                  <p>${%noCloudAvailable}</p>
+                  <p class="jenkins-description">${%noCloudAvailable}</p>
                 </j:when>
                 <j:otherwise>
-                  <p>${%noCloudPlugin}</p>
+                  <p class="jenkins-description">${%noCloudPlugin}</p>
                 </j:otherwise>
               </j:choose>
               <ul class="empty-state-section-list">
