@@ -77,28 +77,6 @@ $.when(getItems()).done(function (data) {
       $(".input-help", context).removeClass("input-message-disabled");
     }
 
-    // About Scroll-linked effect: https://developer.mozilla.org/en-US/docs/Mozilla/Performance/Scroll-linked_effects
-    function doSticky() {
-      var decorator = $("form .footer .btn-decorator");
-      var pos = decorator.offset();
-      var vpH = $(window).height();
-      if (pos.top >= vpH) {
-        decorator.css({ position: "fixed" });
-      }
-
-      $(window).scroll(function () {
-        var footer = $("form .footer");
-        var ref1 = decorator.offset().top + decorator.outerHeight();
-        var ref2 = footer.offset().top + footer.outerHeight();
-        var vpH = $(window).height();
-        if (ref2 > vpH + $(window).scrollTop()) {
-          decorator.css({ position: "fixed" });
-        } else if (ref2 - 1 <= ref1) {
-          decorator.css({ position: "absolute" });
-        }
-      });
-    }
-
     function enableSubmit(status) {
       var btn = $("form .footer .btn-decorator button[type=submit]");
       if (status === true) {
@@ -369,8 +347,5 @@ $.when(getItems()).done(function (data) {
 
     // Disable the submit button
     enableSubmit(false);
-
-    // Do sticky the form buttons
-    doSticky();
   });
 });
