@@ -1,0 +1,28 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:i="jelly:fmt" xmlns:t="/lib/hudson" xmlns:l="/lib/layout">
+    <l:card title="${%Details}" id="details">
+        <div class="cardrows">
+            <j:forEach var="w" items="${it.getDetailFactories()}">
+                <st:include it="${w}" page="index.jelly"/>
+            </j:forEach>
+
+            <hr class="cardidvider" />
+            
+            <j:if test="${(job.fullName!=job.fullDisplayName) and (job.class.name!='hudson.matrix.MatrixConfiguration')}">
+                <div class="populism">
+                    <div class="populism__icon">
+                        <l:icon src="symbol-timer"/>
+                    </div>
+                    <j:choose>
+                        <j:when test="${job.parent!=app}">
+                            ${%Full project name}: ${job.fullName}
+                        </j:when>
+                        <j:otherwise>
+                            ${%Project name}: ${job.fullName}
+                        </j:otherwise>
+                    </j:choose>
+                </div>
+            </j:if>
+        </div>
+    </l:card>
+</j:jelly>

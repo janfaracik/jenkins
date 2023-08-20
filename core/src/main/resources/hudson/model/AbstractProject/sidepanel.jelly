@@ -50,6 +50,7 @@ THE SOFTWARE.
 
     <st:include page="sidepanel2.jelly" optional="true" />
 
+    <j:set var="job" value="${it}" />
     <j:forEach var="w" items="${it.widgets}">
       <st:include it="${w}" page="index.jelly" />
     </j:forEach>
