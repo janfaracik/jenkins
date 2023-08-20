@@ -30,7 +30,6 @@ THE SOFTWARE.
 
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
-
       <j:forEach var="w" items="${it.widgets}">
         <st:include it="${w}" page="index.jelly" />
       </j:forEach>
@@ -56,6 +55,20 @@ THE SOFTWARE.
       </div>
 
       <t:buildCaption>${it.displayName} (<i:formatDate value="${it.timestamp.time}" type="both" dateStyle="medium" timeStyle="medium"/>)</t:buildCaption>
+
+      <div class="jenkins-app-bar">
+        <div class="jenkins-app-bar__content">
+          <t:buildCaption>${it.displayName}</t:buildCaption>
+        </div>
+        <div class="jenkins-app-bar__controls">
+          <l:overflowButton>
+            <l:hasPermission permission="${it.UPDATE}">
+              <st:include page="logKeep.jelly" />
+            </l:hasPermission>
+            <st:include page="delete.jelly" />
+          </l:overflowButton>
+        </div>
+      </div>
 
       <div>
         <t:editableDescription permission="${it.UPDATE}" />
