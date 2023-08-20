@@ -1,4 +1,4 @@
-package src.main.java.hudson.widgets;
+package hudson.widgets;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.ExtensionList;

@@ -1,0 +1,10 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+   <h1>Details!</h1>
+   <j:forEach var="w" items="${it.getDetailFactories()}">
+      <st:include it="${w}" page="index.jelly" />
+   </j:forEach>
+
+   <hr/>
+   my hearts software gore
+</j:jelly>
