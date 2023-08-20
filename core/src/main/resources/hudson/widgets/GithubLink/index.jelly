@@ -1,4 +1,9 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core">
-    i am from github
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+    <div class="populism">
+        <div class="populism__icon">
+            <l:icon src="symbol-github"/>
+        </div>
+        <a href="#">Add updates count badge to Updates sidebar item #7084</a>
+    </div>
 </j:jelly>
