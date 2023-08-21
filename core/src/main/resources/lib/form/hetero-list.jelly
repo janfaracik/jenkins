@@ -85,7 +85,14 @@ THE SOFTWARE.
         <j:set var="help" value="${descriptor.helpFile}" />
 
         <div class="repeated-chunk__header">
-          <div class="${attrs.disableDragAndDrop or readOnlyMode ? '' : 'dd-handle'}"/>
+          <div class="${attrs.disableDragAndDrop or readOnlyMode ? '' : 'dd-handle'}">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
 
           ${descriptor.displayName}
 
@@ -120,7 +127,7 @@ THE SOFTWARE.
       </div>
     </j:forEach>
 
-    <div class="repeatable-insertion-point" />
+    <template class="repeatable-insertion-point" />
 
     <div class="prototypes to-be-removed">
       <!-- render one prototype for each type -->
@@ -153,10 +160,8 @@ THE SOFTWARE.
     </div>
 
     <j:if test="${!readOnlyMode}">
-      <div>
-        <button type="button" class="jenkins-button hetero-list-add" menualign="${attrs.menuAlign}" suffix="${attrs.name}">${attrs.addCaption?:'%Add'}<l:icon src="symbol-chevron-down"/>
-        </button>
-      </div>
+      <button type="button" class="jenkins-button hetero-list-add" menualign="${attrs.menuAlign}" suffix="${attrs.name}">${attrs.addCaption?:'%Add'}<l:icon src="symbol-chevron-down"/>
+      </button>
     </j:if>
   </div>
 </j:jelly>
