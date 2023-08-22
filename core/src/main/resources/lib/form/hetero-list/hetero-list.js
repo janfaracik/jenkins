@@ -37,10 +37,7 @@ Behaviour.specify(
       // YUI Menu interprets this <option> text node as HTML, so let's escape it again!
       var title = n.getAttribute("title");
       if (title) {
-        title = title
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
+        title = escapeHTML(title);
       }
       menu.options[i] = new Option(title, "" + i);
       templates.push({
@@ -61,9 +58,12 @@ Behaviour.specify(
       btn,
       menu,
       menuAlign.split("-"),
-      250
+      250,
     );
-    menuButton._button.classList.add(btn.className); // copy class names
+    // copy class names
+    for (i = 0; i < btn.classList.length; i++) {
+      menuButton._button.classList.add(btn.classList.item(i));
+    }
     menuButton._button.setAttribute("suffix", btn.getAttribute("suffix"));
     menuButton.getMenu().clickEvent.subscribe(function (type, args) {
       var item = args[1];
@@ -117,7 +117,7 @@ Behaviour.specify(
             });
 
             function o(did) {
-              if (Object.isElement(did)) {
+              if (did instanceof Element) {
                 did = did.getAttribute("descriptorId");
               }
               for (var i = 0; i < templates.length; i++) {
@@ -151,14 +151,14 @@ Behaviour.specify(
               opacity: { to: 1 },
             },
             0.2,
-            YAHOO.util.Easing.easeIn
+            YAHOO.util.Easing.easeIn,
           ).animate();
 
           Behaviour.applySubtree(nc, true);
           ensureVisible(nc);
           layoutUpdateCallback.call();
         },
-        true
+        true,
       );
     });
 
@@ -188,7 +188,7 @@ Behaviour.specify(
         }
       });
     }
-  }
+  },
 );
 
 Behaviour.specify("DIV.dd-handle", "hetero-list", -100, function (e) {
