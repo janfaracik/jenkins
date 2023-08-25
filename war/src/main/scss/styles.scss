@@ -3,3 +3,13 @@
 @use "components";
 @use "form";
 @use "pages";
+
+
+:root {
+  // Used for inputs, buttons, table, cards
+  --layer-1: hsla(211, 40%, 75%, 0.13);
+  // Used for hover
+  --layer-2: hsla(211, 40%, 75%, 0.2);
+  // Used for active
+  --layer-3: hsla(211, 40%, 75%, 0.27);
+}

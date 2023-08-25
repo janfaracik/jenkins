@@ -50,9 +50,9 @@ $semantics: (
   --dark-grey: #4d545d;
 
   // branding
-  --secondary: hsl(240, 10%, 50%);
-  --focus-input-border: #063f61;
-  --focus-input-glow: #{color.change(#0b6aa2, $alpha: 0.25)};
+  --secondary: hsl(211, 15%, 50%);
+  --focus-input-border: hsl(211, 88%, 20%);
+  --focus-input-glow: #{color.change(hsl(211,87%,34%), $alpha: 0.25)};
 
   // Deprecated
   --focus-btn-primary: #{color.change(#0b6aa2, $alpha: 0.5)};
@@ -87,7 +87,7 @@ $semantics: (
   --header-item-border-radius: 4px;
 
   // Breadcrumbs bar
-  --breadcrumbs-bar-background: hsla(240, 20%, 96.5%, 0.8);
+  --breadcrumbs-bar-background: hsla(220, 40%, 95%, 0.7);
 
   // Alert call outs
   --alert-success-text-color: #155724;
@@ -140,7 +140,7 @@ $semantics: (
   --btn-link-bg--active: var(--light-grey);
 
   // Table
-  --table-background: var(--panel-header-bg-color);
+  --table-background: var(--layer-1);
   --table-header-foreground: var(--text-color);
   --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
@@ -217,13 +217,13 @@ $semantics: (
   --card-background: transparent;
   --card-background--hover: transparent;
   --card-background--active: transparent;
-  --card-border-color: hsla(240, 25%, 75%, 0.25);
-  --card-border-color--hover: hsla(240, 25%, 75%, 0.5);
-  --card-border-color--active: hsla(240, 25%, 75%, 0.75);
+  --card-border-color: var(--layer-1);
+  --card-border-color--hover: var(--layer-2);
+  --card-border-color--active: var(--layer-3);
   --card-border-width: 2px;
 
   // Tab bar
-  --tabs-background: var(--panel-header-bg-color);
+  --tabs-background: var(--layer-1);
   --tabs-item-background: transparent;
   --tabs-item-foreground: var(--text-color);
   --tabs-item-background--hover: rgba(0, 0, 0, 0.05);
@@ -240,8 +240,8 @@ $semantics: (
   --tab-baseline-default-display: none;
 
   // Side panel
-  --panel-header-bg-color: var(--light-grey);
-  --panel-border-color: var(--light-grey);
+  --panel-header-bg-color: var(--layer-1);
+  --panel-border-color: var(--layer-1);
   --side-panel-hover-color: var(--panel-border-color);
   --task-link-bg-color--active: var(--panel-border-color);
   --task-link-bg-color--hover: var(--very-light-grey);
@@ -249,8 +249,8 @@ $semantics: (
   // Form
   --section-padding: 1.75rem;
   --input-color: var(--white);
-  --input-border: #c3ccd1;
-  --input-border-hover: #5c7889;
+  --input-border: hsl(211, 20%, 80%);
+  --input-border-hover: hsl(211, 20%, 45%);
   --input-hidden-password-bg-color: #f9f9f9;
   --form-item-max-width: min(65vw, 1600px);
   --form-item-max-width--medium: min(50vw, 1400px);
@@ -301,15 +301,15 @@ $semantics: (
   --auto-complete-bg-color--prehighlight: #b3d4ff;
 
   // Default button
-  --button-background: hsla(240, 25%, 75%, 0.1);
-  --button-background--hover: hsla(240, 25%, 75%, 0.175);
-  --button-background--active: hsla(240, 25%, 75%, 0.25);
-  --button-box-shadow--focus: hsla(240, 25%, 75%, 0.1);
+  --button-background: var(--layer-1);
+  --button-background--hover: var(--layer-2);
+  --button-background--active: var(--layer-3);
+  --button-box-shadow--focus: color-mix(in srgb, var(--layer-3), transparent);
 
   // Variables for sidebar items, card items
-  --item-background--hover: hsla(240, 25%, 75%, 0.15);
-  --item-background--active: hsla(240, 25%, 75%, 0.225);
-  --item-box-shadow--focus: hsla(240, 25%, 75%, 0.105);
+  --item-background--hover: var(--layer-1);
+  --item-background--active: var(--layer-2);
+  --item-box-shadow--focus: color-mix(in srgb, var(--layer-3), transparent);
 
   // Deprecated
   --primary: var(--accent-color); // Use var(--accent-color) instead

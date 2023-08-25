@@ -9,7 +9,7 @@
 
   &__input {
     appearance: none;
-    background: var(--item-background--hover);
+    background: var(--layer-1);
     border: none;
     outline: none;
     border-radius: 0.625rem;
@@ -60,13 +60,13 @@
 
     &:not(:disabled) {
       &:hover {
-        background: var(--item-background--active);
+        background: var(--layer-2);
       }
 
       &:active,
       &:focus {
         outline: none;
-        background: var(--item-background--active);
+        background: var(--layer-3);
         box-shadow:
           0 0 0 2px var(--focus-input-border),
           0 0 0 7px var(--focus-input-glow);
