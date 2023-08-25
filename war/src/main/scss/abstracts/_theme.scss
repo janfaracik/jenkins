@@ -226,11 +226,11 @@ $semantics: (
   --tabs-background: var(--layer-1);
   --tabs-item-background: transparent;
   --tabs-item-foreground: var(--text-color);
-  --tabs-item-background--hover: rgba(0, 0, 0, 0.05);
+  --tabs-item-background--hover: var(--layer-1);
   --tabs-item-foreground--hover: var(--text-color);
-  --tabs-item-background--active: rgba(0, 0, 0, 0.1);
+  --tabs-item-background--active: var(--layer-2);
   --tabs-item-foreground--active: var(--text-color);
-  --tabs-item-background--selected: white;
+  --tabs-item-background--selected: var(--white);
   --tabs-item-foreground--selected: var(--link-color);
   --tabs-border-radius: calc((10px + 34px) / 2);
 
