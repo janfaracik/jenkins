@@ -230,7 +230,7 @@ $semantics: (
   --tabs-item-foreground--hover: var(--text-color);
   --tabs-item-background--active: var(--layer-2);
   --tabs-item-foreground--active: var(--text-color);
-  --tabs-item-background--selected: var(--white);
+  --tabs-item-background--selected: var(--background);
   --tabs-item-foreground--selected: var(--link-color);
   --tabs-border-radius: calc((10px + 34px) / 2);
 
@@ -265,7 +265,7 @@ $semantics: (
 
   --form-label-font-weight: 500;
   --form-input-padding: 0.5rem;
-  --form-input-border-radius: 6px;
+  --form-input-border-radius: 0.66rem;
   --form-input-glow: 0 0 0 10px transparent;
   --form-input-glow--focus: 0 0 0 5px var(--focus-input-glow);
   --pre-background: rgba(0, 0, 0, 0.05);
@@ -309,7 +309,7 @@ $semantics: (
   // Variables for sidebar items, card items
   --item-background--hover: var(--layer-1);
   --item-background--active: var(--layer-2);
-  --item-box-shadow--focus: color-mix(in srgb, var(--layer-3), transparent);
+  --item-box-shadow--focus: color-mix(in srgb, var(--layer-2), transparent);
 
   // Deprecated
   --primary: var(--accent-color); // Use var(--accent-color) instead
