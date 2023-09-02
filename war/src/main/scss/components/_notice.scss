@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   gap: 1rem;
   min-height: 15rem;
   background: var(--button-background);
@@ -10,10 +9,30 @@
   font-size: var(--font-size-base);
   margin-bottom: 30px;
   font-weight: 500;
-  padding: 50px;
+  padding: var(--section-padding);
 
   svg {
     width: 2.5rem;
     height: 2.5rem;
+  }
+
+  & > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    //max-width: 900px;
+
+    .banaa, .banan2 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+
+      &:empty {
+        display: none;
+      }
+    }
   }
 }

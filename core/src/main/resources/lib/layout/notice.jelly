@@ -34,8 +34,14 @@ THE SOFTWARE.
   </st:documentation>
 
   <div class="jenkins-notice">
-    <l:icon src="${attrs.icon}" />
-    <div>${attrs.text}</div>
-    <d:invokeBody />
+    <div>
+      <div class="banaa">
+        <l:icon src="${attrs.icon}" />
+        <div>${attrs.text}</div>
+      </div>
+      <div class="banan2">
+        <d:invokeBody />
+      </div>
+    </div>
   </div>
 </j:jelly>

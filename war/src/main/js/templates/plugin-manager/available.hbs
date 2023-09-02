@@ -18,6 +18,12 @@
             </div>
             {{#if this.categories }}
                 <div class="app-plugin-manager__categories">
+                    {{# if this.suggested }}
+                      <div href="?filter=recommended" class="jenkins-table__badge--recommended">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                        Recommended
+                      </div>
+                    {{/if}}
                     {{#each this.categories }}
                         <a href="?filter={{ this }}" class="jenkins-table__link jenkins-table__badge">
                         {{ this }}

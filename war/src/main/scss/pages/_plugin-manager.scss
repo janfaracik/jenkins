@@ -1,9 +1,11 @@
 #plugins {
   .app-plugin-manager__categories {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
     margin: 0.5rem 0;
 
     a {
-      margin: 0 1.25rem 0 0 !important;
       font-size: 0.75rem;
     }
   }

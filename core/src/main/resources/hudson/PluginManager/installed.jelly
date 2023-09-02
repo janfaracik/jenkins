@@ -36,6 +36,7 @@ THE SOFTWARE.
     <l:main-panel>
       <j:set var="noPlugins"
              value="${empty(app.pluginManager.plugins) and empty(app.pluginManager.failedPlugins)}" />
+      <j:set var="noPlugins" value="true" />
 
       <div class="jenkins-app-bar jenkins-app-bar--sticky">
         <div class="jenkins-app-bar__content">
@@ -73,8 +74,23 @@ THE SOFTWARE.
         <j:when test="${noPlugins}">
           <l:notice icon="symbol-plugins" text="${%No plugins installed}">
             <div id="asd">
-              <div id="dontcallmeback">Recommended</div>
+              <div id="dontcallmeback">
+                <l:icon src="symbol-star" />
+                Recommended
+              </div>
               <div id="permanentpiece">
+                <div class="loading">
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="loading">
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="loading">
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
             </div>
           </l:notice>
