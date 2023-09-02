@@ -3,3 +3,39 @@
 @use "components";
 @use "form";
 @use "pages";
+
+#asd {
+  margin-top: 30px;
+}
+
+#dontcallmeback {
+  font-weight: 500;
+  margin-bottom: 10px;
+  font-size: var(--font-size-sm);
+  margin-left: 15px;
+}
+
+#permanentpiece {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--section-padding) / 3);
+  min-width: 400px;
+
+  a {
+    flex-direction: column;
+    align-items: start;
+    gap: 0;
+    padding: 10px 15px;
+    background: var(--background);
+    font-size: var(--font-size-sm);
+
+    &::before {
+      background: white;
+    }
+
+    span:last-of-type {
+      color: var(--text-color-secondary);
+      font-weight: normal;
+    }
+  }
+}

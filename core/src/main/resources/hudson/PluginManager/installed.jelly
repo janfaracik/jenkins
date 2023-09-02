@@ -71,7 +71,13 @@ THE SOFTWARE.
 
       <j:choose>
         <j:when test="${noPlugins}">
-          <l:notice icon="symbol-plugins" text="${%No plugins installed}" />
+          <l:notice icon="symbol-plugins" text="${%No plugins installed}">
+            <div id="asd">
+              <div id="dontcallmeback">Recommended</div>
+              <div id="permanentpiece">
+              </div>
+            </div>
+          </l:notice>
         </j:when>
         <j:otherwise>
           <table id="plugins" class="jenkins-table sortable">
@@ -281,6 +287,7 @@ THE SOFTWARE.
       </div>
 
       <st:adjunct includes="hudson.PluginManager._installed"/>
+      <script src="${resURL}/jsbundles/pages/manage-jenkins/plugins/installed.js" type="text/javascript"/>
     </l:main-panel>
   </l:layout>
 </j:jelly>

@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:d="jelly:define">
   <st:documentation>
     <st:attribute name="text" use="required">
       Sets the text for the notice. HTML isn't supported.
@@ -36,5 +36,6 @@ THE SOFTWARE.
   <div class="jenkins-notice">
     <l:icon src="${attrs.icon}" />
     <div>${attrs.text}</div>
+    <d:invokeBody />
   </div>
 </j:jelly>
