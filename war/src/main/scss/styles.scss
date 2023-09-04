@@ -57,14 +57,28 @@
   a {
     flex-direction: column;
     align-items: start;
-    gap: 0;
+    gap: 5px;
     padding: 10px 15px;
     font-size: var(--font-size-sm);
     animation: fadeinting 0.3s ease-in-out;
 
     span:last-of-type {
-      color: var(--text-color-secondary);
-      font-weight: normal;
+      position: relative;
+      //color: var(--text-color-secondary);
+      z-index: 0;
+      font-size: 0.65rem;
+      padding: 2px 7px;
+      font-weight: 500;
+      margin-left: -7px;
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: var(--item-background--hover);
+        border-radius: 100px;
+        z-index: -1;
+      }
     }
   }
 

@@ -1,7 +1,9 @@
+@use "../abstracts/mixins";
+
 #plugins {
   .app-plugin-manager__categories {
     display: flex;
-    gap: 5px;
+    gap: 4px 15px;
     flex-wrap: wrap;
     margin: 0.5rem 0;
 
@@ -108,5 +110,28 @@
   h1 {
     margin-top: 1rem !important;
     margin-bottom: 0.1rem !important;
+  }
+}
+
+.jenkins-table__badge--asda {
+  @include mixins.item;
+
+  --item-background: color-mix(in srgb, currentColor 5%, transparent);
+  --item-background--hover: color-mix(in srgb, currentColor 10%, transparent);
+  --item-background--active: color-mix(in srgb, currentColor 15%, transparent);
+  --item-box-shadow--focus: var(--item-background);
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+  padding: 2px 5px;
+  font-size: 0.75rem;
+  text-decoration: none !important;
+
+  &::before, &::after {
+    inset: -1px -5px;
+    border-radius: 100px;
   }
 }
