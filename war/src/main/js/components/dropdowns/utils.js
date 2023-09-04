@@ -31,16 +31,19 @@ function generateDropdown(element, callback) {
       onShown(instance) {
         behaviorShim.applySubtree(instance.popper);
       },
-    })
+    }),
   );
 }
 
 /*
  * Generates the contents for the dropdown
  */
-function generateDropdownItems(items) {
+function generateDropdownItems(items, compact) {
   const menuItems = document.createElement("div");
   menuItems.classList.add("jenkins-dropdown");
+  if (compact === true) {
+    menuItems.classList.add("jenkins-dropdown--compact");
+  }
 
   items
     .map((item) => {
@@ -50,6 +53,10 @@ function generateDropdownItems(items) {
 
       if (item.type === "SEPARATOR") {
         return Templates.separator();
+      }
+
+      if (item.type === "DISABLED") {
+        return Templates.disabled(item.label);
       }
 
       const menuItem = Templates.menuItem(item);
@@ -62,7 +69,7 @@ function generateDropdownItems(items) {
             trigger: "mouseenter",
             placement: "right-start",
             offset: [-8, 0],
-          })
+          }),
         );
       }
 
@@ -108,23 +115,23 @@ function generateDropdownItems(items) {
       const isVisible =
         window.getComputedStyle(container).visibility === "visible";
       const isLastDropdown = Array.from(
-        document.querySelectorAll(".jenkins-dropdown")
+        document.querySelectorAll(".jenkins-dropdown"),
       )
         .filter((dropdown) => container !== dropdown)
         .filter(
           (dropdown) =>
-            window.getComputedStyle(dropdown).visibility === "visible"
+            window.getComputedStyle(dropdown).visibility === "visible",
         )
         .every(
           (dropdown) =>
             !(
               container.compareDocumentPosition(dropdown) &
               Node.DOCUMENT_POSITION_FOLLOWING
-            )
+            ),
         );
 
       return isVisible && isLastDropdown;
-    }
+    },
   );
 
   behaviorShim.applySubtree(menuItems);
