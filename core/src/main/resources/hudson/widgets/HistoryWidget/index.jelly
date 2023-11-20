@@ -36,29 +36,29 @@ THE SOFTWARE.
       </j:if>
       ${it.displayName}
       <j:if test="${jobClass.isAssignableFrom(it.owner.class)}">
-        <a href="${it.baseUrl}/buildTimeTrend">${%trend}</a>
+        <a class="jenkins-button jenkins-button--tertiary"
+           href="${it.baseUrl}/buildTimeTrend"
+           tooltip="${%trend}">
+          <l:icon src="symbol-trend" />
+        </a>
       </j:if>
-    </div>
-  </j:parse>
-
-  <j:parse var="paneFooter">
-    <!--
-      RSS link
-    -->
-    <span class="build-rss-links">
-        <a class="build-rss-all-link" href="${it.baseUrl}/rssAll">
-          <span class="build-rss-all-icon">
+      <l:overflowButton tooltip="Atom feed"
+                        icon="symbol-rss"
+                        clazz="jenkins-button--tertiary">
+        <a class="jenkins-dropdown__item" href="${it.baseUrl}/rssAll">
+          <div class="jenkins-dropdown__item__icon">
             <l:icon src="symbol-rss" />
-          </span>
+          </div>
           Atom feed ${%for all}
         </a>
-        <a class="build-rss-failed-link" href="${it.baseUrl}/rssFailed">
-          <span class="build-rss-failed-icon">
+        <a class="jenkins-dropdown__item" href="${it.baseUrl}/rssFailed">
+          <div class="jenkins-dropdown__item__icon">
             <l:icon src="symbol-rss" />
-          </span>
+          </div>
           Atom feed ${%for failures}
         </a>
-    </span>
+      </l:overflowButton>
+    </div>
   </j:parse>
 
   <j:set var="page" value="${it.historyPageFilter}" />

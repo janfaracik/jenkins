@@ -59,8 +59,8 @@ THE SOFTWARE.
       </span>
 
       <j:if test="${attrs.id != null}">
-        <a class="collapse" href="${rootURL}/toggleCollapse?paneId=${attrs.id}"
-           title="${paneIsCollapsed ? '%expand' : '%collapse'}">
+        <a class="jenkins-button jenkins-button--tertiary" href="${rootURL}/toggleCollapse?paneId=${attrs.id}"
+           tooltip="${paneIsCollapsed ? '%expand' : '%collapse'}">
 
           <j:set var="svgIconId" value="${paneIsCollapsed ? 'chevron-up' : 'chevron-down'}" />
           <l:icon src="symbol-${svgIconId}" />

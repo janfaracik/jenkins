@@ -467,27 +467,6 @@ div.listview-jobs {
   position: relative;
 }
 
-#buildHistory .build-rss-links {
-  display: flex;
-  justify-content: end;
-}
-
-#buildHistory .build-rss-links a {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0.5rem;
-}
-
-#buildHistory .build-rss-all-icon,
-#buildHistory .build-rss-failed-icon {
-  margin-right: 0.25rem;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
 #buildHistoryPage {
   position: relative;
 
