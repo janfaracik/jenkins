@@ -16,7 +16,7 @@ window.buildTimeTrend_displayBuilds = function (data) {
 
     let link = document.createElement("a");
     link.classList.add("build-status-link");
-    link.href = e.number + "/console";
+    link.href = e.consoleUrl;
     td.appendChild(link);
     let svg = generateSVGIcon(e.iconName);
     link.appendChild(svg);
@@ -109,20 +109,20 @@ function generateSVGIcon(iconName, iconSizeClass) {
     "href",
     imagesURL +
       "/build-status/build-status-sprite.svg#build-status-" +
-      (isInProgress ? "in-progress" : "static")
+      (isInProgress ? "in-progress" : "static"),
   );
   svg1.appendChild(use1);
 
   const svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg2.setAttribute(
     "class",
-    "svg-icon icon-" + iconName + " " + (iconSizeClass || "icon-sm")
+    "svg-icon icon-" + iconName + " " + (iconSizeClass || "icon-sm"),
   );
   svg2.setAttribute("viewBox", "0 0 24 24");
   const use2 = document.createElementNS("http://www.w3.org/2000/svg", "use");
   use2.setAttribute(
     "href",
-    imagesURL + "/build-status/build-status-sprite.svg#" + buildStatus
+    imagesURL + "/build-status/build-status-sprite.svg#" + buildStatus,
   );
   svg2.appendChild(use2);
 
@@ -174,7 +174,7 @@ window.displayBuilds = function (data) {
       "jenkins-table__link",
       "jenkins-table__badge",
       "model-link",
-      "inside"
+      "inside",
     );
     a2.href = rootUrl + "/" + e.url;
     a2.textContent = e.displayName;
@@ -190,7 +190,7 @@ window.displayBuilds = function (data) {
       "onclick",
       'javascript:tl.getBand(0).scrollToCenter(Timeline.DateTime.parseGregorianDateTime("' +
         e.timestampString3 +
-        '"))'
+        '"))',
     );
     button.textContent = e.timestampString;
     td3.appendChild(button);
@@ -209,7 +209,7 @@ window.displayBuilds = function (data) {
     div2.classList.add("jenkins-table__cell__button-wrapper");
     var a3 = document.createElement("a");
     a3.classList.add("jenkins-table__button");
-    a3.href = rootUrl + "/" + e.url + "console";
+    a3.href = e.consoleUrl;
     a3.innerHTML = p.dataset.consoleOutputIcon;
     div2.appendChild(a3);
     td5.appendChild(div2);
