@@ -88,3 +88,51 @@
     transform: scale(0.75);
   }
 }
+
+.progresss {
+  --color: var(--accent-color);
+
+  appearance: none;
+  height: 4px;
+
+  &::-webkit-progress-bar {
+    background: color-mix(in srgb, var(--text-color-secondary) 30%, transparent);
+    border-radius: 10px;
+  }
+
+  &::-webkit-progress-value {
+    background: var(--color);
+    border-radius: 10px;
+  }
+
+  &--red {
+    --color: var(--error-color);
+  }
+}
+
+.progressss {
+  --color: var(--accent-color);
+
+  background: color-mix(in srgb, var(--text-color-secondary) 30%, transparent);
+  height: 4px;
+  width: 100px;
+  border-radius: 10px;
+  overflow: hidden;
+
+  & > div {
+    height: 100%;
+    width: 60px;
+    border-radius: 10px;
+    background: var(--color);
+    animation: frankenstein 1.2s linear infinite;
+  }
+}
+
+@keyframes frankenstein {
+  from {
+    translate: -100% 0;
+  }
+  to {
+    translate: 100px 0;
+  }
+}

@@ -38,6 +38,10 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
+      <t:progressBar pos="-1" red="true" />
+
+      <br/><br/><br/>
+
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 
       <section class="manage-messages">
