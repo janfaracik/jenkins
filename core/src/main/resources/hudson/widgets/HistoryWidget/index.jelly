@@ -35,13 +35,6 @@ THE SOFTWARE.
         <t:buildHealth job="${it.owner}" iconSizeClass="icon-sm" link="${it.baseUrl}/lastBuild"/>
       </j:if>
       ${it.displayName}
-      <j:if test="${jobClass.isAssignableFrom(it.owner.class)}">
-        <a class="jenkins-button jenkins-button--tertiary"
-           href="${it.baseUrl}/buildTimeTrend"
-           tooltip="${%trend}">
-          <l:icon src="symbol-trend" />
-        </a>
-      </j:if>
       <l:overflowButton tooltip="Atom feed"
                         icon="symbol-rss"
                         clazz="jenkins-button--tertiary">
@@ -58,6 +51,13 @@ THE SOFTWARE.
           Atom feed ${%for failures}
         </a>
       </l:overflowButton>
+      <j:if test="${jobClass.isAssignableFrom(it.owner.class)}">
+        <a class="jenkins-button jenkins-button--tertiary"
+           href="${it.baseUrl}/buildTimeTrend"
+           tooltip="${%trend}">
+          <l:icon src="symbol-trend" />
+        </a>
+      </j:if>
     </div>
   </j:parse>
 
