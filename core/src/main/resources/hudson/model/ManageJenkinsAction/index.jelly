@@ -38,7 +38,21 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
+      <t:progressBar pos="-1" />
+      <br/>
       <t:progressBar pos="-1" red="true" />
+      <br/>
+      <t:progressBar pos="50" />
+      <br/>
+      <t:progressBar pos="50" red="true" />
+      <br/>
+      <t:progressBar pos="-1" href="/123" />
+      <br/>
+      <t:progressBar pos="-1" red="true" href="/123" />
+      <br/>
+      <t:progressBar pos="50" href="/123" />
+      <br/>
+      <t:progressBar pos="50" red="true" href="/123" />
 
       <br/><br/><br/>
 
