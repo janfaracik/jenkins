@@ -574,11 +574,9 @@ div.listview-jobs {
   text-decoration: underline;
 }
 
-.pane.build-details a,
-.pane.build-details a:visited {
-  color: var(--pane-link-color--visited);
-  opacity: 0.6;
-  text-decoration: none;
+.pane.build-details a {
+  color: var(--text-color-secondary) !important;
+  text-decoration: none !important;
 }
 
 .pane.build-details a:hover {
