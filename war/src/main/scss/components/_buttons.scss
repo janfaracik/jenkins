@@ -299,3 +299,73 @@ $jenkins-split-button-border-radius: 0.2rem;
     }
   }
 }
+
+.buildtitle {
+  margin-top: -0.2rem;
+  margin-bottom: 0.8rem;
+  font-weight: 550;
+}
+
+#buildHistoryPage {
+  border: 2px solid color-mix(in srgb, var(--text-color-secondary) 15%, transparent);
+  padding: 1rem;
+  margin: 10px;
+  border-radius: 1rem;
+
+  .jenkins-search {
+    margin-inline: -0.5rem;
+    margin-top: -0.2rem;
+    margin-bottom: -0.25rem;
+  }
+}
+
+.ethan {
+  @include mixins.item();
+
+  display: flex;
+  flex-direction: column;
+  padding: 0.35rem 0.55rem;
+  margin: 0 -0.5rem;
+  font-size: 0.8rem !important;
+
+  .toprow {
+    //display: grid;
+    //grid-template-columns: auto auto auto;
+    //align-items: center;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    .build-status-link {
+      display: contents;
+    }
+
+    a {
+      color: var(--text-color);
+      text-decoration: none;
+    }
+
+    .timeman {
+      color: var(--text-color-secondary);
+    }
+  }
+}
+
+.itemsss {
+  display: flex;
+  flex-direction: column;
+}
+
+.willow {
+  display: flex;
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  margin-top: 1rem;
+  margin-bottom: 4px;
+}
+
+.descriptionnn {
+  color: var(--text-color-secondary);
+  margin-top: 8px;
+  //margin-left: 24px;
+}
