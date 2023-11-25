@@ -315,7 +315,7 @@ $jenkins-split-button-border-radius: 0.2rem;
   .jenkins-search {
     margin-inline: -0.5rem;
     margin-top: -0.2rem;
-    margin-bottom: -0.25rem;
+    margin-bottom: 5px;
   }
 }
 
@@ -360,7 +360,7 @@ $jenkins-split-button-border-radius: 0.2rem;
   display: flex;
   font-size: 0.75rem;
   color: var(--text-color-secondary);
-  margin-top: 1rem;
+  margin-top: 10px;
   margin-bottom: 4px;
 }
 
