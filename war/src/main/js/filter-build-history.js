@@ -26,6 +26,7 @@ function loadPage() {
 
         xander.innerHTML = responseText;
         noBuilds.style.display = "none";
+        Behaviour.applySubtree(xander);
       });
     }
   });

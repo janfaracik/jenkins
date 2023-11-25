@@ -37,43 +37,45 @@ THE SOFTWARE.
 
   <div class="ethan" page-entry-id="${pageEntry.entryId}">
     <div class="toprow">
-      <a class="build-status-link" href="${h.getConsoleUrl(build)}" tooltip="${build.iconColor.description} > ${%Console Output}">
+      <a class="toprow__icon"
+         href="${h.getConsoleUrl(build)}"
+         tooltip="${build.iconColor.description} > ${%Console Output}">
           <l:icon src="symbol-status-${build.iconColor.iconName}" />
       </a>
-      <a href="${link}">${build.displayName}</a>
-      <div class="timeman" time="${build.timestamp.time.time}">
-        <j:set var="linkTitleAttr" value=""/>
-        <j:if test="${!build.building}">
-          <j:set var="linkTitleAttr">${%Took} ${build.durationString}</j:set>
-        </j:if>
-        <div tooltip="${linkTitleAttr}">
-          <i:formatDate value="${build.timestamp.time}" type="time" timeStyle="short" />
-          ${h.getUserTimeZonePostfix()}
-        </div>
-        <j:if test="${build.building}">
-          <j:set target="${it.widget}" property="nextBuildNumberToFetch" value="${build.number}"/>
-          <t:buildProgressBar build="${build}"/>
-        </j:if>
-      </div>
-    </div>
-    <div>
-      <div class="middle-align build-badge">
-        <j:set var="badges" value="${build.badgeActions}"/>
-        <j:if test="${!empty(badges)}">
-          <st:nbsp/>
-          <j:forEach var="badge" items="${badges}">
-            <st:include it="${badge}" page="badge.jelly" />
-          </j:forEach>
-        </j:if>
-      </div>
+      <a href="${link}" class="toprow__link">
+        ${build.displayName}
+        <span class="timeman" time="${build.timestamp.time.time}">
+          <j:set var="linkTitleAttr" value="${null}" />
+          <j:if test="${!build.building}">
+            <j:set var="linkTitleAttr">${%Took} ${build.durationString}</j:set>
+          </j:if>
+          <div tooltip="${linkTitleAttr}">
+            <i:formatDate value="${build.timestamp.time}" type="time" timeStyle="short" />
+            ${h.getUserTimeZonePostfix()}
+          </div>
+        </span>
+      </a>
       <j:if test="${build.building}">
-        <div class="build-stop">
+        <div class="toprow__controls">
+          <j:if test="${build.building}">
+            <j:set target="${it.widget}" property="nextBuildNumberToFetch" value="${build.number}"/>
+            <t:buildProgressBar build="${build}"/>
+          </j:if>
+
           <!-- Check CANCEL permission for Project, Admin permission otherwise -->
           <j:if test="${empty(it.widget.owner.CANCEL) ? h.hasPermission(app.ADMINISTER) : it.widget.owner.hasPermission(it.widget.owner.CANCEL)}">
             <l:stopButton href="${link}stop" alt="[cancel]" confirm="${%confirm(build.fullDisplayName)}" />
           </j:if>
         </div>
       </j:if>
+      <div class="toprow__badges">
+        <j:set var="badges" value="${build.badgeActions}"/>
+        <j:if test="${!empty(badges)}">
+          <j:forEach var="badge" items="${badges}">
+            <st:include it="${badge}" page="badge.jelly" />
+          </j:forEach>
+        </j:if>
+      </div>
     </div>
     <j:if test="${!empty build.truncatedDescription}">
       <div class="descriptionnn">

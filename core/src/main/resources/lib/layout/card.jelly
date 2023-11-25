@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+Copyright (c) 2023 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-  Render build histories. 
--->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <j:set target="${it}" property="nextBuildNumberToFetch" value="${it.nextBuildNumber}"/>
-  <j:invokeStatic className="java.time.LocalDate" method="now" var="now"/>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
+    <st:documentation>
+        <st:attribute name="title" />
+        <st:attribute name="id" />
+        <st:attribute name="controls">
+            Todo
+        </st:attribute>
+        <st:attribute name="expandable">
+            Shows the expand icon if expandable
+        </st:attribute>
+    </st:documentation>
 
-  <j:forEach var="pageEntry" items="${it.runs}">
-      <i:formatDate value="${pageEntry.entry.timestamp.time}" var="date" type="date" dateStyle="long" />
-      <i:formatDate value="${pageEntry.entry.timestamp.time}" var="simpleDate" type="date" pattern="YYYY-MM-dd" />
-    <j:if test="${pastDate != date}">
-      <span class="willow">${simpleDate == now ? "%Today" : date}</span>
-      <j:set var="pastDate" value="${date}" />
-    </j:if>
-    <st:include page="/hudson/widgets/HistoryWidget/entry.jelly" />
-  </j:forEach>
+    <div class="jenkins-card" id="${attrs.id}">
+        <div class="jenkins-card__title">
+            ${attrs.title}
+            <div class="jenkins-card__controls">
+                <j:out value="${controls}"/>
+                <j:if test="${attrs.expandable != null}">
+                    <a href="${attrs.expandable}" class="jenkins-button" tooltip="Expand">
+                        <l:icon src="symbol-expand" />
+                    </a>
+                </j:if>
+            </div>
+        </div>
+        <div class="jenkins-card__content">
+            <d:invokeBody />
+        </div>
+    </div>
 </j:jelly>
