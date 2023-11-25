@@ -78,7 +78,7 @@ THE SOFTWARE.
       </div>
     </div>
     <j:if test="${!empty build.truncatedDescription}">
-      <div class="descriptionnn">
+      <div class="ethan__description">
         <j:out value="${app.markupFormatter.translate(build.truncatedDescription)}"/>
       </div>
     </j:if>
