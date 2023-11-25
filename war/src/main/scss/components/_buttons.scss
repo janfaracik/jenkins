@@ -309,8 +309,9 @@ $jenkins-split-button-border-radius: 0.2rem;
 #buildHistoryPage {
   border: 2px solid color-mix(in srgb, var(--text-color-secondary) 15%, transparent);
   padding: 1rem;
-  margin: 10px;
+  margin: 10px 0 10px 10px;
   border-radius: 1rem;
+  -webkit-font-smoothing: subpixel-antialiased;
 
   .jenkins-search {
     margin-inline: -0.5rem;
@@ -336,13 +337,10 @@ $jenkins-split-button-border-radius: 0.2rem;
     align-items: center;
     gap: 0.5rem;
 
-    .build-status-link {
-      display: contents;
-    }
-
     a {
       color: var(--text-color);
       text-decoration: none;
+      font-weight: 450;
     }
 
     .timeman {
@@ -361,6 +359,7 @@ $jenkins-split-button-border-radius: 0.2rem;
   font-size: 0.75rem;
   color: var(--text-color-secondary);
   margin-top: 10px;
+  font-weight: 450;
   margin-bottom: 4px;
 }
 
