@@ -41,7 +41,7 @@ THE SOFTWARE.
             <div class="jenkins-card__controls">
                 <j:out value="${controls}"/>
                 <j:if test="${attrs.expandable != null}">
-                    <a href="${attrs.expandable}" class="jenkins-button" tooltip="Expand">
+                    <a href="${attrs.expandable}" class="letterman" tooltip="Expand">
                         <l:icon src="symbol-expand" />
                     </a>
                 </j:if>

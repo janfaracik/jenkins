@@ -55,8 +55,8 @@ THE SOFTWARE.
           </div>
         </span>
       </a>
-      <j:if test="${build.building}">
-        <div class="toprow__controls">
+      <div class="toprow__controls">
+        <j:if test="${build.building}">
           <j:if test="${build.building}">
             <j:set target="${it.widget}" property="nextBuildNumberToFetch" value="${build.number}"/>
             <t:buildProgressBar build="${build}"/>
@@ -66,15 +66,16 @@ THE SOFTWARE.
           <j:if test="${empty(it.widget.owner.CANCEL) ? h.hasPermission(app.ADMINISTER) : it.widget.owner.hasPermission(it.widget.owner.CANCEL)}">
             <l:stopButton href="${link}stop" alt="[cancel]" confirm="${%confirm(build.fullDisplayName)}" />
           </j:if>
-        </div>
-      </j:if>
-      <div class="toprow__badges">
+        </j:if>
         <j:set var="badges" value="${build.badgeActions}"/>
         <j:if test="${!empty(badges)}">
           <j:forEach var="badge" items="${badges}">
             <st:include it="${badge}" page="badge.jelly" />
           </j:forEach>
         </j:if>
+        <div class="letterman asda-link" data-href="${link}">
+          <l:icon src="symbol-menu" />
+        </div>
       </div>
     </div>
     <j:if test="${!empty build.truncatedDescription}">
