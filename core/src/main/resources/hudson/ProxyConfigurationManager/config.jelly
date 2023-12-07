@@ -1,9 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
-
-Copyright (c) 2012, Martin Schroeder, Intel Mobile Communications GmbH
+Copyright (c) 2023, CloudBees Inc, and other contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +22,16 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-  Displays the console output
--->
 <?jelly escape-by-default='true'?>
-<st:compress xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-<st:setHeader name="X-Building" value="${it.building}" />
-<l:ajax>
-  <l:icon alt="${it.iconColor.description}" src="symbol-status-${it.iconColor.iconName}" class="icon-xlg" tooltip="${it.iconColor.description}"/>
-</l:ajax>
-</st:compress>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <f:section title="${%HTTP Proxy Configuration}">
+        <f:advanced title="${%Setup}">
+            <j:scope>
+                <j:set var="descriptor" value="${instance.getProxyDescriptor()}"/>
+                <j:set var="instance" value="${app.proxy}"/>
+                <st:include from="${descriptor}" page="${descriptor.configPage}"/>
+            </j:scope>
+        </f:advanced>
+    </f:section>
+</j:jelly>
