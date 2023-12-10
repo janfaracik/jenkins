@@ -38,7 +38,7 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
-      <div style="display: flex; border: 100px solid gray; background: gray;">
+      <div style="display: flex; border: 100px solid transparent">
         <div style="width: 100px; height: 100px; background: var(--layer-1)"></div>
         <div style="width: 100px; height: 100px; background: var(--layer-2)"></div>
         <div style="width: 100px; height: 100px; background: var(--layer-3)"></div>
