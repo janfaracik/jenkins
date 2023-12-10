@@ -51,7 +51,9 @@ THE SOFTWARE.
         </div>
       </j:when>
       <j:otherwise>
-        <progress class="jenkins-progress-bar__precise" value="${attrs.pos}" max="100" />
+        <div class="jenkins-progress-bar__precise">
+          <div style="width: ${attrs.pos}px"></div>
+        </div>
       </j:otherwise>
     </j:choose>
   </x:element>

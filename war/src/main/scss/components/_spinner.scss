@@ -93,6 +93,7 @@
   --color: var(--accent-color);
 
   display: inline-flex;
+  align-items: stretch;
   background: color-mix(in srgb, var(--text-color-secondary) 25%, transparent);
   border-radius: 100px;
   width: 100px;
@@ -108,15 +109,11 @@
     appearance: none;
     height: 100%;
 
-    &::-webkit-progress-bar {
-      background: transparent;
-      border-radius: 10px;
-    }
-
-    &::-webkit-progress-value {
+    div {
       background: var(--color);
       border-radius: 10px;
       min-width: 4px;
+      height: 100%;
     }
   }
 
