@@ -38,11 +38,17 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
-      <div style="display: flex">
+      <div style="display: flex; border: 100px solid gray; background: gray;">
         <div style="width: 100px; height: 100px; background: var(--layer-1)"></div>
         <div style="width: 100px; height: 100px; background: var(--layer-2)"></div>
         <div style="width: 100px; height: 100px; background: var(--layer-3)"></div>
         <div style="width: 100px; height: 100px; background: var(--layer-4)"></div>
+        <div style="width: 100px; height: 100px; background: var(--layer-5)"></div>
+        <div style="width: 100px; height: 100px; background: var(--layer-6)"></div>
+        <div style="width: 100px; height: 100px; background: var(--layer-7)"></div>
+        <div style="width: 100px; height: 100px; background: var(--layer-8)"></div>
+        <div style="width: 100px; height: 100px; background: var(--layer-9)"></div>
+        <div style="width: 100px; height: 100px; background: var(--layer-10)"></div>
       </div>
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
