@@ -52,7 +52,7 @@ THE SOFTWARE.
       <l:search-bar placeholder="${%find}"
                     clazz="${page.runs.isEmpty() and page.queueItems.isEmpty() ? 'jenkins-hidden' : ''}"/>
 
-      <div id="no-builds" class="jenkins-pane__information">
+      <div id="no-builds" class="nobuilds">
         ${%No builds}
       </div>
 

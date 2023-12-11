@@ -433,3 +433,11 @@ $jenkins-split-button-border-radius: 0.2rem;
     height: 1.25rem;
   }
 }
+
+.nobuilds {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem;
+}
