@@ -23,7 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <j:set var="page" value="${it.historyPageFilter}" />
 
   <j:set var="controls">
@@ -48,15 +48,17 @@ THE SOFTWARE.
        page-entry-oldest="${page.oldestOnPage}"
        page-has-up="${page.hasUpPage}"
        page-has-down="${page.hasDownPage}">
-    <l:card title="Builds" controls="${controls}" expandable="buildTimeTrend">
+    <l:card id="jenkins-builds" title="Builds" controls="${controls}" expandable="buildTimeTrend">
       <l:search-bar placeholder="${%find}"
                     clazz="${page.runs.isEmpty() and page.queueItems.isEmpty() ? 'jenkins-hidden' : ''}"/>
 
-      <div id="no-builds" class="nobuilds">
-        ${%No builds}
-      </div>
+      <div class="app-builds-container">
+        <div id="no-builds" class="app-builds-container__placeholder">
+          ${%No builds}
+        </div>
 
-      <div id="xander">
+        <div id="xander" class="app-builds-container__items">
+        </div>
       </div>
 
       <!--The value for `page-next-build` is modified inside of `entries.jelly` on render, so set the attribute-->

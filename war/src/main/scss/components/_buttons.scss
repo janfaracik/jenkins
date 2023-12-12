@@ -389,10 +389,6 @@ $jenkins-split-button-border-radius: 0.2rem;
   flex-direction: column;
 }
 
-#xander {
-  margin-bottom: -0.5rem;
-}
-
 .willow {
   display: flex;
   font-size: 0.75rem;
@@ -434,10 +430,29 @@ $jenkins-split-button-border-radius: 0.2rem;
   }
 }
 
-.nobuilds {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 3rem;
+.app-builds-container {
+  transition: opacity var(--standard-transition);
+
+  &__items {
+    margin-bottom: -0.5rem;
+  }
+
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem;
+    animation: timeonthefloor var(--standard-transition);
+
+    @keyframes timeonthefloor {
+      from {
+        opacity: 0;
+      }
+    }
+  }
+
+  &--loading {
+    opacity: 0.3;
+  }
 }
