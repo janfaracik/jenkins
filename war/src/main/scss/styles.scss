@@ -3,3 +3,24 @@
 @use "components";
 @use "form";
 @use "pages";
+
+//::view-transition-old(root),
+//::view-transition-new(root) {
+//  animation-duration: 0s;
+//}
+
+@keyframes incoming {
+  from {
+    scale: 97.5%;
+    opacity: 0;
+  }
+}
+
+
+@keyframes outgoing {
+  to {
+    scale: 95%;
+    opacity: 0;
+  }
+}
+

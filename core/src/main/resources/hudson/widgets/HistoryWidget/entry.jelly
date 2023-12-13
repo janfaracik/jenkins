@@ -35,7 +35,16 @@ THE SOFTWARE.
     <i:setTimeZone value="${h.getUserTimeZone()}" />
    </j:if>
 
-  <div class="ethan" page-entry-id="${pageEntry.entryId}">
+<!--  <style>-->
+<!--    ::view-transition-old(item-${pageEntry.entryId}) {-->
+<!--&lt;!&ndash;    animation: 0.3s outgoing both;&ndash;&gt;-->
+<!--    }-->
+<!--    ::view-transition-new(item-${pageEntry.entryId}) {-->
+<!--&lt;!&ndash;    animation: 0.3s incoming both;&ndash;&gt;-->
+<!--    }-->
+<!--  </style>-->
+
+  <div class="ethan" page-entry-id="${pageEntry.entryId}" style="view-transition-name: item-${pageEntry.entryId}">
     <div class="toprow">
       <a class="toprow__icon"
          href="${h.getConsoleUrl(build)}"

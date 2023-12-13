@@ -28,9 +28,11 @@ function loadPage() {
           return;
         }
 
-        xander.innerHTML = responseText;
-        noBuilds.style.display = "none";
-        Behaviour.applySubtree(xander);
+        document.startViewTransition(() => {
+          xander.innerHTML = responseText;
+          noBuilds.style.display = "none";
+          Behaviour.applySubtree(xander);
+        });
       });
     }
   });
