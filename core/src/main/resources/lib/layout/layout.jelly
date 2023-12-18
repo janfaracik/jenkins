@@ -60,10 +60,6 @@ THE SOFTWARE.
     <st:attribute name="type" use="optional">
       Available values: two-column (by default), one-column (full-width size) or full-screen (since 2.53).
     </st:attribute>
-    <st:attribute name="nogrid" use="optional">
-      Do not include Bootstrap 3 grid. When a plugin wants to use a more recent version of Bootstrap then
-      the bundled grid will cause conflicts.
-    </st:attribute>
   </st:documentation>
 <l:view contentType="text/html;charset=UTF-8">
 <st:setHeader name="Expires" value="0" />
@@ -111,9 +107,6 @@ THE SOFTWARE.
     <title>${h.appendIfNotNull(title, ' [Jenkins]', 'Jenkins')}</title>
 
     <link rel="stylesheet" href="${resURL}/jsbundles/styles.css" type="text/css" />
-    <j:if test="${attrs.nogrid==null or attrs.nogrid.equals(false)}">
-      <link rel="stylesheet" href="${resURL}/css/responsive-grid.css" type="text/css" />
-    </j:if>
     <j:if test="${attrs.css!=null}">
       <link rel="stylesheet" href="${resURL}${attrs.css}" type="text/css" />
     </j:if>
@@ -190,7 +183,7 @@ THE SOFTWARE.
       </l:breadcrumbBar>
     </j:if>
 
-    <div id="page-body" class="app-page-body app-page-body--${layoutType} clear">
+    <div id="page-body" class="app-page-body app-page-body--${layoutType}">
       <j:if test="${layoutType=='two-column'}">
         <div id="side-panel" class="app-page-body__sidebar">
           <j:set var="mode" value="side-panel" />

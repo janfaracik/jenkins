@@ -27,13 +27,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
 <l:layout permissions="${app.MANAGE_AND_SYSTEM_READ}" type="one-column" title="Hello">
     <l:main-panel>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-24">
-                    <h1>Hello, world!</h1>
-                </div>
-            </div>
-        </div>
+        <h1>Hello, world!</h1>
     </l:main-panel>
 </l:layout>
 </j:jelly>
