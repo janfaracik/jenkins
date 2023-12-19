@@ -101,6 +101,10 @@ $padding-y: 0.65rem;
   flex: 1;
   font-weight: 500;
 
+  a {
+    text-decoration: underline;
+  }
+
   & > div {
     font-weight: normal;
   }
