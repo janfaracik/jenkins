@@ -28,7 +28,7 @@ module.exports = {
         ],
       },
     ],
-    "color-function-notation": "legacy",
+    "color-function-notation": "modern",
     "alpha-value-notation": "number",
     "number-max-precision": 5,
     "function-no-unknown": null,
