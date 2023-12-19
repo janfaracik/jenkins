@@ -71,7 +71,7 @@ THE SOFTWARE.
             <div class="app-build-queue__item__text">
               <j:choose>
                 <j:when test="${hasPermission}">
-                  <a href="${rootURL}/${item.task.url}" class="model-link rollsroyce" tooltip="${item.causesDescription} ${item.why} ${item.params} \n ${%WaitingFor(item.inQueueForString)}">
+                  <a href="${rootURL}/${item.task.url}" class="model-link" tooltip="${item.causesDescription} ${item.why} ${item.params} \n ${%WaitingFor(item.inQueueForString)}">
                     <l:breakable value="${item.displayName}"/>
                   </a>
                 </j:when>
