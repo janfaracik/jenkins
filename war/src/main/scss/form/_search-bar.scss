@@ -9,7 +9,7 @@
 
   &__input {
     appearance: none;
-    background: var(--layer-1);
+    background: var(--surface-1);
     border: none;
     outline: none;
     border-radius: 0.625rem;
@@ -60,13 +60,13 @@
 
     &:not(:disabled) {
       &:hover {
-        background: var(--layer-2);
+        background: var(--surface-2);
       }
 
       &:active,
       &:focus {
         outline: none;
-        background: var(--layer-2);
+        background: var(--surface-2);
         box-shadow:
           0 0 0 2px var(--focus-input-border),
           0 0 0 7px var(--focus-input-glow);
@@ -154,8 +154,8 @@
       right: calc(50% - 1em);
       width: 2em;
       height: 2em;
-      border: 0.1rem solid var(--item-background--active);
-      border-radius: 0.3rem;
+      border: 0.1rem solid var(--surface-2);
+      border-radius: 0.35rem;
     }
 
     svg {

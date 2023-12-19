@@ -5,17 +5,37 @@
 @use "pages";
 
 :root {
-  --accent-color: red;
-  --basey: var(--accent-color);
+  //--accent-color: var(--purple);
 
-  --layer-1: color-mix(in srgb, var(--basey) 2.5%, #ffffff);
-  --layer-10: color-mix(in srgb, var(--basey) 2.5%, #000000);
-  --layer-2: color-mix(in srgb, var(--layer-1), var(--layer-10) 11.1%);
-  --layer-3: color-mix(in srgb, var(--layer-1), var(--layer-10) 22.2%);
-  --layer-4: color-mix(in srgb, var(--layer-1), var(--layer-10) 33.3%);
-  --layer-5: color-mix(in srgb, var(--layer-1), var(--layer-10) 44.4%);
-  --layer-6: color-mix(in srgb, var(--layer-1), var(--layer-10) 55.5%);
-  --layer-7: color-mix(in srgb, var(--layer-1), var(--layer-10) 66.6%);
-  --layer-8: color-mix(in srgb, var(--layer-1), var(--layer-10) 77.7%);
-  --layer-9: color-mix(in srgb, var(--layer-1), var(--layer-10) 88.8%);
+  //--surface-1: hsl(from var(--accent-color) h 45% 94%);
+  //--surface-2: hsl(from var(--accent-color) h 42.5% 89%);
+  //--surface-3: hsl(from var(--accent-color) h 40% 84%);
+  //--surface-4: hsl(from var(--accent-color) h 37.5% 79%);
+  //--surface-5: hsl(from var(--accent-color) h 35% 74%);
+
+  --surface-1: hsl(from var(--accent-color) h 30% 50% / 10%);
+  --surface-2: hsl(from var(--accent-color) h 27.5% 50% / 17.5%);
+  --surface-3: hsl(from var(--accent-color) h 25% 50% / 25%);
+  --surface-4: hsl(from var(--accent-color) h 22.5% 50% / 32.5%);
+  --surface-5: hsl(from var(--accent-color) h 0% 50% / 40%);
+
+  //--layer-1: hsl(from var(--accent-color) h 45% 96%);
+  //--layer-1-5: hsl(from var(--accent-color) h 42.5% 90%);
+  //--layer-2: hsl(from var(--accent-color) h 40% 85%);
+  //--layer-2-5: hsl(from var(--accent-color) h 37.5% 80%);
+  //--layer-3: hsl(from var(--accent-color) h 35% 75%);
+  //--layer-3-5: hsl(from var(--accent-color) h 32.5% 70%);
+  //--layer-4: hsl(from var(--accent-color) h 30% 65%);
+  //--layer-4-5: hsl(from var(--accent-color) h 27.5% 60%);
+  //--layer-5: hsl(from var(--accent-color) h 25% 55%);
+  //--layer-5-5: hsl(from var(--accent-color) h 25% 50%);
+  //--layer-6: hsl(from var(--accent-color) h 25% 45%);
+  //--layer-6-5: hsl(from var(--accent-color) h 27.5% 40%);
+  //--layer-7: hsl(from var(--accent-color) h 30% 35%);
+  //--layer-7-5: hsl(from var(--accent-color) h 32.5% 30%);
+  //--layer-8: hsl(from var(--accent-color) h 35% 25%);
+  //--layer-8-5: hsl(from var(--accent-color) h 37.5% 20%);
+  //--layer-9: hsl(from var(--accent-color) h 40% 15%);
+  //--layer-9-5: hsl(from var(--accent-color) h 42.5% 10%);
+  //--layer-10: hsl(from var(--accent-color) h 45% 3%);
 }

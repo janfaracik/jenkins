@@ -38,18 +38,43 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
-      <div style="display: flex; border: 100px solid transparent">
-        <div style="width: 100px; height: 100px; background: var(--layer-1)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-2)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-3)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-4)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-5)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-6)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-7)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-8)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-9)"></div>
-        <div style="width: 100px; height: 100px; background: var(--layer-10)"></div>
-      </div>
+<!--      <div style="display: flex; border-top: 100px solid transparent">-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-1)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-2)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-3)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-4)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-5)"></div>-->
+<!--      </div>-->
+
+<!--      <div style="display: flex; ">-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-o-1)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-o-2)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-o-3)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-o-4)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;surface-o-5)"></div>-->
+<!--      </div>-->
+
+<!--      <div style="display: flex; border: 100px solid transparent">-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-1)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-1-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-2)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-2-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-3)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-3-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-4)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-4-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-5-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-6)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-6-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-7)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-7-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-8)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-8-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-9)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-9-5)"></div>-->
+<!--        <div style="width: 100px; height: 100px; background: var(&#45;&#45;layer-10)"></div>-->
+<!--      </div>-->
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 

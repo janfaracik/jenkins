@@ -18,7 +18,7 @@ $colors: (
 
 $semantics: (
   "accent": var(--blue),
-  "text": var(--layer-10),
+  "text": hsl(from var(--accent-color) h 45% 10% / 90%),
   "error": var(--red),
   "warning": var(--orange),
   "success": var(--green),
@@ -50,7 +50,7 @@ $semantics: (
   --dark-grey: #4d545d;
 
   // branding
-  --secondary: var(--layer-6);
+  --secondary: hsl(from var(--accent-color) h 45% 30% / 80%);
   --focus-input-border: var(--basey);
   --focus-input-glow: color-mix(in srgb, var(--basey) 25%, transparent);
 
@@ -140,7 +140,7 @@ $semantics: (
   --btn-link-bg--active: var(--light-grey);
 
   // Table
-  --table-background: var(--layer-1);
+  --table-background: var(--surface-1);
   --table-header-foreground: var(--text-color);
   --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
@@ -217,18 +217,18 @@ $semantics: (
   --card-background: transparent;
   --card-background--hover: transparent;
   --card-background--active: transparent;
-  --card-border-color: var(--layer-1);
-  --card-border-color--hover: var(--layer-2);
-  --card-border-color--active: var(--layer-3);
+  --card-border-color: var(--surface-1);
+  --card-border-color--hover: var(--surface-2);
+  --card-border-color--active: var(--surface-3);
   --card-border-width: 2px;
 
   // Tab bar
-  --tabs-background: var(--layer-1);
+  --tabs-background: var(--surface-1);
   --tabs-item-background: transparent;
   --tabs-item-foreground: var(--text-color);
-  --tabs-item-background--hover: var(--layer-1);
+  --tabs-item-background--hover: var(--surface-1);
   --tabs-item-foreground--hover: var(--text-color);
-  --tabs-item-background--active: var(--layer-2);
+  --tabs-item-background--active: var(--surface-2);
   --tabs-item-foreground--active: var(--text-color);
   --tabs-item-background--selected: var(--background);
   --tabs-item-foreground--selected: var(--link-color);
@@ -240,8 +240,8 @@ $semantics: (
   --tab-baseline-default-display: none;
 
   // Side panel
-  --panel-header-bg-color: var(--layer-1);
-  --panel-border-color: var(--layer-1);
+  --panel-header-bg-color: var(--surface-1);
+  --panel-border-color: var(--surface-1);
   --side-panel-hover-color: var(--panel-border-color);
   --task-link-bg-color--active: var(--panel-border-color);
   --task-link-bg-color--hover: var(--very-light-grey);
@@ -301,15 +301,15 @@ $semantics: (
   --auto-complete-bg-color--prehighlight: #b3d4ff;
 
   // Default button
-  --button-background: var(--layer-1);
-  --button-background--hover: var(--layer-2);
-  --button-background--active: var(--layer-3);
-  --button-box-shadow--focus: color-mix(in srgb, var(--layer-3), transparent);
+  --button-background: var(--surface-1);
+  --button-background--hover: var(--surface-2);
+  --button-background--active: var(--surface-3);
+  --button-box-shadow--focus: color-mix(in srgb, var(--surface-2), transparent);
 
   // Variables for sidebar items, card items
-  --item-background--hover: var(--layer-1);
-  --item-background--active: var(--layer-2);
-  --item-box-shadow--focus: color-mix(in srgb, var(--layer-2), transparent);
+  --item-background--hover: var(--surface-1);
+  --item-background--active: var(--surface-2);
+  --item-box-shadow--focus: color-mix(in srgb, var(--surface-2), transparent);
 
   // Deprecated
   --primary: var(--accent-color); // Use var(--accent-color) instead
