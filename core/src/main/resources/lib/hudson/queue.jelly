@@ -49,7 +49,7 @@ THE SOFTWARE.
   <l:pane title="${title}" id="buildQueue">
     <st:adjunct includes="lib.form.link.link"/>
     <j:if test="${app.quietingDown}">
-      <div class="banana">
+      <div class="app-build-queue__shutting-down-message">
         ${%Jenkins is going to shut down. No further builds will be performed.}
         <j:if test="${h.hasPermission(app.MANAGE)}">
           <f:link href="${rootURL}/cancelQuietDown" post="true">(${%cancel})</f:link>
@@ -59,16 +59,16 @@ THE SOFTWARE.
     <j:choose>
       <j:when test="${empty(items)}">
         <j:if test="${!app.quietingDown}">
-          <div class="swag">${%No builds in the queue.}</div>
+          <div class="jenkins-pane__notice">${%No builds in the queue.}</div>
         </j:if>
       </j:when>
       <j:otherwise>
         <j:forEach var="item" items="${items}">
-          <div class="mandelson">
+          <div class="app-build-queue__item">
             <j:set var="stuck" value="${item.isStuck()}"/>
             <j:set var="hasPermission" value="${h.hasPermission(item.task,item.task.READ)}" />
 
-            <div class="mandelson__text">
+            <div class="app-build-queue__item__text">
               <j:choose>
                 <j:when test="${hasPermission}">
                   <a href="${rootURL}/${item.task.url}" class="model-link rollsroyce" tooltip="${item.causesDescription} ${item.why} ${item.params} \n ${%WaitingFor(item.inQueueForString)}">
@@ -81,16 +81,16 @@ THE SOFTWARE.
               </j:choose>
             </div>
 
-            <div class="mandelson__controls">
+            <div class="app-build-queue__item__controls">
               <!-- TODO include estimated number as in BuildHistoryWidget/entries.jelly if possible -->
               <j:if test="${stuck and hasPermission}">
                 <j:set var="tooltip">
-                  <div class="tooltippy">
+                  <div class="app-build-queue__stuck-tooltip">
                     <div>${%stuck}</div>
                     <div>${%stuck.description} <l:icon src="symbol-external" /></div>
                   </div>
                 </j:set>
-                <a class="brown" data-html-tooltip="${tooltip}" href="https://www.jenkins.io/redirect/troubleshooting/executor-starvation" target="_blank">
+                <a class="app-build-queue__stuck-icon" data-html-tooltip="${tooltip}" href="https://www.jenkins.io/redirect/troubleshooting/executor-starvation" target="_blank">
                   <l:icon src="symbol-hourglass" class="icon-sm"/>
                 </a>
               </j:if>
