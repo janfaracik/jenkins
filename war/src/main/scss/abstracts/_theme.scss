@@ -13,12 +13,12 @@ $colors: (
   "red": #e6001f,
   "yellow": #ffb31a,
   "white": #fff,
-  "black": #14141f,
+  "black": hsl(from var(--accent-color) h 45% 10% / 90%),
 );
 
 $semantics: (
   "accent": var(--blue),
-  "text": hsl(from var(--accent-color) h 45% 10% / 90%),
+  "text": var(--black),
   "error": var(--red),
   "warning": var(--orange),
   "success": var(--green),
@@ -51,8 +51,8 @@ $semantics: (
 
   // branding
   --secondary: hsl(from var(--accent-color) h 45% 30% / 80%);
-  --focus-input-border: var(--basey);
-  --focus-input-glow: color-mix(in srgb, var(--basey) 25%, transparent);
+  --focus-input-border: #063f61;
+  --focus-input-glow: #{color.change(#0b6aa2, $alpha: 0.25)};
 
   // Deprecated
   --focus-btn-primary: #{color.change(#0b6aa2, $alpha: 0.5)};
@@ -70,7 +70,7 @@ $semantics: (
   --unstable-build-icon-color: var(--orange);
 
   // Background colors
-  --background: white;
+  --background: var(--white);
 
   // Header
   --brand-link-color: var(--secondary);
@@ -87,7 +87,7 @@ $semantics: (
   --header-item-border-radius: 4px;
 
   // Breadcrumbs bar
-  --breadcrumbs-bar-background: color-mix(in srgb, color-mix(in srgb, var(--basey) 20%, var(--background)), transparent);
+  --breadcrumbs-bar-background: hsl(from var(--surface-1) h s 94% / 60%);
 
   // Alert call outs
   --alert-success-text-color: #155724;
@@ -249,8 +249,8 @@ $semantics: (
   // Form
   --section-padding: 1.75rem;
   --input-color: var(--white);
-  --input-border: color-mix(in srgb, var(--basey) 55%, transparent);
-  --input-border-hover: var(--basey);
+  --input-border: #c3ccd1;
+  --input-border-hover: #5c7889;
   --input-hidden-password-bg-color: #f9f9f9;
   --form-item-max-width: min(65vw, 1600px);
   --form-item-max-width--medium: min(50vw, 1400px);
@@ -265,7 +265,7 @@ $semantics: (
 
   --form-label-font-weight: 500;
   --form-input-padding: 0.5rem;
-  --form-input-border-radius: 7px;
+  --form-input-border-radius: 6px;
   --form-input-glow: 0 0 0 10px transparent;
   --form-input-glow--focus: 0 0 0 5px var(--focus-input-glow);
   --pre-background: rgba(0, 0, 0, 0.05);
