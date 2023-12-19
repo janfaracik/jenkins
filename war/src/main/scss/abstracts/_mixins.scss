@@ -32,30 +32,6 @@
   }
 }
 
-@mixin link-dark {
-  text-decoration: var(--link-dark-text-decoration);
-  font-weight: var(--link-dark-font-weight);
-
-  &:link {
-    color: var(--link-dark-color);
-  }
-
-  &:visited {
-    color: var(--link-dark-visited-color);
-  }
-
-  &:hover,
-  &:focus {
-    color: var(--link-dark-color--hover);
-    text-decoration: var(--link-dark-text-decoration--hover);
-  }
-
-  &:active {
-    color: var(--link-dark-color--active);
-    text-decoration: var(--link-dark-text-decoration--active);
-  }
-}
-
 @mixin item {
   position: relative;
   z-index: 0;

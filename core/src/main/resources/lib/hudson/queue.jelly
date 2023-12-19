@@ -48,23 +48,17 @@ THE SOFTWARE.
   <l:pane title="${title}" width="2" id="buildQueue">
     <st:adjunct includes="lib.form.link.link"/>
     <j:if test="${app.quietingDown}">
-      <tr>
-        <td class="pane" colspan="2" style="white-space: normal;">
-          ${%Jenkins is going to shut down. No further builds will be performed.}
-          <j:if test="${h.hasPermission(app.MANAGE)}">
-            <f:link href="${rootURL}/cancelQuietDown" post="true">(${%cancel})</f:link>
-          </j:if>
-        </td>
-      </tr>
+      <div class="banana">
+        ${%Jenkins is going to shut down. No further builds will be performed.}
+        <j:if test="${h.hasPermission(app.MANAGE)}">
+          <f:link href="${rootURL}/cancelQuietDown" post="true">(${%cancel})</f:link>
+        </j:if>
+      </div>
     </j:if>
     <j:choose>
       <j:when test="${empty(items)}">
-        <j:if test="${! app.quietingDown}">
-          <tr>
-            <td class="pane" colspan="2">
-              ${%No builds in the queue.}
-            </td>
-          </tr>
+        <j:if test="${!app.quietingDown}">
+          <div class="swag">${%No builds in the queue.}</div>
         </j:if>
       </j:when>
       <j:otherwise>

@@ -1,5 +1,23 @@
 @use "../abstracts/mixins";
 
+$padding-x: 1rem;
+$padding-y: 0.65rem;
+
+.banana {
+  position: relative;
+  margin: 0 $padding-x $padding-y $padding-x;
+  z-index: 0;
+  font-size: var(--font-size-sm);
+  padding-bottom: $padding-y;
+  border-bottom: 2px solid var(--card-border-color);
+}
+
+.swag {
+  color: var(--text-color-secondary);
+  margin: 0 $padding-x $padding-y $padding-x;
+  font-size: var(--font-size-sm);
+}
+
 #side-panel .pane-frame {
   border-radius: 1rem;
   background: var(--card-background);
@@ -20,9 +38,8 @@
 
 #side-panel .pane-header,
 #side-panel .pane-footer {
-  color: var(--link-dark-color);
   background: transparent;
-  padding: 0.65rem 1rem;
+  padding: $padding-y $padding-x;
 }
 
 #side-panel .pane-header-title {
@@ -74,14 +91,6 @@
   &:not(:first-child) {
     border-top: 1px solid var(--panel-border-color);
   }
-}
-
-#side-panel .pane-header a,
-#side-panel .pane-footer a,
-#side-panel .pane-content a {
-  @include mixins.link-dark;
-
-  text-decoration: underline;
 }
 
 /**
