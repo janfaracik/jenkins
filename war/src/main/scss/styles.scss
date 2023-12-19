@@ -3,19 +3,3 @@
 @use "components";
 @use "form";
 @use "pages";
-
-:root {
-  //--accent-color: var(--purple);
-
-  //--surface-1: hsl(from var(--accent-color) h 45% 94%);
-  //--surface-2: hsl(from var(--accent-color) h 42.5% 89%);
-  //--surface-3: hsl(from var(--accent-color) h 40% 84%);
-  //--surface-4: hsl(from var(--accent-color) h 37.5% 79%);
-  //--surface-5: hsl(from var(--accent-color) h 35% 74%);
-
-  --surface-1: hsl(from var(--accent-color) h 30% 50% / 10%);
-  --surface-2: hsl(from var(--accent-color) h 27.5% 50% / 17.5%);
-  --surface-3: hsl(from var(--accent-color) h 25% 50% / 25%);
-  --surface-4: hsl(from var(--accent-color) h 22.5% 50% / 32.5%);
-  --surface-5: hsl(from var(--accent-color) h 0% 50% / 40%);
-}

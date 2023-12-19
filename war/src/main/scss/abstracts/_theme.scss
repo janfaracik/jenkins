@@ -330,4 +330,10 @@ $semantics: (
   @each $key, $value in $semantics {
     --#{$key}-color: #{$value};
   }
+
+  --surface-1: hsl(from var(--accent-color) h 30% 50% / 10%);
+  --surface-2: hsl(from var(--accent-color) h 27.5% 50% / 17.5%);
+  --surface-3: hsl(from var(--accent-color) h 25% 50% / 25%);
+  --surface-4: hsl(from var(--accent-color) h 22.5% 50% / 32.5%);
+  --surface-5: hsl(from var(--accent-color) h 0% 50% / 40%);
 }
