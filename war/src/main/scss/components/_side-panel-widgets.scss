@@ -77,8 +77,12 @@ $padding-y: 0.65rem;
 
 .jenkins-pane__notice {
   color: var(--text-color-secondary);
-  margin: 0 $padding-x $padding-y $padding-x;
+  padding: 0 $padding-x $padding-y $padding-x;
   font-size: var(--font-size-sm);
+
+  &:empty {
+    display: none;
+  }
 }
 
 #side-panel .pane-header {
