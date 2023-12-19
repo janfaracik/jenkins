@@ -3,6 +3,67 @@
 $padding-x: 1rem;
 $padding-y: 0.65rem;
 
+#side-panel .pane-frame {
+  border-radius: 1rem;
+  background: var(--card-background);
+  border: var(--card-border-width) solid var(--card-border-color);
+  margin-left: 10px;
+  margin-bottom: calc(var(--section-padding) / 2);
+  overflow: hidden;
+
+  a {
+    color: var(--text-color);
+  }
+}
+
+.tooltippy {
+  display: flex;
+  flex-direction: column;
+
+  div {
+    &:last-of-type {
+      display: flex;
+      align-items: center;
+      color: var(--text-color-secondary);
+      gap: 0.3rem;
+
+      svg {
+        width: 0.75rem;
+        height: 0.75rem;
+      }
+    }
+  }
+}
+
+.mandelson {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 0 $padding-x $padding-y $padding-x;
+  font-size: var(--font-size-sm);
+
+  &__text {
+    color: var(--text-color-secondary);
+
+    a {
+      color: var(--link-color) !important;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
+
+.brown {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .banana {
   position: relative;
   margin: 0 $padding-x $padding-y $padding-x;
@@ -16,15 +77,6 @@ $padding-y: 0.65rem;
   color: var(--text-color-secondary);
   margin: 0 $padding-x $padding-y $padding-x;
   font-size: var(--font-size-sm);
-}
-
-#side-panel .pane-frame {
-  border-radius: 1rem;
-  background: var(--card-background);
-  border: var(--card-border-width) solid var(--card-border-color);
-  margin-left: 10px;
-  margin-bottom: calc(var(--section-padding) / 2);
-  overflow: hidden;
 }
 
 #side-panel .pane-header {
