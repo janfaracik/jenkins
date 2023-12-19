@@ -70,13 +70,9 @@ THE SOFTWARE.
     <j:choose>
       <div class="pane-content">
         <j:when test="${paneIsCollapsed}">
-          <table class="pane">
-            <tr>
-              <td class="pane">
-                ${attrs.collapsedText}
-              </td>
-            </tr>
-          </table>
+          <div class="jenkins-pane__notice">
+            ${attrs.collapsedText}
+          </div>
         </j:when>
         <j:otherwise>
           <table class="pane ${attrs.class}">
