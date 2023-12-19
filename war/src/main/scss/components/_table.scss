@@ -184,6 +184,10 @@
     }
   }
 
+  &--auto-width {
+    width: auto !important;
+  }
+
   &--small {
     --table-padding: 0.2rem;
 
