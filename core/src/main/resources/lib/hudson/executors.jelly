@@ -56,13 +56,13 @@ THE SOFTWARE.
     </d:tag>
     <d:tag name="executor">
       <j:if test="${!c.offline or (c.offline and !e.idle)}">
-          <tr>
-            <td class="pane" align="right" style="vertical-align: top">
+          <div>
+            <div class="pane" align="right" style="vertical-align: top">
               ${name}
-            </td>
+            </div>
             <j:choose>
               <j:when test="${e.idle}">
-                <td class="pane">
+                <div>
                   <j:choose>
                     <j:when test="${c.offline}">
                       <a href="${rootURL}/${c.url}" class="model-link inside">${%Offline}</a>
@@ -71,15 +71,15 @@ THE SOFTWARE.
                       ${%Idle}
                     </j:otherwise>
                   </j:choose>
-                </td>
-                <td class="pane"/>
-                <td class="pane"/>
+                </div>
+                <div />
+                <div />
               </j:when>
               <j:otherwise>
                 <!-- not actually optional, but it helps with backward compatibility -->
                 <j:set var="executor" value="${e}" />
                 <st:include it="${e.currentExecutable}" page="executorCell.jelly" optional="true">
-                  <td class="pane">
+                  <div>
                     <div style="white-space: normal">
                       <j:set var="exe" value="${e.currentExecutable}" />
                       <j:set var="wu" value="${e.currentWorkUnit}" />
@@ -117,40 +117,38 @@ THE SOFTWARE.
                         </j:otherwise>
                       </j:choose>
                     </div>
-                  </td>
-                <td class="pane">
+                  </div>
+                <div>
                   <j:if test="${h.hasPermission(exeparent,exeparent.READ)}">
                       <a href="${rootURL}/${exe.url}" class="model-link inside" style="display: block;"><l:breakable value="${exe.displayName}"/></a>
                   </j:if>
-                </td>
+                </div>
                 </st:include>
-                <td class="pane" align="center" valign="middle">
+                <div>
                   <j:if test="${h.hasPermission(exeparent,exeparent.READ) and e.hasStopPermission()}">
                     <l:stopButton href="${rootURL}/${c.url}${url}/stopBuild?runExtId=${h.urlEncode(exe.externalizableId)}" confirm="${%confirm(exe.fullDisplayName)}" alt="${%terminate this build}"  />
                   </j:if>
-                </td>
+                </div>
               </j:otherwise>
             </j:choose>
-          </tr>
+          </div>
       </j:if>
     </d:tag>
   </d:taglib>
   <j:set var="computers" value="${attrs.computers?:app.computers}" />
   <j:set var="computersSize" value="${computers.size()}"/>
-    <l:pane width="3" id="executors"
-        title="&lt;a href='${rootURL}/computer/'>${%Build Executor Status}&lt;/a>"
+    <l:pane id="executors"
+        title="&lt;a href='${rootURL}/computer/'>${%Buildaa Executor Status}&lt;/a>"
         collapsedText="${%Computers(computersSize - 1, app.unlabeledLoad.computeTotalExecutors() - app.unlabeledLoad.computeIdleExecutors(), app.unlabeledLoad.computeTotalExecutors())}">
-      <colgroup><col width="30"/><col width="200*"/><col width="24"/></colgroup>
-
       <j:forEach var="c" items="${computers}">
         <j:set var="cDisplayExecutors" value="${c.displayExecutors}"/>
-        <tr>
+        <div>
           <j:if test="${(computersSize gt 1 and !cDisplayExecutors.isEmpty()) or (c.node == app and c.offline)}">
-            <th class="pane" colspan="4">
+            <div>
               <local:computerCaption title="${c.displayName}" />
-            </th>
+            </div>
           </j:if>
-        </tr>
+        </div>
         <j:forEach var="de" items="${cDisplayExecutors}" varStatus="eloop">
           <j:set var="e" value="${de.executor}"/>
           <local:executor name="${de.displayName}" url="${de.url}" />
