@@ -16,6 +16,47 @@ $padding-y: 0.65rem;
   }
 }
 
+.citybanklights {
+  display: flex;
+  align-items: center;
+  //justify-content: stretch;
+  gap: 15px;
+  margin: 0 $padding-x $padding-y $padding-x;
+  font-size: var(--font-size-sm);
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto !important;
+  }
+
+  .abouttoday {
+    color: var(--text-color-secondary) !important;
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-top: 5px;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-color-secondary);
+  }
+}
+
+.app-running-builds {
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    margin: 0 $padding-x $padding-y $padding-x;
+    font-size: var(--font-size-sm);
+  }
+}
+
 .app-build-queue {
   &__item {
     display: flex;

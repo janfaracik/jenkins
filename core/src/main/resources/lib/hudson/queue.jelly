@@ -46,7 +46,7 @@ THE SOFTWARE.
     </j:otherwise>
   </j:choose>
 
-  <l:pane title="${title}" id="buildQueue">
+  <l:pane title="${title}" id="buildQueue" hideTable="true">
     <st:adjunct includes="lib.form.link.link"/>
     <j:if test="${app.quietingDown}">
       <div class="app-build-queue__shutting-down-message">

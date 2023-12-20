@@ -50,6 +50,9 @@ THE SOFTWARE.
     <st:attribute name="collapsedText">
       Text shown instead of the regular pane content when it is collapsed.
     </st:attribute>
+    <st:attribute name="hideTable">
+      TODO
+    </st:attribute>
   </st:documentation>
   <j:set var="paneIsCollapsed" value="${h.isCollapsed(attrs.id)}" />
   <div class="pane-frame ${paneIsCollapsed ? 'collapsed' : 'expanded'}" id="${attrs.id}">
@@ -75,9 +78,18 @@ THE SOFTWARE.
           </div>
         </j:when>
         <j:otherwise>
-          <table class="pane ${attrs.class}">
-            <d:invokeBody />
-          </table>
+          <j:choose>
+            <j:when test="${attrs.hideTable == true}">
+              <div class="${attrs.class}">
+                <d:invokeBody />
+              </div>
+            </j:when>
+            <j:otherwise>
+              <table class="pane ${attrs.class}">
+                <d:invokeBody />
+              </table>
+            </j:otherwise>
+          </j:choose>
         </j:otherwise>
       </div>
     </j:choose>
