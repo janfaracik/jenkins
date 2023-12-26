@@ -3,7 +3,7 @@
     <j:if test="${app.useSecurity}">
         <j:choose>
             <j:when test="${!h.isAnonymous()}">
-                <div class="user-jumplist">
+                <div class="menu-jumplist">
                     <a href="${rootURL}/${it.url}" class="user-thing">
                         <j:invokeStatic var="user" className="hudson.model.User" method="current" />
                         <j:choose>
@@ -35,7 +35,7 @@
                 </div>
             </j:when>
             <j:otherwise>
-                <div class="user-jumplist">
+                <div class="menu-jumplist">
                     <j:set var="jumplist" value="${it}" />
                     <st:include it="${app.securityRealm}" page="loginLink.jelly" />
                 </div>

@@ -41,7 +41,7 @@ public class SettingsNavigationItem implements NavigationItem {
         String suffix = activeAdministrativeMonitors.size() > 1 ? "notifications" : "notification";
 
         return new Badge(String.valueOf(activeAdministrativeMonitors.size()),
-                activeAdministrativeMonitors.size() + suffix,
+                activeAdministrativeMonitors.size() + " " + suffix,
                 anySecurity ? Badge.Severity.DANGER : Badge.Severity.WARNING);
     }
 }

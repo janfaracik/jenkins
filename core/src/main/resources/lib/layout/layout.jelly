@@ -178,11 +178,11 @@ THE SOFTWARE.
       <!-- for accessibility, skip the entire navigation bar and etc and go straight to the head of the content -->
       <a href="#skip2content" class="jenkins-skip-link">Skip to content</a>
 
-<!--      <l:pageHeader title="${%title}"-->
-<!--                    logoAlt="${%jenkinshead.alt}"-->
-<!--                    searchPlaceholder="${%search}"-->
-<!--                    searchHelpUrl="${%searchBox.url}"-->
-<!--                    logout="${%logout}"/>-->
+      <l:pageHeader title="${%title}"
+                    logoAlt="${%jenkinshead.alt}"
+                    searchPlaceholder="${%search}"
+                    searchHelpUrl="${%searchBox.url}"
+                    logout="${%logout}"/>
 
       <l:breadcrumbBar>
         <j:set var="mode" value="breadcrumbs" />
@@ -248,7 +248,7 @@ THE SOFTWARE.
       </footer>
     </j:if>
 
-    <div class="newsidebar">
+    <div class="app-navigation">
       <j:forEach var="nav" items="${h.getNavigationItems()}">
         <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(nav.url)}" />
         <j:set var="tooltip">
@@ -259,7 +259,7 @@ THE SOFTWARE.
           <j:set var="tooltip">
             <div>${nav.displayName}</div>
             <j:if test="${nav.badge != null}">
-              <div style="color: var(--text-color-secondary)">${nav.badge.tooltip}</div>
+              <div class="idontmeanto">${nav.badge.tooltip}</div>
             </j:if>
           </j:set>
         </j:if>
@@ -269,11 +269,11 @@ THE SOFTWARE.
            data-html-tooltip="${tooltip}"
            data-tooltip-interactive="true"
            data-tooltip-type="sidebar"
-           class="newsidebar__item ${isCurrent ? 'newsidebar__item--active' : null}">
+           class="app-navigation__item ${isCurrent ? 'app-navigation__item--active' : null}">
           <l:icon src="${nav.icon}" />
           <span class="jenkins-visually-hidden">${nav.displayName}</span>
           <j:if test="${nav.badge != null}">
-            <span class="badge-thing badge-thing--${nav.badge.severity}" />
+            <span class="app-navigation__item__badge app-navigation__item__badge--${nav.badge.severity}" />
           </j:if>
         </a>
       </j:forEach>

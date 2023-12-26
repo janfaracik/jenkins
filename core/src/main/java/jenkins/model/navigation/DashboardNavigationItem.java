@@ -1,7 +1,5 @@
 package jenkins.model.navigation;
 
-import jenkins.model.Jenkins;
-
 public class DashboardNavigationItem implements NavigationItem {
 
     @Override
@@ -16,6 +14,6 @@ public class DashboardNavigationItem implements NavigationItem {
 
     @Override
     public String getUrl() {
-        return Jenkins.get().getRootUrl();
+        return "";
     }
 }
