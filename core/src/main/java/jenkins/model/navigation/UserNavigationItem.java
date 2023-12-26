@@ -7,12 +7,6 @@ import jenkins.model.Jenkins;
 
 public class UserNavigationItem implements NavigationItem {
 
-    private final Jenkins jenkins;
-
-    public UserNavigationItem() {
-        this.jenkins = Jenkins.get();
-    }
-
     @Override
     public String getDisplayName() {
         boolean isAnonymous = Functions.isAnonymous();
@@ -31,6 +25,7 @@ public class UserNavigationItem implements NavigationItem {
 
     @Override
     public String getUrl() {
+        Jenkins jenkins = Jenkins.get();
         boolean isAnonymous = Functions.isAnonymous();
 
         if (isAnonymous) {
