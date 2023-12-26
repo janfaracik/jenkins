@@ -4,7 +4,7 @@
         <j:choose>
             <j:when test="${!h.isAnonymous()}">
                 <div class="menu-jumplist">
-                    <a href="${rootURL}/${it.url}" class="user-thing">
+                    <a href="${rootURL}/${it.url}" class="jenkins-button jenkins-button--tertiary">
                         <j:invokeStatic var="user" className="hudson.model.User" method="current" />
                         <j:choose>
                             <j:when test="${user.fullName == null || user.fullName.trim().isEmpty()}">
@@ -14,11 +14,7 @@
                                 <j:set var="userName" value="${user.fullName}"/>
                             </j:otherwise>
                         </j:choose>
-
-                        <div class="jenkins-avatar">
-                            <div class="jenkins-avatar__animation"></div>
-                            <span class="jenkins-avatar__initials">JF</span>
-                        </div>
+                        <l:icon src="symbol-person" />
                         <div>${userName}</div>
                     </a>
                     <div class="separator"></div>
