@@ -39,7 +39,9 @@ THE SOFTWARE.
     <d:invokeBody />
   </j:set>
 
-  <div id="breadcrumbBar" class="jenkins-breadcrumbs" aria-label="breadcrumb">
+  <l:userExperimentalFlag var="newNavigation" flagClassName="jenkins.model.experimentalflags.NewNavigationExperimentalFlag" />
+
+  <div id="breadcrumbBar" class="jenkins-breadcrumbs ${newNavigation ? 'jenkins-breadcrumbs--new-navigation' : ''}" aria-label="breadcrumb">
     <ol class="jenkins-breadcrumbs__list" id="breadcrumbs">
       <j:forEach var="anc" items="${request.ancestors}" indexVar="index">
         <j:if test="${h.isModel(anc.object) and anc.prev.url!=anc.url}">

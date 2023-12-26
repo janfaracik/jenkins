@@ -129,6 +129,10 @@
       }
     }
   }
+
+  &--new-navigation {
+    padding-left: calc(75px + 0.75rem);
+  }
 }
 
 .jenkins-menu-dropdown-chevron {

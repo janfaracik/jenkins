@@ -173,16 +173,19 @@ THE SOFTWARE.
     <script src="${resURL}/jsbundles/app.js" type="text/javascript" defer="true" />
   </head>
   <body id="jenkins" class="yui-skin-sam ${layoutType} jenkins-${h.version}" data-version="${h.version}" data-model-type="${it.class.name}">
+    <l:userExperimentalFlag var="newNavigation" flagClassName="jenkins.model.experimentalflags.NewNavigationExperimentalFlag" />
 
     <j:if test="${layoutType!='full-screen'}">
       <!-- for accessibility, skip the entire navigation bar and etc and go straight to the head of the content -->
       <a href="#skip2content" class="jenkins-skip-link">Skip to content</a>
 
-      <l:pageHeader title="${%title}"
-                    logoAlt="${%jenkinshead.alt}"
-                    searchPlaceholder="${%search}"
-                    searchHelpUrl="${%searchBox.url}"
-                    logout="${%logout}"/>
+      <j:if test="${!newNavigation}">
+        <l:pageHeader title="${%title}"
+                      logoAlt="${%jenkinshead.alt}"
+                      searchPlaceholder="${%search}"
+                      searchHelpUrl="${%searchBox.url}"
+                      logout="${%logout}"/>
+      </j:if>
 
       <l:breadcrumbBar>
         <j:set var="mode" value="breadcrumbs" />
@@ -190,7 +193,7 @@ THE SOFTWARE.
       </l:breadcrumbBar>
     </j:if>
 
-    <div id="page-body" class="app-page-body app-page-body--${layoutType} clear">
+    <div id="page-body" class="app-page-body app-page-body--${layoutType} clear ${newNavigation ? 'app-page-body--new-navigation' : ''}">
       <j:if test="${layoutType=='two-column'}">
         <j:set var="mode" value="side-panel" />
         <d:invokeBody />
@@ -248,7 +251,8 @@ THE SOFTWARE.
       </footer>
     </j:if>
 
-    <div class="app-navigation">
+    <j:if test="${newNavigation}">
+      <div class="app-navigation">
       <j:forEach var="nav" items="${h.getNavigationItems()}">
         <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(nav.url)}" />
         <j:set var="tooltip">
@@ -278,6 +282,7 @@ THE SOFTWARE.
         </a>
       </j:forEach>
     </div>
+    </j:if>
   </body>
 </html>
 </l:view>
