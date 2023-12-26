@@ -156,6 +156,7 @@ import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.SimplePageDecorator;
+import jenkins.model.navigation.*;
 import jenkins.util.SystemProperties;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyTagException;
@@ -2477,5 +2478,15 @@ public class Functions {
     @Restricted(NoExternalUse.class)
     public static String generateItemId() {
         return String.valueOf(Math.floor(Math.random() * 3000));
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static List<NavigationItem> getNavigationItems() {
+        return List.of(
+                new DashboardNavigationItem(),
+                new BuildHistoryNavigationItem(),
+                new PeopleNavigationItem(),
+                new SettingsNavigationItem()
+        );
     }
 }

@@ -26,9 +26,10 @@ public class SettingsNavigationItem implements NavigationItem {
     public Badge getBadge() {
         Jenkins jenkins = Jenkins.get();
         List<AdministrativeMonitor> activeAdministrativeMonitors = jenkins.getActiveAdministrativeMonitors();
+        boolean anySecurity = activeAdministrativeMonitors.stream().anyMatch(AdministrativeMonitor::isSecurity);
 
         return new Badge(String.valueOf(activeAdministrativeMonitors.size()),
                 activeAdministrativeMonitors.size() + " notifications",
-                Badge.Severity.DANGER);
+                anySecurity ? Badge.Severity.DANGER : Badge.Severity.WARNING);
     }
 }
