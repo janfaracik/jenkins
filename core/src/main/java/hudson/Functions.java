@@ -2486,6 +2486,7 @@ public class Functions {
                 new DashboardNavigationItem(),
                 new BuildHistoryNavigationItem(),
                 new PeopleNavigationItem(),
+                new UserNavigationItem(),
                 new SettingsNavigationItem()
         );
     }
