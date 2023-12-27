@@ -274,6 +274,7 @@ THE SOFTWARE.
              data-html-tooltip="${tooltip}"
              data-tooltip-interactive="true"
              data-tooltip-type="sidebar"
+             draggable="false"
              class="app-navigation__item ${isCurrent ? 'app-navigation__item--active' : null}">
             <l:icon src="${nav.icon}" />
             <span class="jenkins-visually-hidden">${nav.displayName}</span>
