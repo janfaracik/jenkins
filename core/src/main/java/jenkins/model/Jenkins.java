@@ -322,8 +322,10 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.WebApp;
 import org.kohsuke.stapler.WebMethod;
+import org.kohsuke.stapler.export.ExportConfig;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
+import org.kohsuke.stapler.export.Flavor;
 import org.kohsuke.stapler.framework.adjunct.AdjunctManager;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.kohsuke.stapler.jelly.JellyClassLoaderTearOff;
@@ -4467,6 +4469,10 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         User.reload();
         queue.load();
         WebApp.get(servletContext).setApp(this);
+    }
+
+    public void doManifest(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        rsp.serveExposedBean(req, new Manifest(), new ExportConfig().withFlavor(Flavor.JSON));
     }
 
     /**
