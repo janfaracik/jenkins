@@ -33,7 +33,6 @@
       width: 1.125rem;
       height: 1.125rem;
       color: var(--navigation-color);
-      opacity: 0.9;
     }
 
     &[aria-describedby] {
@@ -43,10 +42,8 @@
     }
 
     &--active {
-      --navigation-color: hsl(214, 14%, 100%);
-
       svg {
-        opacity: 1;
+        color: var(--navigation-color--active);
       }
 
       &::before {

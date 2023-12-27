@@ -319,7 +319,8 @@ $semantics: (
 
   // Navigation
   --navigation-background: #16191d;
-  --navigation-color: hsl(214, 14%, 85%);
+  --navigation-color: hsl(214, 20%, 80%);
+  --navigation-color--active: hsl(214, 14%, 100%);
 
   // Colors
   @each $key, $value in $colors {
