@@ -264,7 +264,7 @@ THE SOFTWARE.
             <j:set var="tooltip">
               <div>${nav.displayName}</div>
               <j:if test="${nav.badge != null}">
-                <div class="idontmeanto">${nav.badge.tooltip}</div>
+                <div class="app-navigation__tooltip-description">${nav.badge.tooltip}</div>
               </j:if>
             </j:set>
           </j:if>

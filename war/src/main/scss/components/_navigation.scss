@@ -100,16 +100,16 @@
   }
 }
 
-.idontmeanto {
+.app-navigation__tooltip-description {
   color: var(--text-color-secondary);
 }
 
-.menu-jumplist {
+.app-navigation__menu {
   display: flex;
   justify-content: stretch;
   flex-direction: column;
   width: 250px;
-  margin: -0.45rem -0.8rem;
+  margin: -0.5rem -0.8rem;
   padding: 0.5rem;
 
   .jenkins-button {
@@ -120,9 +120,6 @@
     height: 2px;
     background: currentColor;
     opacity: 0.05;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
+    margin: 0.5rem -0.5rem;
   }
 }
