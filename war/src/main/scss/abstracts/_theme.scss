@@ -317,6 +317,10 @@ $semantics: (
   --danger: var(--red); // Use var(--destructive-color) instead
   --warning: var(--orange); // Use var(--warning-color) instead
 
+  // Navigation
+  --navigation-background: #16191d;
+  --navigation-color: hsl(214, 14%, 85%);
+
   // Colors
   @each $key, $value in $colors {
     --#{$key}: #{$value};

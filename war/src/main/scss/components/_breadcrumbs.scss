@@ -1,4 +1,5 @@
 @use "../abstracts/mixins";
+@use "../base/breakpoints";
 
 .jenkins-breadcrumbs {
   position: sticky;
@@ -130,8 +131,10 @@
     }
   }
 
-  &--new-navigation {
-    padding-left: calc(75px + 0.75rem);
+  @media (min-width: breakpoints.$tablet-breakpoint) {
+    &--new-navigation {
+      padding-left: calc(75px + 0.75rem);
+    }
   }
 }
 

@@ -1,5 +1,8 @@
 package jenkins.model.navigation;
 
+import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerRequest;
+
 public class DashboardNavigationItem implements NavigationItem {
 
     @Override
@@ -14,6 +17,9 @@ public class DashboardNavigationItem implements NavigationItem {
 
     @Override
     public String getUrl() {
-        return "";
+        StaplerRequest currentRequest = Stapler.getCurrentRequest();
+        currentRequest.getWebApp().getDispatchValidator().allowDispatch(currentRequest, Stapler.getCurrentResponse());
+
+        return currentRequest.getContextPath();
     }
 }

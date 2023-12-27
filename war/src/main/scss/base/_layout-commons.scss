@@ -32,7 +32,13 @@
   flex: 1 0 auto;
 
   &--new-navigation {
-    padding-left: 75px;
+    @media (max-width: breakpoints.$tablet-breakpoint) {
+      padding-bottom: 75px;
+    }
+
+    @media (min-width: breakpoints.$tablet-breakpoint) {
+      padding-left: 75px;
+    }
   }
 }
 
