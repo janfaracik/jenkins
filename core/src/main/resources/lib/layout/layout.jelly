@@ -187,6 +187,41 @@ THE SOFTWARE.
                       logout="${%logout}"/>
       </j:if>
 
+      <j:if test="${newNavigation}">
+        <div class="app-navigation">
+          <j:forEach var="nav" items="${h.getNavigationItems()}">
+            <j:set var="isRoot" value="${nav.url.equals(rootURL)}" />
+            <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(nav.url)}" />
+            <j:set var="tooltip">
+              <st:include it="${nav}" page="jumplist.jelly" optional="true" />
+            </j:set>
+
+            <j:if test="${tooltip.length() == 0}">
+              <j:set var="tooltip">
+                <div>${nav.displayName}</div>
+                <j:if test="${nav.badge != null}">
+                  <div class="app-navigation__tooltip-description">${nav.badge.tooltip}</div>
+                </j:if>
+              </j:set>
+            </j:if>
+
+            <a href="${isRoot ? rootURL : rootURL + '/' + nav.url}"
+               tooltip="${nav.displayName}"
+               data-html-tooltip="${tooltip}"
+               data-tooltip-interactive="true"
+               data-tooltip-type="sidebar"
+               draggable="false"
+               class="app-navigation__item ${isCurrent ? 'app-navigation__item--active' : null}">
+              <l:icon src="${nav.icon}" />
+              <span class="jenkins-visually-hidden">${nav.displayName}</span>
+              <j:if test="${nav.badge != null}">
+                <span class="app-navigation__item__badge app-navigation__item__badge--${nav.badge.severity}" />
+              </j:if>
+            </a>
+          </j:forEach>
+        </div>
+      </j:if>
+
       <l:breadcrumbBar>
         <j:set var="mode" value="breadcrumbs" />
         <d:invokeBody/>
@@ -249,41 +284,6 @@ THE SOFTWARE.
           </div>
         </div>
       </footer>
-    </j:if>
-
-    <j:if test="${newNavigation}">
-      <div class="app-navigation">
-        <j:forEach var="nav" items="${h.getNavigationItems()}">
-          <j:set var="isRoot" value="${nav.url.equals(rootURL)}" />
-          <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(nav.url)}" />
-          <j:set var="tooltip">
-            <st:include it="${nav}" page="jumplist.jelly" optional="true" />
-          </j:set>
-
-          <j:if test="${tooltip.length() == 0}">
-            <j:set var="tooltip">
-              <div>${nav.displayName}</div>
-              <j:if test="${nav.badge != null}">
-                <div class="app-navigation__tooltip-description">${nav.badge.tooltip}</div>
-              </j:if>
-            </j:set>
-          </j:if>
-
-          <a href="${isRoot ? rootURL : rootURL + '/' + nav.url}"
-             tooltip="${nav.displayName}"
-             data-html-tooltip="${tooltip}"
-             data-tooltip-interactive="true"
-             data-tooltip-type="sidebar"
-             draggable="false"
-             class="app-navigation__item ${isCurrent ? 'app-navigation__item--active' : null}">
-            <l:icon src="${nav.icon}" />
-            <span class="jenkins-visually-hidden">${nav.displayName}</span>
-            <j:if test="${nav.badge != null}">
-              <span class="app-navigation__item__badge app-navigation__item__badge--${nav.badge.severity}" />
-            </j:if>
-          </a>
-        </j:forEach>
-      </div>
     </j:if>
   </body>
 </html>
