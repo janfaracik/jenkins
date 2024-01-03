@@ -8,7 +8,7 @@ $background-outset: 0.7rem;
   display: flex;
   flex-direction: column;
   margin: var(--section-padding);
-  gap: 5px;
+  gap: 0.25rem;
 
   @media (min-width: breakpoints.$tablet-breakpoint) {
     margin-right: calc($background-outset);
@@ -65,7 +65,7 @@ $background-outset: 0.7rem;
   gap: 0.75rem;
   width: 100%;
   cursor: pointer;
-  font-weight: 500 !important;
+  font-weight: 450 !important;
   font-size: 0.9rem;
   color: var(--text-color) !important;
   background: transparent;
@@ -118,7 +118,7 @@ $background-outset: 0.7rem;
   }
 
   &--active {
-    font-weight: 600 !important;
+    font-weight: 550 !important;
     cursor: default;
 
     svg * {
