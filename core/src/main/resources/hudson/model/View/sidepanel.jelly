@@ -36,9 +36,6 @@ THE SOFTWARE.
   </l:header>
 
   <l:side-panel>
-    <l:app-bar title="Dashboard">
-
-    </l:app-bar>
     <l:tasks>
       <st:include page="tasks-top.jelly" it="${it.owner}" optional="true" />
 
