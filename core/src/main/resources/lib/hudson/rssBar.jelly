@@ -25,7 +25,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:dd="/lib/layout/dropdowns" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <div id="rss-bar" class="jenkins-buttons-row jenkins-buttons-row--invert">
-    <l:overflowButton clazz="jenkins-button--tertiary">
+    <l:overflowButton>
       <dd:item icon="symbol-information-circle" id="button-icon-legend" text="${%Legend}" />
       <dd:separator />
       <dd:submenu icon="symbol-rss" text="${%Atom feed}">

@@ -29,13 +29,9 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" />
     <l:breadcrumb title="${%Build History}" />
     <l:main-panel>
-      <div class="jenkins-app-bar">
-        <div class="jenkins-app-bar__content">
-          <h1>
-            ${%buildHistory(it.class.name=='hudson.model.AllView' ? app.displayName : it.displayName)}
-          </h1>
-        </div>
-      </div>
+      <l:app-bar title="${%buildHistory(it.class.name=='hudson.model.AllView' ? app.displayName : it.displayName)}">
+        <t:rssBar />
+      </l:app-bar>
 
       <t:buildListTable builds="${it.builds}"/>
     </l:main-panel>

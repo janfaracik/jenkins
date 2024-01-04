@@ -28,12 +28,11 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" />
     <l:breadcrumb title="${%Build History}" />
     <l:main-panel>
-      <h1>
-        ${%title(it.displayName)}
-      </h1>
-      <p>
-        <em>${%disclaimer}</em>
-      </p>
+      <l:app-bar title="${%title(it.displayName)}">
+        <t:rssBar />
+      </l:app-bar>
+
+      <p class="jenkins-description">${%disclaimer}</p>
 
       <t:buildListTable builds="${it.builds}"/>
     </l:main-panel>
