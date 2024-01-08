@@ -117,6 +117,20 @@ public class ViewTest {
     @Rule
     public LoggerRule logging = new LoggerRule();
 
+    @Test
+    public void roundTrip() throws Exception {
+        ListView view = new ListView("foo");
+        view.setDescription("Some description");
+        view.setFilterExecutors(true);
+        view.setFilterQueue(true);
+        j.jenkins.addView(view);
+        j.configRoundtrip(view);
+
+        assertEquals("Some description", view.getDescription());
+        assertEquals(true, view.isFilterExecutors());
+        assertEquals(true, view.isFilterQueue());
+    }
+
     @Issue("JENKINS-7100")
     @Test public void xHudsonHeader() throws Exception {
         assertNotNull(j.createWebClient().goTo("").getWebResponse().getResponseHeaderValue("X-Hudson"));
@@ -686,7 +700,7 @@ public class ViewTest {
         assertThat(e.getStatusCode(), equalTo(500));
 
         // This should have a different message, but this is the current behavior demonstrating the problem.
-        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request."));
+        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request"));
 
         OldDataMonitor odm = ExtensionList.lookupSingleton(OldDataMonitor.class);
         Map<Saveable, OldDataMonitor.VersionRange> data = odm.getData();
@@ -730,7 +744,7 @@ public class ViewTest {
         assertThat(e.getStatusCode(), equalTo(500));
 
         // This should have a different message, but this is the current behavior demonstrating the problem.
-        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request."));
+        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request"));
 
         OldDataMonitor odm = ExtensionList.lookupSingleton(OldDataMonitor.class);
         Map<Saveable, OldDataMonitor.VersionRange> data = odm.getData();
