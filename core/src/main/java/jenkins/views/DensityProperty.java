@@ -28,6 +28,11 @@ public class DensityProperty extends UserProperty {
 
     public static DensityType getDensityValueForCurrentUser() {
         User user = User.current();
+
+        if (user == null) {
+            return DensityType.DEFAULT;
+        }
+
         return user.getProperty(DensityProperty.class).getDensity();
     }
 
