@@ -28,11 +28,17 @@ function loadPage() {
           return;
         }
 
-        document.startViewTransition(() => {
+        if (!document.startViewTransition) {
           xander.innerHTML = responseText;
           noBuilds.style.display = "none";
           Behaviour.applySubtree(xander);
-        });
+        } else {
+          document.startViewTransition(() => {
+            xander.innerHTML = responseText;
+            noBuilds.style.display = "none";
+            Behaviour.applySubtree(xander);
+          });
+        }
       });
     }
   });
