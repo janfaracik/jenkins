@@ -57,7 +57,7 @@ THE SOFTWARE.
           ${%No builds}
         </div>
 
-        <div id="xander" class="app-builds-container__items">
+        <div id="jenkins-build-history" class="app-builds-container__items">
         </div>
       </div>
 

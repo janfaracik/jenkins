@@ -6,7 +6,7 @@ const pageSearchInput = buildHistoryPage.querySelector(
 );
 const ajaxUrl = buildHistoryPage.getAttribute("page-ajax");
 const card = document.querySelector("#jenkins-builds");
-const xander = card.querySelector("#xander");
+const contents = card.querySelector("#jenkins-build-history");
 const container = card.querySelector(".app-builds-container");
 const noBuilds = card.querySelector("#no-builds")
 
@@ -23,20 +23,20 @@ function loadPage() {
         container.classList.remove("app-builds-container--loading");
 
         if (responseText.trim() === "") {
-          xander.innerHTML = "";
+          contents.innerHTML = "";
           noBuilds.style.display = "block";
           return;
         }
 
         if (!document.startViewTransition) {
-          xander.innerHTML = responseText;
+          contents.innerHTML = responseText;
           noBuilds.style.display = "none";
-          Behaviour.applySubtree(xander);
+          Behaviour.applySubtree(contents);
         } else {
           document.startViewTransition(() => {
-            xander.innerHTML = responseText;
+            contents.innerHTML = responseText;
             noBuilds.style.display = "none";
-            Behaviour.applySubtree(xander);
+            Behaviour.applySubtree(contents);
           });
         }
       });
