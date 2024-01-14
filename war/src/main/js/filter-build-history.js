@@ -1,7 +1,9 @@
 import debounce from "lodash/debounce";
 
 const buildHistoryPage = document.getElementById("buildHistoryPage");
-const pageSearchInput = buildHistoryPage.querySelector(
+const pageSearch = buildHistoryPage.querySelector(
+  ".jenkins-search",
+);const pageSearchInput = buildHistoryPage.querySelector(
   "input",
 );
 const ajaxUrl = buildHistoryPage.getAttribute("page-ajax");
@@ -21,6 +23,7 @@ function loadPage() {
     if (rsp.ok) {
       rsp.text().then((responseText) => {
         container.classList.remove("app-builds-container--loading");
+        pageSearch.classList.remove("jenkins-search--loading");
 
         if (responseText.trim() === "") {
           contents.innerHTML = "";
@@ -57,6 +60,7 @@ setInterval(() => {
 document.addEventListener("DOMContentLoaded", function () {
   pageSearchInput.addEventListener("input", function () {
     container.classList.add("app-builds-container--loading");
+    pageSearch.classList.add("jenkins-search--loading");
     debouncedFilter();
   });
 
