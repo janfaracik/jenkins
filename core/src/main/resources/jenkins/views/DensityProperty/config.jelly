@@ -24,20 +24,7 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-  <f:entry field="density">
-      <div>Control the density of the Jenkins user interface</div>
-    <div class="densities">
-      <input type="radio" name="density" value="DEFAULT" checked="true" id="drive"  />
-      <label for="drive" class="jenkins-button densitybutton densitybuttondefault">
-        <div>T</div>
-        <div>Default</div>
-      </label>
-
-      <input type="radio" name="density" value="TIGHT" id="driv2e" />
-      <label for="driv2e" class="jenkins-button densitybutton densitybuttontight">
-        <div>T</div>
-        <div>Tight</div>
-      </label>
-    </div>
+  <f:entry field="density" title="Density" description="Control the density of the Jenkins user interface">
+    <f:select />
   </f:entry>
 </j:jelly>
