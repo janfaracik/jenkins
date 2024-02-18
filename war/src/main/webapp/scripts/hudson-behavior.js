@@ -612,9 +612,10 @@ function geval(script) {
 // eslint-disable-next-line no-unused-vars
 function fireEvent(element, event) {
   return !element.dispatchEvent(
-    new Event(event, {
+    new CustomEvent(event, {
       bubbles: true,
       cancelable: true,
+      detail: element,
     }),
   );
 }
@@ -2708,8 +2709,13 @@ function validateButton(checkUrl, paramList, button) {
   paramList.split(",").forEach(function (name) {
     var p = findPreviousFormItem(button, name);
     if (p != null) {
-      if (p.type == "checkbox") {
+      if (p.type === "checkbox") {
         parameters[name] = p.checked;
+      } else if (p.type === "radio") {
+        while (p && !p.checked) {
+          p = findPreviousFormItem(p, name);
+        }
+        parameters[name] = p.value;
       } else {
         parameters[name] = p.value;
       }
