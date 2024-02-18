@@ -72,39 +72,34 @@
     float: right;
   }
 
-  .plugin-dependency-info .title,
-  .plugin-dependency-info .subtitle {
-    opacity: 0.7;
-  }
 
-  .plugin-dependency-info .title {
-    margin-bottom: 5px;
-    font-size: larger;
-    font-weight: bolder;
-  }
-
-  .plugin-dependency-info span {
-    margin: 5px 5px 0 0;
-    background-color: var(--accent-color);
-    display: inline-block;
-    padding: 0.2em 0.6em 0.3em;
-    font-size: var(--font-size-xs);
-    font-weight: 700;
-    line-height: 1;
-    color: var(--white);
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25em;
-  }
 }
 
-.app-plugin-manager__sidebar {
-  position: sticky;
-  top: calc(40px + 1.6rem);
+.plugin-dependency-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4375rem;
+  padding-block: 0.3rem;
+  max-width: 350px;
 
-  h1 {
-    margin-top: 1rem !important;
-    margin-bottom: 0.1rem !important;
+  .subtitle {
+    opacity: 0.85;
+    color: var(--text-color-secondary);
+  }
+
+  .distant-axis {
+    display: flex;
+    gap: 0.4375rem;
+    flex-wrap: wrap;
+
+    span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background-color: color-mix(in srgb, var(--text-color-secondary) 7.5%, transparent);
+      border: 1px solid color-mix(in srgb, var(--text-color-secondary) 2%, transparent);
+      padding: 0.15rem 0.65rem;
+      border-radius: 100px;
+    }
   }
 }

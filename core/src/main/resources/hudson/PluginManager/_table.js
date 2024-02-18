@@ -204,23 +204,9 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
       }
     }
 
-    function addDependencyInfoRow(pluginTR, infoTR) {
-      infoTR.classList.add("plugin-dependency-info");
-      pluginTR.parentNode.insertBefore(infoTR, pluginTR.nextElementSibling);
-    }
-    function removeDependencyInfoRow(pluginTR) {
-      var nextRow = pluginTR.nextElementSibling;
-      if (nextRow && nextRow.classList.contains("plugin-dependency-info")) {
-        nextRow.remove();
-      }
-    }
-
     function populateEnableDisableInfo(pluginTR, infoContainer) {
       var pluginMetadata = pluginTR.jenkinsPluginMetadata;
-
-      // Remove all existing class info
-      infoContainer.removeAttribute("class");
-      infoContainer.classList.add("enable-state-info");
+      infoContainer.classList.add("plugin-dependency-info")
 
       if (pluginTR.classList.contains("has-disabled-dependency")) {
         var dependenciesDiv = pluginMetadata.dependenciesDiv;
@@ -299,6 +285,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
     function populateUninstallInfo(pluginTR, infoContainer) {
       // Remove all existing class info
       infoContainer.removeAttribute("class");
+      infoContainer.classList.add("plugin-dependency-info");
       infoContainer.classList.add("uninstall-state-info");
 
       if (pluginTR.classList.contains("has-dependents")) {
@@ -352,6 +339,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         }
       }
 
+      dependentsDiv.classList.add('distant-axis')
       dependentsDiv.style.display = "inherit";
       return dependentsDiv;
     }
@@ -397,57 +385,29 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         });
       }
 
-      //
-      var infoTR = document.createElement("tr");
-      var infoTD = document.createElement("td");
-      var infoDiv = document.createElement("div");
-      infoTR.appendChild(infoTD);
-      infoTD.appendChild(infoDiv);
-      infoTD.setAttribute("colspan", "6"); // This is the cell that all info will be added to.
-      infoDiv.style.display = "inherit";
-
-      // We don't want the info row to appear immediately. We wait for e.g. 1 second and if the mouse
-      // is still in there (hasn't left the cell) then we show. The following code is for clearing the
-      // show timeout where the mouse has left before the timeout has fired.
-      var showInfoTimeout = undefined;
-      function clearShowInfoTimeout() {
-        if (showInfoTimeout) {
-          clearTimeout(showInfoTimeout);
-        }
-        showInfoTimeout = undefined;
-      }
-
       // Handle mouse in/out of the enable/disable cell (left most cell).
       if (enableTD) {
         enableTD.addEventListener("mouseenter", function () {
-          showInfoTimeout = setTimeout(function () {
-            showInfoTimeout = undefined;
-            infoDiv.textContent = "";
-            if (populateEnableDisableInfo(pluginTR, infoDiv)) {
-              addDependencyInfoRow(pluginTR, infoTR);
-            }
-          }, 1000);
-        });
-        enableTD.addEventListener("mouseleave", function () {
-          clearShowInfoTimeout();
-          removeDependencyInfoRow(pluginTR);
+          const button = enableTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
+          const shinyNewDiv = document.createElement("div");
+
+          if (populateEnableDisableInfo(pluginTR, shinyNewDiv)) {
+            button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
+            Behaviour.applySubtree(button, true);
+          }
         });
       }
 
       // Handle mouse in/out of the uninstall cell (right most cell).
       if (uninstallTD) {
         uninstallTD.addEventListener("mouseenter", function () {
-          showInfoTimeout = setTimeout(function () {
-            showInfoTimeout = undefined;
-            infoDiv.textContent = "";
-            if (populateUninstallInfo(pluginTR, infoDiv)) {
-              addDependencyInfoRow(pluginTR, infoTR);
-            }
-          }, 1000);
-        });
-        uninstallTD.addEventListener("mouseleave", function () {
-          clearShowInfoTimeout();
-          removeDependencyInfoRow(pluginTR);
+          const button = uninstallTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
+          const shinyNewDiv = document.createElement("div");
+
+          if (populateUninstallInfo(pluginTR, shinyNewDiv)) {
+            button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
+            Behaviour.applySubtree(button, true);
+          }
         });
       }
     }

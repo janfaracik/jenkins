@@ -156,16 +156,18 @@ THE SOFTWARE.
                   </td>
                   <j:set var="state" value="${p.enabled?'true':null}"/>
                   <td class="jenkins-table__cell--tight enable" data="${state}">
-                    <div class="jenkins-table__cell__button-wrapper">
-                      <span class="jenkins-toggle-switch">
-                        <input type="checkbox" checked="${state}"
-                               class="plugin-manager-toggle-switch"
-                               url="plugin/${p.shortName}"
-                               disabled="${readOnlyMode ? 'true' : null}"
-                               original="${p.active?'true':'false'}"/>
-                        <label class="attach-previous"></label>
-                      </span>
-                    </div>
+                    <span data-type="app-tooltip-wrapper">
+                      <div class="jenkins-table__cell__button-wrapper">
+                        <span class="jenkins-toggle-switch">
+                          <input type="checkbox" checked="${state}"
+                                 class="plugin-manager-toggle-switch"
+                                 url="plugin/${p.shortName}"
+                                 disabled="${readOnlyMode ? 'true' : null}"
+                                 original="${p.active?'true':'false'}"/>
+                          <label class="attach-previous"></label>
+                        </span>
+                      </div>
+                    </span>
                   </td>
                   <l:isAdmin>
                     <td class="jenkins-table__cell--tight">
@@ -218,14 +220,16 @@ THE SOFTWARE.
                                 </j:forEach>
                               </div>
                             </j:if>
-                            <button data-action="uninstall"
-                                    type="button"
-                                    class="jenkins-table__button jenkins-!-destructive-color"
-                                    tooltip="${%Uninstall} ${p.updateInfo.displayName ?: p.displayName}"
-                                    data-href="plugin/${p.shortName}/doUninstall"
-                                    data-message="${%uninstall-title(p.updateInfo.displayName ?: p.displayName)}">
-                              <l:icon src="symbol-close-circle"/>
-                            </button>
+                            <span data-type="app-tooltip-wrapper">
+                              <button data-action="uninstall"
+                                      type="button"
+                                      class="jenkins-table__button jenkins-!-destructive-color"
+                                      tooltip="${%Uninstall} ${p.updateInfo.displayName ?: p.displayName}"
+                                      data-href="plugin/${p.shortName}/doUninstall"
+                                      data-message="${%uninstall-title(p.updateInfo.displayName ?: p.displayName)}">
+                                <l:icon src="symbol-close-circle"/>
+                              </button>
+                            </span>
                           </j:otherwise>
                         </j:choose>
                       </div>
