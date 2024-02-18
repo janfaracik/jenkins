@@ -1,3 +1,5 @@
+@use "../abstracts/mixins";
+
 #plugins {
   .app-plugin-manager__categories {
     margin: 0.5rem 0;
@@ -71,8 +73,6 @@
   .uninstall-state-info {
     float: right;
   }
-
-
 }
 
 .plugin-dependency-info {
@@ -92,12 +92,19 @@
     gap: 0.4375rem;
     flex-wrap: wrap;
 
-    span {
+    a {
+      @include mixins.item;
+
+      color: var(--text-color);
+      text-decoration: none;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background-color: color-mix(in srgb, var(--text-color-secondary) 7.5%, transparent);
-      border: 1px solid color-mix(in srgb, var(--text-color-secondary) 2%, transparent);
+      background-color: color-mix(
+        in sRGB,
+        var(--text-color-secondary) 7.5%,
+        transparent
+      );
       padding: 0.15rem 0.65rem;
       border-radius: 100px;
     }

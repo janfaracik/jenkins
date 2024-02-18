@@ -91,7 +91,7 @@ THE SOFTWARE.
                   data-plugin-id="${p.shortName}" data-plugin-name="${p.displayName}">
                   <td class="details">
                     <div class="plugin-name success-plugin">
-                      <a href="${p.url}" class="jenkins-table__link" target="_blank" rel="noopener noreferrer">
+                      <a href="${p.url}" id="${p.shortName}" style="scroll-margin-top: 175px" class="jenkins-table__link" target="_blank" rel="noopener noreferrer">
                         ${p.updateInfo.displayName?:p.displayName}
                         <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">
                           <span class="jenkins-visually-hidden">${%Version}</span>
@@ -196,13 +196,13 @@ THE SOFTWARE.
                             <j:if test="${p.hasMandatoryDependents() or p.hasImpliedDependents()}">
                               <div class="dependent-list">
                                 <j:forEach var="dependent" items="${p.mandatoryDependents}">
-                                  <span data-plugin-id="${dependent}"></span>
+                                  <a href="#${dependent}" data-plugin-id="${dependent}"></a>
                                 </j:forEach>
                                 <j:set var="impliedDependents" value="${p.impliedDependents}"/>
                                 <j:choose>
                                   <j:when test="${impliedDependents.size() lt 15}">
                                     <j:forEach var="dependent" items="${impliedDependents}">
-                                      <span data-plugin-id="${dependent}"></span>
+                                      <a href="#${dependent}" data-plugin-id="${dependent}"></a>
                                     </j:forEach>
                                   </j:when>
                                   <j:otherwise>
@@ -216,7 +216,7 @@ THE SOFTWARE.
                             <j:if test="${p.hasMandatoryDependencies()}">
                               <div class="dependency-list">
                                 <j:forEach var="dependency" items="${p.mandatoryDependencies}">
-                                  <span data-plugin-id="${dependency.shortName}"></span>
+                                  <a href="#${dependent}" data-plugin-id="${dependency.shortName}"></a>
                                 </j:forEach>
                               </div>
                             </j:if>

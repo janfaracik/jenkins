@@ -206,7 +206,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
 
     function populateEnableDisableInfo(pluginTR, infoContainer) {
       var pluginMetadata = pluginTR.jenkinsPluginMetadata;
-      infoContainer.classList.add("plugin-dependency-info")
+      infoContainer.classList.add("plugin-dependency-info");
 
       if (pluginTR.classList.contains("has-disabled-dependency")) {
         var dependenciesDiv = pluginMetadata.dependenciesDiv;
@@ -358,7 +358,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
 
       if (dependenciesDiv) {
         pluginTR.jenkinsPluginMetadata.dependencies = selectAll(
-          "span",
+          "a",
           dependenciesDiv,
         );
         pluginTR.jenkinsPluginMetadata.dependencyIds = processSpanSet(
@@ -367,7 +367,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
       }
       if (dependentsDiv) {
         pluginTR.jenkinsPluginMetadata.dependents = selectAll(
-          "span",
+          "a",
           dependentsDiv,
         );
         pluginTR.jenkinsPluginMetadata.dependentIds = processSpanSet(
@@ -386,10 +386,13 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
 
       // Handle mouse in/out of the enable/disable cell (left most cell).
       enableTD.addEventListener("mouseenter", function () {
-        const button = enableTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
+        const button = enableTD.querySelector(
+          `[data-type="app-tooltip-wrapper"]`,
+        );
         const shinyNewDiv = document.createElement("div");
 
         if (populateEnableDisableInfo(pluginTR, shinyNewDiv)) {
+          button.setAttribute("data-tooltip-interactive", true);
           button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
           Behaviour.applySubtree(button, true);
         }
@@ -397,10 +400,13 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
 
       // Handle mouse in/out of the uninstall cell (right most cell).
       uninstallTD.addEventListener("mouseenter", function () {
-        const button = uninstallTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
+        const button = uninstallTD.querySelector(
+          `[data-type="app-tooltip-wrapper"]`,
+        );
         const shinyNewDiv = document.createElement("div");
 
         if (populateUninstallInfo(pluginTR, shinyNewDiv)) {
+          button.setAttribute("data-tooltip-interactive", true);
           button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
           Behaviour.applySubtree(button, true);
         }
