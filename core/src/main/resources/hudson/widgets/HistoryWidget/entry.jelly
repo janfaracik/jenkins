@@ -67,12 +67,14 @@ THE SOFTWARE.
             <l:stopButton href="${link}stop" alt="${%Cancel}" confirm="${%confirm(build.fullDisplayName)}" />
           </j:if>
         </j:if>
+
         <j:set var="badges" value="${build.badgeActions}"/>
         <j:if test="${!empty(badges)}">
           <j:forEach var="badge" items="${badges}">
             <st:include it="${badge}" page="badge.jelly" />
           </j:forEach>
         </j:if>
+
         <div class="jenkins-card__reveal jenkins-jumplist-link" data-href="${link}">
           <l:icon src="symbol-menu" />
         </div>
