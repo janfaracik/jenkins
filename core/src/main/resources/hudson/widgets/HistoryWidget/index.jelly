@@ -23,23 +23,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns">
   <j:set var="page" value="${it.historyPageFilter}" />
 
   <j:set var="controls">
     <l:overflowButton icon="symbol-menu" clazz="letterman">
-      <a class="jenkins-dropdown__item" href="${it.baseUrl}/rssAll">
-        <div class="jenkins-dropdown__item__icon">
-          <l:icon src="symbol-rss" />
-        </div>
-        Atom feed ${%for all}
-      </a>
-      <a class="jenkins-dropdown__item" href="${it.baseUrl}/rssFailed">
-        <div class="jenkins-dropdown__item__icon">
-          <l:icon src="symbol-rss" />
-        </div>
-        Atom feed ${%for failures}
-      </a>
+      <dd:item icon="symbol-rss"
+               text="Atom feed ${%for all}"
+               href="${it.baseUrl}/rssAll" />
+      <dd:item icon="symbol-rss"
+               text="Atom feed ${%for failures}"
+               href="${it.baseUrl}/rssFailed" />
     </l:overflowButton>
   </j:set>
 
