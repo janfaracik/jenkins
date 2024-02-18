@@ -56,23 +56,6 @@
   .dependency-list {
     display: none;
   }
-
-  .enable-state-info,
-  .uninstall-state-info {
-    padding: 5px 20px;
-    max-width: 70%;
-    border: solid 1px var(--warning-color);
-    border-radius: 3px;
-    text-align: center;
-  }
-
-  .enable-state-info {
-    float: left;
-  }
-
-  .uninstall-state-info {
-    float: right;
-  }
 }
 
 .plugin-dependency-info {
@@ -87,7 +70,8 @@
     color: var(--text-color-secondary);
   }
 
-  .dependent-list {
+  .dependent-list,
+  .dependency-list {
     display: flex;
     gap: 0.4375rem;
     flex-wrap: wrap;
