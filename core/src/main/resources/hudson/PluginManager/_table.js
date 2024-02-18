@@ -339,7 +339,6 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         }
       }
 
-      dependentsDiv.classList.add('distant-axis')
       dependentsDiv.style.display = "inherit";
       return dependentsDiv;
     }
@@ -386,30 +385,26 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
       }
 
       // Handle mouse in/out of the enable/disable cell (left most cell).
-      if (enableTD) {
-        enableTD.addEventListener("mouseenter", function () {
-          const button = enableTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
-          const shinyNewDiv = document.createElement("div");
+      enableTD.addEventListener("mouseenter", function () {
+        const button = enableTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
+        const shinyNewDiv = document.createElement("div");
 
-          if (populateEnableDisableInfo(pluginTR, shinyNewDiv)) {
-            button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
-            Behaviour.applySubtree(button, true);
-          }
-        });
-      }
+        if (populateEnableDisableInfo(pluginTR, shinyNewDiv)) {
+          button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
+          Behaviour.applySubtree(button, true);
+        }
+      });
 
       // Handle mouse in/out of the uninstall cell (right most cell).
-      if (uninstallTD) {
-        uninstallTD.addEventListener("mouseenter", function () {
-          const button = uninstallTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
-          const shinyNewDiv = document.createElement("div");
+      uninstallTD.addEventListener("mouseenter", function () {
+        const button = uninstallTD.querySelector(`[data-type="app-tooltip-wrapper"]`);
+        const shinyNewDiv = document.createElement("div");
 
-          if (populateUninstallInfo(pluginTR, shinyNewDiv)) {
-            button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
-            Behaviour.applySubtree(button, true);
-          }
-        });
-      }
+        if (populateUninstallInfo(pluginTR, shinyNewDiv)) {
+          button.setAttribute("data-html-tooltip", shinyNewDiv.outerHTML);
+          Behaviour.applySubtree(button, true);
+        }
+      });
     }
 
     for (let j = 0; j < pluginTRs.length; j++) {

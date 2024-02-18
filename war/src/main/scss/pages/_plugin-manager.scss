@@ -78,8 +78,8 @@
 .plugin-dependency-info {
   display: flex;
   flex-direction: column;
-  gap: 0.4375rem;
-  padding-block: 0.3rem;
+  gap: 0.5rem;
+  padding: 0.4rem 0.1rem;
   max-width: 350px;
 
   .subtitle {
@@ -87,7 +87,7 @@
     color: var(--text-color-secondary);
   }
 
-  .distant-axis {
+  .dependent-list {
     display: flex;
     gap: 0.4375rem;
     flex-wrap: wrap;
