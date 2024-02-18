@@ -37,22 +37,22 @@ THE SOFTWARE.
             <j:set var="id" value="${h.generateId()}"/>
 
             <div class="ethan ethan--notinteractable" page-entry-id="${pageEntry.entryId}">
-                <div class="toprow">
-                    <div class="toprow__icon">
+                <div class="app-builds-container__item__inner">
+                    <div class="app-builds-container__item__inner__icon">
                         <l:icon src="symbol-status-nobuilt"/>
                     </div>
-                    <div class="toprow__link">
+                    <div class="app-builds-container__item__inner__link">
                         <!-- Don't use math unless needed, in case nextBuildNumber is not numeric -->
                         #${queuedItems.size() == 1 ? it.widget.owner.nextBuildNumber : it.widget.owner.nextBuildNumber+queuedItems.size()-i-1}
                     </div>
                     <j:if test="${build.building}">
-                        <div class="toprow__controls">
+                        <div class="app-builds-container__item__inner__controls">
                             <j:if test="${item.hasCancelPermission()}">
                                 <l:stopButton href="${rootURL}/queue/cancelItem?id=${item.id}" alt="${%cancel this build}"/>
                             </j:if>
                         </div>
                     </j:if>
-                    <div class="toprow__badges">
+                    <div class="app-builds-container__item__inner__badges">
                         <j:if test="${!item.params.isEmpty()}">
                             <div tooltip="Build Parameters: ${item.params}">
                                 <l:icon class="icon-notepad icon-sm"/>

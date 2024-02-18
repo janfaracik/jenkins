@@ -27,7 +27,7 @@ $card-padding: 1rem;
   }
 
   &:hover {
-    .letterman {
+    .jenkins-card__reveal {
       color: var(--text-color) !important;
     }
   }
@@ -53,7 +53,7 @@ $card-padding: 1rem;
     pointer-events: none;
   }
 
-  .letterman {
+  .jenkins-card__reveal {
     display: flex;
     align-items: center;
     justify-content: center;

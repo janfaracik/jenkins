@@ -35,14 +35,14 @@ THE SOFTWARE.
     <i:setTimeZone value="${h.getUserTimeZone()}" />
    </j:if>
 
-  <div class="ethan" page-entry-id="${pageEntry.entryId}" style="view-transition-name: item-${pageEntry.entryId}">
-    <div class="toprow">
-      <a class="toprow__icon"
+  <div class="app-builds-container__item" page-entry-id="${pageEntry.entryId}">
+    <div class="app-builds-container__item__inner">
+      <a class="app-builds-container__item__inner__icon"
          href="${h.getConsoleUrl(build)}"
-         tooltip="${build.iconColor.description} > ${%Console Output}">
+         tooltip="${build.iconColor.description}">
           <l:icon src="symbol-status-${build.iconColor.iconName}" />
       </a>
-      <a href="${link}" class="toprow__link">
+      <a href="${link}" class="app-builds-container__item__inner__link">
         ${build.displayName}
         <span class="timeman" time="${build.timestamp.time.time}">
           <j:set var="linkTitleAttr" value="${null}" />
@@ -55,7 +55,7 @@ THE SOFTWARE.
           </div>
         </span>
       </a>
-      <div class="toprow__controls">
+      <div class="app-builds-container__item__inner__controls">
         <j:if test="${build.building}">
           <j:if test="${build.building}">
             <j:set target="${it.widget}" property="nextBuildNumberToFetch" value="${build.number}"/>
@@ -73,13 +73,13 @@ THE SOFTWARE.
             <st:include it="${badge}" page="badge.jelly" />
           </j:forEach>
         </j:if>
-        <div class="letterman asda-link" data-href="${link}">
+        <div class="jenkins-card__reveal jenkins-jumplist-link" data-href="${link}">
           <l:icon src="symbol-menu" />
         </div>
       </div>
     </div>
     <j:if test="${!empty build.truncatedDescription}">
-      <div class="ethan__description">
+      <div class="app-builds-container__item__description">
         <j:out value="${app.markupFormatter.translate(build.truncatedDescription)}"/>
       </div>
     </j:if>

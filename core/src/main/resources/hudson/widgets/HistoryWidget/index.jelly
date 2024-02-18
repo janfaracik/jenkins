@@ -27,7 +27,7 @@ THE SOFTWARE.
   <j:set var="page" value="${it.historyPageFilter}" />
 
   <j:set var="controls">
-    <l:overflowButton icon="symbol-menu" clazz="letterman">
+    <l:overflowButton icon="symbol-menu" clazz="jenkins-card__reveal">
       <dd:item icon="symbol-rss"
                text="Atom feed ${%for all}"
                href="${it.baseUrl}/rssAll" />

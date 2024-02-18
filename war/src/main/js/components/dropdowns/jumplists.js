@@ -31,7 +31,7 @@ function generateJumplistAccessors() {
  */
 function generateDropdowns() {
   behaviorShim.specify(
-    "li.children, .asda-link, #menuSelector, .jenkins-menu-dropdown-chevron",
+    "li.children, .jenkins-jumplist-link, #menuSelector, .jenkins-menu-dropdown-chevron",
     "-dropdown-",
     1000,
     (element) =>
