@@ -240,39 +240,20 @@
   }
 
   &__badge {
+    --item-background--hover: color-mix(in srgb, currentColor 10%, transparent);
+    --item-background--active: color-mix(in srgb, currentColor 15%, transparent);
+    --item-box-shadow--focus: color-mix(in srgb, currentColor 7.5%, transparent);
+
+    @include mixins.item;
+
     margin-left: 1rem !important;
 
+    &::before, &::after {
+      inset: -5px -8px;
+    }
+
     &::before {
-      inset: -5px -8px;
-      border-radius: 13px;
-      background: currentColor;
-      opacity: 0.05;
-    }
-
-    &::after {
-      inset: -5px -8px;
-      box-shadow: 0 0 0 10px currentColor;
-      opacity: 0;
-    }
-
-    &:hover {
-      &::before {
-        background: currentColor;
-        border-radius: 6px;
-      }
-    }
-
-    &:active,
-    &:focus {
-      &::before {
-        background: currentColor;
-        border-radius: 6px;
-      }
-
-      &::after {
-        box-shadow: 0 0 0 5px currentColor;
-        opacity: 0.025;
-      }
+      background: color-mix(in srgb, currentColor 5%, transparent);
     }
   }
 }
