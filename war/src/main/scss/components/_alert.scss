@@ -1,0 +1,44 @@
+.alert {
+  font-size: var(--font-size-sm);
+  padding: 1rem 1.2rem;
+  margin-bottom: 20px;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--alert-background) 10%, transparent);
+  color: var(--alert-background);
+  line-height: 1.66;
+  text-shadow: 0 1px 1px var(--background);
+
+  &-success {
+    --alert-background: var(--success-color);
+  }
+
+  &-info {
+    --alert-background: var(--accent-color);
+  }
+
+  &-warning {
+    --alert-background: var(--warning-color);
+  }
+
+  &-danger {
+    --alert-background: var(--error-color);
+  }
+
+  strong {
+    font-weight: 600;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.75;
+    }
+
+    &:active,
+    &:focus {
+      opacity: 0.5;
+    }
+  }
+}
