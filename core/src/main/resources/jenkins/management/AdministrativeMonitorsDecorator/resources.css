@@ -148,22 +148,6 @@
   text-decoration: var(--link-text-decoration--hover);
 }
 
-.am-container .am-list .alert-success a {
-  color: var(--alert-success-text-color);
-}
-
-.am-container .am-list .alert-info a {
-  color: var(--alert-info-text-color);
-}
-
-.am-container .am-list .alert-warning a {
-  color: var(--alert-warning-text-color);
-}
-
-.am-container .am-list .alert-danger a {
-  color: var(--alert-danger-text-color);
-}
-
 @media screen and (max-width: 576px) {
   /* Hide non-security monitors on mobile view to avoid messing up the heading */
   #visible-am-container {

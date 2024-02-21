@@ -37,13 +37,12 @@
 
 .simple-page .safe-restarting {
   text-align: center;
-  border-color: var(--alert-success-border-color);
-  background-color: var(--alert-success-bg-color);
-  border-width: 2px;
-  border-radius: 2px;
-  border-style: solid;
+  background: color-mix(in srgb, var(--success-color) 10%, transparent);
+  color: var(--success-color);
+  border-radius: 1rem;
   margin: 5% auto auto;
-  padding: 5px;
+  padding: 1rem 1.2rem;
+  font-weight: 500;
 }
 
 .simple-page .safe-restarting > p {
