@@ -27,7 +27,7 @@ window.buildTimeTrend_displayBuilds = function (data) {
 
     link = document.createElement("a");
     link.href = e.number + "/";
-    link.classList.add("model-link", "inside");
+    link.classList.add("model-link", "iamlink");
     link.innerText = escapeHTML(e.displayName);
 
     td.appendChild(link);
@@ -62,6 +62,8 @@ window.buildTimeTrend_displayBuilds = function (data) {
     Behaviour.applySubtree(tr);
   }
   ts_refresh(p);
+
+  doThing()
 };
 
 /**
@@ -143,4 +145,38 @@ window.displayBuilds = function (data) {
     Behaviour.applySubtree(tr);
   }
   ts_refresh(p);
+
+
+
 };
+
+function doThing() {
+  const searchBarInput = document.querySelector("#search-bar-builds");
+
+  console.log('light years')
+  console.log('light years')
+  console.log(document.querySelectorAll("tbody tr"))
+
+  console.log(Array.from(document.querySelectorAll("tbody tr"))
+    .map((item) => ({
+      url: item.querySelector(".iamlink").href,
+      icon: item.querySelector(
+        "svg",
+      ).outerHTML,
+      label: item.querySelector(".iamlink").textContent,
+    })))
+
+  searchBarInput.suggestions = function () {
+    return Array.from(document.querySelectorAll("tbody tr"))
+      .map((item) => ({
+        url: item.querySelector(".iamlink").href,
+        icon: item.querySelector(
+          "svg",
+        ).outerHTML,
+        label: item.querySelector(".iamlink").textContent,
+      }));
+  };
+
+  Behaviour.applySubtree(searchBarInput, true)
+}
+

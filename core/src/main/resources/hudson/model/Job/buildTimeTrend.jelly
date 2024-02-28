@@ -48,7 +48,14 @@ THE SOFTWARE.
         <l:icon src="symbol-status-disabled-anime" id="disabled-anime" />
       </template>
 
-      <h1>${%Builds}</h1>
+      <div class="jenkins-app-bar">
+          <div class="jenkins-app-bar__content">
+              <h1>${%Builds} <span class="aasda">${it.builds.size()}</span></h1>
+          </div>
+          <div class="jenkins-app-bar__controls">
+              <l:search-bar id="search-bar-builds" />
+          </div>
+      </div>
 
 <!--      <j:set var="job" value="${it}" />-->
 <!--      <j:forEach var="p" items="${it.permalinks}">-->
@@ -58,7 +65,7 @@ THE SOFTWARE.
       <div class="abouttodays">
         <div class="iteem  iteem--time">
 <!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-check" />
+          <l:icon src="symbol-timer" />
           <div>Average time</div>
           <div>
             ${it.estimatedDuration}ms
@@ -74,7 +81,7 @@ THE SOFTWARE.
         </div>
         <a class="iteem iteem--success">
 <!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-check" />
+          <l:icon src="symbol-status-blue" />
           <div>Last successful</div>
           <div>
             #123
@@ -82,7 +89,7 @@ THE SOFTWARE.
         </a>
         <a class="iteem iteem--failed">
 <!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-check" />
+          <l:icon src="symbol-status-red" />
           <div>Last failed</div>
           <div>
             #74
@@ -102,12 +109,14 @@ THE SOFTWARE.
              data-is-distributed-build-enabled="${isDistributedBuildEnabled}">
         <thead>
           <tr>
-            <th><st:nbsp/></th>
+            <th class="jenkins-table__cell--tight">S</th>
             <th initialSortDir="up">${%Build}</th>
-            <th>${%Duration}</th>
+              <th>${%Duration}</th>
+              <th>${%Completed}</th>
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
             </j:if>
+              <th>${%overflow}</th>
           </tr>
           <tbody></tbody>
         </thead>

@@ -1215,13 +1215,18 @@ svg.icon-xlg {
 
 .canvaas {
   padding: 1.5rem 1rem;
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   margin-bottom: 1rem;
   border: var(--card-border-width) solid var(--card-border-color);
 
   canvas {
     max-height: 350px;
   }
+}
+
+.aasda {
+  color: var(--text-color-secondary);
+  margin-left: 0.5ch;
 }
 
 .abouttodays {
@@ -1239,14 +1244,16 @@ svg.icon-xlg {
   .iteem {
     position: relative;
     padding: 1rem 1.2rem;
-    border-radius: 1rem;
+    border-radius: 0.75rem;
     font-size: 1.2rem;
-    font-weight: 700;
+    font-weight: 550;
     overflow: hidden;
     aspect-ratio: 20 / 10;
     display: flex;
     flex-direction: column;
     justify-content: end;
+    line-height: 1;
+    gap: 0.625rem;
 
     .backplate {
       position: absolute;
@@ -1281,6 +1288,11 @@ svg.icon-xlg {
       border-radius: inherit;
     }
 
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+
     &--time {
       --card-symbol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Cpath d='M112.91 128A191.85 191.85 0 0064 254c-1.18 106.35 85.65 193.8 192 194 106.2.2 192-85.83 192-192 0-104.54-83.55-189.61-187.5-192a4.36 4.36 0 00-4.5 4.37V152' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3Cpath d='M233.38 278.63l-79-113a8.13 8.13 0 0111.32-11.32l113 79a32.5 32.5 0 01-37.25 53.26 33.21 33.21 0 01-8.07-7.94z'/%3E%3C/svg%3E");
     }
@@ -1298,8 +1310,6 @@ svg.icon-xlg {
 
     div:first-of-type {
       color: var(--text-color-secondary);
-      opacity: 0.75;
-      font-weight: 550;
     }
   }
 }
