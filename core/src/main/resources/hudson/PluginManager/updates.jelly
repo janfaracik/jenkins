@@ -64,7 +64,7 @@ THE SOFTWARE.
 
         <j:choose>
           <j:when test="${!empty(list)}">
-            <table id="plugins" class="jenkins-table sortable">
+            <table id="plugins" class="jenkins-table sortable update-table">
               <thead>
                 <tr>
                   <l:isAdmin>
@@ -83,7 +83,6 @@ THE SOFTWARE.
                   </l:isAdmin>
                   <th initialSortDir="down">${%Name}</th>
                   <th>${%Released}</th>
-                  <th>${%Installed}</th>
                 </tr>
               </thead>
                   <j:forEach var="p" items="${list}">
@@ -112,8 +111,20 @@ THE SOFTWARE.
                         <div>
                           <a href="${p.wiki}" class="jenkins-table__link" rel="noopener noreferrer" target="_blank">
                             <st:out value="${p.displayName}"/>
-                            <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">
-                              <span class="jenkins-visually-hidden">${%Version}</span>
+                            <span class="jenkins-label jenkins-label--tertiary pluginupgradelabel">
+                              <span class="jenkins-visually-hidden">${%Upgrading from}</span>
+                              <j:choose>
+                                <j:when test="${p.installed.active}">
+                                  <st:out value="${p.installed.version}"/>
+                                </j:when>
+                                <j:otherwise>
+                                  <span title="${%Inactive}">
+                                    (<st:out value="${p.installed.version}"/>)
+                                  </span>
+                                </j:otherwise>
+                              </j:choose>
+                              <l:icon src="symbol-arrow-right" />
+                              <span class="jenkins-visually-hidden">${%to}</span>
                               ${p.version}
                             </span>
                           </a>
@@ -212,18 +223,6 @@ THE SOFTWARE.
                             ${%ago(h.getTimeSpanString(p.releaseTimestamp))}
                           </time>
                         </j:if>
-                      </td>
-                      <td>
-                        <j:choose>
-                          <j:when test="${p.installed.active}">
-                            <st:out value="${p.installed.version}"/>
-                          </j:when>
-                          <j:otherwise>
-                            <span title="${%Inactive}">
-                              (<st:out value="${p.installed.version}"/>)
-                            </span>
-                          </j:otherwise>
-                        </j:choose>
                       </td>
                     </tr>
                   </j:forEach>

@@ -61,13 +61,13 @@
             {{/if}}
         </td>
         {{#if this.releaseTimestamp }}
-            <td style="width: 25%" data="{{ this.releaseTimestamp.iso8601 }}">
+            <td class="jenkins-table__cell--no-wrap" data="{{ this.releaseTimestamp.iso8601 }}">
                 <time datetime="{{ this.releaseTimestamp.iso8601 }}">
                     {{ this.releaseTimestamp.displayValue }}
                 </time>
             </td>
         {{else}}
-            <td style="width: 25%"></td>
+            <td class="jenkins-table__cell--no-wrap"></td>
         {{/if}}
     </tr>
 {{/each}}

@@ -1,3 +1,55 @@
+.pluginupgradelabel {
+  margin-left: 1ch;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+
+  svg {
+    width: 0.875rem;
+    height: 0.875rem;
+
+    * {
+      stroke-width: 50px;
+    }
+  }
+}
+
+.update-table {
+  th {
+
+  }
+
+  * {
+  }
+
+  thead {
+    th {
+      padding-left: 1rem !important;
+      padding-right: 0 !important;
+      vertical-align: top !important;
+
+      &:last-of-type {
+        padding-right: 2rem !important;
+      }
+    }
+  }
+
+  tbody {
+    td {
+      padding-left: 1rem !important;
+      padding-right: 0 !important;
+      padding-top: 0.8rem !important;
+      padding-bottom: 0.8rem !important;
+      vertical-align: top !important;
+
+      &:last-of-type {
+        padding-right: 2rem !important;
+      }
+    }
+  }
+}
+
 #plugins {
   .app-plugin-manager__categories {
     margin: 0.5rem 0;

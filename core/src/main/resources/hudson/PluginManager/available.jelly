@@ -69,13 +69,12 @@ THE SOFTWARE.
       <script src="${resURL}/jsbundles/plugin-manager-ui.js" type="text/javascript"/>
 
       <form id="form" method="post" action="install">
-        <table id="plugins" class="jenkins-table sortable"
+        <table id="plugins" class="jenkins-table sortable update-table"
                data-hasAdmin="${h.hasPermission(app.ADMINISTER)}">
           <thead>
             <tr>
               <l:isAdmin>
                 <th data-sort-disable="true">
-                  ${%Install}
                 </th>
               </l:isAdmin>
               <th initialSortDir="down">${%Name}</th>

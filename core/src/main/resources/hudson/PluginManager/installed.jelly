@@ -74,7 +74,7 @@ THE SOFTWARE.
           <l:notice icon="symbol-plugins" text="${%No plugins installed}" />
         </j:when>
         <j:otherwise>
-          <table id="plugins" class="jenkins-table sortable">
+          <table id="plugins" class="jenkins-table sortable update-table">
             <thead>
             <tr>
               <th initialSortDir="down">${%Name}</th>
@@ -122,13 +122,13 @@ THE SOFTWARE.
                       </j:choose>
                     </div>
                     <j:set var="issueTrackerReportUrl" value="${p.getIssueTrackerReportUrl()}"/>
-                    <j:if test="${issueTrackerReportUrl != null}">
-                      <div class="excerpt">
-                        <a href="${issueTrackerReportUrl}" rel="noopener nofollow noreferrer" target="_blank" class="jenkins-label jenkins-label--tertiary">
-                          ${%reportIssue}
-                        </a>
-                      </div>
-                    </j:if>
+<!--                    <j:if test="${issueTrackerReportUrl != null}">-->
+<!--                      <div class="excerpt">-->
+<!--                        <a href="${issueTrackerReportUrl}" rel="noopener nofollow noreferrer" target="_blank" class="jenkins-label jenkins-label&#45;&#45;tertiary">-->
+<!--                          ${%reportIssue}-->
+<!--                        </a>-->
+<!--                      </div>-->
+<!--                    </j:if>-->
                     <j:if test="${!p.getActiveWarnings().isEmpty()}">
                       <div class="alert alert-danger">${%securityWarning}
                         <ul>
