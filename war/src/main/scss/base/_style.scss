@@ -1210,15 +1210,17 @@ svg.icon-xlg {
 
 .canvaas, .iteem {
   background: var(--card-background);
+
 }
 
 .canvaas {
-  padding: 2rem;
+  padding: 1.5rem 1rem;
   border-radius: 1rem;
   margin-bottom: 1rem;
+  border: var(--card-border-width) solid var(--card-border-color);
 
   canvas {
-    max-height: 400px;
+    max-height: 350px;
   }
 }
 
@@ -1250,9 +1252,9 @@ svg.icon-xlg {
       position: absolute;
       inset: 0;
       mask-image:  radial-gradient(
-                      at bottom left,
-                      rgba(0 0 0 / 10%) 55%,
-                      white
+                      at top right,
+                      white,
+                      transparent 70%
       );
       opacity: 0.2;
 
@@ -1262,7 +1264,7 @@ svg.icon-xlg {
         z-index: 0;
         inset: -400px;
         pointer-events: none;
-        mask-size: 35px;
+        mask-size: 2rem;
         //rotate: 45deg;
         background: var(--text-color-secondary);
         mask-image: var(--card-symbol);

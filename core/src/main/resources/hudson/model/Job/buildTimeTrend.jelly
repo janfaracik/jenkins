@@ -50,30 +50,39 @@ THE SOFTWARE.
 
       <h1>${%Builds}</h1>
 
+<!--      <j:set var="job" value="${it}" />-->
+<!--      <j:forEach var="p" items="${it.permalinks}">-->
+<!--        <st:include page="link.jelly" it="${p}" />-->
+<!--      </j:forEach>-->
+
       <div class="abouttodays">
         <div class="iteem  iteem--time">
-          <span class="backplate"></span>
+<!--          <span class="backplate"></span>-->
+          <l:icon src="symbol-check" />
           <div>Average time</div>
           <div>
             ${it.estimatedDuration}ms
           </div>
         </div>
         <div class="iteem iteem--time">
-          <span class="backplate"></span>
+<!--          <span class="backplate"></span>-->
+          <l:icon src="symbol-check" />
           <div>Average time</div>
           <div>
             ${it.estimatedDuration}ms
           </div>
         </div>
         <a class="iteem iteem--success">
-          <span class="backplate"></span>
+<!--          <span class="backplate"></span>-->
+          <l:icon src="symbol-check" />
           <div>Last successful</div>
           <div>
             #123
           </div>
         </a>
         <a class="iteem iteem--failed">
-          <span class="backplate"></span>
+<!--          <span class="backplate"></span>-->
+          <l:icon src="symbol-check" />
           <div>Last failed</div>
           <div>
             #74
