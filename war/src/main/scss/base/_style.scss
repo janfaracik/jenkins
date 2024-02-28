@@ -1208,9 +1208,9 @@ svg.icon-xlg {
 
 /* -------------------------------------- */
 
-.canvaas, .iteem {
+.canvaas,
+.iteem {
   background: var(--card-background);
-
 }
 
 .canvaas {
@@ -1237,7 +1237,6 @@ svg.icon-xlg {
 
   a.iteem {
     cursor: pointer;
-
     text-decoration: none !important;
   }
 
@@ -1258,11 +1257,7 @@ svg.icon-xlg {
     .backplate {
       position: absolute;
       inset: 0;
-      mask-image:  radial-gradient(
-                      at top right,
-                      white,
-                      transparent 70%
-      );
+      mask-image: radial-gradient(at top right, white, transparent 70%);
       opacity: 0.2;
 
       &::before {

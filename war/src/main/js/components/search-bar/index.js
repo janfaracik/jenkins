@@ -13,7 +13,6 @@ function init() {
     "jenkins-search__input",
     0,
     (searchBar) => {
-
       if (!searchBar.suggestions) {
         return;
       }
@@ -120,12 +119,12 @@ function init() {
 
         hideResultsContainer();
       });
-    });
+    },
+  );
 
   // Array.from(searchBarInputs)
   //   .filter((searchBar) => searchBar.suggestions)
   //   .forEach((searchBar) => {
-
 }
 
 export default { init };

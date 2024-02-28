@@ -29,8 +29,6 @@ THE SOFTWARE.
   <l:layout title="${%title(it.displayName)}" type="one-column">
     <l:breadcrumb title="${%Builds}" />
 
-    <st:adjunct includes="hudson.model.Job.buildTimeTrend_resources" />
-
     <l:main-panel>
       <template id="jenkins-build-status-icons">
         <l:icon src="symbol-status-blue" id="blue" />
@@ -56,6 +54,8 @@ THE SOFTWARE.
               <l:search-bar id="search-bar-builds" />
           </div>
       </div>
+
+    <script src="${resURL}/jsbundles/pages/project/builds.js" type="text/javascript" />
 
 <!--      <j:set var="job" value="${it}" />-->
 <!--      <j:forEach var="p" items="${it.permalinks}">-->
@@ -111,12 +111,11 @@ THE SOFTWARE.
           <tr>
             <th class="jenkins-table__cell--tight">S</th>
             <th initialSortDir="up">${%Build}</th>
-              <th>${%Duration}</th>
-              <th>${%Completed}</th>
+            <th>${%Duration}</th>
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
             </j:if>
-              <th>${%overflow}</th>
+            <th>${%overflow}</th>
           </tr>
           <tbody></tbody>
         </thead>
