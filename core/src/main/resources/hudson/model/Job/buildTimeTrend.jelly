@@ -115,7 +115,7 @@ THE SOFTWARE.
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
             </j:if>
-            <th>${%overflow}</th>
+            <th></th>
           </tr>
           <tbody></tbody>
         </thead>

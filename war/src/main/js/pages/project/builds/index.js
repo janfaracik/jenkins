@@ -27,49 +27,48 @@ window.buildTimeTrend_displayBuilds = function (data) {
   console.log(data);
 
   data.forEach((item) => {
+    let distributedBuildColumn = ``;
+
+    if (isDistributedBuildsEnabled) {
+      var buildInfo;
+      var buildInfoStr = xmlEscape(item.builtOnStr || "");
+      if (item.builtOn) {
+        buildInfo = document.createElement("a");
+        buildInfo.href = rootURL + "/computer/" + item.builtOn;
+        buildInfo.classList.add("model-link");
+        buildInfo.innerText = buildInfoStr;
+      } else {
+        buildInfo = buildInfoStr;
+      }
+      const td = document.createElement("td");
+      if (buildInfo instanceof Node) {
+        td.appendChild(buildInfo);
+      } else {
+        td.innerText = buildInfo;
+      }
+      distributedBuildColumn = td.innerHTML;
+    }
+
     const tableRow = createElementFromHtml(`<tr>
-<td data="${item.iconColorOrdinal}"><a href="${item.consoleUrl}">${generateSVGIcon(item.iconName)}</a></td>
-<td class="model-link iamlink" data="${item.number}"><a href="${item.number}/">${xmlEscape(item.displayName)}</a></td>
+<td class="jenkins-table__cell--tight jenkins-table__icon" data="${item.iconColorOrdinal}"><div class="jenkins-table__cell__button-wrapper"><a href="${item.consoleUrl}">${generateSVGIcon(item.iconName)}</a></div></td>
+<td data="${item.number}"><a class="iamlink" href="${item.number}/">${xmlEscape(item.displayName)}</a></td>
 <td data="${item.duration}">${xmlEscape(item.durationString)}</td>
-<td>${item}</td>
-<td><button class="jenkins-button">...</button></td>
+${distributedBuildColumn}
+<td><button data-href="${item.number}/" class="jenkins-button jenkins-button--tertiary overflowTing"><div class="jenkins-overflow-button__ellipsis">
+          <span></span>
+          <span></span>
+         <span></span>
+        </div></button></td>
 </tr>`);
 
     p.append(tableRow);
     behaviorShim.applySubtree(tableRow);
   });
 
-  //   tr.appendChild(td);
-  //   if (isDistributedBuildsEnabled) {
-  //     var buildInfo = null;
-  //     var buildInfoStr = escapeHTML(e.builtOnStr || "");
-  //     if (e.builtOn) {
-  //       buildInfo = document.createElement("a");
-  //       buildInfo.href = rootURL + "/computer/" + e.builtOn;
-  //       buildInfo.classList.add("model-link");
-  //       buildInfo.innerText = buildInfoStr;
-  //     } else {
-  //       buildInfo = buildInfoStr;
-  //     }
-  //     td = document.createElement("td");
-  //     if (buildInfo instanceof Node) {
-  //       td.appendChild(buildInfo);
-  //     } else {
-  //       td.innerText = buildInfo;
-  //     }
-  //     tr.appendChild(td);
-  //   }
-  //   p.appendChild(tr);
-  //   Behaviour.applySubtree(tr);
-  // }
-  // ts_refresh(p);
-
+  ts_refresh(p);
   generateSearchResults();
 };
 
-/**
- * Generate SVG Icon
- */
 function generateSVGIcon(iconName) {
   const icons = document.querySelector("#jenkins-build-status-icons");
 
