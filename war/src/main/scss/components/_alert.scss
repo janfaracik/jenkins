@@ -3,10 +3,10 @@
   padding: 1rem 1.2rem;
   margin-bottom: 20px;
   border-radius: 1rem;
-  background: color-mix(in srgb, var(--alert-background) 10%, transparent);
+  background: color-mix(in srgb, var(--alert-background) 7.5%, transparent);
   color: var(--alert-background);
   line-height: 1.66;
-  text-shadow: 0 1px 1px var(--background);
+  font-weight: 450;
 
   &-success {
     --alert-background: var(--success-color);
@@ -25,7 +25,11 @@
   }
 
   strong {
-    font-weight: 600;
+    font-weight: 550;
+  }
+
+  p {
+    color: inherit;
   }
 
   a {
