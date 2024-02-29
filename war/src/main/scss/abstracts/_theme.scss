@@ -45,7 +45,7 @@ $semantics: (
 
   // Color palette
   --very-light-grey: #f8f8f8;
-  --light-grey: hsl(240, 20%, 96.5%);
+  --light-grey: hsl(240, 25%, 96.5%);
   --medium-grey: #9ba7af;
   --dark-grey: #4d545d;
 
@@ -144,8 +144,8 @@ $semantics: (
   --table-header-foreground: var(--text-color);
   --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
-  --table-border-radius: 10px;
-  --table-row-border-radius: 4px;
+  --table-border-radius: 0.75rem;
+  --table-row-border-radius: 0.3125rem;
 
   // Deprecated
   --even-row-color: var(--very-light-grey);
