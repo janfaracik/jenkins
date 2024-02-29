@@ -117,33 +117,6 @@
     }
   }
 
-  &-slider {
-    display: none;
-    position: relative;
-    width: 11px;
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: calc(50% - 20px);
-      left: calc(50% - 1.5px);
-      width: 3px;
-      height: 40px;
-      background: currentColor;
-      border-radius: 2px;
-      opacity: 0.5;
-      transition: var(--standard-transition);
-    }
-
-    &:hover {
-      cursor: ew-resize;
-
-      &::after {
-        opacity: 1;
-      }
-    }
-  }
-
   &-preview {
     display: flex;
     align-items: center;
@@ -247,7 +220,8 @@
 
   .document {
     width: 70ch;
-    background: var(--item-background--hover);
+    background: var(--card-background);
+    border: var(--card-border-width) solid var(--card-border-color);
     padding: var(--section-padding);
     border-radius: 10px;
     line-height: 1.66;
