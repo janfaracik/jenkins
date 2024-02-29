@@ -23,16 +23,15 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <div style="display: grid; grid-template-columns: 1fr auto; align-items: center">
-    <l:tabBar>
-      <j:forEach var="v" items="${it.sort(views)}">
-        <l:tab name="${v.displayName}" active="${v==currentView}" href="${rootURL}/${v.url}" />
-      </j:forEach>
-      <j:if test="${currentView.hasPermission(currentView.CREATE)}">
-        <l:tabNewItem href="${rootURL}/${currentView.owner.url}newView" title="${%New View}" />
-      </j:if>
-    </l:tabBar>
-    <t:rssBar/>
-  </div>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+
+      <l:tabBar>
+        <j:forEach var="v" items="${it.sort(views)}">
+          <l:tab name="${v.displayName}" active="${v==currentView}" href="${rootURL}/${v.url}" />
+        </j:forEach>
+        <j:if test="${currentView.hasPermission(currentView.CREATE)}">
+          <l:tabNewItem href="${rootURL}/${currentView.owner.url}newView" title="${%New View}" />
+        </j:if>
+      </l:tabBar>
+
 </j:jelly>

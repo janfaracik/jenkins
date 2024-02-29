@@ -61,11 +61,6 @@ THE SOFTWARE.
     </j:if>
 
     <j:if test="${!empty(jobs) or !empty(attrs.views)}">
-      <!-- the caller can inject a tab bar here -->
-      <div id="projectstatus-tabBar">
-        <d:invokeBody/>
-      </div>
-
       <div class="jenkins-mobile-hide">
         <table id="projectstatus" class="jenkins-table ${iconSize == '16x16' ? 'jenkins-table--small' : iconSize == '24x24' ? 'jenkins-table--medium' : ''} sortable">
           <thead>

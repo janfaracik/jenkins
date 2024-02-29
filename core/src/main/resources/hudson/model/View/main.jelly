@@ -23,14 +23,67 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:t="/lib/hudson">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:t="/lib/hudson" xmlns:dd="/lib/layout/dropdowns" xmlns:l="/lib/layout">
+  <div class="jenkins-app-bar">
+    <div class="jenkins-app-bar__content">
+      <j:choose>
+        <j:when test="${empty(items)}">
+          <j:if test="${!empty(app.items)}">
+            <j:set var="views" value="${it.owner.views}"/>
+            <j:set var="currentView" value="${it}"/>
+            <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
+          </j:if>
+        </j:when>
+        <j:otherwise>
+          <j:set var="views" value="${it.owner.views}"/>
+          <j:set var="currentView" value="${it}"/>
+          <j:choose>
+            <j:when test="${it.owner.class.name=='hudson.model.MyViewsProperty'}">
+              <st:include page="myViewTabs.jelly" it="${it.owner.myViewsTabBar}"/>
+            </j:when>
+            <j:otherwise>
+              <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
+            </j:otherwise>
+          </j:choose>
+        </j:otherwise>
+      </j:choose>
+    </div>
+    <div class="jenkins-app-bar__controls">
+      <st:include page="app-bar-controls.jelly" optional="true" />
+
+      <l:overflowButton>
+        <st:include page="app-bar-overflow.jelly" optional="true" />
+        <dd:separator />
+        <dd:item icon="symbol-information-circle" id="button-icon-legend" text="${%Legend}" />
+        <dd:submenu icon="symbol-rss" text="${%Atom feed}">
+          <dd:item icon="symbol-rss" text="${%All}" href="rssAll" />
+          <dd:item icon="symbol-rss" text="${%Failures}" href="rssFailed" />
+          <dd:item icon="symbol-rss" text="${%LatestBuilds}" href="rssLatest" />
+        </dd:submenu>
+        <dd:separator />
+        <st:include page="app-bar-overflow-bottom.jelly" optional="true" />
+      </l:overflowButton>
+
+      <template id="template-icon-legend" data-title="${%Icon legend}">
+        <st:include page="_legend.jelly" it="${app}" />
+      </template>
+
+      <script src="${resURL}/jsbundles/pages/dashboard.js" type="text/javascript" defer="true" />
+    </div>
+  </div>
+
+  <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">
+    <!-- allow the owner to take over the top section, but we also need the default to be backward compatible -->
+    <div id="view-message">
+      <div id="systemmessage">
+        <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />
+      </div>
+      <t:editableDescription permission="${it.CONFIGURE}"/>
+    </div>
+  </st:include>
+
   <j:choose>
     <j:when test="${empty(items)}">
-      <j:if test="${!empty(app.items)}">
-        <j:set var="views" value="${it.owner.views}"/>
-        <j:set var="currentView" value="${it}"/>
-        <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
-      </j:if>
       <st:include page="noJob.jelly" />
     </j:when>
     <j:otherwise>
@@ -38,27 +91,7 @@ THE SOFTWARE.
                      showViewTabs="true"
                      columnExtensions="${my.columns}"
                      indenter="${my.indenter}"
-                     itemGroup="${my.owner.itemGroup}">
-        <j:set var="views" value="${it.owner.views}"/>
-        <j:set var="currentView" value="${it}"/>
-        <j:choose>
-          <j:when test="${it.owner.class.name=='hudson.model.MyViewsProperty'}">
-            <st:include page="myViewTabs.jelly" it="${it.owner.myViewsTabBar}"/>
-          </j:when>
-          <j:otherwise>
-            <st:include page="viewTabs.jelly" it="${it.owner.viewsTabBar}"/>
-          </j:otherwise>
-        </j:choose>
-        <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">
-          <!-- allow the owner to take over the top section, but we also need the default to be backward compatible -->
-          <div id="view-message">
-            <div id="systemmessage">
-              <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />
-            </div>
-            <t:editableDescription permission="${it.CONFIGURE}"/>
-          </div>
-        </st:include>
-      </t:projectView>
+                     itemGroup="${my.owner.itemGroup}" />
     </j:otherwise>
   </j:choose>
 </j:jelly>
