@@ -25,32 +25,11 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
     <st:include page="tasks-new.jelly" it="${it.owner}" optional="true">
-        <!-- made overridable for ViewGroup that doesn't allow modifications -->
         <a href="${rootURL}/${it.viewUrl}newJob" class="jenkins-button">
             <l:icon src="symbol-add" />
             ${%NewJob(it.newPronoun)}
         </a>
-<!--        <div>-->
-<!--            ${it}-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            ${it.isEditable()}-->
-<!--        </div>-->
-<!--        <j:set var="url" value="${h.getNearestAncestorUrl(request,it)}"/>-->
-<!--        <div>-->
-<!--            ${url}-->
-
-<!--        </div>-->
-<!--        <j:choose>-->
-<!--            <j:when test="${h.hasPermission(it,it.CONFIGURE)}">-->
-<!--                <l:task icon="icon-gear icon-md" href="${url}/configure" title="${%Configure}" />-->
-<!--            </j:when>-->
-<!--            <j:when test="${h.hasPermission(it,it.EXTENDED_READ)}">-->
-<!--                <l:task icon="icon-gear icon-md" href="${url}/configure" title="${%View Configuration}" />-->
-<!--            </j:when>-->
-<!--        </j:choose>-->
-
-        <j:if test="${it.isEditable() or true}">
+        <j:if test="${it.isEditable()}">
             <!-- /configure URL on Jenkins object is overloaded with Jenkins's system config, so always use the explicit name. -->
             <a href="${rootURL}/${it.viewUrl}configure" class="jenkins-button">
                 ${%Configure}

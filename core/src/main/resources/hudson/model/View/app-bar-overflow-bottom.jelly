@@ -24,13 +24,8 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns">
-    <dd:custom>
-        <div>
-            ${it.owner.class}
-        </div>
-        ${it.owner.canDelete(it)}
-    </dd:custom>
     <j:if test="${it.owner.canDelete(it)}">
+        <dd:separator />
         <l:deleteNew permission="${it.DELETE}" title="${%Delete}" message="${%delete.view(it.displayName)}"/>
     </j:if>
 </j:jelly>
