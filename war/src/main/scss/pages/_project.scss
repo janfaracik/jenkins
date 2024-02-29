@@ -1,0 +1,118 @@
+.canvaas,
+.iteem {
+  background: var(--card-background);
+}
+
+.canvaas {
+  padding: 1.5rem 1rem;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+  border: var(--card-border-width) solid var(--card-border-color);
+
+  canvas {
+    max-height: 350px;
+  }
+}
+
+.abouttodays {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  a.iteem {
+    cursor: pointer;
+    text-decoration: none !important;
+    color: var(--text-color);
+    transition: var(--standard-transition);
+    box-shadow: 0 0 0 10px transparent;
+
+    &:hover {
+      background: var(--card-background--hover);
+      --card-border-color: var(--card-border-color--hover);
+    }
+
+    &:active, &:focus {
+      background: var(--card-background--active);
+      --card-border-color: var(--card-border-color--active);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--card-border-color--active), transparent);
+    }
+  }
+
+  .iteem {
+    position: relative;
+    padding: 1.1rem 1.2rem;
+    border-radius: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 550;
+    overflow: hidden;
+    aspect-ratio: 20 / 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    line-height: 1;
+    gap: 0.625rem;
+
+    .backplate {
+      position: absolute;
+      inset: 0;
+      mask-image: radial-gradient(at top right, white, transparent 70%);
+      opacity: 0.2;
+
+      &::before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset: -400px;
+        pointer-events: none;
+        mask-size: 2rem;
+        //rotate: 45deg;
+        background: var(--text-color-secondary);
+        mask-image: var(--card-symbol);
+      }
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      border: var(--card-border-width) solid var(--card-border-color);
+      border-radius: inherit;
+      transition: var(--standard-transition);
+    }
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    &--time {
+      --card-symbol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Cpath d='M112.91 128A191.85 191.85 0 0064 254c-1.18 106.35 85.65 193.8 192 194 106.2.2 192-85.83 192-192 0-104.54-83.55-189.61-187.5-192a4.36 4.36 0 00-4.5 4.37V152' fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32'/%3E%3Cpath d='M233.38 278.63l-79-113a8.13 8.13 0 0111.32-11.32l113 79a32.5 32.5 0 01-37.25 53.26 33.21 33.21 0 01-8.07-7.94z'/%3E%3C/svg%3E");
+    }
+
+    &--success {
+      --card-symbol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Cpath d='M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z' fill='none' stroke='currentColor' stroke-miterlimit='10' stroke-width='32'/%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M352 176L217.6 336 160 272'/%3E%3C/svg%3E");
+      --card-color: var(--green);
+    }
+
+    &--failed {
+      --card-symbol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M368 368L144 144M368 144L144 368'/%3E%3C/svg%3E");
+      //--card-symbol: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Cpath d='M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z' fill='none' stroke='currentColor' stroke-miterlimit='10' stroke-width='32'/%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='32' d='M352 176L217.6 336 160 272'/%3E%3C/svg%3E");
+      --card-color: var(--red);
+    }
+
+    div:first-of-type {
+      color: var(--text-color-secondary);
+    }
+  }
+}
+//
+//@keyframes blurin {
+//  from {
+//    scale: 0.9;
+//    filter: blur(10px);
+//  }
+//}

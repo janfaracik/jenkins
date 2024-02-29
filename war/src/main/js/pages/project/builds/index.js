@@ -24,8 +24,6 @@ window.buildTimeTrend_displayBuilds = function (data) {
     "true" === p.getAttribute("data-is-distributed-build-enabled");
   const rootURL = document.head.getAttribute("data-rooturl");
 
-  console.log(data);
-
   data.forEach((item) => {
     let distributedBuildColumn = ``;
 

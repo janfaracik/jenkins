@@ -25,11 +25,14 @@ THE SOFTWARE.
 
 <!-- Displays the chart that show how long builds are taking -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:x="jelly:xml">
   <l:layout title="${%title(it.displayName)}" type="one-column">
     <l:breadcrumb title="${%Builds}" />
 
     <l:main-panel>
+      <j:new var="handler" className="jenkins.widgets.BuildTimeTrend"/>
+      ${handler.setBuilds(it.builds)}
+
       <template id="jenkins-build-status-icons">
         <l:icon src="symbol-status-blue" id="blue" />
         <l:icon src="symbol-status-yellow" id="yellow" />
@@ -46,55 +49,30 @@ THE SOFTWARE.
         <l:icon src="symbol-status-disabled-anime" id="disabled-anime" />
       </template>
 
-      <div class="jenkins-app-bar">
+      <div class="jenkins-app-bar jenkins-app-bar--sticky">
           <div class="jenkins-app-bar__content">
-              <h1>${%Builds} <span class="aasda">${it.builds.size()}</span></h1>
+              <h1>${%Builds} <span class="jenkins-app-bar__subtitle">${it.builds.size()}</span></h1>
           </div>
           <div class="jenkins-app-bar__controls">
               <l:search-bar id="search-bar-builds" />
           </div>
       </div>
 
-    <script src="${resURL}/jsbundles/pages/project/builds.js" type="text/javascript" />
-
-<!--      <j:set var="job" value="${it}" />-->
-<!--      <j:forEach var="p" items="${it.permalinks}">-->
-<!--        <st:include page="link.jelly" it="${p}" />-->
-<!--      </j:forEach>-->
+      <script src="${resURL}/jsbundles/pages/project/builds.js" type="text/javascript" />
 
       <div class="abouttodays">
-        <div class="iteem  iteem--time">
-<!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-timer" />
-          <div>Average time</div>
-          <div>
-            ${it.estimatedDuration}ms
-          </div>
-        </div>
-        <div class="iteem iteem--time">
-<!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-check" />
-          <div>Average time</div>
-          <div>
-            ${it.estimatedDuration}ms
-          </div>
-        </div>
-        <a class="iteem iteem--success">
-<!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-status-blue" />
-          <div>Last successful</div>
-          <div>
-            #123
-          </div>
-        </a>
-        <a class="iteem iteem--failed">
-<!--          <span class="backplate"></span>-->
-          <l:icon src="symbol-status-red" />
-          <div>Last failed</div>
-          <div>
-            #74
-          </div>
-        </a>
+        <j:forEach var="card" items="${handler.swagCards}">
+          <x:element name="${card.url != null ? 'a' : 'div'}">
+            <x:attribute name="class">iteem</x:attribute>
+            <x:attribute name="href">${card.url}</x:attribute>
+
+            <l:icon src="${card.symbol}" />
+            <div>${card.label}</div>
+            <div>
+              ${card.value}
+            </div>
+          </x:element>
+        </j:forEach>
       </div>
 
       <div class="canvaas">
@@ -102,8 +80,6 @@ THE SOFTWARE.
       </div>
 
       <j:set var="isDistributedBuildEnabled" value="${!empty(app.nodes)}"/>
-      <j:new var="handler" className="jenkins.widgets.BuildTimeTrend"/>
-      ${handler.setBuilds(it.builds)}
       <l:progressiveRendering handler="${handler}" callback="buildTimeTrend_displayBuilds"/>
       <table class="jenkins-table sortable" id="trend"
              data-is-distributed-build-enabled="${isDistributedBuildEnabled}">

@@ -1,4 +1,3 @@
-// import Jumplists from "@/components/dropdowns/jumplists";
 import Chart from "chart.js/auto";
 
 function init() {
@@ -22,6 +21,9 @@ function init() {
 
     return getComputedStyle(ctx).getPropertyValue("--" + color);
   };
+
+  Chart.defaults.font.weight = 500;
+  Chart.defaults.color = textColor;
 
   new Chart(ctx, {
     type: "line",
@@ -62,9 +64,6 @@ function init() {
           grid: {
             drawOnChartArea: false,
           },
-          ticks: {
-            color: textColor,
-          },
         },
         y: {
           border: {
@@ -72,9 +71,6 @@ function init() {
           },
           grid: {
             drawOnChartArea: false,
-          },
-          ticks: {
-            color: textColor,
           },
         },
       },
