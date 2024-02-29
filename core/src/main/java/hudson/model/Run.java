@@ -319,6 +319,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
     /**
      * Creates a new {@link Run}.
      * @param job Owner job
+     * @see LazyBuildMixIn#newBuild
      */
     protected Run(@NonNull JobT job) throws IOException {
         this(job, System.currentTimeMillis());
@@ -347,6 +348,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
 
     /**
      * Loads a run from a log file.
+     * @see LazyBuildMixIn#loadBuild
      */
     protected Run(@NonNull JobT project, @NonNull File buildDir) throws IOException {
         this.project = project;
@@ -536,7 +538,8 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
      * @return true if after started and before completed.
      * @since 1.538
      */
-    protected boolean isInProgress() {
+    @Exported
+    public boolean isInProgress() {
         return state.equals(State.BUILDING) || state.equals(State.POST_PRODUCTION);
     }
 
@@ -1239,12 +1242,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
     /**
      * Maximum number of artifacts to list before using switching to the tree view.
      */
-    public static final int LIST_CUTOFF = Integer.parseInt(SystemProperties.getString("hudson.model.Run.ArtifactList.listCutoff", "16"));
-
-    /**
-     * Maximum number of artifacts to show in tree view before just showing a link.
-     */
-    public static final int TREE_CUTOFF = Integer.parseInt(SystemProperties.getString("hudson.model.Run.ArtifactList.treeCutoff", "40"));
+    public static final int LIST_CUTOFF = Integer.parseInt(SystemProperties.getString("hudson.model.Run.ArtifactList.listCutoff", "20"));
 
     // ..and then "too many"
 
@@ -1898,8 +1896,6 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
 
                     LOGGER.log(FINE, "{0} main build action completed: {1}", new Object[] {this, result});
                     CheckPoint.MAIN_COMPLETED.report();
-                } catch (ThreadDeath t) {
-                    throw t;
                 } catch (AbortException e) { // orderly abortion.
                     result = Result.FAILURE;
                     listener.error(e.getMessage());
@@ -1921,8 +1917,6 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
                 // even if the main build fails fatally, try to run post build processing
                 job.post(Objects.requireNonNull(listener));
 
-            } catch (ThreadDeath t) {
-                throw t;
             } catch (Throwable e) {
                 handleFatalBuildProblem(listener, e);
                 result = Result.FAILURE;
@@ -2486,10 +2480,12 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         }
         Jenkins j = Jenkins.getInstanceOrNull();
         if (j == null) {
+            LOGGER.fine(() -> "Jenkins not running");
             return null;
         }
         Job<?, ?> job = j.getItemByFullName(jobName, Job.class);
         if (job == null) {
+            LOGGER.fine(() -> "no such job " + jobName + " when running as " + Jenkins.getAuthentication2().getName());
             return null;
         }
         return job.getBuildByNumber(number);
@@ -2541,7 +2537,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
     /**
      * Sort by date. Newer ones first.
      */
-    public static final Comparator<Run> ORDER_BY_DATE = new Comparator<Run>() {
+    public static final Comparator<Run> ORDER_BY_DATE = new Comparator<>() {
         @Override
         public int compare(@NonNull Run lhs, @NonNull Run rhs) {
             long lt = lhs.getTimeInMillis();
@@ -2671,18 +2667,13 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
 
 
     public static class RedirectUp {
-        public void doDynamic(StaplerResponse rsp) throws IOException {
+        public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException {
             // Compromise to handle both browsers (auto-redirect) and programmatic access
             // (want accurate 404 response).. send 404 with javascript to redirect browsers.
             rsp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             rsp.setContentType("text/html;charset=UTF-8");
             PrintWriter out = rsp.getWriter();
-            out.println("<html><head>" +
-                "<meta http-equiv='refresh' content='1;url=..'/>" +
-                "<script>window.location.replace('..');</script>" +
-                "</head>" +
-                "<body style='background-color:white; color:white;'>" +
-                "Not found</body></html>");
+            Util.printRedirect(req.getContextPath(), "..", "Not found", out);
             out.flush();
         }
     }

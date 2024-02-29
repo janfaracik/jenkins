@@ -33,7 +33,6 @@ import hudson.util.ClassLoaderSanityThreadFactory;
 import hudson.util.DaemonThreadFactory;
 import hudson.util.ExceptionCatchingThreadFactory;
 import hudson.util.NamingThreadFactory;
-import hudson.util.NullStream;
 import hudson.util.ProcessTree;
 import hudson.util.StreamCopyThread;
 import java.io.File;
@@ -52,7 +51,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.apache.commons.io.input.NullInputStream;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
@@ -320,12 +318,10 @@ public abstract class Proc {
         @Override
         public int join() throws InterruptedException, IOException {
             // show what we are waiting for in the thread title
-            // since this involves some native work, let's have some soak period before enabling this by default
             Thread t = Thread.currentThread();
             String oldName = t.getName();
             if (SHOW_PID) {
-                ProcessTree.OSProcess p = ProcessTree.get().get(proc);
-                t.setName(oldName + " " + (p != null ? "waiting for pid=" + p.getPid() : "waiting for " + name));
+                t.setName(oldName + " waiting for pid=" + proc.pid());
             }
 
             try {
@@ -430,8 +426,8 @@ public abstract class Proc {
             return String.join(" ", cmd);
         }
 
-        public static final InputStream SELFPUMP_INPUT = new NullInputStream(0);
-        public static final OutputStream SELFPUMP_OUTPUT = new NullStream();
+        public static final InputStream SELFPUMP_INPUT = InputStream.nullInputStream();
+        public static final OutputStream SELFPUMP_OUTPUT = OutputStream.nullOutputStream();
     }
 
     /**
@@ -506,7 +502,7 @@ public abstract class Proc {
      * Debug switch to have the thread display the process it's waiting for.
      */
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "for debugging")
-    public static boolean SHOW_PID = false;
+    public static boolean SHOW_PID = true;
 
     /**
     * An instance of {@link Proc}, which has an internal workaround for JENKINS-23271.

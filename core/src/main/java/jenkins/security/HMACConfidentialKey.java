@@ -17,7 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
  *
  * <p>
  * This provides more secure version of it by using HMAC.
- * See http://rdist.root.org/2009/10/29/stop-using-unsafe-keyed-hashes-use-hmac/ for background.
+ * See <a href="https://rdist.root.org/2009/10/29/stop-using-unsafe-keyed-hashes-use-hmac/">this blog post</a> for background.
  * This implementation also never leaks the secret value to outside, so it makes it impossible
  * for the careless caller to misuse the key (thus protecting ourselves from our own stupidity!)
  *
@@ -98,6 +98,11 @@ public class HMACConfidentialKey extends ConfidentialKey {
     }
 
     private byte[] chop(byte[] mac) {
+        //don't shorten the mac code on FIPS mode
+        //if length supplied is less than original mac code length on FIPS, throw exception
+        if (FIPS140.useCompliantAlgorithms() && length < mac.length) {
+            throw new IllegalArgumentException("Supplied length can't be less than " + mac.length + " on FIPS mode");
+        }
         if (mac.length <= length)  return mac; // already too short
 
         byte[] b = new byte[length];

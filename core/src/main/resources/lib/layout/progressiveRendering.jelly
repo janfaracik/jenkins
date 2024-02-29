@@ -28,7 +28,7 @@ THE SOFTWARE.
             Instance of jenkins.util.ProgressiveRendering.
         </st:attribute>
         <st:attribute name="callback" use="required">
-          JavaScript expression that evaluates to the function taking one JSON-valued parameter which renders results as they come.
+          Name of a global scope JavaScript function that takes one JSON-valued parameter which renders results as they come.
         </st:attribute>
         <st:attribute name="tooltip">
             Optional tooltip for progress bar.
@@ -36,7 +36,7 @@ THE SOFTWARE.
     </st:documentation>
     <st:adjunct includes="lib.layout.progressiveRendering.progressiveRendering"/>
     <j:set var="id" value="${h.generateId()}"/>
-    <t:progressBar id="${id}" pos="0" tooltip="${tooltip ?: '%progressMessage'}"/>
+    <t:progressBar id="${id}" pos="0" tooltip="${tooltip ?: '%progressMessage'}" large="true" animate="true"/>
     <st:bind var="proxy" value="${handler}" />
-    <script>progressivelyRender(proxy, ${callback}, '${id}');</script>
+    <div class="progressive-rendering-information-holder" data-id="${id}" data-callback="${callback}" />
 </j:jelly>

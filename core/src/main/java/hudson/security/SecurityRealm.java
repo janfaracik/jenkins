@@ -37,11 +37,10 @@ import hudson.security.captcha.CaptchaSupport;
 import hudson.util.DescriptorList;
 import hudson.util.PluginServletFilter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -617,7 +616,7 @@ public abstract class SecurityRealm extends AbstractDescribableImpl<SecurityReal
 
     protected final List<Filter> commonFilters() {
         // like Jenkins.ANONYMOUS:
-        AnonymousAuthenticationFilter apf = new AnonymousAuthenticationFilter("anonymous", "anonymous", Collections.singletonList(new SimpleGrantedAuthority("anonymous")));
+        AnonymousAuthenticationFilter apf = new AnonymousAuthenticationFilter("anonymous", "anonymous", List.of(new SimpleGrantedAuthority("anonymous")));
         ExceptionTranslationFilter etf = new ExceptionTranslationFilter(new HudsonAuthenticationEntryPoint("/" + getLoginUrl() + "?from={0}"));
         etf.setAccessDeniedHandler(new AccessDeniedHandlerImpl());
         UnwrapSecurityExceptionFilter usef = new UnwrapSecurityExceptionFilter();
@@ -640,7 +639,7 @@ public abstract class SecurityRealm extends AbstractDescribableImpl<SecurityReal
      */
     @Restricted(DoNotUse.class)
     public static String getFrom() {
-        String from = null, returnValue = null;
+        String from = null;
         final StaplerRequest request = Stapler.getCurrentRequest();
 
         // Try to obtain a return point from the query parameter
@@ -648,15 +647,27 @@ public abstract class SecurityRealm extends AbstractDescribableImpl<SecurityReal
             from = request.getParameter("from");
         }
 
+        // On the 404 error page, use the session attribute it sets
+        if (request != null && request.getRequestURI().equals(request.getContextPath() + "/404")) {
+            final HttpSession session = request.getSession(false);
+            if (session != null) {
+                final Object attribute = session.getAttribute("from");
+                if (attribute != null) {
+                    from = attribute.toString();
+                }
+            }
+        }
+
         // If entry point was not found, try to deduce it from the request URI
-        // except pages related to login process
+        // except pages related to login process and the 404 error page
         if (from == null
                 && request != null
                 && request.getRequestURI() != null
-                && !request.getRequestURI().equals("/loginError")
-                && !request.getRequestURI().equals("/login")) {
-
-                from = request.getRequestURI();
+                // The custom login page makes the next two lines obsolete, but safer to have them.
+                && !request.getRequestURI().equals(request.getContextPath() + "/loginError")
+                && !request.getRequestURI().equals(request.getContextPath() + "/login")
+                && !request.getRequestURI().equals(request.getContextPath() + "/404")) {
+            from = request.getRequestURI();
         }
 
         // If deduced entry point isn't deduced yet or the content is a blank value
@@ -664,9 +675,7 @@ public abstract class SecurityRealm extends AbstractDescribableImpl<SecurityReal
         from = StringUtils.defaultIfBlank(from, "/").trim();
 
         // Encode the return value
-        try {
-            returnValue = URLEncoder.encode(from, "UTF-8");
-        } catch (UnsupportedEncodingException e) { }
+        String returnValue = URLEncoder.encode(from, StandardCharsets.UTF_8);
 
         // Return encoded value or at least "/" in the case exception occurred during encode()
         // or if the encoded content is blank value

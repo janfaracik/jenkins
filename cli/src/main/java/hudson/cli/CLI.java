@@ -43,11 +43,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,20 +58,19 @@ import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
+import org.glassfish.tyrus.client.SslEngineConfigurator;
 import org.glassfish.tyrus.container.jdk.client.JdkClientContainer;
 
 /**
  * CLI entry point to Jenkins.
  */
+@SuppressFBWarnings(value = "CRLF_INJECTION_LOGS", justification = "We don't care about this behavior")
 public class CLI {
 
     private CLI() {}
@@ -121,7 +123,6 @@ public class CLI {
 
         boolean noKeyAuth = false;
 
-        // TODO perhaps allow mode to be defined by environment variable too (assuming $JENKINS_USER_ID can be used for -user)
         Mode mode = null;
 
         String user = null;
@@ -132,6 +133,7 @@ public class CLI {
         String tokenEnv = System.getenv("JENKINS_API_TOKEN");
 
         boolean strictHostKey = false;
+        boolean noCertificateCheck = false;
 
         while (!args.isEmpty()) {
             String head = args.get(0);
@@ -177,17 +179,7 @@ public class CLI {
             }
             if (head.equals("-noCertificateCheck")) {
                 LOGGER.info("Skipping HTTPS certificate checks altogether. Note that this is not secure at all.");
-                SSLContext context = SSLContext.getInstance("TLS");
-                context.init(null, new TrustManager[]{new NoCheckTrustManager()}, new SecureRandom());
-                HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
-                // bypass host name check, too.
-                HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    @SuppressFBWarnings(value = "WEAK_HOSTNAME_VERIFIER", justification = "User set parameter to skip verifier.")
-                    public boolean verify(String s, SSLSession sslSession) {
-                        return true;
-                    }
-                });
+                noCertificateCheck = true;
                 args = args.subList(1, args.size());
                 continue;
             }
@@ -267,10 +259,10 @@ public class CLI {
         }
 
         if (args.isEmpty())
-            args = Collections.singletonList("help"); // default to help
+            args = List.of("help"); // default to help
 
         if (mode == null) {
-            mode = Mode.HTTP;
+            mode = Mode.WEB_SOCKET;
         }
 
         LOGGER.log(FINE, "using connection mode {0}", mode);
@@ -303,7 +295,7 @@ public class CLI {
             LOGGER.warning("Warning: -user ignored unless using -ssh");
         }
 
-        CLIConnectionFactory factory = new CLIConnectionFactory();
+        CLIConnectionFactory factory = new CLIConnectionFactory().noCertificateCheck(noCertificateCheck);
         String userInfo = new URL(url).getUserInfo();
         if (userInfo != null) {
             factory = factory.basicAuth(userInfo);
@@ -327,7 +319,13 @@ public class CLI {
 
     @SuppressFBWarnings(value = {"PATH_TRAVERSAL_IN", "URLCONNECTION_SSRF_FD"}, justification = "User provided values for running the program.")
     private static String readAuthFromFile(String auth) throws IOException {
-        return FileUtils.readFileToString(new File(auth.substring(1)), Charset.defaultCharset());
+        Path path;
+        try {
+            path = Paths.get(auth.substring(1));
+        } catch (InvalidPathException e) {
+            throw new IOException(e);
+        }
+        return Files.readString(path, Charset.defaultCharset());
     }
 
     @SuppressFBWarnings(value = {"PATH_TRAVERSAL_IN", "URLCONNECTION_SSRF_FD"}, justification = "User provided values for running the program.")
@@ -346,13 +344,20 @@ public class CLI {
             @Override
             public void beforeRequest(Map<String, List<String>> headers) {
                 if (factory.authorization != null) {
-                    headers.put("Authorization", Collections.singletonList(factory.authorization));
+                    headers.put("Authorization", List.of(factory.authorization));
                 }
             }
         }
 
         ClientManager client = ClientManager.createClient(JdkClientContainer.class.getName()); // ~ ContainerProvider.getWebSocketContainer()
         client.getProperties().put(ClientProperties.REDIRECT_ENABLED, true); // https://tyrus-project.github.io/documentation/1.13.1/index/tyrus-proprietary-config.html#d0e1775
+        if (factory.noCertificateCheck) {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[] {new NoCheckTrustManager()}, new SecureRandom());
+            SslEngineConfigurator sslEngineConfigurator = new SslEngineConfigurator(sslContext);
+            sslEngineConfigurator.setHostnameVerifier((s, sslSession) -> true);
+            client.getProperties().put(ClientProperties.SSL_ENGINE_CONFIGURATOR, sslEngineConfigurator);
+        }
         Session session = client.connectToServer(new CLIEndpoint(), ClientEndpointConfig.Builder.create().configurator(new Authenticator()).build(), URI.create(url.replaceFirst("^http", "ws") + "cli/ws"));
         PlainCLIProtocol.Output out = new PlainCLIProtocol.Output() {
             @Override
@@ -378,8 +383,15 @@ public class CLI {
         }
     }
 
-    private static int plainHttpConnection(String url, List<String> args, CLIConnectionFactory factory) throws IOException, InterruptedException {
+    private static int plainHttpConnection(String url, List<String> args, CLIConnectionFactory factory)
+            throws GeneralSecurityException, IOException, InterruptedException {
         LOGGER.log(FINE, "Trying to connect to {0} via plain protocol over HTTP", url);
+        if (factory.noCertificateCheck) {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[] {new NoCheckTrustManager()}, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((s, sslSession) -> true);
+        }
         FullDuplexHttpStream streams = new FullDuplexHttpStream(new URL(url), "cli?remoting=false", factory.authorization);
         try (ClientSideImpl connection = new ClientSideImpl(new PlainCLIProtocol.FramedOutput(streams.getOutputStream()))) {
             connection.start(args);
@@ -483,14 +495,9 @@ public class CLI {
 
     private static String computeVersion() {
         Properties props = new Properties();
-        try {
-            InputStream is = CLI.class.getResourceAsStream("/jenkins/cli/jenkins-cli-version.properties");
+        try (InputStream is = CLI.class.getResourceAsStream("/jenkins/cli/jenkins-cli-version.properties")) {
             if (is != null) {
-                try {
-                    props.load(is);
-                } finally {
-                    is.close();
-                }
+                props.load(is);
             }
         } catch (IOException e) {
             e.printStackTrace(); // if the version properties is missing, that's OK.

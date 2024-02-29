@@ -26,8 +26,8 @@ package hudson.security;
 
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Functions;
+import hudson.Util;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -82,7 +82,7 @@ public class HudsonAuthenticationEntryPoint implements AuthenticationEntryPoint 
             String uriFrom = req.getRequestURI();
             if (req.getQueryString() != null && !req.getQueryString().isEmpty()) uriFrom += "?" + req.getQueryString();
             String loginForm = req.getContextPath() + loginFormUrl;
-            loginForm = MessageFormat.format(loginForm, URLEncoder.encode(uriFrom, "UTF-8"));
+            loginForm = MessageFormat.format(loginForm, URLEncoder.encode(uriFrom, StandardCharsets.UTF_8));
             req.setAttribute("loginForm", loginForm);
 
             rsp.setStatus(SC_FORBIDDEN);
@@ -105,7 +105,7 @@ public class HudsonAuthenticationEntryPoint implements AuthenticationEntryPoint 
             } catch (IllegalStateException e) {
                 out = rsp.getWriter();
             }
-            printResponse(loginForm, out);
+            Util.printRedirect(req.getContextPath(), loginForm, "Authentication required", out);
 
             if (cause != null)
                 cause.report(out);
@@ -119,18 +119,5 @@ public class HudsonAuthenticationEntryPoint implements AuthenticationEntryPoint 
                 out.print("                              ");
             out.close();
         }
-    }
-
-    @SuppressFBWarnings(value = "XSS_SERVLET", justification = "Intermediate step for redirecting users to login page.")
-    private void printResponse(String loginForm, PrintWriter out) {
-        out.printf(
-            "<html><head>" +
-            "<meta http-equiv='refresh' content='1;url=%1$s'/>" +
-            "<script>window.location.replace('%1$s');</script>" +
-            "</head>" +
-            "<body style='background-color:white; color:white;'>%n" +
-            "%n%n" +
-            "Authentication required%n" +
-            "<!--%n", loginForm);
     }
 }

@@ -26,6 +26,7 @@ package hudson.cli;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.ExtensionList;
@@ -42,7 +43,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.UncheckedIOException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
@@ -52,6 +52,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.Jenkins;
+import jenkins.util.SystemProperties;
 import org.apache.commons.discovery.ResourceClassIterator;
 import org.apache.commons.discovery.ResourceNameIterator;
 import org.apache.commons.discovery.resource.ClassLoaders;
@@ -63,6 +64,7 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.ParserProperties;
 import org.kohsuke.args4j.spi.OptionHandler;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -108,6 +110,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 @LegacyInstancesAreScopedToHudson
 public abstract class CLICommand implements ExtensionPoint, Cloneable {
+
+    /**
+     * Boolean values to either allow or disallow parsing of @-prefixes.
+     * If a command line value starts with @, it is interpreted as being a file, loaded,
+     * and interpreted as if the file content would have been passed to the command line
+     */
+    @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "Accessible via System Groovy Scripts")
+    @Restricted(NoExternalUse.class)
+    public static boolean ALLOW_AT_SYNTAX = SystemProperties.getBoolean(CLICommand.class.getName() + ".allowAtSyntax");
+
     /**
      * Connected to stdout and stderr of the CLI agent that initiated the session.
      * IOW, if you write to these streams, the person who launched the CLI command
@@ -308,7 +320,8 @@ public abstract class CLICommand implements ExtensionPoint, Cloneable {
      * @since 1.538
      */
     protected CmdLineParser getCmdLineParser() {
-        return new CmdLineParser(this);
+        ParserProperties properties = ParserProperties.defaults().withAtSyntax(ALLOW_AT_SYNTAX);
+        return new CmdLineParser(this, properties);
     }
 
     /**
@@ -415,11 +428,7 @@ public abstract class CLICommand implements ExtensionPoint, Cloneable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        try {
-            return out.toString(charset.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new AssertionError(e);
-        }
+        return out.toString(charset);
     }
 
     /**
@@ -437,11 +446,7 @@ public abstract class CLICommand implements ExtensionPoint, Cloneable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        try {
-            return out.toString(charset.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new AssertionError(e);
-        }
+        return out.toString(charset);
     }
 
     /**
@@ -458,20 +463,11 @@ public abstract class CLICommand implements ExtensionPoint, Cloneable {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        PrintStream ps;
-        try {
-            ps = new PrintStream(out, false, charset.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new AssertionError(e);
-        }
+        PrintStream ps = new PrintStream(out, false, charset);
 
         printUsageSummary(ps);
         ps.close();
-        try {
-            return out.toString(charset.name());
-        } catch (UnsupportedEncodingException e) {
-            throw new AssertionError(e);
-        }
+        return out.toString(charset);
     }
 
     /**

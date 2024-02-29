@@ -30,10 +30,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.StringReader;
 import java.nio.charset.Charset;
-import org.apache.commons.io.output.NullOutputStream;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Issue;
 
@@ -78,7 +78,7 @@ public class ComputerLauncherTest {
             IOException.class,
             () ->
                 ComputerLauncher.checkJavaVersion(
-                    new PrintStream(NullOutputStream.NULL_OUTPUT_STREAM),
+                    new PrintStream(OutputStream.nullOutputStream()),
                     "-",
                     new BufferedReader(
                         new StringReader(
@@ -92,7 +92,7 @@ public class ComputerLauncherTest {
             IOException.class,
             () ->
                 ComputerLauncher.checkJavaVersion(
-                    new PrintStream(NullOutputStream.NULL_OUTPUT_STREAM),
+                    new PrintStream(OutputStream.nullOutputStream()),
                     "-",
                     new BufferedReader(
                         new StringReader(
@@ -143,8 +143,8 @@ public class ComputerLauncherTest {
 
     private static void assertChecked(String text, String spec) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        ComputerLauncher.checkJavaVersion(new PrintStream(os, false, Charset.defaultCharset().name()), "bin/java", new BufferedReader(new StringReader(text)));
-        String logged = os.toString(Charset.defaultCharset().name());
+        ComputerLauncher.checkJavaVersion(new PrintStream(os, false, Charset.defaultCharset()), "bin/java", new BufferedReader(new StringReader(text)));
+        String logged = os.toString(Charset.defaultCharset());
         assertTrue(logged.contains(Messages.ComputerLauncher_JavaVersionResult("bin/java", spec)), logged);
     }
 }

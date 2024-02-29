@@ -30,6 +30,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.BulkChange;
 import hudson.DescriptorExtensionList;
 import hudson.ExtensionList;
@@ -59,13 +60,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -74,6 +76,7 @@ import javax.servlet.ServletException;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
 import jenkins.model.Jenkins;
+import jenkins.model.Loadable;
 import jenkins.security.RedactSecretJsonInErrorMessageSanitizer;
 import jenkins.util.io.OnMaster;
 import net.sf.json.JSONArray;
@@ -81,6 +84,8 @@ import net.sf.json.JSONObject;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jvnet.tiger_types.Types;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.Ancestor;
 import org.kohsuke.stapler.BindInterceptor;
 import org.kohsuke.stapler.Facet;
@@ -102,7 +107,7 @@ import org.kohsuke.stapler.lang.Klass;
  * to {@link Object}/{@link Class} relationship.
  *
  * A {@link Descriptor}/{@link Describable}
- * combination is used throughout in Hudson to implement a
+ * combination is used throughout in Jenkins to implement a
  * configuration/extensibility mechanism.
  *
  * <p>
@@ -115,7 +120,7 @@ import org.kohsuke.stapler.lang.Klass;
  * configuration of a view (what projects are in it, regular expression, etc.)
  *
  * <p>
- * For Hudson to create such configured {@link ListView} instance, Hudson
+ * For Jenkins to create such configured {@link ListView} instance, Jenkins
  * needs another object that captures the metadata of {@link ListView},
  * and that is what a {@link Descriptor} is for. {@link ListView} class
  * has a singleton descriptor, and this descriptor helps render
@@ -142,7 +147,7 @@ import org.kohsuke.stapler.lang.Klass;
  * @author Kohsuke Kawaguchi
  * @see Describable
  */
-public abstract class Descriptor<T extends Describable<T>> implements Saveable, OnMaster {
+public abstract class Descriptor<T extends Describable<T>> implements Loadable, Saveable, OnMaster {
     /**
      * The class being described by this descriptor.
      */
@@ -439,8 +444,8 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
             QueryParameter qp = p.annotation(QueryParameter.class);
             if (qp != null) {
                 String name = qp.value();
-                if (name.length() == 0) name = p.name();
-                if (name == null || name.length() == 0)
+                if (name.isEmpty()) name = p.name();
+                if (name == null || name.isEmpty())
                     continue;   // unknown parameter name. we'll report the error when the form is submitted.
 
                 RelativePath rp = p.annotation(RelativePath.class);
@@ -568,7 +573,7 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
      *      Always non-null (see note above.) This object includes represents the entire submission.
      * @param formData
      *      The JSON object that captures the configuration data for this {@link Descriptor}.
-     *      See https://www.jenkins.io/doc/developer/forms/structured-form-submission/
+     *      See <a href="https://www.jenkins.io/doc/developer/forms/structured-form-submission/">the developer documentation</a>.
      *      Always non-null.
      *
      * @throws FormException
@@ -755,6 +760,7 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
         return getHelpFile(getKlass(), fieldName);
     }
 
+    @SuppressFBWarnings(value = "SBSC_USE_STRINGBUFFER_CONCATENATION", justification = "no big deal")
     public String getHelpFile(Klass<?> clazz, String fieldName) {
         HelpRedirect r = helpRedirect.get(fieldName);
         if (r != null)    return r.resolve();
@@ -776,7 +782,7 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
                 throw new Error(e);
             }
 
-            if (getStaticHelpUrl(c, suffix) != null)    return page;
+            if (getStaticHelpUrl(Stapler.getCurrentRequest(), c, suffix) != null)    return page;
         }
         return null;
     }
@@ -820,7 +826,7 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
      *
      * @param json
      *      The JSON object that captures the configuration data for this {@link Descriptor}.
-     *      See https://www.jenkins.io/doc/developer/forms/structured-form-submission/
+     *      See <a href="https://www.jenkins.io/doc/developer/forms/structured-form-submission/">the developer documentation</a>.
      * @return false
      *      to keep the client in the same config page.
      */
@@ -863,7 +869,7 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
     }
 
     private String getViewPage(Class<?> clazz, String pageName, String defaultValue) {
-        return getViewPage(clazz, Collections.singleton(pageName), defaultValue);
+        return getViewPage(clazz, Set.of(pageName), defaultValue);
     }
 
     private String getViewPage(Class<?> clazz, Collection<String> pageNames, String defaultValue) {
@@ -922,6 +928,7 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
      * (If we do that in the base class, the derived class won't
      * get a chance to set default values.)
      */
+    @Override
     public synchronized void load() {
         XmlFile file = getConfigFile();
         if (!file.exists())
@@ -972,13 +979,13 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
                 return;
             }
 
-            URL url = getStaticHelpUrl(c, path);
+            URL url = getStaticHelpUrl(Stapler.getCurrentRequest(), c, path);
             if (url != null) {
                 // TODO: generalize macro expansion and perhaps even support JEXL
                 rsp.setContentType("text/html;charset=UTF-8");
                 try (InputStream in = url.openStream()) {
                     String literal = IOUtils.toString(in, StandardCharsets.UTF_8);
-                    rsp.getWriter().println(Util.replaceMacro(literal, Collections.singletonMap("rootURL", req.getContextPath())));
+                    rsp.getWriter().println(Util.replaceMacro(literal, Map.of("rootURL", req.getContextPath())));
                 }
                 return;
             }
@@ -986,18 +993,22 @@ public abstract class Descriptor<T extends Describable<T>> implements Saveable, 
         rsp.sendError(SC_NOT_FOUND);
     }
 
-    private URL getStaticHelpUrl(Klass<?> c, String suffix) {
-        Locale locale = Stapler.getCurrentRequest().getLocale();
+    @Restricted(NoExternalUse.class)
+    public static URL getStaticHelpUrl(StaplerRequest req, Klass<?> c, String suffix) {
 
         String base = "help" + suffix;
-
         URL url;
-        url = c.getResource(base + '_' + locale.getLanguage() + '_' + locale.getCountry() + '_' + locale.getVariant() + ".html");
-        if (url != null)    return url;
-        url = c.getResource(base + '_' + locale.getLanguage() + '_' + locale.getCountry() + ".html");
-        if (url != null)    return url;
-        url = c.getResource(base + '_' + locale.getLanguage() + ".html");
-        if (url != null)    return url;
+
+        Enumeration<Locale> locales = req.getLocales();
+        while (locales.hasMoreElements()) {
+            Locale locale = locales.nextElement();
+            url = c.getResource(base + '_' + locale.getLanguage() + '_' + locale.getCountry() + '_' + locale.getVariant() + ".html");
+            if (url != null)    return url;
+            url = c.getResource(base + '_' + locale.getLanguage() + '_' + locale.getCountry() + ".html");
+            if (url != null)    return url;
+            url = c.getResource(base + '_' + locale.getLanguage() + ".html");
+            if (url != null)    return url;
+        }
 
         // default
         return c.getResource(base + ".html");

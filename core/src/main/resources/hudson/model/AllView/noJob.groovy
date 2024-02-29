@@ -2,6 +2,7 @@ package hudson.model.AllView
 
 import hudson.model.Computer
 import hudson.model.Item
+import hudson.model.Job
 import jenkins.model.Jenkins
 
 def l = namespace(lib.LayoutTagLib)
@@ -11,7 +12,7 @@ def canSetUpDistributedBuilds = Jenkins.get().hasPermission(Computer.CREATE) &&
         Jenkins.get().clouds.isEmpty() &&
         Jenkins.get().getNodes().isEmpty();
 def hasAdministerJenkinsPermission = Jenkins.get().hasPermission(Jenkins.ADMINISTER);
-def hasItemCreatePermission = my.owner.hasPermission(Item.CREATE);
+def hasItemCreatePermission = my.owner.itemGroup.hasPermission(Item.CREATE);
 
 div {
 
@@ -30,9 +31,7 @@ div {
                             a(href: "newJob", class: "content-block__link") {
                                 span(_("createJob"))
                                 span(class: "trailing-icon") {
-                                    l.svgIcon(
-                                            class: "icon-sm",
-                                            href: "${resURL}/images/material-icons/svg-sprite-navigation-symbol.svg#ic_arrow_forward_24px")
+                                    l.icon(src: "symbol-add")
                                 }
                             }
                         }
@@ -47,21 +46,17 @@ div {
                                 a(href: "computer/new", class: "content-block__link") {
                                     span(_("setUpAgent"))
                                     span(class: "trailing-icon") {
-                                        l.svgIcon(
-                                                class: "icon-sm",
-                                                href: "${resURL}/images/material-icons/svg-sprite-navigation-symbol.svg#ic_arrow_forward_24px")
+                                        l.icon(src: "symbol-computer")
                                     }
                                 }
                             }
 
                             if (hasAdministerJenkinsPermission) {
                                 li(class: "content-block") {
-                                    a(href: "configureClouds", class: "content-block__link") {
+                                    a(href: "cloud/", class: "content-block__link") {
                                         span(_("setUpCloud"))
                                         span(class: "trailing-icon") {
-                                            l.svgIcon(
-                                                    class: "icon-sm",
-                                                    href: "${resURL}/images/material-icons/svg-sprite-navigation-symbol.svg#ic_arrow_forward_24px")
+                                            l.icon(src: "symbol-cloud")
                                         }
                                     }
                                 }
@@ -70,12 +65,10 @@ div {
                             li(class: "content-block") {
                                 a(href: "https://www.jenkins.io/redirect/distributed-builds",
                                         target: "_blank",
-                                        class: "content-block__link content-block__help-link") {
+                                        class: "content-block__link") {
                                     span(_("learnMoreDistributedBuilds"))
                                     span(class: "trailing-icon") {
-                                        l.svgIcon(
-                                                class: "icon-sm",
-                                                href: "${resURL}/images/material-icons/svg-sprite-content-symbol.svg#ic_link_24px")
+                                        l.icon(src: "symbol-help-circle")
                                     }
                                 }
                             }
@@ -88,16 +81,14 @@ div {
             // we're in a folder
 
             section(class: "empty-state-section") {
-                h2(_("This folder is empty"), class: "h4")
+                h2(_("thisFolderIsEmpty"), class: "h4")
 
                 ul(class: "empty-state-section-list") {
                     li(class: "content-block") {
                         a(href: "newJob", class: "content-block__link") {
                             span(_("createJob"))
                             span(class: "trailing-icon") {
-                                l.svgIcon(
-                                        class: "icon-sm",
-                                        href: "${resURL}/images/material-icons/svg-sprite-navigation-symbol.svg#ic_arrow_forward_24px")
+                                l.icon(src: "symbol-add")
                             }
                         }
                     }
@@ -124,9 +115,9 @@ div {
                                 class: "content-block__link") {
                             span(_("Log in to Jenkins"))
                             span(class: "trailing-icon") {
-                                l.svgIcon(
-                                        class: "icon-sm",
-                                        href: "${resURL}/images/material-icons/svg-sprite-navigation-symbol.svg#ic_arrow_forward_24px")
+                                l.icon(
+                                        class: "icon-md",
+                                        src: "symbol-arrow-right")
                             }
                         }
                     }
@@ -136,9 +127,9 @@ div {
                             a(href: "signup", class: "content-block__link") {
                                 span(_("Sign up for Jenkins"))
                                 span(class: "trailing-icon") {
-                                    l.svgIcon(
-                                            class: "icon-sm",
-                                            href: "${resURL}/images/material-icons/svg-sprite-navigation-symbol.svg#ic_arrow_forward_24px")
+                                    l.icon(
+                                            class: "icon-md",
+                                            src: "symbol-arrow-right")
                                 }
 
                             }

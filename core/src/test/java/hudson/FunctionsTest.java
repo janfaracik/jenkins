@@ -146,7 +146,7 @@ public class FunctionsTest {
             when(j.getItemGroup()).thenReturn(j);
             createMockAncestors(req, createAncestor(view, "."), createAncestor(j, "../.."));
             TopLevelItem i = createMockItem(parent, "job/i/");
-            when(view.getItems()).thenReturn(Collections.singletonList(i));
+            when(view.getItems()).thenReturn(List.of(i));
             String result = Functions.getRelativeLinkTo(i);
             assertEquals("job/i/", result);
         }
@@ -212,7 +212,7 @@ public class FunctionsTest {
             when(parent.getItemGroup()).thenReturn(parent);
             createMockAncestors(req, createAncestor(j, "../../.."), createAncestor(parent, "../.."), createAncestor(view, "."));
             TopLevelItem i = createMockItem(parent, "job/i/", "parent/job/i/");
-            when(view.getItems()).thenReturn(Collections.singletonList(i));
+            when(view.getItems()).thenReturn(List.of(i));
             String result = Functions.getRelativeLinkTo(i);
             assertEquals("job/i/", result);
         }
@@ -321,12 +321,13 @@ public class FunctionsTest {
             Locale.setDefault(Locale.ENGLISH);
             assertEquals("0 B", Functions.humanReadableByteSize(0));
             assertEquals("1023 B", Functions.humanReadableByteSize(1023));
-            assertEquals("1.00 KB", Functions.humanReadableByteSize(1024));
-            assertEquals("1.50 KB", Functions.humanReadableByteSize(1536));
-            assertEquals("20.00 KB", Functions.humanReadableByteSize(20480));
-            assertEquals("1023.00 KB", Functions.humanReadableByteSize(1047552));
-            assertEquals("1.00 MB", Functions.humanReadableByteSize(1048576));
-            assertEquals("1.50 GB", Functions.humanReadableByteSize(1610612700));
+            assertEquals("1.00 KiB", Functions.humanReadableByteSize(1024));
+            assertEquals("1.50 KiB", Functions.humanReadableByteSize(1536));
+            assertEquals("20.00 KiB", Functions.humanReadableByteSize(20480));
+            assertEquals("1023.00 KiB", Functions.humanReadableByteSize(1047552));
+            assertEquals("1.00 MiB", Functions.humanReadableByteSize(1048576));
+            assertEquals("1.50 GiB", Functions.humanReadableByteSize(1610612700));
+            assertEquals("1.50 TiB", Functions.humanReadableByteSize(1649267441664L));
         } finally {
             Locale.setDefault(defaultLocale);
         }
@@ -399,6 +400,13 @@ public class FunctionsTest {
         String result = Functions.extractPluginNameFromIconSrc("symbol-padlock plugin-design-library");
 
         assertThat(result, is(equalTo("design-library")));
+    }
+
+    @Test
+    public void extractPluginNameFromIconSrcWhichContainsPluginWordInThePluginName() {
+        String result = Functions.extractPluginNameFromIconSrc("symbol-padlock plugin-design-library-plugin");
+
+        assertThat(result, is(equalTo("design-library-plugin")));
     }
 
     @Issue("JDK-6507809")

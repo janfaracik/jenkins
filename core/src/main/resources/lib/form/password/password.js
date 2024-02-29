@@ -22,15 +22,34 @@
  * THE SOFTWARE.
  */
 
-Behaviour.specify('.hidden-password', 'hidden-password-button', 0, function (e) {
-    var secretUpdateBtn = e.querySelector('.hidden-password-update-btn');
-    if (secretUpdateBtn === null) return;
-
-    var id = 'hidden-password-' + (iota++);
+Behaviour.specify(
+  ".hidden-password",
+  "hidden-password-button",
+  0,
+  function (e) {
+    var secretUpdateBtn = e.querySelector(".hidden-password-update-btn");
+    if (secretUpdateBtn === null) {
+      return;
+    }
 
     secretUpdateBtn.onclick = function () {
-        e.querySelector('.hidden-password-field').setAttribute('type', 'password');
-        e.querySelector('.hidden-password-placeholder').remove();
-        secretUpdateBtn.remove();
+      e.querySelector(".hidden-password-field").setAttribute(
+        "type",
+        "password",
+      );
+      e.querySelector(".hidden-password-placeholder").remove();
+      secretUpdateBtn.remove();
     };
-});
+  },
+);
+
+Behaviour.specify(
+  "input[type='text'].complex-password-field",
+  "empty-password-text-input",
+  0,
+  function (element) {
+    element.addEventListener("input", function () {
+      element.setAttribute("type", "password");
+    });
+  },
+);
