@@ -1,3 +1,5 @@
+@use "../abstracts/mixins";
+
 .manage-messages a,
 .manage-messages a:visited {
   color: inherit !important;
@@ -205,7 +207,7 @@
 }
 
 .longhorn-item {
-  .item();
+  @include mixins.item;
 
   display: flex;
   align-items: center;

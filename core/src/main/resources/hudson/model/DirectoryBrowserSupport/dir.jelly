@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 <!-- Show files in the workspace -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout title="${it.title} : ${path}" type="single-pane">
     <st:include page="sidepanel.jelly" it="${it.owner}"/>
 
@@ -64,16 +64,23 @@ THE SOFTWARE.
               <h1>${%Workspace}</h1>
             </div>
             <div class="jenkins-app-bar__controls">
-              <button class="jenkins-button">
-                <l:icon src="symbol-overflow" />
-              </button>
-<!--              <a class="jenkins-button" href="${backPath}${pattern!=''?pattern+'/':''}*zip*/${dir.name}.zip">-->
-<!--                <l:icon src="symbol-download"/>-->
-<!--                ${%Download all}-->
-<!--              </a>-->
-<!--              <a class="jenkins-button jenkins-button&#45;&#45;destructive" tooltip="${%Clear workspace}">-->
-<!--                <l:icon src="symbol-trash" />-->
-<!--              </a>-->
+              <l:overflowButton>
+                <dd:item text="Download all files"
+                         href="${backPath}${pattern!=''?pattern+'/':''}*zip*/${dir.name}.zip"
+                         icon="symbol-download" />
+                <dd:separator />
+                <dd:custom>
+                  <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
+                                      href="doDelete"
+                                      message="${%delete.logrecorder(it.displayName)}"
+                                      post="true">
+                    <div class="jenkins-dropdown__item__icon">
+                      <l:icon src="symbol-trash" />
+                    </div>
+                    ${%Delete all files}
+                  </l:confirmationLink>
+                </dd:custom>
+              </l:overflowButton>
             </div>
           </div>
 
