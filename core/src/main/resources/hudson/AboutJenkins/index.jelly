@@ -48,6 +48,9 @@ THE SOFTWARE.
             <l:icon src="symbol-heart" />
             ${%Get involved}
           </a>
+          <a href="https://www.jenkins.io/changelog/${app.VERSION}/" class="jenkins-button" target="_blank">
+            ${%What's new}
+          </a>
         </div>
       </div>
 
