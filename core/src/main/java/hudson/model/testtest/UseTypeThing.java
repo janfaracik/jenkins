@@ -4,7 +4,7 @@ public class UseTypeThing extends BaseViewThing {
 
     @Override
     public String getDisplayName() {
-        return "Project type";
+        return "Project types";
     }
 
     @Override

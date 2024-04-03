@@ -1,3 +1,54 @@
+@use "../../scss/abstracts/mixins";
+
+.minithing {
+  max-width: 800px !important;
+}
+
+.oceansounds {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 -1rem;
+
+  .deepend {
+    @include mixins.item;
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 1rem;
+    font-size: 0.875rem;
+
+    &:not(:has(.descdesc)) {
+      align-items: center;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+
+      svg, img {
+        width: 2rem !important;
+        height: 2rem !important;
+      }
+    }
+
+    &__details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
+      .descdesc {
+        color: var(--text-color-secondary);
+      }
+    }
+  }
+}
+
+// ------
+
 .configure-instance {
   padding: 20px 100px;
   margin: 8px;

@@ -25,11 +25,14 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
   <st:documentation>
+    <st:attribute name="clazz">
+      A string.
+    </st:attribute>
     Generates the body as the main content part of a Jenkins page.
   </st:documentation>
 
   <j:if test="${mode == 'main'}">
-    <div id="main-panel" class="app-page-body__main-panel">
+    <div id="main-panel" class="app-page-body__main-panel ${attrs.clazz}">
       <j:if test="${app.isQuietingDown()}">
         <j:choose>
           <j:when test="${app.isPreparingSafeRestart()}">
