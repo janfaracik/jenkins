@@ -1,4 +1,5 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <h1>${from.displayName}</h1>
+  <l:notice icon="symbol-github" text="Connect to GitHub" />
 </j:jelly>

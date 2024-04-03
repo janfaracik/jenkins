@@ -9,7 +9,7 @@ public class GithubProjectThing extends BaseViewThing {
 
     @Override
     public String getDisplayName() {
-        return "GitHub";
+        return "Add a GitHub repository";
     }
 
     @Override

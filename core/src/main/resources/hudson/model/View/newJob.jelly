@@ -31,9 +31,11 @@ THE SOFTWARE.
       <script src="${resURL}/jsbundles/add-item.js" type="text/javascript" defer="true" />
     </l:header>
 
+    <l:breadcrumb title="${%NewJob(it.newPronoun)}" />
+
     <l:side-panel>
       <l:tasks>
-        <h1>${%New project}</h1>
+        <h1>${%NewJob(it.newPronoun)}</h1>
 
         <j:forEach var="item" items="${it.things}" indexVar="index">
           <j:if test="${index == 2}">

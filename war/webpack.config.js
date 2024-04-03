@@ -18,7 +18,6 @@ module.exports = (env, argv) => ({
     ],
     "add-item": [
       path.join(__dirname, "src/main/js/add-item.js"),
-      path.join(__dirname, "src/main/js/add-item.scss"),
     ],
     "pages/computer-set": [
       path.join(__dirname, "src/main/js/pages/computer-set"),
