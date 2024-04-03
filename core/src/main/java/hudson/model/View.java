@@ -44,7 +44,7 @@ import hudson.model.listeners.ItemListener;
 import hudson.model.testtest.BaseViewThing;
 import hudson.model.testtest.DuplicateProjectThing;
 import hudson.model.testtest.GithubProjectThing;
-import hudson.model.testtest.UseTypeThing;
+import hudson.model.testtest.ProjectTypesThing;
 import hudson.scm.ChangeLogSet;
 import hudson.search.CollectionSearchIndex;
 import hudson.search.SearchIndexBuilder;
@@ -1094,7 +1094,7 @@ public abstract class View extends AbstractModelObject implements AccessControll
     }
 
     public List<BaseViewThing> getThings() {
-        return List.of(new UseTypeThing(), new DuplicateProjectThing(), new GithubProjectThing());
+        return List.of(new ProjectTypesThing(), new DuplicateProjectThing(), new GithubProjectThing());
     }
 
     public Categories getItemCategories() {
