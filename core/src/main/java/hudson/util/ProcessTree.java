@@ -29,7 +29,6 @@ import static hudson.util.jna.GNUCLibrary.LIBC;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 
-import com.google.common.primitives.Ints;
 import com.sun.jna.LastErrorException;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
@@ -484,7 +483,7 @@ public abstract class ProcessTree implements Iterable<OSProcess>, IProcessTree, 
     private static class DoVetoersExist extends SlaveToMasterCallable<Boolean, IOException> {
         @Override
         public Boolean call() throws IOException {
-            return ProcessKillingVeto.all().size() > 0;
+            return !ProcessKillingVeto.all().isEmpty();
         }
     }
 
@@ -750,7 +749,7 @@ public abstract class ProcessTree implements Iterable<OSProcess>, IProcessTree, 
         @CheckForNull
         @Override
         public OSProcess get(@NonNull Process proc) {
-            return get(Ints.checkedCast(proc.pid()));
+            return get(Math.toIntExact(proc.pid()));
         }
 
         @Override
