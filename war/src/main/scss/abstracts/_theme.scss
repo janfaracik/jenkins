@@ -50,7 +50,7 @@ $semantics: (
   --dark-grey: #4d545d;
 
   // branding
-  --secondary: hsl(240, 10%, 50%);
+  --secondary: rgb(96, 125, 159);
   --focus-input-border: #063f61;
   --focus-input-glow: #{color.change(#0b6aa2, $alpha: 0.25)};
 

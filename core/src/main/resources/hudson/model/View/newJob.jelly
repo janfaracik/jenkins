@@ -34,9 +34,9 @@ THE SOFTWARE.
     <l:breadcrumb title="${%NewJob(it.newPronoun)}" />
 
     <l:side-panel>
-      <l:tasks>
-        <h1>${%NewJob(it.newPronoun)}</h1>
+      <l:app-bar title="${%NewJob(it.newPronoun)}" />
 
+      <l:tasks>
         <j:forEach var="item" items="${it.things}" indexVar="index">
           <j:if test="${index == 2}">
             <div class="swag">Integrate with</div>

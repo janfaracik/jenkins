@@ -1,7 +1,9 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:t="/lib/hudson">
   <form method="post" action="createItemMagic">
-    <h1>${from.displayName}</h1>
+    <l:app-bar title="${from.displayName}">
+      <t:help href="https://www.jenkins.io/doc/book/using/working-with-projects/" />
+    </l:app-bar>
 
     <st:include page="newJobName.jelly"/>
 
