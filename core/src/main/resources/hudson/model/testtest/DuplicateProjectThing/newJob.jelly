@@ -3,7 +3,9 @@
   <form method="post" action="createItem">
     <h1>${from.displayName}</h1>
 
-    <st:include page="newJobName.jelly"/>
+    <st:include page="newJobName.jelly" />
+
+    <input type="hidden" name="clazz" value="${from.class}" />
 
     <div class="jenkins-form-item">
       <div class="jenkins-form-label">

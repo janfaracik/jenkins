@@ -31,20 +31,12 @@ import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import hudson.DescriptorExtensionList;
-import hudson.Extension;
-import hudson.ExtensionPoint;
-import hudson.Functions;
-import hudson.Indenter;
-import hudson.Util;
+import hudson.*;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Descriptor.FormException;
 import hudson.model.listeners.ItemListener;
 import hudson.model.testtest.BaseViewThing;
-import hudson.model.testtest.DuplicateProjectThing;
-import hudson.model.testtest.GithubProjectThing;
-import hudson.model.testtest.ProjectTypesThing;
 import hudson.scm.ChangeLogSet;
 import hudson.search.CollectionSearchIndex;
 import hudson.search.SearchIndexBuilder;
@@ -72,20 +64,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1062,6 +1041,21 @@ public abstract class View extends AbstractModelObject implements AccessControll
      */
     public abstract Item doCreateItem(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException;
 
+    @RequirePOST
+    public Item doCreateItemMagic(StaplerRequest req, StaplerResponse rsp) throws ServletException {
+        JSONObject something = req.getSubmittedForm();
+        String clazz = something.getString("clazz");
+        List<BaseViewThing> classes = getThings();
+        Optional<BaseViewThing> currentClazz = classes.stream()
+                .filter(e -> e.getClass().getName().equals(clazz)).findFirst();
+
+        if (currentClazz.isEmpty()) {
+            return null;
+        }
+
+        return currentClazz.get().doCreateItem(req, rsp);
+    }
+
     /**
      * Makes sure that the given name is good as a job name.
      * For use from {@code newJob}.
@@ -1094,7 +1088,7 @@ public abstract class View extends AbstractModelObject implements AccessControll
     }
 
     public List<BaseViewThing> getThings() {
-        return List.of(new ProjectTypesThing(), new DuplicateProjectThing(), new GithubProjectThing());
+        return ExtensionList.lookup(BaseViewThing.class);
     }
 
     public Categories getItemCategories() {
