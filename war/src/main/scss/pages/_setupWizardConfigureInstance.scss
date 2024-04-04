@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  margin: 0 -1rem;
+  margin: 0 -0.8rem;
 
   .deepend {
     @include mixins.item;
@@ -39,7 +39,7 @@
     align-items: start;
     gap: 1rem;
     cursor: pointer;
-    padding: 1rem;
+    padding: 0.9rem 2rem 0.9rem 0.8rem;
     font-size: 0.875rem;
 
     &:not(:has(.descdesc)) {
@@ -56,15 +56,21 @@
         width: 1.75rem !important;
         height: 1.75rem !important;
       }
+
+      // Legacy - to keep projects with images (not symbols) relatively the same size
+      img {
+        scale: 1.25;
+      }
     }
 
     &__details {
       display: flex;
       flex-direction: column;
-      gap: 0.25rem;
+      gap: 0.35rem;
 
       .descdesc {
         color: var(--text-color-secondary);
+        line-height: 1.66;
       }
     }
   }
