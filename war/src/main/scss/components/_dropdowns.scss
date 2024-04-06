@@ -218,7 +218,7 @@ $dropdown-padding: 0.4rem;
       mask-position: center;
       opacity: 0.6;
     }
-    
+
     &:hover {
       .jenkins-dropdown__item__toggle {
         &::after {
@@ -271,7 +271,8 @@ $dropdown-padding: 0.4rem;
   margin-left: 1.5rem;
   margin-right: -1.15rem;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
     border-radius: 100px;

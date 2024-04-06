@@ -33,7 +33,10 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" />
      <l:breadcrumb title="${%Console Output}" />
     <l:main-panel>
-      <t:buildCaption>${%Console Output}</t:buildCaption>
+      <t:buildCaption>
+        ${%Console Output}
+        <l:copyButton message="${%successfullyCopied}" tooltip="${%clickToCopy}" ref="out"/>
+      </t:buildCaption>
 
       <st:include page="consolemini.jelly" />
     </l:main-panel>

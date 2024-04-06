@@ -30,19 +30,7 @@ THE SOFTWARE.
 
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
-      <div class="jenkins-app-bar">
-        <div class="jenkins-app-bar__content">
-          <t:buildCaption>${it.displayName} (<i:formatDate value="${it.timestamp.time}" type="both" dateStyle="medium" timeStyle="medium"/>)</t:buildCaption>
-        </div>
-        <div class="jenkins-app-bar__controls">
-          <l:overflowButton>
-            <l:hasPermission permission="${it.UPDATE}">
-              <st:include page="logKeep.jelly" />
-            </l:hasPermission>
-            <st:include page="delete.jelly" />
-          </l:overflowButton>
-        </div>
-      </div>
+      <t:buildCaption>${it.displayName} (<i:formatDate value="${it.timestamp.time}" type="both" dateStyle="medium" timeStyle="medium"/>)</t:buildCaption>
 
       <st:include page="consolewidget.jelly" />
 
