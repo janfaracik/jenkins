@@ -26,26 +26,14 @@ THE SOFTWARE.
   Displays the toggle button to keep/don't-keep the log file.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <j:if test="${it.canToggleLogKeep()}">
-    <form method="post" action="toggleLogKeep">
+    <form method="post" action="toggleLogKeep" style="margin-top:1em">
       <j:if test="${it.keepLog and h.hasPermission(it,it.DELETE)}">
-        <button class="jenkins-dropdown__item">
-          <div class="jenkins-dropdown__item__icon">
-            <l:icon src="symbol-keep" />
-          </div>
-          ${%Keep this build forever}
-          <div class="jenkins-dropdown__item__toggle jenkins-dropdown__item__toggle--active" />
-        </button>
+        <f:submit value="${%Don't keep this build forever}" primary="false" />
       </j:if>
       <j:if test="${!it.keepLog and h.hasPermission(it,it.UPDATE)}">
-        <button class="jenkins-dropdown__item">
-          <div class="jenkins-dropdown__item__icon">
-            <l:icon src="symbol-keep" />
-          </div>
-          ${%Keep this build forever}
-          <div class="jenkins-dropdown__item__toggle" />
-        </button>
+        <f:submit value="${%Keep this build forever}" primary="false" />
       </j:if>
     </form>
   </j:if>
