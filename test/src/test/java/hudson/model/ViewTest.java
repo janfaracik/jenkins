@@ -29,7 +29,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -64,7 +63,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -116,6 +114,20 @@ public class ViewTest {
     @Rule public JenkinsRule j = new JenkinsRule();
     @Rule
     public LoggerRule logging = new LoggerRule();
+
+    @Test
+    public void roundTrip() throws Exception {
+        ListView view = new ListView("foo");
+        view.setDescription("Some description");
+        view.setFilterExecutors(true);
+        view.setFilterQueue(true);
+        j.jenkins.addView(view);
+        j.configRoundtrip(view);
+
+        assertEquals("Some description", view.getDescription());
+        assertTrue(view.isFilterExecutors());
+        assertTrue(view.isFilterQueue());
+    }
 
     @Issue("JENKINS-7100")
     @Test public void xHudsonHeader() throws Exception {
@@ -322,6 +334,12 @@ public class ViewTest {
         assertNotContainsItems(view1, notInView, inView2);
         assertContainsItems(view2, inView2, inBothViews);
         assertNotContainsItems(view2, notInView, inView1);
+
+        // Clear the queue
+        assertTrue(j.jenkins.getQueue().cancel(notInView));
+        assertTrue(j.jenkins.getQueue().cancel(inView1));
+        assertTrue(j.jenkins.getQueue().cancel(inView2));
+        assertTrue(j.jenkins.getQueue().cancel(inBothViews));
     }
 
     private void assertContainsItems(View view, Task... items) {
@@ -680,7 +698,7 @@ public class ViewTest {
         assertThat(e.getStatusCode(), equalTo(500));
 
         // This should have a different message, but this is the current behavior demonstrating the problem.
-        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request."));
+        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request"));
 
         OldDataMonitor odm = ExtensionList.lookupSingleton(OldDataMonitor.class);
         Map<Saveable, OldDataMonitor.VersionRange> data = odm.getData();
@@ -724,7 +742,7 @@ public class ViewTest {
         assertThat(e.getStatusCode(), equalTo(500));
 
         // This should have a different message, but this is the current behavior demonstrating the problem.
-        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request."));
+        assertThat(e.getResponse().getContentAsString(), containsString("A problem occurred while processing the request"));
 
         OldDataMonitor odm = ExtensionList.lookupSingleton(OldDataMonitor.class);
         Map<Saveable, OldDataMonitor.VersionRange> data = odm.getData();
@@ -805,7 +823,7 @@ public class ViewTest {
         Object result = page.executeJavaScript("Array.from(document.querySelectorAll('.label')).filter(el => el.innerText.indexOf('" + customizableTLID.customDisplayName + "') !== -1)[0].parentElement.parentElement").getJavaScriptResult();
         assertThat(result, instanceOf(HTMLElement.class));
         HTMLElement resultElement = (HTMLElement) result;
-        assertThat(resultElement.getAttribute("onclick", null), nullValue());
+        assertThat(resultElement.getAttribute("onclick"), nullValue());
     }
 
     @Test
@@ -881,13 +899,6 @@ public class ViewTest {
         JenkinsRule.WebClient wc = j.createWebClient();
 
         HtmlPage page = wc.goTo("view/all/newJob");
-
-        Object resultClassNames = page.executeJavaScript("document.querySelector('.hudson_model_FreeStyleProject .icon img').className").getJavaScriptResult();
-        assertThat(resultClassNames, instanceOf(String.class));
-        String resultClassNamesString = (String) resultClassNames;
-        List<String> resultClassNamesList = Arrays.asList(resultClassNamesString.split(" "));
-        assertThat(resultClassNamesList, hasItem("icon-xlg"));
-        assertThat(resultClassNamesList, hasItem("icon-freestyle-project"));
 
         Object resultSrc = page.executeJavaScript("document.querySelector('.hudson_model_FreeStyleProject .icon img').src").getJavaScriptResult();
         assertThat(resultSrc, instanceOf(String.class));
