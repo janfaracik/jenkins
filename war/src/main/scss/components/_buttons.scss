@@ -300,12 +300,6 @@ $jenkins-split-button-border-radius: 0.2rem;
   }
 }
 
-.buildtitle {
-  margin-top: -0.2rem;
-  margin-bottom: 0.8rem;
-  font-weight: 550;
-}
-
 .stop-button-link {
   --item-background--hover: color-mix(in sRGB, var(--red) 20%, transparent);
   --item-background--active: color-mix(in sRGB, var(--red) 25%, transparent);
