@@ -53,6 +53,15 @@ THE SOFTWARE.
 
         <div id="jenkins-build-history" class="app-builds-container__items">
         </div>
+
+        <br/>
+        <br/>
+
+        <div style="display: flex">
+          <button id="top">top</button>
+          <button id="up">up</button>
+          <button id="down">down</button>
+        </div>
       </div>
 
       <!--The value for `page-next-build` is modified inside of `entries.jelly` on render, so set the attribute-->

@@ -12,12 +12,87 @@ const contents = card.querySelector("#jenkins-build-history");
 const container = card.querySelector(".app-builds-container");
 const noBuilds = card.querySelector("#no-builds")
 
+const top = document.querySelector("#top");
+const up = document.querySelector("#up");
+const down = document.querySelector("#down");
+
 const updateBuildsRefreshInterval = 5000;
 
-function loadPage() {
+function updatePageParams(dataTable) {
+  const pageHasUp = dataTable.getAttribute("page-has-up");
+  const pageHasDown = dataTable.getAttribute("page-has-down");
+
+  // console.log(pageHasUp == false)
+  // console.log(JSON.stringify(pageHasDown));
+
+  if (pageHasUp === "false") {
+    console.log("Hiding up")
+    top.style.display = "none";
+    up.style.display = "none";
+  } else {
+    console.log("Showing up")
+    top.style.display = "flex";
+    up.style.display = "flex";
+  }
+
+  if (pageHasDown === "false") {
+    console.log("Hiding down")
+    down.style.display = "none";
+  } else {
+    console.log("Showing down")
+    down.style.display = "flex";
+  }
+
+  buildHistoryPage.setAttribute(
+    "page-has-up",
+    pageHasUp
+  );
+  buildHistoryPage.setAttribute(
+    "page-has-down",
+    pageHasDown
+  );
+  buildHistoryPage.setAttribute(
+    "page-entry-newest",
+    dataTable.getAttribute("page-entry-newest"),
+  );
+  buildHistoryPage.setAttribute(
+    "page-entry-oldest",
+    dataTable.getAttribute("page-entry-oldest"),
+  );
+}
+
+function getNewestEntryId() {
+  return buildHistoryPage.getAttribute("page-entry-newest");
+}
+function getOldestEntryId() {
+  return buildHistoryPage.getAttribute("page-entry-oldest");
+}
+
+top.addEventListener('click', () => {
+  loadPage();
+})
+
+up.addEventListener('click', () => {
+  loadPage({ "newer-than": getNewestEntryId() });
+})
+
+down.addEventListener('click', () => {
+  // cancelRefreshTimeout();
+  loadPage({ "older-than": getOldestEntryId() });
+})
+
+function loadPage(options) {
   const params = {
+    ...options,
     search: pageSearchInput.value
   };
+
+  // console.log(getNewestEntryId())
+  // console.log(getOldestEntryId())
+
+  // newerThan
+  // loadPage({ "newer-than": getNewestEntryId() });
+  // loadPage({ "older-than": getOldestEntryId() });
 
   fetch(ajaxUrl + toQueryString(params)).then((rsp) => {
     if (rsp.ok) {
@@ -42,6 +117,10 @@ function loadPage() {
             Behaviour.applySubtree(contents);
           });
         }
+
+        var div = document.createElement("div");
+        div.innerHTML = responseText;
+        updatePageParams(div.children[0]);
       });
     }
   });
@@ -53,9 +132,9 @@ const handleFilter = function () {
 
 const debouncedFilter = debounce(handleFilter, 300);
 
-setInterval(() => {
-  loadPage()
-}, updateBuildsRefreshInterval)
+// setInterval(() => {
+//   loadPage({})
+// }, updateBuildsRefreshInterval)
 
 document.addEventListener("DOMContentLoaded", function () {
   pageSearchInput.addEventListener("input", function () {
@@ -66,8 +145,3 @@ document.addEventListener("DOMContentLoaded", function () {
 
   loadPage({});
 });
-
-document.querySelectorAll(".task-link").forEach((taskLink) =>
-  taskLink.addEventListener('click', () => {
-    loadPage();
-}))
