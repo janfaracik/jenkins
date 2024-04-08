@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2023 Jan Faracik
+Copyright (c) 2024 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,31 +24,35 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
-    <st:documentation>
-        <st:attribute name="title" />
-        <st:attribute name="id" />
-        <st:attribute name="controls">
-            Todo
-        </st:attribute>
-        <st:attribute name="expandable">
-            Shows the expand icon if expandable
-        </st:attribute>
-    </st:documentation>
+  <st:documentation>
+    <st:attribute name="title" use="required">
+        Title of the card
+    </st:attribute>
+    <st:attribute name="id">
+        Optional ID for the card
+    </st:attribute>
+    <st:attribute name="controls">
+      Shows controls in the top right of the card
+    </st:attribute>
+    <st:attribute name="expandable">
+      Shows the expand icon if set, navigates to the value provided
+    </st:attribute>
+  </st:documentation>
 
-    <div class="jenkins-card" id="${attrs.id}">
-        <div class="jenkins-card__title">
-            ${attrs.title}
-            <div class="jenkins-card__controls">
-                <j:out value="${controls}"/>
-                <j:if test="${attrs.expandable != null}">
-                    <a href="${attrs.expandable}" class="jenkins-card__reveal" tooltip="Expand">
-                        <l:icon src="symbol-expand" />
-                    </a>
-                </j:if>
-            </div>
-        </div>
-        <div class="jenkins-card__content">
-            <d:invokeBody />
-        </div>
+  <div class="jenkins-card" id="${attrs.id}">
+    <div class="jenkins-card__title">
+      ${attrs.title}
+      <div class="jenkins-card__controls">
+        <j:out value="${controls}"/>
+        <j:if test="${attrs.expandable != null}">
+          <a href="${attrs.expandable}" class="jenkins-card__reveal" tooltip="${%Expand}">
+            <l:icon src="symbol-expand" />
+          </a>
+        </j:if>
+      </div>
     </div>
+    <div class="jenkins-card__content">
+      <d:invokeBody />
+    </div>
+  </div>
 </j:jelly>
