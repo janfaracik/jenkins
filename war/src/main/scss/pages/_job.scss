@@ -134,3 +134,50 @@
     }
   }
 }
+
+.buttttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin: 0 -0.3rem;
+  margin-top: 1rem;
+  margin-bottom: -0.5rem;
+
+  .jenkins-button {
+    padding: 10px;
+
+    svg {
+      transition: var(--standard-transition);
+    }
+
+    &:first-of-type {
+      justify-content: start;
+
+      &:hover {
+        translate: -2px 0;
+
+        svg {
+          translate: -4px 0;
+        }
+      }
+    }
+
+    &:last-of-type {
+      justify-content: end;
+
+      &:hover {
+        translate: 2px 0;
+
+        svg {
+          translate: 4px 0;
+        }
+      }
+    }
+  }
+
+  .disableee {
+    color: var(--text-color-secondary);
+    opacity: 0.25;
+    pointer-events: none;
+  }
+}

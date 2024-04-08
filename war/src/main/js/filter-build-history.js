@@ -12,7 +12,6 @@ const contents = card.querySelector("#jenkins-build-history");
 const container = card.querySelector(".app-builds-container");
 const noBuilds = card.querySelector("#no-builds")
 
-const top = document.querySelector("#top");
 const up = document.querySelector("#up");
 const down = document.querySelector("#down");
 
@@ -22,26 +21,8 @@ function updatePageParams(dataTable) {
   const pageHasUp = dataTable.getAttribute("page-has-up");
   const pageHasDown = dataTable.getAttribute("page-has-down");
 
-  // console.log(pageHasUp == false)
-  // console.log(JSON.stringify(pageHasDown));
-
-  if (pageHasUp === "false") {
-    console.log("Hiding up")
-    top.style.display = "none";
-    up.style.display = "none";
-  } else {
-    console.log("Showing up")
-    top.style.display = "flex";
-    up.style.display = "flex";
-  }
-
-  if (pageHasDown === "false") {
-    console.log("Hiding down")
-    down.style.display = "none";
-  } else {
-    console.log("Showing down")
-    down.style.display = "flex";
-  }
+  up.classList.toggle("disableee", pageHasUp === "false");
+  down.classList.toggle("disableee", pageHasDown === "false");
 
   buildHistoryPage.setAttribute(
     "page-has-up",
@@ -67,10 +48,6 @@ function getNewestEntryId() {
 function getOldestEntryId() {
   return buildHistoryPage.getAttribute("page-entry-oldest");
 }
-
-top.addEventListener('click', () => {
-  loadPage();
-})
 
 up.addEventListener('click', () => {
   loadPage({ "newer-than": getNewestEntryId() });
