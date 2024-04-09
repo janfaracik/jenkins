@@ -36,7 +36,7 @@ THE SOFTWARE.
             <j:set var="item" value="${pageEntry.entry}"/>
             <j:set var="id" value="${h.generateId()}"/>
 
-            <div class="ethan ethan--notinteractable" page-entry-id="${pageEntry.entryId}">
+            <div class="app-builds-container__item app-builds-container__item--notinteractable" page-entry-id="${pageEntry.entryId}">
                 <div class="app-builds-container__item__inner">
                     <div class="app-builds-container__item__inner__icon">
                         <l:icon src="symbol-status-nobuilt"/>
@@ -60,7 +60,7 @@ THE SOFTWARE.
                         </j:if>
                     </div>
                 </div>
-                <div class="ethan__description">
+                <div class="app-builds-container__item__description">
                     <j:set var="cause" value="${item.getCauseOfBlockage()}"/>
                     <j:choose>
                         <j:when test="${cause!=null}">

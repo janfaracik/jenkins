@@ -21,8 +21,8 @@ function updatePageParams(dataTable) {
   const pageHasUp = dataTable.getAttribute("page-has-up");
   const pageHasDown = dataTable.getAttribute("page-has-down");
 
-  up.classList.toggle("disableee", pageHasUp === "false");
-  down.classList.toggle("disableee", pageHasDown === "false");
+  up.classList.toggle("app-builds-container__button--disabled", pageHasUp === "false");
+  down.classList.toggle("app-builds-container__button--disabled", pageHasDown === "false");
 
   buildHistoryPage.setAttribute(
     "page-has-up",
