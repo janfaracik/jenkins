@@ -540,6 +540,11 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
      */
     public final Hudson.CloudList clouds = new Hudson.CloudList(this);
 
+    @Restricted(Beta.class)
+    public void loadNode(File dir) throws IOException {
+        getNodesObject().load(dir);
+    }
+
     public static class CloudList extends DescribableList<Cloud, Descriptor<Cloud>> {
         public CloudList(Jenkins h) {
             super(h);
@@ -1450,26 +1455,6 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         save();
     }
 
-    public View.People getPeople() {
-        return new View.People(this);
-    }
-
-    /**
-     * @since 1.484
-     */
-    public View.AsynchPeople getAsynchPeople() {
-        return new View.AsynchPeople(this);
-    }
-
-    /**
-     * Does this {@link View} has any associated user information recorded?
-     * @deprecated Potentially very expensive call; do not use from Jelly views.
-     */
-    @Deprecated
-    public boolean hasPeople() {
-        return View.People.isApplicable(items.values());
-    }
-
     public Api getApi() {
         /* Do not show "REST API" link in footer when on 404 error page */
         final StaplerRequest req = Stapler.getCurrentRequest();
@@ -2219,6 +2204,12 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         return nodes.getNode(name);
     }
 
+    @CheckForNull
+    @Restricted(Beta.class)
+    public Node getOrLoadNode(String nodeName) {
+        return getNodesObject().getOrLoad(nodeName);
+    }
+
     /**
      * Gets a {@link Cloud} by {@link Cloud#name its name}, or null.
      */
@@ -2264,6 +2255,14 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
      */
     public void removeNode(@NonNull Node n) throws IOException {
         nodes.removeNode(n);
+    }
+
+    /**
+     * Unload a node from Jenkins without touching its configuration file.
+     */
+    @Restricted(Beta.class)
+    public void unloadNode(@NonNull Node n) {
+        nodes.unload(n);
     }
 
     /**
@@ -3298,7 +3297,8 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
     /**
      * The file we save our configuration.
      */
-    private XmlFile getConfigFile() {
+    @Restricted(NoExternalUse.class)
+    protected XmlFile getConfigFile() {
         return new XmlFile(XSTREAM, new File(root, "config.xml"));
     }
 

@@ -450,48 +450,6 @@ div.listview-jobs {
 }
 
 /* ========================= build history ========================= */
-#buildHistory a:visited {
-  color: fuchsia;
-}
-
-#buildHistory tr.no-wrap td.middle-align {
-  padding: 0;
-}
-
-#buildHistory .desc {
-  position: relative;
-  padding: 0;
-  margin-top: 5px;
-  white-space: normal;
-  color: var(--text-color-secondary);
-  word-break: break-word;
-}
-
-#buildHistory .build-row-cell {
-  position: relative;
-}
-
-#buildHistory .build-rss-links {
-  display: flex;
-  justify-content: end;
-}
-
-#buildHistory .build-rss-links a {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 0.5rem;
-}
-
-#buildHistory .build-rss-all-icon,
-#buildHistory .build-rss-failed-icon {
-  margin-right: 0.25rem;
-
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-
 #buildHistoryPage {
   position: relative;
 
@@ -620,11 +578,9 @@ div.listview-jobs {
   text-decoration: underline;
 }
 
-.pane.build-details a,
-.pane.build-details a:visited {
-  color: var(--pane-link-color--visited);
-  opacity: 0.6;
-  text-decoration: none;
+.pane.build-details a {
+  color: var(--text-color-secondary) !important;
+  text-decoration: none !important;
 }
 
 .pane.build-details a:hover {
@@ -1046,57 +1002,6 @@ select.select-ajax-pending {
 
 .i18n {
   display: none;
-}
-
-.alert {
-  font-size: var(--font-size-sm);
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid transparent;
-  border-radius: var(--form-input-border-radius);
-}
-
-.alert a {
-  color: inherit;
-  text-decoration: underline;
-
-  &:hover,
-  &:focus,
-  &:active {
-    text-decoration: underline;
-  }
-}
-
-.alert-success {
-  color: var(--alert-success-text-color);
-  background-color: var(--alert-success-bg-color);
-  border-color: var(--alert-success-border-color);
-}
-
-.alert-info {
-  color: var(--alert-info-text-color);
-  background-color: var(--alert-info-bg-color);
-  border-color: var(--alert-info-border-color);
-}
-
-.alert-warning {
-  color: var(--alert-warning-text-color);
-  background-color: var(--alert-warning-bg-color);
-  border-color: var(--alert-warning-border-color);
-}
-
-.alert-warning p {
-  color: var(--alert-warning-text-color);
-}
-
-.alert-danger {
-  color: var(--alert-danger-text-color);
-  background-color: var(--alert-danger-bg-color);
-  border-color: var(--alert-danger-border-color);
-}
-
-.alert-danger p {
-  color: var(--alert-danger-text-color);
 }
 
 body.no-decoration #main-panel {
