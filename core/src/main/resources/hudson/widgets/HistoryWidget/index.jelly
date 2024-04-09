@@ -55,10 +55,10 @@ THE SOFTWARE.
         </div>
 
         <div class="app-builds-container__controls">
-          <button class="jenkins-button jenkins-button--tertiary renamemeplease" id="up">
+          <button class="jenkins-button jenkins-button--tertiary jenkins-card__unveil" id="up">
             <l:icon src="symbol-arrow-left" />
           </button>
-          <button class="jenkins-button jenkins-button--tertiary renamemeplease" id="down">
+          <button class="jenkins-button jenkins-button--tertiary jenkins-card__unveil" id="down">
             <l:icon src="symbol-arrow-right" />
           </button>
         </div>

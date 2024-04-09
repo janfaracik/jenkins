@@ -27,7 +27,7 @@ $card-padding: 1rem;
   }
 
   &:not(:hover) {
-    .renamemeplease {
+    .jenkins-card__unveil {
       color: var(--text-color-secondary) !important;
     }
   }

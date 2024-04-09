@@ -44,7 +44,7 @@ THE SOFTWARE.
       </a>
       <a href="${link}" class="app-builds-container__item__inner__link">
         ${build.displayName}
-        <span class="timeman" time="${build.timestamp.time.time}">
+        <span class="app-builds-container__item__time" time="${build.timestamp.time.time}">
           <j:set var="linkTitleAttr" value="${null}" />
           <j:if test="${!build.building}">
             <j:set var="linkTitleAttr">${%Took} ${build.durationString}</j:set>
