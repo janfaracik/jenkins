@@ -52,7 +52,7 @@
       padding: 10px;
 
       svg {
-        transition: var(--standard-transition);
+        transition: translate var(--standard-transition);
       }
 
       &:first-of-type {
@@ -81,7 +81,7 @@
     }
 
     .app-builds-container__button--disabled {
-      color: var(--text-color-secondary);
+      color: var(--text-color-secondary) !important;
       opacity: 0.25;
       pointer-events: none;
     }
@@ -129,6 +129,7 @@
       flex-grow: 1;
       padding: 0.4rem 0 0.4rem 0.25rem;
 
+      // TODO - rename
       .timeman {
         color: var(--text-color-secondary);
       }

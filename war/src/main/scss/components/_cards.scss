@@ -26,6 +26,12 @@ $card-padding: 1rem;
     margin-right: -0.2rem;
   }
 
+  &:not(:hover) {
+    .renamemeplease {
+      color: var(--text-color-secondary) !important;
+    }
+  }
+
   &:hover {
     .jenkins-card__reveal {
       color: var(--text-color) !important;
@@ -86,3 +92,4 @@ $card-padding: 1rem;
     }
   }
 }
+
