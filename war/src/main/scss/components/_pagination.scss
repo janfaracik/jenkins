@@ -6,7 +6,7 @@
   .jenkins-button {
     display: grid;
     grid-template-columns: auto auto;
-    gap: 0.35rem 0.7rem;
+    gap: 0.3rem 0.7rem;
 
     svg {
       transition: var(--standard-transition);
@@ -29,6 +29,8 @@
     }
 
     &:hover {
+      transform: translateX(-4px);
+
       svg {
         transform: translateX(-2px);
       }
@@ -40,6 +42,8 @@
     margin-left: auto;
 
     &:hover {
+      transform: translateX(4px);
+
       svg {
         transform: translateX(2px);
       }
