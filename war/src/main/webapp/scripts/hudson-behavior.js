@@ -161,7 +161,7 @@ var crumb = {
 
 (function initializeCrumb() {
   var extensionsAvailable = document.head.getAttribute(
-    "data-extensions-available"
+    "data-extensions-available",
   );
   if (extensionsAvailable === "true") {
     var crumbHeaderName = document.head.getAttribute("data-crumb-header");
@@ -438,12 +438,21 @@ function qs(owner) {
   };
 }
 
-// find the nearest ancestor node that has the given tag name
+// @deprecated Use standard javascript method `e.closest(tagName)` instead
+// eslint-disable-next-line no-unused-vars
 function findAncestor(e, tagName) {
+  console.warn(
+    "Deprecated call to findAncestor - use standard javascript method `e.closest(tagName)` instead",
+  );
   return e.closest(tagName);
 }
 
+// @deprecated Use standard javascript method `e.closest(className)` instead
+// eslint-disable-next-line no-unused-vars
 function findAncestorClass(e, cssClass) {
+  console.warn(
+    "Deprecated call to findAncestorClass - use standard javascript method `e.closest(className)` instead",
+  );
   return e.closest("." + cssClass);
 }
 
@@ -581,15 +590,10 @@ function parseHtml(html) {
 
 /**
  * Evaluates the script in global context.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#direct_and_indirect_eval
  */
 function geval(script) {
-  // execScript chokes on "" but eval doesn't, so we need to reject it first.
-  if (script == null || script == "") {
-    return;
-  }
-  // see http://perfectionkills.com/global-eval-what-are-the-options/
-  // note that execScript cannot return value
-  (this.execScript || eval)(script);
+  eval(script);
 }
 
 /**
@@ -602,16 +606,13 @@ function geval(script) {
  */
 // eslint-disable-next-line no-unused-vars
 function fireEvent(element, event) {
-  if (document.createEvent) {
-    // dispatch for firefox + others
-    let evt = document.createEvent("HTMLEvents");
-    evt.initEvent(event, true, true); // event type,bubbling,cancelable
-    return !element.dispatchEvent(evt);
-  } else {
-    // dispatch for IE
-    let evt = document.createEventObject();
-    return element.fireEvent("on" + event, evt);
-  }
+  return !element.dispatchEvent(
+    new CustomEvent(event, {
+      bubbles: true,
+      cancelable: true,
+      detail: element,
+    }),
+  );
 }
 
 // Behavior rules
@@ -634,17 +635,7 @@ function updateValidationArea(validationArea, content) {
     // Only change content if different, causes an unnecessary animation otherwise
     if (validationArea.innerHTML !== content) {
       validationArea.innerHTML = content;
-      validationArea.style.height =
-        validationArea.children[0].offsetHeight + "px";
-
-      // Only include the notice in the validation-error-area, move all other elements out
-      if (validationArea.children.length > 1) {
-        Array.from(validationArea.children)
-          .slice(1)
-          .forEach((element) => {
-            validationArea.after(element);
-          });
-      }
+      validationArea.style.height = "auto";
 
       Behaviour.applySubtree(validationArea);
       // For errors with additional details, apply the subtree to the expandable details pane
@@ -663,7 +654,7 @@ function registerValidator(e) {
   if (!tr) {
     console.warn(
       "Couldn't find the expected validation element (.validation-error-area) for element",
-      e.closest(".jenkins-form-item")
+      e.closest(".jenkins-form-item"),
     );
     return;
   }
@@ -679,17 +670,9 @@ function registerValidator(e) {
       try {
         return eval(url); // need access to 'this', so no 'geval'
       } catch (e) {
-        if (window.console != null) {
-          console.warn(
-            "Legacy checkUrl '" + url + "' is not valid JavaScript: " + e
-          );
-        }
-        if (window.YUI != null) {
-          YUI.log(
-            "Legacy checkUrl '" + url + "' is not valid JavaScript: " + e,
-            "warn"
-          );
-        }
+        console.warn(
+          "Legacy checkUrl '" + url + "' is not valid JavaScript: " + e,
+        );
         return url; // return plain url as fallback
       }
     } else {
@@ -698,7 +681,7 @@ function registerValidator(e) {
         depends.split(" ").forEach(
           TryEach(function (n) {
             q.nearBy(n);
-          })
+          }),
         );
       }
       return url + q.toString();
@@ -717,7 +700,7 @@ function registerValidator(e) {
       "Failed to register validation method: " +
         e.getAttribute("checkUrl") +
         " : " +
-        e
+        e,
     );
     return;
   }
@@ -732,7 +715,7 @@ function registerValidator(e) {
           const errorMessage = `<div class="error">An internal error occurred during form field validation (HTTP ${response.status}). Please reload the page and if the problem persists, ask the administrator for help.</div>`;
           updateValidationArea(
             validationArea,
-            response.status === 200 ? responseText : errorMessage
+            response.status === 200 ? responseText : errorMessage,
           );
         });
       },
@@ -754,19 +737,11 @@ function registerValidator(e) {
       TryEach(function (name) {
         var c = findNearBy(e, name);
         if (c == null) {
-          if (window.console != null) {
-            console.warn("Unable to find nearby " + name);
-          }
-          if (window.YUI != null) {
-            YUI.log(
-              "Unable to find a nearby control of the name " + name,
-              "warn"
-            );
-          }
+          console.warn("Unable to find nearby " + name);
           return;
         }
         c.addEventListener("change", checker.bind(e));
-      })
+      }),
     );
   }
 
@@ -780,7 +755,7 @@ function registerRegexpValidator(e, regexp, message) {
   if (!tr) {
     console.warn(
       "Couldn't find the expected parent element (.setting-main) for element",
-      e.closest(".jenkins-form-item")
+      e.closest(".jenkins-form-item"),
     );
     return;
   }
@@ -800,7 +775,7 @@ function registerRegexpValidator(e, regexp, message) {
     } else {
       updateValidationArea(
         this.targetElement,
-        `<div class="error">${message}</div>`
+        `<div class="error">${message}</div>`,
       );
       set = true;
     }
@@ -821,7 +796,7 @@ function registerMinMaxValidator(e) {
   if (!tr) {
     console.warn(
       "Couldn't find the expected parent element (.setting-main) for element",
-      e.closest(".jenkins-form-item")
+      e.closest(".jenkins-form-item"),
     );
     return;
   }
@@ -857,7 +832,7 @@ function registerMinMaxValidator(e) {
             // The value is out of range
             updateValidationArea(
               this.targetElement,
-              `<div class="error">This value should be between ${min} and ${max}</div>`
+              `<div class="error">This value should be between ${min} and ${max}</div>`,
             );
             set = true;
           } else {
@@ -876,7 +851,7 @@ function registerMinMaxValidator(e) {
         if (parseInt(min) > parseInt(this.value)) {
           updateValidationArea(
             this.targetElement,
-            `<div class="error">This value should be larger than ${min}</div>`
+            `<div class="error">This value should be larger than ${min}</div>`,
           );
           set = true;
         } else {
@@ -894,7 +869,7 @@ function registerMinMaxValidator(e) {
         if (parseInt(max) < parseInt(this.value)) {
           updateValidationArea(
             this.targetElement,
-            `<div class="error">This value should be less than ${max}</div>`
+            `<div class="error">This value should be less than ${max}</div>`,
           );
           set = true;
         } else {
@@ -1001,7 +976,13 @@ function renderOnDemand(e, callback, noBehaviour) {
   if (!e || !e.classList.contains("render-on-demand")) {
     return;
   }
-  var proxy = eval(e.getAttribute("proxy"));
+
+  let proxyMethod = e.getAttribute("data-proxy-method");
+  let proxyUrl = e.getAttribute("data-proxy-url");
+  let proxyCrumb = e.getAttribute("data-proxy-crumb");
+  let proxyUrlNames = e.getAttribute("data-proxy-url-names").split(",");
+
+  var proxy = window[proxyMethod](proxyUrl, proxyCrumb, proxyUrlNames);
   proxy.render(function (t) {
     var contextTagName = e.parentNode.tagName;
     var c;
@@ -1219,6 +1200,13 @@ function rowvgStartEachRow(recursive, f) {
 }
 
 (function () {
+  // This moves all link elements to the head
+  // fixes JENKINS-72196 when a link is inside a div of a repeatable and the
+  // div is deleted then the styling is lost for divs afterwards.
+  Behaviour.specify("body link", "move-css-to-head", -9999, function (link) {
+    document.head.appendChild(link);
+  });
+
   var p = 20;
   Behaviour.specify("TABLE.sortable", "table-sortable", ++p, function (e) {
     // sortable table
@@ -1226,13 +1214,13 @@ function rowvgStartEachRow(recursive, f) {
   });
 
   Behaviour.specify(
-    "TABLE.progress-bar",
+    "TABLE.progress-bar, div.app-progress-bar",
     "table-progress-bar",
     ++p,
     function (e) {
       // progressBar.jelly
       e.onclick = progressBarOnClick;
-    }
+    },
   );
 
   // <label> that doesn't use ID, so that it can be copied in <repeatable>
@@ -1242,7 +1230,7 @@ function rowvgStartEachRow(recursive, f) {
     ++p,
     function (e) {
       e.onclick = labelAttachPreviousOnClick;
-    }
+    },
   );
 
   // form fields that are validated via AJAX call to the server
@@ -1251,19 +1239,19 @@ function rowvgStartEachRow(recursive, f) {
     "INPUT.validated",
     "input-validated",
     ++p,
-    registerValidator
+    registerValidator,
   );
   Behaviour.specify(
     "SELECT.validated",
     "select-validated",
     ++p,
-    registerValidator
+    registerValidator,
   );
   Behaviour.specify(
     "TEXTAREA.validated",
     "textarea-validated",
     ++p,
-    registerValidator
+    registerValidator,
   );
 
   // validate required form values
@@ -1286,7 +1274,7 @@ function rowvgStartEachRow(recursive, f) {
       e.addEventListener("keypress", preventInputEe);
       registerMinMaxValidator(e);
       registerRegexpValidator(e, /^-?(\d+)$/, "Not an integer");
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1297,7 +1285,7 @@ function rowvgStartEachRow(recursive, f) {
       e.addEventListener("keypress", preventInputEe);
       registerMinMaxValidator(e);
       registerRegexpValidator(e, /^\d+$/, "Not a non-negative integer");
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1308,7 +1296,7 @@ function rowvgStartEachRow(recursive, f) {
       e.addEventListener("keypress", preventInputEe);
       registerMinMaxValidator(e);
       registerRegexpValidator(e, /^(\d*[1-9]\d*|)$/, "Not a positive integer");
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1319,7 +1307,7 @@ function rowvgStartEachRow(recursive, f) {
       e.addEventListener("keypress", preventInputEe);
       registerMinMaxValidator(e);
       registerRegexpValidator(e, /^[1-9]\d*$/, "Not a positive integer");
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1362,7 +1350,7 @@ function rowvgStartEachRow(recursive, f) {
         ]);
         return true;
       };
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1372,15 +1360,13 @@ function rowvgStartEachRow(recursive, f) {
     function (e) {
       e.onclick = helpButtonOnClick;
       e.tabIndex = 9999; // make help link unnavigable from keyboard
-      e.parentNode.parentNode.classList.add("has-help");
-    }
+    },
   );
 
   // legacy class name
   Behaviour.specify("A.help-button", "a-help-button", ++p, function (e) {
     e.onclick = helpButtonOnClick;
     e.tabIndex = 9999; // make help link unnavigable from keyboard
-    e.parentNode.parentNode.classList.add("has-help");
   });
 
   // Script Console : settings and shortcut key
@@ -1388,14 +1374,12 @@ function rowvgStartEachRow(recursive, f) {
     (function () {
       var cmdKeyDown = false;
       var mode = e.getAttribute("script-mode") || "text/x-groovy";
-      var readOnly = eval(e.getAttribute("script-readOnly")) || false;
 
       // eslint-disable-next-line no-unused-vars
       var w = CodeMirror.fromTextArea(e, {
         mode: mode,
         lineNumbers: true,
         matchBrackets: true,
-        readOnly: readOnly,
         onKeyEvent: function (editor, event) {
           function saveAndSubmit() {
             editor.save();
@@ -1463,7 +1447,7 @@ function rowvgStartEachRow(recursive, f) {
     function on_drag(e) {
       codemirror.CodeMirror.setSize(
         null,
-        Math.max(MIN_HEIGHT, start_h + e.y - start_y) + "px"
+        Math.max(MIN_HEIGHT, start_h + e.y - start_y) + "px",
       );
     }
 
@@ -1516,7 +1500,7 @@ function rowvgStartEachRow(recursive, f) {
     ++p,
     function (e) {
       makeButton(e);
-    }
+    },
   );
 
   Behaviour.specify("INPUT.yui-button", "input-yui-button", ++p, function (e) {
@@ -1534,7 +1518,7 @@ function rowvgStartEachRow(recursive, f) {
 
       // Set start.ref to checkbox in preparation of row-set-end processing
       e.setAttribute("ref", (checkbox.id = "cb" + iota++));
-    }
+    },
   );
 
   // see RowVisibilityGroupTest
@@ -1582,7 +1566,7 @@ function rowvgStartEachRow(recursive, f) {
          */
         eachRow: rowvgStartEachRow,
       };
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1593,7 +1577,7 @@ function rowvgStartEachRow(recursive, f) {
       e.addEventListener("click", function () {
         updateOptionalBlock(e);
       });
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1627,7 +1611,7 @@ function rowvgStartEachRow(recursive, f) {
       }
 
       applyNameRef(start, end, ref);
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1642,7 +1626,7 @@ function rowvgStartEachRow(recursive, f) {
       // Get the `input` from the checkbox container
       var checkbox = e.querySelector("input[type='checkbox']");
       updateOptionalBlock(checkbox);
-    }
+    },
   );
 
   // image that shows [+] or [-], with hover effect.
@@ -1742,7 +1726,7 @@ function rowvgStartEachRow(recursive, f) {
                 }
               : function (e) {
                   e.setAttribute("field-disabled", "true");
-                }
+                },
           );
         }
       }
@@ -1750,7 +1734,7 @@ function rowvgStartEachRow(recursive, f) {
       e.onchange = updateDropDownList;
 
       updateDropDownList();
-    }
+    },
   );
 
   Behaviour.specify("A.showDetails", "a-showdetails", ++p, function (e) {
@@ -1769,7 +1753,7 @@ function rowvgStartEachRow(recursive, f) {
     ++p,
     function (e) {
       e.classList.add("behavior-loading--hidden");
-    }
+    },
   );
 
   Behaviour.specify(
@@ -1778,30 +1762,8 @@ function rowvgStartEachRow(recursive, f) {
     ++p,
     function (e) {
       new YAHOO.widget.Button(e, { type: "menu", menu: e.nextElementSibling });
-    }
+    },
   );
-
-  Behaviour.specify(".track-mouse", "-track-mouse", ++p, function (element) {
-    var DOM = YAHOO.util.Dom;
-
-    element.addEventListener("mouseenter", function () {
-      element.classList.add("mouseover");
-
-      var mousemoveTracker = function (event) {
-        var elementRegion = DOM.getRegion(element);
-        if (
-          event.x < elementRegion.left ||
-          event.x > elementRegion.right ||
-          event.y < elementRegion.top ||
-          event.y > elementRegion.bottom
-        ) {
-          element.classList.remove("mouseover");
-          document.removeEventListener("mousemove", mousemoveTracker);
-        }
-      };
-      document.addEventListener("mousemove", mousemoveTracker);
-    });
-  });
 
   window.addEventListener("load", function () {
     // Add a class to the bottom bar when it's stuck to the bottom of the screen
@@ -1811,9 +1773,9 @@ function rowvgStartEachRow(recursive, f) {
         ([e]) =>
           e.target.classList.toggle(
             "bottom-sticker-inner--stuck",
-            e.intersectionRatio < 1
+            e.intersectionRatio < 1,
           ),
-        { threshold: [1] }
+        { threshold: [1] },
       );
 
       observer.observe(el);
@@ -1879,30 +1841,7 @@ function rowvgStartEachRow(recursive, f) {
       var spanTag = document.createElement("span");
       spanTag.innerHTML = labelText;
       label.appendChild(spanTag);
-    }
-  );
-
-  // stop button JS cannot be done as adjunct, as it can be inside an Ajax response
-  Behaviour.specify(
-    ".stop-button-link",
-    "stop-button-link",
-    0,
-    function (link) {
-      let question = link.getAttribute("data-confirm");
-      let url = link.getAttribute("href");
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (question !== null) {
-          if (!confirm(question)) {
-            return;
-          }
-        }
-        fetch(url, {
-          method: "post",
-          headers: crumb.wrap({}),
-        });
-      });
-    }
+    },
   );
 })();
 
@@ -1932,7 +1871,7 @@ function refillOnChange(e, onChange) {
     deps.forEach(
       TryEach(function (d) {
         params[d.name] = controlValue(d.control);
-      })
+      }),
     );
     onChange(params);
   }
@@ -1942,20 +1881,12 @@ function refillOnChange(e, onChange) {
       TryEach(function (name) {
         var c = findNearBy(e, name);
         if (c == null) {
-          if (window.console != null) {
-            console.warn("Unable to find nearby " + name);
-          }
-          if (window.YUI != null) {
-            YUI.log(
-              "Unable to find a nearby control of the name " + name,
-              "warn"
-            );
-          }
+          console.warn("Unable to find nearby " + name);
           return;
         }
         c.addEventListener("change", h);
         deps.push({ name: Path.tail(name), control: c });
-      })
+      }),
     );
   }
   h(); // initial fill
@@ -1973,15 +1904,17 @@ function replaceDescription(initialDescription, submissionUrl) {
   d.firstElementChild.nextElementSibling.innerHTML =
     "<div class='jenkins-spinner'></div>";
   let parameters = {};
-  if (initialDescription !== undefined && submissionUrl !== undefined) {
-    parameters = {
-      description: initialDescription,
-      submissionUrl: submissionUrl,
-    };
+  if (initialDescription !== null && initialDescription !== "") {
+    parameters["description"] = initialDescription;
+  }
+  if (submissionUrl !== null && submissionUrl !== "") {
+    parameters["submissionUrl"] = submissionUrl;
   }
   fetch("./descriptionForm", {
     method: "post",
-    headers: crumb.wrap({}),
+    headers: crumb.wrap({
+      "Content-Type": "application/x-www-form-urlencoded",
+    }),
     body: objectToUrlFormEncoded(parameters),
   }).then((rsp) => {
     rsp.text().then((responseText) => {
@@ -2044,10 +1977,9 @@ function updateOptionalBlock(c) {
     // Hack to hide tool home when "Install automatically" is checked.
     var homeField = findPreviousFormItem(c, "home");
     if (homeField != null && homeField.value == "") {
-      var tr =
-        findAncestor(homeField, "TR") || findAncestorClass(homeField, "tr");
-      if (tr != null) {
-        tr.style.display = c.checked ? "none" : "";
+      const formItem = homeField.closest(".jenkins-form-item");
+      if (formItem != null) {
+        formItem.style.display = c.checked ? "none" : "";
         layoutUpdateCallback.call();
       }
     }
@@ -2110,7 +2042,7 @@ function AutoScroller(scrollContainer) {
       var height = getViewportHeight();
       var scrollPos = Math.max(
         scrollDiv.scrollTop,
-        document.documentElement.scrollTop
+        document.documentElement.scrollTop,
       );
       var diff = currentHeight - scrollPos - height;
       // window.alert("currentHeight=" + currentHeight + ",scrollTop=" + scrollDiv.scrollTop + ",height=" + height);
@@ -2127,27 +2059,6 @@ function AutoScroller(scrollContainer) {
       scrollDiv.scrollTop = currentHeight;
     },
   };
-}
-
-// used in expandableTextbox.jelly to change a input field into a text area
-// eslint-disable-next-line no-unused-vars
-function expandTextArea(button, id) {
-  button.style.display = "none";
-  var field = button.parentNode.previousSibling.children[0];
-  var value = field.value.replace(/ +/g, "\n");
-
-  var n = button;
-  while (!n.classList.contains("expanding-input") && n.tagName != "TABLE") {
-    n = n.parentNode;
-  }
-
-  var parent = n.parentNode;
-  parent.innerHTML = "<textarea rows=8 class='jenkins-input'></textarea>";
-  var textArea = parent.childNodes[0];
-  textArea.name = field.name;
-  textArea.value = value;
-
-  layoutUpdateCallback.call();
 }
 
 // refresh a part of the HTML specified by the given ID,
@@ -2175,7 +2086,7 @@ function refreshPart(id, url) {
               console.log(
                 "Failed to retrieve response for ID " +
                   id +
-                  ", perhaps Jenkins is unavailable"
+                  ", perhaps Jenkins is unavailable",
               );
               return;
             }
@@ -2264,12 +2175,29 @@ function encode(str) {
 // when there are multiple form elements of the same name,
 // this method returns the input field of the given name that pairs up
 // with the specified 'base' input element.
+// eslint-disable-next-line no-unused-vars
 function findMatchingFormInput(base, name) {
   // find the FORM element that owns us
   var f = base.closest("form");
 
-  var bases = f.querySelectorAll('input[name="' + base.name + '"]');
-  var targets = f.querySelectorAll('input[name="' + name + '"]');
+  var bases = f.querySelectorAll(
+    'input[name="' +
+      base.name +
+      '"], textarea[name="' +
+      base.name +
+      '"], select[name="' +
+      base.name +
+      '"]',
+  );
+  var targets = f.querySelectorAll(
+    'input[name="' +
+      name +
+      '"], textarea[name="' +
+      name +
+      '"], select[name="' +
+      name +
+      '"]',
+  );
 
   for (var i = 0; i < bases.length; i++) {
     if (bases[i] == base) {
@@ -2278,17 +2206,6 @@ function findMatchingFormInput(base, name) {
   }
 
   return null; // not found
-}
-
-// TODO remove when Prototype.js is removed
-if (typeof Form === "object") {
-  /** @deprecated For backward compatibility only; use {@link findMatchingFormInput} instead. */
-  Form.findMatchingInput = function (base, name) {
-    console.warn(
-      "Deprecated call to Form.findMatchingInput detected; use findMatchingFormInput instead."
-    );
-    return findMatchingFormInput(base, name);
-  };
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -2411,7 +2328,7 @@ function createSearchBox(searchURL) {
   var ac = new YAHOO.widget.AutoComplete(
     "search-box",
     "search-box-completion",
-    ds
+    ds,
   );
   ac.typeAhead = false;
   ac.autoHighlight = false;
@@ -2469,7 +2386,7 @@ function findFormParent(e, form, isStatic) {
 
   if (form == null) {
     // caller can pass in null to have this method compute the owning form
-    form = findAncestor(e, "FORM");
+    form = e.closest("FORM");
   }
 
   while (e != form) {
@@ -2653,7 +2570,7 @@ function buildFormTree(form) {
             addProperty(
               p,
               e.name.substring(r),
-              (e.formDom = { value: e.value })
+              (e.formDom = { value: e.value }),
             );
           } else {
             addProperty(p, e.name.substring(r), e.value);
@@ -2675,14 +2592,7 @@ function buildFormTree(form) {
       }
     }
 
-    // TODO simplify when Prototype.js is removed
-    if (Object.toJSON) {
-      // Prototype.js
-      jsonElement.value = Object.toJSON(form.formDom);
-    } else {
-      // Standard
-      jsonElement.value = JSON.stringify(form.formDom);
-    }
+    jsonElement.value = JSON.stringify(form.formDom);
 
     // clean up
     for (i = 0; i < doms.length; i++) {
@@ -2701,7 +2611,7 @@ window.addEventListener("load", function () {
   document.querySelectorAll(".jenkins-form-item").forEach(function (element) {
     if (
       element.querySelector(
-        ".optionalBlock-container > .row-group-start input[type='checkbox'], .optional-block-start input[type='checkbox'], div > .jenkins-checkbox"
+        ".optionalBlock-container > .row-group-start input[type='checkbox'], .optional-block-start input[type='checkbox'], div > .jenkins-checkbox",
       ) != null
     ) {
       element.classList.add("jenkins-form-item--tight");
@@ -2757,7 +2667,7 @@ function loadScript(href, callback) {
 // eslint-disable-next-line no-unused-vars
 function safeValidateButton(button) {
   var descriptorUrl = button.getAttribute(
-    "data-validate-button-descriptor-url"
+    "data-validate-button-descriptor-url",
   );
   var method = button.getAttribute("data-validate-button-method");
   var checkUrl = descriptorUrl + "/" + method;
@@ -2776,8 +2686,13 @@ function validateButton(checkUrl, paramList, button) {
   paramList.split(",").forEach(function (name) {
     var p = findPreviousFormItem(button, name);
     if (p != null) {
-      if (p.type == "checkbox") {
+      if (p.type === "checkbox") {
         parameters[name] = p.checked;
+      } else if (p.type === "radio") {
+        while (p && !p.checked) {
+          p = findPreviousFormItem(p, name);
+        }
+        parameters[name] = p.value;
       } else {
         parameters[name] = p.value;
       }
@@ -2849,15 +2764,6 @@ function createComboBox(idOrField, valueFunction) {
   } else {
     creator();
   }
-}
-
-// Exception in code during the AJAX processing should be reported,
-// so that our users can find them more easily.
-// TODO remove when Prototype.js is removed
-if (typeof Ajax === "object" && Ajax.Request) {
-  Ajax.Request.prototype.dispatchException = function (e) {
-    throw e;
-  };
 }
 
 // event callback when layouts/visibility are updated and elements might have moved around

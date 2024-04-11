@@ -28,8 +28,6 @@ import static hudson.init.InitMilestone.COMPLETED;
 import static hudson.init.InitMilestone.PLUGINS_LISTED;
 import static hudson.init.InitMilestone.PLUGINS_PREPARED;
 import static hudson.init.InitMilestone.PLUGINS_STARTED;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
@@ -43,6 +41,7 @@ import hudson.PluginWrapper.Dependency;
 import hudson.init.InitMilestone;
 import hudson.init.InitStrategy;
 import hudson.init.InitializerFinder;
+import hudson.lifecycle.Lifecycle;
 import hudson.model.AbstractItem;
 import hudson.model.AbstractModelObject;
 import hudson.model.AdministrativeMonitor;
@@ -83,7 +82,6 @@ import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
@@ -91,10 +89,9 @@ import java.nio.file.attribute.FileTime;
 import java.security.CodeSource;
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumSet;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -149,7 +146,6 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 import org.jenkinsci.Symbol;
 import org.jvnet.hudson.reactor.Executable;
@@ -277,7 +273,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
      */
     public static @NonNull PluginManager createDefault(@NonNull Jenkins jenkins) {
         String pmClassName = SystemProperties.getString(CUSTOM_PLUGIN_MANAGER);
-        if (!StringUtils.isBlank(pmClassName)) {
+        if (pmClassName != null && !pmClassName.isBlank()) {
             LOGGER.log(FINE, String.format("Use of custom plugin manager [%s] requested.", pmClassName));
             try {
                 final Class<? extends PluginManager> klass = Class.forName(pmClassName).asSubclass(PluginManager.class);
@@ -375,7 +371,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             throw new UncheckedIOException(e);
         }
         String workDir = SystemProperties.getString(PluginManager.class.getName() + ".workDir");
-        this.workDir = StringUtils.isBlank(workDir) ? null : new File(workDir);
+        this.workDir = workDir == null || workDir.isBlank() ? null : new File(workDir);
 
         strategy = createPluginStrategy();
     }
@@ -511,8 +507,10 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
 
                                         // obtain topologically sorted list and overwrite the list
                                         for (PluginWrapper p : cgd.getSorted()) {
-                                            if (p.isActive())
+                                            if (p.isActive()) {
                                                 activePlugins.add(p);
+                                                ((UberClassLoader) uberClassLoader).clearCacheMisses();
+                                            }
                                         }
                                     } catch (CycleDetectedException e) { // TODO this should be impossible, since we override reactOnCycle to not throw the exception
                                         stop(); // disable all plugins since classloading from them can lead to StackOverflow
@@ -927,6 +925,9 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     throw new RestartRequiredException(Messages._PluginManager_PluginIsAlreadyInstalled_RestartRequired(sn));
                 }
             }
+            if (!Lifecycle.get().supportsDynamicLoad()) {
+                throw new RestartRequiredException(Messages._PluginManager_LifecycleDoesNotSupportDynamicLoad_RestartRequired());
+            }
             if (p == null) {
                 p = strategy.createPluginWrapper(arc);
             }
@@ -937,9 +938,10 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             // so existing plugins can't be depending on this newly deployed one.
 
             plugins.add(p);
-            if (p.isActive())
+            if (p.isActive()) {
                 activePlugins.add(p);
-            ((UberClassLoader) uberClassLoader).loaded.clear();
+                ((UberClassLoader) uberClassLoader).clearCacheMisses();
+            }
 
             // TODO antimodular; perhaps should have a PluginListener to complement ExtensionListListener?
             CustomClassFilter.Contributed.load();
@@ -1135,7 +1137,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                 final JarEntry entry = entryName != null && jarFile != null ? jarFile.getJarEntry(entryName) : null;
                 if (entry != null) {
                     try (InputStream i = jarFile.getInputStream(entry)) {
-                        byte[] manifestBytes = IOUtils.toByteArray(i);
+                        byte[] manifestBytes = i.readAllBytes();
                         in = new ByteArrayInputStream(manifestBytes);
                     }
                 } else {
@@ -1250,6 +1252,13 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
     @Exported
     public List<PluginWrapper> getPlugins() {
         return Collections.unmodifiableList(plugins);
+    }
+
+    @Restricted(NoExternalUse.class) // used by jelly
+    public List<PluginWrapper> getPluginsSortedByTitle() {
+        return plugins.stream()
+                .sorted(Comparator.comparing(PluginWrapper::getDisplayName, String.CASE_INSENSITIVE_ORDER))
+                .collect(Collectors.toUnmodifiableList());
     }
 
     public List<FailedPlugin> getFailedPlugins() {
@@ -1431,16 +1440,16 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         for (UpdateSite site : Jenkins.get().getUpdateCenter().getSiteList()) {
             List<JSONObject> sitePlugins = site.getAvailables().stream()
                 .filter(plugin -> {
-                    if (StringUtils.isBlank(query)) {
+                    if (query == null || query.isBlank()) {
                         return true;
                     }
-                    return StringUtils.containsIgnoreCase(plugin.name, query) ||
-                        StringUtils.containsIgnoreCase(plugin.title, query) ||
-                        StringUtils.containsIgnoreCase(plugin.excerpt, query) ||
+                    return (plugin.name != null && plugin.name.toLowerCase().contains(query.toLowerCase())) ||
+                        (plugin.title != null && plugin.title.toLowerCase().contains(query.toLowerCase())) ||
+                        (plugin.excerpt != null && plugin.excerpt.toLowerCase().contains(query.toLowerCase())) ||
                         plugin.hasCategory(query) ||
                         plugin.getCategoriesStream()
                             .map(UpdateCenter::getCategoryDisplayName)
-                            .anyMatch(category -> StringUtils.containsIgnoreCase(category, query)) ||
+                            .anyMatch(category -> category != null && category.toLowerCase().contains(query.toLowerCase())) ||
                         plugin.hasWarnings() && query.equalsIgnoreCase("warning:");
                 })
                 .limit(Math.max(limit - plugins.size(), 1))
@@ -1470,7 +1479,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     jsonObject.put("title", plugin.title);
                     jsonObject.put("displayName", plugin.getDisplayName());
                     if (plugin.wiki == null || !(plugin.wiki.startsWith("https://") || plugin.wiki.startsWith("http://"))) {
-                        jsonObject.put("wiki", StringUtils.EMPTY);
+                        jsonObject.put("wiki", "");
                     } else {
                         jsonObject.put("wiki", plugin.wiki);
                     }
@@ -1805,13 +1814,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         jenkins.checkPermission(Jenkins.ADMINISTER);
 
         ProxyConfiguration pc = req.bindJSON(ProxyConfiguration.class, req.getSubmittedForm());
-        if (pc.name == null) {
-            jenkins.proxy = null;
-            ProxyConfiguration.getXmlFile().delete();
-        } else {
-            jenkins.proxy = pc;
-            jenkins.proxy.save();
-        }
+        ProxyConfigurationManager.saveProxyConfiguration(pc);
         return new HttpRedirect("advanced");
     }
 
@@ -1872,25 +1875,16 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             File tmpDir = Files.createTempDirectory("uploadDir").toFile();
             ServletFileUpload upload = new ServletFileUpload(new DiskFileItemFactory(DiskFileItemFactory.DEFAULT_SIZE_THRESHOLD, tmpDir));
             List<FileItem> items = upload.parseRequest(req);
-            if (StringUtils.isNotBlank(items.get(1).getString())) {
+            String string = items.get(1).getString();
+            if (string != null && !string.isBlank()) {
                 // this is a URL deployment
-                fileName = items.get(1).getString();
+                fileName = string;
                 copier = new UrlPluginCopier(fileName);
             } else {
                 // this is a file upload
                 FileItem fileItem = items.get(0);
                 fileName = Util.getFileName(fileItem.getName());
                 copier = new FileUploadPluginCopier(fileItem);
-            }
-
-            if (FileSystems.getDefault().supportedFileAttributeViews().contains("posix")) {
-                Arrays.stream(Objects.requireNonNull(tmpDir.listFiles())).forEach((file -> {
-                    try {
-                        Files.setPosixFilePermissions(file.toPath(), EnumSet.of(OWNER_READ, OWNER_WRITE));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }));
             }
 
             if ("".equals(fileName)) {
@@ -1902,7 +1896,8 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             }
 
             // first copy into a temporary file name
-            File t = File.createTempFile("uploaded", ".jpi");
+            File t = File.createTempFile("uploaded", ".jpi", tmpDir);
+            tmpDir.deleteOnExit();
             t.deleteOnExit();
             // TODO Remove this workaround after FILEUPLOAD-293 is resolved.
             Files.delete(Util.fileToPath(t));
@@ -1913,9 +1908,6 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                 throw new ServletException(e);
             }
             copier.cleanup();
-            if (!tmpDir.delete()) {
-                System.err.println("Failed to delete temporary directory: " + tmpDir);
-            }
 
             final String baseName = identifyPluginShortName(t);
 
@@ -1929,7 +1921,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                 }
                 String deps = m.getMainAttributes().getValue("Plugin-Dependencies");
 
-                if (StringUtils.isNotBlank(deps)) {
+                if (deps != null && !deps.isBlank()) {
                     // now we get to parse it!
                     String[] plugins = deps.split(",");
                     for (String p : plugins) {
@@ -1960,7 +1952,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
 
     @Restricted(NoExternalUse.class)
     @RequirePOST public FormValidation doCheckPluginUrl(StaplerRequest request, @QueryParameter String value) throws IOException {
-        if (StringUtils.isNotBlank(value)) {
+        if (value != null && !value.isBlank()) {
             try {
                 URL url = new URL(value);
                 if (!url.getProtocol().startsWith("http")) {
@@ -2400,6 +2392,10 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                 }
             }
             return Collections.enumeration(resources);
+        }
+
+        void clearCacheMisses() {
+            loaded.values().removeIf(Optional::isEmpty);
         }
 
         @Override
