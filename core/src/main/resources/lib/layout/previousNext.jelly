@@ -36,7 +36,7 @@ THE SOFTWARE.
         <j:if test="${attrs.previousUrl != null}">
             <a id="button-previous-page"
                href="${attrs.previousUrl}"
-               class="jenkins-button jenkins-button--tertiary jdl-previous-button">
+               class="jenkins-button jenkins-button--tertiary jenkins-previous-button">
                 <l:icon src="symbol-arrow-left" />
                 <span>${%Previous}</span>
                 <span>${attrs.previousDescription}</span>
@@ -45,7 +45,7 @@ THE SOFTWARE.
         <j:if test="${attrs.nextUrl != null}">
             <a id="button-next-page"
                href="${attrs.nextUrl}"
-               class="jenkins-button jenkins-button--tertiary jdl-next-button">
+               class="jenkins-button jenkins-button--tertiary jenkins-next-button">
                 <span>${%Next}</span>
                 <l:icon src="symbol-arrow-right" />
                 <span>${attrs.nextDescription}</span>
