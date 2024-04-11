@@ -8,8 +8,8 @@
     grid-template-columns: auto auto;
     gap: 0.3rem 0.7rem;
 
-    svg {
-      transition: var(--standard-transition);
+    * {
+      transition: transform var(--standard-transition);
     }
 
     span:last-of-type {
@@ -29,10 +29,10 @@
     }
 
     &:hover {
-      transform: translateX(-4px);
+      transform: translateX(-2px);
 
-      svg {
-        transform: translateX(-2px);
+      * {
+        transform: translateX(-4px);
       }
     }
   }
@@ -42,10 +42,10 @@
     margin-left: auto;
 
     &:hover {
-      transform: translateX(4px);
+      transform: translateX(2px);
 
-      svg {
-        transform: translateX(2px);
+      * {
+        transform: translateX(4px);
       }
     }
   }
