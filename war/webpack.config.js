@@ -64,9 +64,6 @@ module.exports = (env, argv) => ({
     "components/command-palette": [
       path.join(__dirname, "src/main/js/components/command-palette"),
     ],
-    "filter-build-history": [
-      path.join(__dirname, "src/main/js/filter-build-history.js"),
-    ],
     "simple-page": [path.join(__dirname, "src/main/scss/simple-page.scss")],
     styles: [path.join(__dirname, "src/main/scss/styles.scss")],
   },
