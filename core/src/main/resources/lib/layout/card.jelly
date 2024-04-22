@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+Copyright (c) 2024 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,38 +22,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-    displays a caption for build/externalRun.
--->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
   <st:documentation>
+    <st:attribute name="title" use="required">
+        Title of the card
+    </st:attribute>
+    <st:attribute name="id">
+        Optional ID for the card
+    </st:attribute>
     <st:attribute name="controls">
-      Optional field to set controls in the app bar
+      Shows controls in the top right of the card
+    </st:attribute>
+    <st:attribute name="expandable">
+      Shows the expand icon if set, navigates to the value provided on click
+    </st:attribute>
+    <st:attribute name="clazz">
+      Optional class attribute for the card
     </st:attribute>
   </st:documentation>
 
-  <div class="jenkins-app-bar">
-    <div class="jenkins-app-bar__content jenkins-build-caption" data-status-url="${rootURL}/${it.url}statusIcon">
-      <l:icon alt="${it.iconColor.description}" src="symbol-status-${it.iconColor.iconName}"
-          tooltip="${it.iconColor.description}"/>
-      <h1>
-        <d:invokeBody trim="true"/>
-      </h1>
+  <div class="jenkins-card ${attrs.clazz}" id="${attrs.id}">
+    <div class="jenkins-card__title">
+      ${attrs.title}
+      <div class="jenkins-card__controls">
+        <j:out value="${controls}"/>
+        <j:if test="${attrs.expandable != null}">
+          <a href="${attrs.expandable}" class="jenkins-card__reveal" tooltip="${%Expand}">
+            <l:icon src="symbol-expand" />
+          </a>
+        </j:if>
+      </div>
     </div>
-    <div class="jenkins-app-bar__controls">
-      <j:if test="${it.building}">
-        <div class="build-caption-progress-container">
-          ${%Progress}:
-          <t:buildProgressBar build="${it}" animate="true"/>
-          <j:if test="${it.parent.hasAbortPermission()}">
-            <l:stopButton href="stop" confirm="${%confirm(it.fullDisplayName)}"
-                          alt="${%cancel}"/>
-          </j:if>
-        </div>
-      </j:if>
-      <st:adjunct includes="lib.hudson.build-caption"/>
-      <j:out value="${attrs.controls}" />
+    <div class="jenkins-card__content">
+      <d:invokeBody />
     </div>
   </div>
 </j:jelly>
