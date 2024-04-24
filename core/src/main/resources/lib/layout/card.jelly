@@ -37,9 +37,12 @@ THE SOFTWARE.
     <st:attribute name="expandable">
       Shows the expand icon if set, navigates to the value provided on click
     </st:attribute>
+      <st:attribute name="clazz">
+          Optional class attribute for the card
+      </st:attribute>
   </st:documentation>
 
-  <div class="jenkins-card" id="${attrs.id}">
+  <div class="jenkins-card ${attrs.clazz}" id="${attrs.id}">
     <div class="jenkins-card__title">
       ${attrs.title}
       <div class="jenkins-card__controls">

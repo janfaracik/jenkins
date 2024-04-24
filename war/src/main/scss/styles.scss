@@ -3,3 +3,33 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.terminal {
+  --card-background: #000;
+
+  * {
+    --text-color: white;
+    --color: red;
+    --text-color-secondary: green;
+    --console-output-color: yellow;
+    color: var(--text-color);
+    scrollbar-color: rgba(255 255 255 / 0.4) transparent;
+    scrollbar-width: thin;
+  }
+
+  .terminalinside {
+    min-height: 390px;
+    max-height: 390px;
+    overflow-y: auto;
+    margin: -1rem;
+    padding: 1rem;
+
+    pre {
+      background: transparent;
+      margin: 0;
+      padding: 0;
+      line-height: 1.75;
+      font-size: var(--font-size-sm);
+    }
+  }
+}

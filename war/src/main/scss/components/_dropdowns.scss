@@ -218,6 +218,14 @@ $dropdown-padding: 0.4rem;
       mask-position: center;
       opacity: 0.6;
     }
+
+    &:hover {
+      .jenkins-dropdown__item__toggle {
+        &::after {
+          width: 12px;
+        }
+      }
+    }
   }
 
   &:hover {
