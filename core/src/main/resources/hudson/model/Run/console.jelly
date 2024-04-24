@@ -29,9 +29,7 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <st:compress xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:dd="/lib/layout/dropdowns">
-  <l:layout title="${it.fullDisplayName} Console">
-    <st:include page="sidepanel.jelly" />
-
+  <l:layout title="${it.fullDisplayName} Console" type="one-column" clazz="consoletest">
     <l:breadcrumb title="${%Console Output}" />
 
     <l:main-panel>

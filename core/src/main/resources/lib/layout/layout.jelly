@@ -101,7 +101,7 @@ THE SOFTWARE.
   </j:if>
 </j:if>
 <x:doctype name="html" />
-<html>
+<html class="${attrs.clazz}">
   <head data-rooturl="${rootURL}" data-resurl="${resURL}" data-imagesurl="${imagesURL}" resURL="${resURL}"
         data-extensions-available="${extensionsAvailable}"
         data-crumb-header="${h.getCrumbRequestField()}" data-crumb-value="${h.getCrumb(request)}"
