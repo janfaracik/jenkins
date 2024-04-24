@@ -55,17 +55,22 @@ function generateDropdowns() {
               ),
             ),
           )
-          .catch((error) => console.log(`Jumplist request failed: ${error}`))
+          .catch((error) => console.error(`Jumplist request failed:`, error))
           .finally(() => (instance.loaded = true));
       }),
   );
 }
 
-/*
+/**
  * Generates the contents for the dropdown
+ * @param {DropdownItem[]}  items
+ * @return {DropdownItem[]}
  */
 function mapChildrenItemsToDropdownItems(items) {
-  return items.map((item) => {
+  /** @type {number | null} */
+  let initialGroup = null;
+
+  return items.flatMap((item) => {
     if (item.type === "HEADER") {
       return {
         type: "HEADER",
@@ -79,47 +84,22 @@ function mapChildrenItemsToDropdownItems(items) {
       };
     }
 
-    return {
-      icon: item.icon,
-      iconXml: item.iconXml,
-      label: item.displayName,
-      url: item.url,
-      type: item.post || item.requiresConfirmation ? "button" : "link",
-      badge: item.badge,
-      onClick: () => {
-        if (item.post || item.requiresConfirmation) {
-          if (item.requiresConfirmation) {
-            dialog
-              .confirm(item.displayName, { message: item.message })
-              .then(() => {
-                const form = document.createElement("form");
-                form.setAttribute("method", item.post ? "POST" : "GET");
-                form.setAttribute("action", item.url);
-                if (item.post) {
-                  crumb.appendToForm(form);
-                }
-                document.body.appendChild(form);
-                form.submit();
-              });
-          } else {
-            fetch(item.url, {
-              method: "post",
-              headers: crumb.wrap({}),
-            });
-            notificationBar.show(
-              item.displayName + ": Done.",
-              notificationBar.SUCCESS,
-            );
-          }
-        }
-      },
-      subMenu: item.subMenu
-        ? () => {
-            return mapChildrenItemsToDropdownItems(item.subMenu.items);
-          }
-        : null,
-    };
+    const response = [];
+
+    if (
+      initialGroup != null &&
+      item.group?.order !== initialGroup &&
+      item.group.order > 2
+    ) {
+      response.push({
+        type: "SEPARATOR",
+      });
+    }
+    initialGroup = item.group?.order;
+
+    response.push(item);
+    return response;
   });
 }
 
-export default { init };
+export default { init, mapChildrenItemsToDropdownItems };

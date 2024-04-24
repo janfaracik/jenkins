@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
 The MIT License
 
-Copyright 2014 Jesse Glick.
+Copyright (c) 2024, Jenkins Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +21,23 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
+
 <?jelly escape-by-default='true'?>
-<!-- Displayed by projects (assignable to ParameterizedJobMixIn.ParameterizedJob) which can be configured and built. -->
-<j:jelly xmlns:j="jelly:core" />
+<j:jelly xmlns:j="jelly:core">
+  <j:if test="${it.transientActions != null}">
+    <div class="jenkins-app-bar__controls">
+      <button id="auto-overflow" class="jenkins-button"
+              tooltip="${%More actions}"
+              type="button">
+        <div class="jenkins-overflow-button__ellipsis">
+          <span />
+          <span />
+          <span />
+        </div>
+      </button>
+      <template>
+        ${h.toJson(it.transientActions)}
+      </template>
+    </div>
+  </j:if>
+</j:jelly>

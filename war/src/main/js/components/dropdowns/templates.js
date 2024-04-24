@@ -1,5 +1,6 @@
 import { createElementFromHtml } from "@/util/dom";
 import { xmlEscape } from "@/util/security";
+import behaviorShim from "@/util/behavior-shim";
 
 function dropdown() {
   return {
@@ -27,15 +28,46 @@ function dropdown() {
   };
 }
 
-function menuItem(options) {
+function kebabToCamelCase(str) {
+  return str.replace(/-([a-z])/g, function (match, char) {
+    return char.toUpperCase();
+  });
+}
+
+function loadScriptIfNotLoaded(url, item) {
+  // Check if the script element with the given URL already exists
+  const existingScript = document.querySelector(`script[src="${url}"]`);
+
+  if (!existingScript) {
+    const script = document.createElement("script");
+    script.src = url;
+
+    script.onload = () => {
+      // TODO - This is hacky
+      behaviorShim.applySubtree(item, true);
+    };
+
+    document.body.appendChild(script);
+  }
+}
+
+/**
+ * Generates the contents for the dropdown
+ * @param {DropdownItem}  menuItem
+ * @return {Element}
+ */
+function menuItem(menuItem, type = "jenkins-dropdown__item") {
+  /**
+   * @type {DropdownItem}
+   */
   const itemOptions = Object.assign(
     {
       type: "link",
     },
-    options,
+    menuItem,
   );
 
-  const label = xmlEscape(itemOptions.label);
+  const label = xmlEscape(itemOptions.displayName);
   let badgeText;
   let badgeTooltip;
   let badgeSeverity;
@@ -44,10 +76,20 @@ function menuItem(options) {
     badgeTooltip = xmlEscape(itemOptions.badge.tooltip);
     badgeSeverity = xmlEscape(itemOptions.badge.severity);
   }
-  const tag = itemOptions.type === "link" ? "a" : "button";
+
+  // TODO - improve this
+  let clazz =
+    itemOptions.clazz +
+    (itemOptions.semantic
+      ? " jenkins-!-" + itemOptions.semantic.toLowerCase() + "-color"
+      : "");
+
+  // TODO - make this better
+  const tag = itemOptions.action && itemOptions.action.url ? "a" : "button";
+  const url = tag === "a" ? xmlEscape(itemOptions.action.url) : "";
 
   const item = createElementFromHtml(`
-      <${tag} class="jenkins-dropdown__item ${itemOptions.clazz ? xmlEscape(itemOptions.clazz) : ""}" ${itemOptions.url ? `href="${xmlEscape(itemOptions.url)}"` : ""} ${itemOptions.id ? `id="${xmlEscape(itemOptions.id)}"` : ""}>
+      <${tag} class="${type} ${clazz ? clazz : ""}" ${url ? `href="${url}"` : ""} ${itemOptions.id ? `id="${xmlEscape(itemOptions.id)}"` : ""}>
           ${
             itemOptions.icon
               ? `<div class="jenkins-dropdown__item__icon">${
@@ -64,15 +106,45 @@ function menuItem(options) {
                         : ``
                     }
           ${
-            itemOptions.subMenu != null
+            itemOptions.action && itemOptions.action.actions
               ? `<span class="jenkins-dropdown__item__chevron"></span>`
               : ``
           }
       </${tag}>
     `);
 
-  if (options.onClick) {
-    item.addEventListener("click", (event) => options.onClick(event));
+  if (menuItem.action && menuItem.action.attributes) {
+    for (const key in menuItem.action.attributes) {
+      item.dataset[kebabToCamelCase(key)] =
+        menuItem.action.attributes[key].toString();
+    }
+
+    loadScriptIfNotLoaded(menuItem.action.javascriptUrl, item);
+  }
+
+  if (menuItem.onClick) {
+    item.addEventListener('click', menuItem.onClick);
+  }
+
+  if (menuItem.action && menuItem.action.postTo) {
+    item.addEventListener("click", () => {
+      dialog
+        .confirm(menuItem.action.title, {
+          message: menuItem.action.description,
+          type: menuItem.semantic.toLowerCase() ?? "default",
+        })
+        .then(
+          () => {
+            const form = document.createElement("form");
+            form.setAttribute("method", "POST");
+            form.setAttribute("action", menuItem.action.postTo);
+            crumb.appendToForm(form);
+            document.body.appendChild(form);
+            form.submit();
+          },
+          () => {},
+        );
+    });
   }
 
   return item;
