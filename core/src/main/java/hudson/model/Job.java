@@ -1503,6 +1503,70 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         }
     }
 
+    public static class SwagGraph {
+
+        private List<String> values;
+
+        private List<SwagLabel> labels;
+
+        public SwagGraph(List<String> values, List<SwagLabel> labels) {
+            this.values = values;
+            this.labels = labels;
+        }
+
+        public List<String> getValues() {
+            return values;
+        }
+
+        public List<SwagLabel> getLabels() {
+            return labels;
+        }
+    }
+
+    public static class SwagLabel {
+        private String label;
+
+        private String color;
+
+        public SwagLabel(String label) {
+            this.label = label;
+        }
+
+        public SwagLabel(String label, String color) {
+            this.label = label;
+            this.color = color;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getColor() {
+            return color;
+        }
+
+        @Override
+        public String toString() {
+            return "{\"label\": \"" + label + "\", \"color\": \"" + color + "\"}";
+        }
+    }
+
+    public SwagGraph getSwag() {
+        List<String> values = new ArrayList<>();
+        List<SwagLabel> labels = new ArrayList<>();
+
+        for (Run r : getNewBuilds()) {
+            if (r.isBuilding()) {
+                continue;
+            }
+
+            values.add(String.valueOf(r.getDuration()));
+            labels.add(new SwagLabel(String.valueOf(r.getNumber()), r.getIconColor().getIconName()));
+        }
+
+        return new SwagGraph(values, labels);
+    }
+
     public Graph getBuildTimeGraph() {
         return new Graph(getLastBuildTime(), 500, 400) {
             @Override

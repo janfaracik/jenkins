@@ -28,6 +28,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.BallColor;
 import hudson.model.Node;
 import hudson.model.Run;
+import java.util.List;
 import jenkins.console.ConsoleUrlProvider;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
@@ -64,4 +65,51 @@ public class BuildTimeTrend extends RunListProgressiveRendering {
         }
     }
 
+    public static class SwagCard {
+        private final String symbol;
+
+        private final String label;
+
+        private final String value;
+
+        private String url;
+
+        public SwagCard(String symbol, String label, String value) {
+            this.symbol = symbol;
+            this.label = label;
+            this.value = value;
+        }
+
+        public SwagCard(String symbol, String label, String value, String url) {
+            this.symbol = symbol;
+            this.label = label;
+            this.value = value;
+            this.url = url;
+        }
+
+        public String getSymbol() {
+            return symbol;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+    }
+
+    public List<SwagCard> getSwagCards() {
+        return List.of(
+                new SwagCard("symbol-timer", "Average time", "8418ms"),
+                new SwagCard("symbol-play", "Last completed", "10 mins ago", "/"),
+                new SwagCard("symbol-status-blue", "Last successful", "#118", "/"),
+                new SwagCard("symbol-status-red", "Last failed", "#74", "/")
+        );
+    }
 }

@@ -28,6 +28,9 @@ module.exports = (env, argv) => ({
         "src/main/js/pages/manage-jenkins/system-information",
       ),
     ],
+    "pages/project/builds": [
+      path.join(__dirname, "src/main/js/pages/project/builds"),
+    ],
     app: [path.join(__dirname, "src/main/js/app.js")],
     "pages/cloud-set": [
       path.join(__dirname, "src/main/js/pages/cloud-set/index.js"),
@@ -50,8 +53,8 @@ module.exports = (env, argv) => ({
     "components/row-selection-controller": [
       path.join(__dirname, "src/main/js/components/row-selection-controller"),
     ],
-    "filter-build-history": [
-      path.join(__dirname, "src/main/js/filter-build-history.js"),
+    "pages/project/builds-card": [
+      path.join(__dirname, "src/main/js/pages/project/builds-card.js"),
     ],
     "simple-page": [path.join(__dirname, "src/main/scss/simple-page.scss")],
     styles: [path.join(__dirname, "src/main/scss/styles.scss")],
