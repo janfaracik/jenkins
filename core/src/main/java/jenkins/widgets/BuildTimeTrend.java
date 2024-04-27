@@ -24,6 +24,7 @@
 
 package jenkins.widgets;
 
+import hudson.Util;
 import hudson.model.*;
 import hudson.scm.ChangeLogSet;
 import java.util.List;
@@ -46,6 +47,8 @@ public class BuildTimeTrend extends RunListProgressiveRendering {
         element.put("displayName", build.getDisplayName());
         element.put("duration", build.getDuration());
         element.put("durationString", build.getDurationString());
+        element.put("completed", build.getTimeInMillis() + build.getDuration());
+        element.put("completedString", Util.getTimeSpanString(build.getTimeInMillis() + build.getDuration()));
         element.put("consoleUrl", ConsoleUrlProvider.getRedirectUrl(build));
 
         // TODO

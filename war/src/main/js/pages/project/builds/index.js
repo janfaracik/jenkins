@@ -53,6 +53,7 @@ window.buildTimeTrend_displayBuilds = function (data) {
           <td data="${item.number}"><a class="iamlink" href="${item.number}/">${xmlEscape(item.displayName)}</a></td>
           <td data="${item.message}">${item.message}</td>
           <td data="${item.duration}">${xmlEscape(item.durationString)}</td>
+          <td data="${item.completed}">${xmlEscape(item.completedString)}</td>
           ${distributedBuildColumn}
           <td>
             <button data-href="${item.number}/" class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"><div class="jenkins-overflow-button__ellipsis">
