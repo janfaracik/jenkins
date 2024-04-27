@@ -114,6 +114,14 @@ public abstract class ChangeLogSet<T extends ChangeLogSet.Entry> implements Iter
         return r.toArray();
     }
 
+    @Exported
+    public final List<T> getItems2() {
+        List<T> r = new ArrayList<>();
+        for (T t : this)
+            r.add(t);
+        return r;
+    }
+
     /**
      * Optional identification of the kind of SCM being used.
      * @return a short token, such as the SCM's main CLI executable name

@@ -2,6 +2,9 @@ import Chart from "chart.js/auto";
 
 function init() {
   const ctx = document.getElementById("myChart");
+
+  if (!ctx) return;
+
   const things = eval(ctx.dataset.labels).reverse();
   const labels = things.map((e) => e.label).map((e) => "#" + e);
   const values = eval(ctx.dataset.values).reverse();

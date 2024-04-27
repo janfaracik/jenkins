@@ -24,13 +24,12 @@
 
 package jenkins.widgets;
 
-import hudson.model.AbstractBuild;
-import hudson.model.BallColor;
-import hudson.model.Node;
-import hudson.model.Run;
+import hudson.model.*;
+import hudson.scm.ChangeLogSet;
 import java.util.List;
 import jenkins.console.ConsoleUrlProvider;
 import jenkins.model.Jenkins;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
@@ -48,8 +47,29 @@ public class BuildTimeTrend extends RunListProgressiveRendering {
         element.put("duration", build.getDuration());
         element.put("durationString", build.getDurationString());
         element.put("consoleUrl", ConsoleUrlProvider.getRedirectUrl(build));
+
+        // TODO
+        element.put("message", new JSONArray());
+
         if (build instanceof AbstractBuild) {
-            AbstractBuild<?, ?> b = (AbstractBuild) build;
+            AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) build;
+            ChangeLogSet<? extends ChangeLogSet.Entry> changeSets = b.getChangeSet();
+
+//            String message = "";
+
+//            changeSets.iterator().forEachRemaining(e -> {
+//                message += e.getMsgAnnotated();
+//            });
+
+            List<? extends ChangeLogSet.Entry> thing = changeSets.getItems2();
+
+            var array = new JSONArray();
+            for (ChangeLogSet.Entry e : thing) {
+                array.add(e.getMsgAnnotated());
+            }
+
+            element.put("message", array);
+
             Node n = b.getBuiltOn();
             if (n == null) {
                 String ns = b.getBuiltOnStr();

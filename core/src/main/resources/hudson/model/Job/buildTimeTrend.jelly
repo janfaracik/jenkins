@@ -87,6 +87,7 @@ THE SOFTWARE.
           <tr>
             <th class="jenkins-table__cell--tight">S</th>
             <th initialSortDir="up">${%Build}</th>
+            <th>${%Message}</th>
             <th>${%Duration}</th>
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
