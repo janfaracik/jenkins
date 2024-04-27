@@ -42,6 +42,10 @@ THE SOFTWARE.
         </div>
       </div>
 
+      <l:card title="Changes">
+        Hello :)
+      </l:card>
+
       <j:if test="${(it.fullName!=it.fullDisplayName) and (it.class.name!='hudson.matrix.MatrixConfiguration')}"> <!-- TODO rather check for TopLevelItem (how to do this from Jelly?) -->
         <j:choose>
           <j:when test="${it.parent!=app}">
