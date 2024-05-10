@@ -3,3 +3,43 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.magicgrid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 1rem;
+}
+
+.jenkins-desc {
+  font-size: 1rem;
+  color: var(--text-color-secondary);
+  line-height: 1.66;
+}
+
+.sidddee {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .jenkins-card {
+    margin-bottom: 0;
+  }
+}
+
+.jenkins-card {
+  dl, dt, dd {
+    margin: 0;
+    font-weight: normal;
+  }
+
+  dt {
+    font-weight: 500;
+    color: var(--text-color);
+  }
+
+  dl {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 0.5rem;
+  }
+}
