@@ -28,9 +28,6 @@ THE SOFTWARE.
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
       <l:app-bar title="${it.caption}">
-        <a class="jenkins-button" href="configure">
-          Configure
-        </a>
         <j:if test="${it.manualLaunchAllowed}">
           <st:include from="${it.launcher}" page="app-bar-controls.jelly" optional="true"/>
         </j:if>
@@ -54,34 +51,16 @@ THE SOFTWARE.
             </l:hasPermission>
           </j:otherwise>
         </j:choose>
+        <a class="jenkins-button" href="configure">
+          Configure
+        </a>
         <t:help href="https://www.jenkins.io/doc/book/using/using-agents/" />
       </l:app-bar>
 
       <st:include page="index-top.jelly" it="${it}" />
 
-      <j:if test="${it.offlineCause!=null and it.offline and !it.connecting}">
-        <st:include it="${it.offlineCause}" page="cause.jelly" />
-      </j:if>
-
-      <j:if test="${it.manualLaunchAllowed}">
-        <st:include from="${it.launcher}" page="main.jelly" optional="true"/>
-      </j:if>
-
-      <j:if test="${it.offline and !it.manualLaunchAllowed and it.launchSupported}">
-        <p>${%title.no_manual_launch(it.retentionStrategy.descriptor.displayName)}</p>
-      </j:if>
-
       <div class="magicgrid">
         <div class="sidddee">
-          <div class="jenkins-card">
-            <j:forEach var="box" items="${it.computerPanelBoxs}">
-              <st:include it="${box}" page="box.jelly" />
-            </j:forEach>
-            <j:forEach var="w" items="${it.widgets}">
-              <st:include it="${w}" page="index" />
-            </j:forEach>
-          </div>
-
           <l:card title="${%Monitoring}">
             <dl>
               <j:forEach var="m" items="${it.monitoringData}">
@@ -94,18 +73,41 @@ THE SOFTWARE.
             </dl>
           </l:card>
 
+          <j:forEach var="box" items="${it.computerPanelBoxs}">
+            <st:include it="${box}" page="box.jelly" />
+          </j:forEach>
+
+          <j:forEach var="w" items="${it.widgets}">
+            <st:include it="${w}" page="index" />
+          </j:forEach>
+
           <j:if test="${it.node.assignedLabels.size() gt 1}">
             <l:card title="${%Labels}">
-              <j:forEach var="entry" items="${it.node.labelCloud}">
-                <!-- Skip the label for this node -->
-                <j:if test="${entry.item!=it.node.selfLabel}">
-                  <a class="${entry.className} model-link" href="${rootURL}/label/${entry.item.name}">${entry.item.name}</a>
-                </j:if>
-              </j:forEach>
+              <div class="labelthings">
+                <j:forEach var="entry" items="${it.node.labelCloud}">
+                  <!-- Skip the label for this node -->
+                  <j:if test="${entry.item!=it.node.selfLabel}">
+                    <a class="${entry.className} taag" href="${rootURL}/label/${entry.item.name}">${entry.item.name}</a>
+                  </j:if>
+                </j:forEach>
+              </div>
             </l:card>
           </j:if>
         </div>
         <div>
+
+          <j:if test="${it.offlineCause!=null and it.offline and !it.connecting}">
+            <st:include it="${it.offlineCause}" page="cause.jelly" />
+          </j:if>
+
+          <j:if test="${it.manualLaunchAllowed}">
+            <st:include from="${it.launcher}" page="main.jelly" optional="true"/>
+          </j:if>
+
+          <j:if test="${it.offline and !it.manualLaunchAllowed and it.launchSupported}">
+            <p>${%title.no_manual_launch(it.retentionStrategy.descriptor.displayName)}</p>
+          </j:if>
+
                 <st:include page="nodepropertysummaries.jelly" />
 
 <!--                <h2>${%title.projects_tied_on(it.displayName)}</h2>-->

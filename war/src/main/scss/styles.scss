@@ -6,14 +6,20 @@
 
 .magicgrid {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: 340px 1fr;
   gap: 1rem;
+}
+
+.app-page-body--one-column:has(.jenkins-desc) {
+  max-width: 100vw;
+  padding-inline: 4rem;
 }
 
 .jenkins-desc {
   font-size: 1rem;
   color: var(--text-color-secondary);
   line-height: 1.66;
+  max-width: 1400px;
 }
 
 .sidddee {
@@ -33,7 +39,7 @@
   }
 
   dt {
-    font-weight: 500;
+    font-weight: 450;
     color: var(--text-color);
   }
 
@@ -41,5 +47,90 @@
     display: grid;
     grid-template-columns: 120px 1fr;
     gap: 0.5rem;
+  }
+}
+
+.labool {
+
+}
+
+.labelthings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+
+  .taag {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border-radius: 100px;
+    padding: 2px 7px;
+    min-height: 20px;
+    min-width: 20px;
+    text-decoration: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: color-mix(in srgb, currentColor 6%, transparent);
+      border: 1px solid color-mix(in srgb, currentColor 4%, transparent);
+      border-radius: inherit;
+    }
+
+    &:hover {
+      &::before {
+        background: color-mix(in srgb, currentColor 8%, transparent);
+      }
+    }
+
+    &:active {
+      &::before {
+        background: color-mix(in srgb, currentColor 10%, transparent);
+      }
+    }
+  }
+
+  /* tag0 is the least important tag in a tag cloud */
+  .tag0 {
+    font-size: 0.875em;
+  }
+
+  .tag1 {
+    font-size: 1.1em;
+  }
+
+  .tag2 {
+    font-size: 1.2em;
+  }
+
+  .tag3 {
+    font-size: 1.3em;
+  }
+
+  .tag4 {
+    font-size: 1.4em;
+  }
+
+  .tag5 {
+    font-size: 1.5em;
+  }
+
+  .tag6 {
+    font-size: 1.6em;
+  }
+
+  .tag7 {
+    font-size: 1.7em;
+  }
+
+  .tag8 {
+    font-size: 1.8em;
+  }
+
+  .tag9 {
+    font-size: 1.9em;
   }
 }
