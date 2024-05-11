@@ -12,7 +12,7 @@ import hudson.model.InvisibleAction;
 import hudson.model.RootAction;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.htmlunit.Page;
 import org.htmlunit.ScriptException;
 import org.htmlunit.html.HtmlPage;
@@ -52,7 +52,7 @@ public class BindTest {
                     .orElseThrow()
                     .getAttribute("src");
 
-            final Page script = wc.goTo(StringUtils.removeStart(scriptUrl, j.contextPath + "/"), "application/javascript");
+            final Page script = wc.goTo(StringUtils.removeStart(scriptUrl, j.contextPath + "/"), "text/javascript");
             final String content = script.getWebResponse().getContentAsString();
             assertThat(content, startsWith("varname = makeStaplerProxy('" + j.contextPath + "/$stapler/bound/"));
             assertThat(content, endsWith("','test',['annotatedJsMethod1','byName1']);"));
@@ -73,7 +73,7 @@ public class BindTest {
                     .orElseThrow()
                     .getAttribute("src");
 
-            final Page script = wc.goTo(StringUtils.removeStart(scriptUrl, j.contextPath + "/"), "application/javascript");
+            final Page script = wc.goTo(StringUtils.removeStart(scriptUrl, j.contextPath + "/"), "text/javascript");
             assertThat(script.getWebResponse().getContentAsString(), is("varname = makeStaplerProxy('" + j.contextPath + "/theWellKnownRoot','test',['annotatedJsMethod2','byName2']);"));
         }
         assertThat(root.invocations, is(1));
@@ -91,7 +91,7 @@ public class BindTest {
             final HtmlPage htmlPage = exception.getPage();
             final String scriptUrl = htmlPage.getElementsByTagName("script").stream().filter(it -> it.getAttribute("src").equals(j.contextPath + "/$stapler/bound/script/null?var=varname")).findFirst().orElseThrow().getAttribute("src");
 
-            final Page script = wc.goTo(StringUtils.removeStart(scriptUrl, j.contextPath + "/"), "application/javascript");
+            final Page script = wc.goTo(StringUtils.removeStart(scriptUrl, j.contextPath + "/"), "text/javascript");
             final String content = script.getWebResponse().getContentAsString();
             assertThat(content, is("varname = null;"));
         }
