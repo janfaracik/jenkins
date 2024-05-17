@@ -72,8 +72,8 @@ $icon-size: 1.375rem;
 }
 
 .populism {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: auto 1fr;
   gap: 0.75rem;
   color: var(--text-color);
 
@@ -97,9 +97,54 @@ $icon-size: 1.375rem;
     }
   }
 
-  a {
-    font-weight: normal;
-    text-underline-offset: 3px;
-    text-decoration-thickness: 2px;
+  button {
+    appearance: none;
+    border: none;
+    outline: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+    transition: var(--standard-transition);
+
+    &:active {
+      transform: scale(0.95);
+      opacity: 0.8;
+    }
   }
+}
+
+.exactlythesame {
+  display: block;
+  rotate: 45deg;
+}
+
+.flip-container {
+  cursor: pointer;
+}
+
+.flipper {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: start;
+  perspective: 1000px;
+}
+
+.front, .back {
+  justify-self: start;
+  grid-area: 1 / 1;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  transition: 1s cubic-bezier(0, 0.68, 0.5, 1.5);
+}
+
+.back {
+  transform: rotateX(180deg);
+}
+
+.flipper.flip .front {
+  transform: rotateX(-180deg);
+}
+
+.flipper.flip .back {
+  transform: rotateX(0deg);
 }
