@@ -58,7 +58,7 @@ THE SOFTWARE.
               <button class="flip-container" aria-live="polite" id="flipButton">
                 <div class="flipper">
                   <div class="front" aria-hidden="false">
-                    ${%startedAgo(it.timestampString)}
+                    <span data-initial-time="${it.startTimeInMillis}" data-time-template="${%startedAgo('####')}" />
                   </div>
                   <div class="back" aria-hidden="true">
                     Started <i:formatDate value="${it.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
@@ -71,17 +71,19 @@ THE SOFTWARE.
               <div class="populism__icon">
                 <l:icon src="symbol-timer" />
               </div>
-              <j:choose>
-                <j:when test="${it.building}">
-                  ${%beingExecuted(it.executor.timestampString)}
-                </j:when>
-                <j:otherwise>
-                  ${%Took} ${it.durationString}
-                </j:otherwise>
-              </j:choose>
-              <j:if test="${!empty(app.nodes) or (it.builtOnStr != null and it.builtOnStr != '')}">
-                ${%on} <t:node value="${it.builtOn}" valueStr="${it.builtOnStr}"/>
-              </j:if>
+              <div>
+                <j:choose>
+                  <j:when test="${it.building}">
+                    <span data-initial-time="${it.startTimeInMillis}" data-time-template="${%beingExecuted('####')}" />
+                  </j:when>
+                  <j:otherwise>
+                    ${%Took} ${it.durationString}
+                  </j:otherwise>
+                </j:choose>
+                <j:if test="${!empty(app.nodes) or (it.builtOnStr != null and it.builtOnStr != '')}">
+                  ${%on} <t:node value="${it.builtOn}" valueStr="${it.builtOnStr}"/>
+                </j:if>
+              </div>
             </div>
           </div>
         </l:card>
