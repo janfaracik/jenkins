@@ -40,7 +40,7 @@ THE SOFTWARE.
 
       <t:buildCaption controls="${controls}">${it.displayName}</t:buildCaption>
 
-      <div style="float: right; width: 360px; margin-left: 1rem">
+      <div class="deets">
         <l:card title="${%Details}">
           <div class="populisms">
             <div class="populism">
