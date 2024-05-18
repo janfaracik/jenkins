@@ -1,10 +1,10 @@
 import behaviorShim from "@/util/behavior-shim";
 
 const primaryColors = [
+  "blue",
   "orange",
   "red",
   "green",
-  "blue",
   "pink",
   "brown",
   "cyan",
@@ -12,10 +12,6 @@ const primaryColors = [
   "indigo",
   "purple",
 ];
-Array.from(primaryColors).forEach((color) => {
-  primaryColors.push("light-" + color);
-  primaryColors.push("dark-" + color);
-});
 const secondaryColors = Array.from(primaryColors).reverse();
 
 function getInitials(name) {
@@ -44,18 +40,18 @@ function generateColorIndex(seed, maximum) {
 
 function init() {
   behaviorShim.specify(".jenkins-avatar", "-avatar-", 1000, (avatar) => {
-    const fullname = avatar.dataset.fullname;
-    const initials = getInitials(fullname);
+    const fullName = avatar.dataset.fullname;
+    const initials = getInitials(fullName);
     const initialsElement = avatar.querySelector(".jenkins-avatar__initials");
-    const colorIndex = generateColorIndex(fullname, primaryColors.length);
-    const angle = `${generateColorIndex(fullname, 360)}deg`;
+    const colorIndex = generateColorIndex(fullName, primaryColors.length);
+    const angle = `${generateColorIndex(fullName, 360)}deg`;
     const primaryColor = `var(--${primaryColors[colorIndex]})`;
     const secondaryColor = `var(--${secondaryColors[colorIndex]})`;
 
     avatar.style.setProperty("--gradient-angle", angle);
     avatar.style.setProperty("--gradient-1", primaryColor);
     avatar.style.setProperty("--gradient-2", secondaryColor);
-    // initialsElement.dataset.initials = initials;
+    initialsElement.dataset.initials = initials;
     initialsElement.textContent = initials;
   });
 }

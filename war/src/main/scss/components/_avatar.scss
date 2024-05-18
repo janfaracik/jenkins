@@ -36,33 +36,20 @@
     opacity: 0.35;
   }
 
-  &__animation {
-    position: absolute;
-    inset: 0;
-    animation: rotate-bg 5s linear infinite;
-    mix-blend-mode: overlay;
-    opacity: 0.5;
-    background: linear-gradient(
-      var(--gradient-angle),
-      var(--gradient-1),
-      var(--gradient-2)
-    );
-    border-radius: 100%;
-    aspect-ratio: 1;
-  }
-
   &__initials {
     position: relative;
-    font-weight: 600;
+    font-weight: 550;
     font-size: inherit;
-    color: transparent;
-    background: linear-gradient(
-      var(--gradient-angle),
-      var(--gradient-1),
-      var(--gradient-2)
-    );
-    background-clip: text;
-    filter: contrast(0.4) saturate(3) brightness(2.25);
+    color: color-mix(in srgb, var(--white) 10%, transparent);
+
+    &::after {
+      content: attr(data-initials);
+      position: absolute;
+      inset: 0;
+      color: var(--white);
+      mix-blend-mode: overlay;
+      text-shadow: 0 0 1px black;
+    }
   }
 
   @keyframes rotate-bg {
@@ -73,21 +60,5 @@
     100% {
       rotate: 360deg;
     }
-  }
-}
-
-.user-heading {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  .jenkins-avatar {
-    width: 3.375rem;
-    height: 3.375rem;
-    font-size: 1.5rem;
-  }
-
-  h1 {
-    display: contents;
   }
 }
