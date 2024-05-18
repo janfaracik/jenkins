@@ -40,35 +40,35 @@ THE SOFTWARE.
 
       <t:buildCaption controls="${controls}">${it.displayName}</t:buildCaption>
 
-      <div class="deets">
+      <div class="app-build__details">
         <l:card title="${%Details}">
-          <div class="populisms">
-            <div class="populism">
+          <div class="jenkins-card__details">
+            <div class="jenkins-card__details__item">
               <j:set var="minutes" value="${360 * (it.timestamp.time.minutes / 60)}" />
               <i:formatDate var="hours" value="${it.timestamp.time}" pattern="h" />
               <j:set var="hours" value="${360 * (hours / 12) + (30 * (it.timestamp.time.minutes / 60))}" />
 
-              <div class="populism__icon">
-                <div class="cssclock" style="--hours: ${hours}deg; --minutes: ${minutes}deg">
-                  <span class="hours"></span>
-                  <span class="minutes"></span>
+              <div class="jenkins-card__details__item__icon">
+                <div class="app-build__clock" style="--hours: ${hours}deg; --minutes: ${minutes}deg">
+                  <span class="app-build__clock__hours" />
+                  <span class="app-build__clock__minutes" />
                 </div>
               </div>
 
-              <button class="flip-container" aria-live="polite" id="flipButton">
-                <div class="flipper">
-                  <div class="front" aria-hidden="false">
+              <button aria-live="polite" id="button-started-at">
+                <div class="app-build__started-at">
+                  <div class="app-build__started-at__front" aria-hidden="false">
                     <span data-initial-time="${it.startTimeInMillis}" data-time-template="${%startedAgo('####')}" />
                   </div>
-                  <div class="back" aria-hidden="true">
+                  <div class="app-build__started-at__back" aria-hidden="true">
                     Started <i:formatDate value="${it.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
                   </div>
                 </div>
               </button>
             </div>
 
-            <div class="populism">
-              <div class="populism__icon">
+            <div class="jenkins-card__details__item">
+              <div class="jenkins-card__details__item__icon">
                 <l:icon src="symbol-timer" />
               </div>
               <div>

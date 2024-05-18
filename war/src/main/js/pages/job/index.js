@@ -1,31 +1,33 @@
-document.getElementById('flipButton').addEventListener('click', function() {
-  const flipper = document.querySelector('.flipper');
-  const front = document.querySelector('.front');
-  const back = document.querySelector('.back');
+document
+  .getElementById("button-started-at")
+  .addEventListener("click", function () {
+    const flipper = document.querySelector(".app-build__started-at");
+    const front = document.querySelector(".app-build__started-at__front");
+    const back = document.querySelector(".app-build__started-at__back");
 
-  if (flipper.classList.contains('flip')) {
-    // Currently showing back, flip to front
-    flipper.classList.remove('flip');
-    front.setAttribute('aria-hidden', 'false');
-    back.setAttribute('aria-hidden', 'true');
-  } else {
-    // Currently showing front, flip to back
-    flipper.classList.add('flip');
-    front.setAttribute('aria-hidden', 'true');
-    back.setAttribute('aria-hidden', 'false');
-  }
-});
+    if (flipper.classList.contains("app-build__started-at--flipped")) {
+      // Currently showing back, flip to front
+      flipper.classList.remove("app-build__started-at--flipped");
+      front.setAttribute("aria-hidden", "false");
+      back.setAttribute("aria-hidden", "true");
+    } else {
+      // Currently showing front, flip to back
+      flipper.classList.add("app-build__started-at--flipped");
+      front.setAttribute("aria-hidden", "true");
+      back.setAttribute("aria-hidden", "false");
+    }
+  });
 
-document.querySelectorAll('[data-initial-time]').forEach(element => {
-  const locale = document.querySelector('html').dataset.locale;
-  const template = element.getAttribute('data-time-template');
-  const startTime = new Date(Number(element.getAttribute('data-initial-time')));
+document.querySelectorAll("[data-initial-time]").forEach((element) => {
+  const locale = document.querySelector("html").dataset.locale;
+  const template = element.getAttribute("data-time-template");
+  const startTime = new Date(Number(element.getAttribute("data-initial-time")));
 
   const formatElapsedTime = (time, unit) => {
     return Intl.NumberFormat(locale, {
       style: "unit",
       unit: unit,
-      unitDisplay: "short"
+      unitDisplay: "short",
     }).format(time);
   };
 
@@ -39,24 +41,24 @@ document.querySelectorAll('[data-initial-time]').forEach(element => {
     const months = Math.floor((elapsed / (1000 * 60 * 60 * 24 * 30)) % 12);
     const years = Math.floor(elapsed / (1000 * 60 * 60 * 24 * 365));
 
-    let elapsedTimeString = '';
+    let elapsedTimeString = "";
     if (years > 0) {
-      elapsedTimeString += formatElapsedTime(years, 'year') + ' ';
+      elapsedTimeString += formatElapsedTime(years, "year") + " ";
     }
     if (months > 0) {
-      elapsedTimeString += formatElapsedTime(months, 'month') + ' ';
+      elapsedTimeString += formatElapsedTime(months, "month") + " ";
     }
     if (days > 0) {
-      elapsedTimeString += formatElapsedTime(days, 'day') + ' ';
+      elapsedTimeString += formatElapsedTime(days, "day") + " ";
     }
     if (hours > 0 && days < 10 && months === 0 && years === 0) {
-      elapsedTimeString += formatElapsedTime(hours, 'hour') + ' ';
+      elapsedTimeString += formatElapsedTime(hours, "hour") + " ";
     }
     if (minutes > 0 && days === 0) {
-      elapsedTimeString += formatElapsedTime(minutes, 'minute') + ' ';
+      elapsedTimeString += formatElapsedTime(minutes, "minute") + " ";
     }
     if (hours === 0 && minutes < 10) {
-      elapsedTimeString += formatElapsedTime(seconds, 'second');
+      elapsedTimeString += formatElapsedTime(seconds, "second");
     }
 
     element.textContent = template.replace("####", elapsedTimeString);
@@ -64,4 +66,4 @@ document.querySelectorAll('[data-initial-time]').forEach(element => {
 
   updateElapsedTime();
   setInterval(updateElapsedTime, 1000);
-})
+});

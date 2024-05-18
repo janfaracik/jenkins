@@ -1,7 +1,95 @@
+@use "../base/breakpoints";
+
 .build-caption-progress-container {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: nowrap;
   gap: 10px;
+}
+
+/* stylelint-disable-next-line media-query-no-invalid */
+@media (min-width: breakpoints.$tablet-breakpoint) {
+  .app-build__details {
+    float: right;
+    width: 360px;
+    margin-left: 1rem;
+  }
+}
+
+.app-build__clock {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+  scale: 0.75;
+
+  &__hours,
+  &__minutes {
+    position: absolute;
+    inset: 0;
+    border-radius: 100%;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 11px;
+      left: 11px;
+      width: 2px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+  }
+
+  &__hours {
+    rotate: var(--hours);
+
+    &::after {
+      height: 6px;
+    }
+  }
+
+  &__minutes {
+    rotate: var(--minutes);
+
+    &::after {
+      height: 8px;
+    }
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    inset: 0;
+    border-radius: 100%;
+    border: 2px solid currentColor;
+  }
+}
+
+.app-build__started-at {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-content: start;
+  perspective: 1000px;
+
+  &__front,
+  &__back {
+    justify-self: start;
+    grid-area: 1 / 1;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+    transition: 1s cubic-bezier(0, 0.68, 0.5, 1.5);
+  }
+
+  &__back {
+    transform: rotateX(180deg);
+  }
+
+  &.app-build__started-at--flipped &__front {
+    transform: rotateX(-180deg);
+  }
+
+  &.app-build__started-at--flipped &__back {
+    transform: rotateX(0deg);
+  }
 }
