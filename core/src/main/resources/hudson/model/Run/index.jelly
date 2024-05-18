@@ -44,6 +44,10 @@ THE SOFTWARE.
         <l:card title="${%Details}">
           <div class="jenkins-card__details">
             <div class="jenkins-card__details__item">
+              <st:include page="description.jelly" it="${it.causes.0}" />
+            </div>
+
+            <div class="jenkins-card__details__item">
               <j:set var="minutes" value="${360 * (it.timestamp.time.minutes / 60)}" />
               <i:formatDate var="hours" value="${it.timestamp.time}" pattern="h" />
               <j:set var="hours" value="${360 * (hours / 12) + (30 * (it.timestamp.time.minutes / 60))}" />

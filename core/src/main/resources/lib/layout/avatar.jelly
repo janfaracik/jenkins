@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Michael B. Donohue, Alan Harder
+Copyright (c) 2023 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,17 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <t:summary icon="symbol-trigger">
-    <j:forEach var="entry" items="${it.causeCounts.entrySet()}">
-      <p>
-        <st:include page="description.jelly" it="${entry.key}"/>
-        <j:if test="${entry.value > 1}">
-          <st:nbsp/>${%Ntimes(entry.value)}
-        </j:if>
-      </p>
-    </j:forEach>
-  </t:summary>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+  <st:documentation>
+    <st:attribute name="fullName" />
+    <st:attribute name="clazz" />
+    <st:attribute name="animated" />
+  </st:documentation>
+
+  <div class="jenkins-avatar ${clazz}" data-fullname="${attrs.fullName}">
+    <j:if test="${attrs.animated}">
+      <div class="jenkins-avatar__animation" />
+    </j:if>
+    <span class="jenkins-avatar__initials" />
+  </div>
 </j:jelly>
