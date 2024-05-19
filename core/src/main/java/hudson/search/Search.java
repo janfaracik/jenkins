@@ -44,6 +44,8 @@ import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
 import jenkins.util.MemoryReductionUtil;
 import jenkins.util.SystemProperties;
+import org.jenkins.ui.symbol.Symbol;
+import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.Ancestor;
@@ -128,9 +130,11 @@ public class Search implements StaplerProxy {
      */
     public void doSuggest(StaplerRequest req, StaplerResponse rsp, @QueryParameter String query) throws IOException, ServletException {
         Result r = new Result();
-        for (SuggestedItem item : getSuggestions(req, query))
-            r.suggestions.add(new Item(item.getPath(), item.getUrl()));
-
+        for (SuggestedItem item : getSuggestions(req, query)) {
+            String symbolName = item.item.getSearchIcon();
+            r.suggestions.add(new Item(item.getPath(), item.getUrl(), "",
+                    Symbol.get(new SymbolRequest.Builder().withRaw(symbolName).build())));
+        }
         rsp.serveExposedBean(req, r, Flavor.JSON);
     }
 
@@ -215,13 +219,23 @@ public class Search implements StaplerProxy {
         @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public String name;
 
+        @Exported
+        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
+        public String icon;
+
+        @Exported
+        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
+        public String iconXml;
+
         public Item(String name) {
             this.name = name;
         }
 
-        public Item(String name, String url) {
+        public Item(String name, String url, String icon, String iconXml) {
             this(name);
             this.url = url;
+            this.icon = icon;
+            this.iconXml = iconXml;
         }
     }
 

@@ -45,6 +45,7 @@ import hudson.security.ACL;
 import hudson.security.AccessControlled;
 import hudson.security.SecurityRealm;
 import hudson.security.UserMayOrMayNotExistException2;
+import hudson.tasks.UserAvatarResolver;
 import hudson.util.FormApply;
 import hudson.util.FormValidation;
 import hudson.util.RunList;
@@ -279,6 +280,11 @@ public class User extends AbstractModelObject implements AccessControlled, Descr
     @Override
     public @NonNull String getSearchUrl() {
         return "/user/" + Util.rawEncode(idStrategy().keyFor(id));
+    }
+
+    @Override
+    public String getSearchIcon() {
+        return UserAvatarResolver.resolve(this, "48x48");
     }
 
     /**
