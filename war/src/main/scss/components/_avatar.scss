@@ -36,6 +36,21 @@
     opacity: 0.35;
   }
 
+  &--animated {
+    //position: absolute;
+    //inset: 0;
+    animation: rotate-bg 5s linear infinite;
+    //mix-blend-mode: overlay;
+    //opacity: 0.5;
+    //background: linear-gradient(
+    //                var(--gradient-angle),
+    //                var(--gradient-1),
+    //                var(--gradient-2)
+    //);
+    //border-radius: 100%;
+    //aspect-ratio: 1;
+  }
+
   &__initials {
     position: relative;
     font-weight: 550;

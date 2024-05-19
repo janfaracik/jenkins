@@ -26,7 +26,7 @@ THE SOFTWARE.
     <j:choose>
       <j:when test="${it.userId != null}" >
           <div class="jenkins-card__details__item__icon">
-              <l:avatar fullName="${it.userName}" />
+              <l:avatar user="${it}" />
           </div>
         <span>${%started_by_user(it.userUrl, it.userName, rootURL)}</span>
       </j:when>
