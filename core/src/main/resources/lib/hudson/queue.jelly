@@ -71,7 +71,7 @@ THE SOFTWARE.
             <div class="app-build-queue__item__text">
               <j:choose>
                 <j:when test="${hasPermission}">
-                <a href="${rootURL}/${item.task.url}" class="model-link"
+                <a href="${rootURL}/${item.task.url}"
                    tooltip="${item.causesDescription} ${item.why} ${item.params} \n ${%WaitingFor(item.inQueueForString)}"
                    data-tooltip-append-to-parent="true">
                     <l:breakable value="${item.displayName}"/>
@@ -97,8 +97,12 @@ THE SOFTWARE.
                 </a>
               </j:if>
               <j:if test="${item.hasCancelPermission()}">
-                <l:stopButton href="${rootURL}/queue/cancelItem?id=${item.id}" confirm="${%confirm(item.displayName)}" alt="${%Cancel this build}"/>
+                <l:stopButton href="${rootURL}/queue/cancelItem?id=${item.id}" confirm="${%confirm(item.displayName)}" alt="${%Cancel}"/>
               </j:if>
+
+              <button class="jenkins-card__reveal jenkins-jumplist-link" data-href="${rootURL}/${item.task.url}">
+                <l:icon src="symbol-menu" />
+              </button>
             </div>
           </div>
         </j:forEach>
