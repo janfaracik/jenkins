@@ -48,7 +48,7 @@ Dialog.prototype.init = function () {
   if (this.dialogType === "modal") {
     if (this.options.content != null) {
       const content = createElementFromHtml(
-        `<div class='jenkins-dialog__contents jenkins-dialog__contents--modal'/>`
+        `<div class='jenkins-dialog__contents jenkins-dialog__contents--modal'/>`,
       );
       content.appendChild(this.options.content);
       this.dialog.appendChild(content);
@@ -62,7 +62,7 @@ Dialog.prototype.init = function () {
         `);
       this.dialog.appendChild(closeButton);
       closeButton.addEventListener("click", () =>
-        this.dialog.dispatchEvent(new Event("cancel"))
+        this.dialog.dispatchEvent(new Event("cancel")),
       );
     }
     this.dialog.addEventListener("click", function (e) {
@@ -76,7 +76,7 @@ Dialog.prototype.init = function () {
     this.form = null;
     if (this.options.form != null && this.dialogType === "form") {
       const contents = createElementFromHtml(
-        `<div class='jenkins-dialog__contents'/>`
+        `<div class='jenkins-dialog__contents'/>`,
       );
       this.form = this.options.form;
       contents.appendChild(this.options.form);
@@ -85,7 +85,7 @@ Dialog.prototype.init = function () {
     }
     if (this.options.message != null && this.dialogType !== "form") {
       const message = createElementFromHtml(
-        `<div class='jenkins-dialog__contents'/>`
+        `<div class='jenkins-dialog__contents'/>`,
       );
       this.dialog.appendChild(message);
       message.innerText = this.options.message;
@@ -132,14 +132,18 @@ Dialog.prototype.appendButtons = function () {
       <button data-id="ok" type="${
         this.options.submitButton ? "submit" : "button"
       }" class="jenkins-button jenkins-button--primary ${
-    _typeClassMap[this.options.type]
-  }">${this.options.okText}</button>
+        _typeClassMap[this.options.type]
+      }">${this.options.okText}</button>
       <button data-id="cancel" class="jenkins-button">${
         this.options.cancelText
       }</button>
     </div>`);
 
-  this.dialog.appendChild(buttons);
+  if (this.dialogType === "form") {
+    this.form.appendChild(buttons);
+  } else {
+    this.dialog.appendChild(buttons);
+  }
 
   this.ok = buttons.querySelector("[data-id=ok]");
   this.cancel = buttons.querySelector("[data-id=cancel]");
@@ -166,33 +170,32 @@ Dialog.prototype.show = function () {
         this.dialog.remove();
         cancel();
       },
-      { once: true }
+      { once: true },
     );
     this.dialog.focus();
     if (this.input != null) {
       this.input.focus();
     }
-    if (this.ok != null) {
+    if (
+      this.ok != null &&
+      (this.dialogType != "form" || !this.options.submitButton)
+    ) {
       this.ok.addEventListener(
         "click",
         (e) => {
-          if (this.dialogType === "form" && this.options.submitButton) {
-            this.form.submit();
-          } else {
-            e.preventDefault();
+          e.preventDefault();
 
-            let value = true;
-            if (this.dialogType === "prompt") {
-              value = this.input.value;
-            }
-            if (this.dialogType === "form") {
-              value = new FormData(this.form);
-            }
-            this.dialog.remove();
-            resolve(value);
+          let value = true;
+          if (this.dialogType === "prompt") {
+            value = this.input.value;
           }
+          if (this.dialogType === "form") {
+            value = new FormData(this.form);
+          }
+          this.dialog.remove();
+          resolve(value);
         },
-        { once: true }
+        { once: true },
       );
     }
   });

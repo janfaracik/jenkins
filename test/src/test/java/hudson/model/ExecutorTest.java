@@ -9,6 +9,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import hudson.Functions;
 import hudson.Launcher;
 import hudson.remoting.VirtualChannel;
 import hudson.slaves.DumbSlave;
@@ -19,9 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import jenkins.model.CauseOfInterruption.UserInterruption;
 import jenkins.model.InterruptedBuildAction;
 import jenkins.model.Jenkins;
-import org.junit.Assert;
+import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.jvnet.hudson.test.BuildWatcher;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
@@ -31,6 +33,9 @@ public class ExecutorTest {
 
     @Rule
     public JenkinsRule j = new JenkinsRule();
+
+    @ClassRule
+    public static BuildWatcher buildWatcher = new BuildWatcher();
 
     @Test
     @Issue("JENKINS-4756")
@@ -168,7 +173,7 @@ public class ExecutorTest {
         );
 
         OfflineCause offlineCause = p.getLastBuild().getBuiltOn().toComputer().getOfflineCause();
-        Assert.assertThat(offlineCause.toString(), not(containsString(message)));
+        assertThat(offlineCause.toString(), not(containsString(message)));
 
         b.doStop();
         j.waitForCompletion(b);
@@ -204,11 +209,20 @@ public class ExecutorTest {
         public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
             VirtualChannel channel = launcher.getChannel();
             Node node = build.getBuiltOn();
+            channel.call(node.getClockDifferenceCallable()); // warm up class loading
 
             e.signal(); // we are safe to be interrupted
             for (;;) {
                 // Keep using the channel
-                channel.call(node.getClockDifferenceCallable());
+                try {
+                    channel.call(node.getClockDifferenceCallable());
+                } catch (IOException x) {
+                    if (x.getMessage().contains("RemoteClassLoader.ClassLoaderProxy")) {
+                        Functions.printStackTrace(x, listener.error("TODO unreproducible error from MultiClassLoaderSerializer.Input.readClassLoader"));
+                    } else {
+                        throw x;
+                    }
+                }
                 Thread.sleep(100);
             }
         }

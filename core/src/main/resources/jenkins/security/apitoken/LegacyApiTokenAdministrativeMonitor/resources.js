@@ -33,7 +33,7 @@ function selectFresh(anchor) {
   var parent = anchor.closest(".legacy-token-usage");
   var allCheckBoxes = parent.querySelectorAll(".token-to-revoke");
   var concernedCheckBoxes = parent.querySelectorAll(
-    ".token-to-revoke.fresh-token"
+    ".token-to-revoke.fresh-token",
   );
 
   checkTheDesiredOne(allCheckBoxes, concernedCheckBoxes);
@@ -43,7 +43,7 @@ function selectRecent(anchor) {
   var parent = anchor.closest(".legacy-token-usage");
   var allCheckBoxes = parent.querySelectorAll(".token-to-revoke");
   var concernedCheckBoxes = parent.querySelectorAll(
-    ".token-to-revoke.recent-token"
+    ".token-to-revoke.recent-token",
   );
 
   checkTheDesiredOne(allCheckBoxes, concernedCheckBoxes);
@@ -93,7 +93,7 @@ function confirmAndRevokeAllSelected(button) {
     var confirmMessageTemplate = button.getAttribute("data-confirm-template");
     var confirmMessage = confirmMessageTemplate.replace(
       "%num%",
-      allCheckedCheckBoxes.length
+      allCheckedCheckBoxes.length,
     );
     dialog
       .confirm(confirmTitle, { message: confirmMessage, type: "destructive" })
@@ -109,17 +109,13 @@ function confirmAndRevokeAllSelected(button) {
             selectedValues.push({ userId: userId, uuid: uuid });
           }
 
-          // TODO simplify when Prototype.js is removed
-
           fetch(url, {
             method: "post",
-            body: Object.toJSON
-              ? Object.toJSON({ values: selectedValues })
-              : JSON.stringify({ values: selectedValues }),
+            body: JSON.stringify({ values: selectedValues }),
             headers: crumb.wrap({ "Content-Type": "application/json" }),
           }).then(() => window.location.reload());
         },
-        () => {}
+        () => {},
       );
   }
 }

@@ -11,11 +11,11 @@ function init() {
  * Appends a ⌄ button at the end of links which support jump lists
  */
 function generateJumplistAccessors() {
-  document.querySelectorAll("A.model-link").forEach((link) => {
+  behaviorShim.specify("A.model-link", "-jumplist-", 999, (link) => {
     const isFirefox = navigator.userAgent.indexOf("Firefox") !== -1;
     // Firefox adds unwanted lines when copying buttons in text, so use a span instead
     const dropdownChevron = document.createElement(
-      isFirefox ? "span" : "button"
+      isFirefox ? "span" : "button",
     );
     dropdownChevron.className = "jenkins-menu-dropdown-chevron";
     dropdownChevron.dataset.href = link.href;
@@ -51,13 +51,13 @@ function generateDropdowns() {
           .then((json) =>
             instance.setContent(
               Utils.generateDropdownItems(
-                mapChildrenItemsToDropdownItems(json.items)
-              )
-            )
+                mapChildrenItemsToDropdownItems(json.items),
+              ),
+            ),
           )
           .catch((error) => console.log(`Jumplist request failed: ${error}`))
           .finally(() => (instance.loaded = true));
-      })
+      }),
   );
 }
 
@@ -106,9 +106,10 @@ function mapChildrenItemsToDropdownItems(items) {
               method: "post",
               headers: crumb.wrap({}),
             });
-            if (event.length === 1 && event[0].target != null) {
-              hoverNotification("Done.", event[0].target);
-            }
+            notificationBar.show(
+              item.displayName + ": Done.",
+              notificationBar.SUCCESS,
+            );
           }
         }
       },

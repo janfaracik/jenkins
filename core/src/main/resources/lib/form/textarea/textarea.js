@@ -45,7 +45,8 @@ Behaviour.specify(
     hidePreview.style.display = "none";
     previewDiv.style.display = "none";
 
-    showPreview.onclick = function () {
+    showPreview.onclick = function (event) {
+      event.preventDefault();
       // Several TEXTAREAs may exist if CodeMirror is enabled. The first one has reference to the CodeMirror object.
       var textarea = e.parentNode.getElementsByTagName("TEXTAREA")[0];
       var text = "";
@@ -67,7 +68,9 @@ Behaviour.specify(
 
       fetch(rootURL + showPreview.getAttribute("previewEndpoint"), {
         method: "post",
-        headers: crumb.wrap({}),
+        headers: crumb.wrap({
+          "Content-Type": "application/x-www-form-urlencoded",
+        }),
         body: new URLSearchParams({
           text: text,
         }),
@@ -83,9 +86,10 @@ Behaviour.specify(
       });
     };
 
-    hidePreview.onclick = function () {
+    hidePreview.onclick = function (event) {
+      event.preventDefault();
       hidePreview.style.display = "none";
       previewDiv.style.display = "none";
     };
-  }
+  },
 );
