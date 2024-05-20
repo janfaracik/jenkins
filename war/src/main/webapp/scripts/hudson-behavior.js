@@ -360,7 +360,6 @@ function findNearBy(e, name) {
 
   function locate(iterator, e) {
     // keep finding elements until we find the good match
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       e = iterator(e, name);
       if (e == null) {
@@ -693,6 +692,7 @@ function registerValidator(e) {
   var url = e.targetUrl();
   try {
     FormChecker.delayedCheck(url, method, e.targetElement);
+    // eslint-disable-next-line no-unused-vars
   } catch (x) {
     // this happens if the checkUrl refers to a non-existing element.
     // don't let this kill off the entire JavaScript
@@ -2224,35 +2224,6 @@ function toQueryString(params) {
     }
   }
   return query;
-}
-
-// eslint-disable-next-line no-unused-vars
-function getElementOverflowParams(element) {
-  // First we force it to wrap so we can get those dimension.
-  // Then we force it to "nowrap", so we can get those dimension.
-  // We can then compare the two sets, which will indicate if
-  // wrapping is potentially happening, or not.
-
-  // Force it to wrap.
-  element.classList.add("force-wrap");
-  var wrappedClientWidth = element.clientWidth;
-  var wrappedClientHeight = element.clientHeight;
-  element.classList.remove("force-wrap");
-
-  // Force it to nowrap. Return the comparisons.
-  element.classList.add("force-nowrap");
-  var nowrapClientHeight = element.clientHeight;
-  try {
-    var overflowParams = {
-      element: element,
-      clientWidth: wrappedClientWidth,
-      scrollWidth: element.scrollWidth,
-      isOverflowed: wrappedClientHeight > nowrapClientHeight,
-    };
-    return overflowParams;
-  } finally {
-    element.classList.remove("force-nowrap");
-  }
 }
 
 // get the cascaded computed style value. 'a' is the style name like 'backgroundColor'
