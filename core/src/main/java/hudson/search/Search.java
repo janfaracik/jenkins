@@ -211,31 +211,41 @@ public class Search implements StaplerProxy {
 
     @ExportedBean(defaultVisibility = 999)
     public static class Item {
-        @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
-        public String url;
 
         @Exported
         @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public String name;
 
-        @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
-        public String icon;
+        private final String url;
 
-        @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
-        public String iconXml;
+        public final String icon;
+
+        public final String iconXml;
 
         public Item(String name) {
-            this.name = name;
+            this(name, null, null, null);
         }
 
         public Item(String name, String url, String icon, String iconXml) {
-            this(name);
+            this.name = name;
             this.url = url;
             this.icon = icon;
             this.iconXml = iconXml;
+        }
+
+        @Exported
+        public String getUrl() {
+            return url;
+        }
+
+        @Exported
+        public String getIcon() {
+            return icon;
+        }
+
+        @Exported
+        public String getIconXml() {
+            return iconXml;
         }
     }
 
