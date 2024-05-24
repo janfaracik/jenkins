@@ -4,7 +4,8 @@ import debounce from "lodash/debounce";
 import * as Symbols from "./symbols";
 import makeKeyboardNavigable from "@/util/keyboard";
 import { xmlEscape } from "@/util/security";
-import { createElementFromHtml } from "../../util/dom";
+import { createElementFromHtml } from "@/util/dom";
+import { groupResultsByCategory } from "@/components/command-palette/utils";
 
 const datasources = [JenkinsSearchSource];
 
@@ -74,15 +75,24 @@ function init() {
       );
     }
 
+    results = groupResultsByCategory(results);
+
     // Clear current search results
     searchResults.innerHTML = "";
 
     if (query.length === 0 || Object.keys(results).length > 0) {
-      results.forEach(function (obj) {
-        const link = createElementFromHtml(obj.render());
-        link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
-        searchResults.append(link);
-      });
+      for (const [group, items] of Object.entries(results)) {
+        const heading = document.createElement("p");
+        heading.className = "jenkins-command-palette__results__heading";
+        heading.innerText = group;
+        searchResults.append(heading);
+
+        items.forEach(function (obj) {
+          const link = createElementFromHtml(obj.render());
+          link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
+          searchResults.append(link);
+        });
+      }
 
       updateSelectedItem(0);
     } else {

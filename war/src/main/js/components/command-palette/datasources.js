@@ -1,6 +1,5 @@
 import { LinkResult } from "./models";
 import Search from "@/api/search";
-import * as Symbols from "./symbols";
 
 export const JenkinsSearchSource = {
   async execute(query) {
@@ -17,7 +16,7 @@ export const JenkinsSearchSource = {
 
     return await response.json().then((data) => {
       return [...data["suggestions"]].map(
-        (e) => new LinkResult(e.iconXml, e.name, correctAddress(e.url)),
+        (e) => new LinkResult(e.iconXml, e.name, correctAddress(e.url), false, e.group.displayName),
       );
     });
   },

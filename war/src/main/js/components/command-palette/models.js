@@ -2,12 +2,14 @@ import * as Symbols from "./symbols";
 import { xmlEscape } from "@/util/security";
 
 export class LinkResult {
-  constructor(icon, label, url, isExternal) {
+  constructor(icon, label, url, isExternal, group) {
     this.icon = icon;
     this.label = label;
     this.url = url;
     this.isExternal = isExternal;
+    this.group = group;
   }
+
   render() {
     return `<a class="jenkins-command-palette__results__item" href="${xmlEscape(
       this.url,
