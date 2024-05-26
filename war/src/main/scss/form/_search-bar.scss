@@ -251,7 +251,7 @@
     translate: 0 0.3125rem;
   }
 
-  a {
+  a, button {
     position: relative;
     display: flex;
     align-items: center;
@@ -266,6 +266,10 @@
     line-height: 1;
     min-height: 2.25rem;
     transition: background var(--standard-transition);
+    appearance: none;
+    border: none;
+    outline: none;
+    background: transparent;
 
     div {
       display: flex;
