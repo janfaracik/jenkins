@@ -1,11 +1,9 @@
 import { LinkResult } from "./models";
 import Search from "@/api/search";
-import * as Symbols from "./symbols";
 
 export const JenkinsSearchSource = {
-  async execute(query) {
+  execute(query) {
     const rootUrl = document.head.dataset.rooturl;
-    const response = await Search.search(query);
 
     function correctAddress(url) {
       if (url.startsWith("/")) {
@@ -15,10 +13,16 @@ export const JenkinsSearchSource = {
       return rootUrl + "/" + url;
     }
 
-    return await response.json().then((data) => {
-      return [...data["suggestions"]].map(
-        (e) => new LinkResult(e.iconXml, e.name, correctAddress(e.url)),
-      );
-    });
+    return Search.search(query).then((rsp) =>
+      rsp.json().then((data) => {
+        return data["suggestions"].slice().map((e) =>
+          LinkResult({
+            icon: e.iconXml,
+            label: e.name,
+            url: correctAddress(e.url),
+          }),
+        );
+      }),
+    );
   },
 };
