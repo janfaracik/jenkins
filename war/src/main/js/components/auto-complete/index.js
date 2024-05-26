@@ -35,13 +35,16 @@ function init() {
 
         function appendResults(container, results) {
           results.forEach((item, index) => {
-            container.appendChild(
-              createElementFromHtml(
-                `<button class="${index === 0 ? SELECTED_CLASS : ""}">
+            const button = createElementFromHtml(
+              `<button type="button" class="${index === 0 ? SELECTED_CLASS : ""}">
                         ${xmlEscape(item.name)}
                       </button>`,
-              ),
             );
+            button.addEventListener("click", () => {
+              searchBar.value = item.name;
+              hideResultsContainer();
+            });
+            container.appendChild(button);
           });
 
           if (results.length === 0 && container === searchResults) {
@@ -54,13 +57,15 @@ function init() {
         }
 
         // Filter results
-        const url = searchBar.getAttribute("autoCompleteUrl") + '?value=' + query;
+        const url =
+          searchBar.getAttribute("autoCompleteUrl") + "?value=" + query;
         fetch(url).then((rsp) => {
           rsp.json().then((result) => {
             searchResults.innerHTML = "";
-            appendResults(searchResults, result['suggestions']);
-            searchResultsContainer.style.height = searchResults.offsetHeight + "px";
-          })
+            appendResults(searchResults, result["suggestions"]);
+            searchResultsContainer.style.height =
+              searchResults.offsetHeight + "px";
+          });
         });
       });
 

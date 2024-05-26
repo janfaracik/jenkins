@@ -234,7 +234,7 @@
   border-radius: 1rem;
   box-shadow: var(--dropdown-box-shadow);
   overflow: hidden;
-  z-index: 10;
+  z-index: 999;
   height: 1px; // Setting to 0 caused the items not to render initially in Chrome
   opacity: 0;
   transition: var(--standard-transition);
@@ -251,7 +251,8 @@
     translate: 0 0.3125rem;
   }
 
-  a, button {
+  a,
+  button {
     position: relative;
     display: flex;
     align-items: center;
