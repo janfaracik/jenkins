@@ -118,7 +118,12 @@ function init() {
   }
 
   function hideCommandPalette() {
-    commandPalette.close();
+    commandPalette.setAttribute("closing", "");
+
+    commandPalette.addEventListener("animationend", () => {
+      commandPalette.removeAttribute("closing");
+      commandPalette.close();
+    }, {once: true});
   }
 
   function itemMouseEnter(item) {
