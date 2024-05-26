@@ -36,5 +36,7 @@ THE SOFTWARE.
     from the module name, since older plugins specify suffix="-beta" for modules that have graduated
     beta since then.
   -->
-  <script src="${resURL}/scripts/yui/${module}/${module}-${yuiSuffix}.js" />
+  <j:if test="${!disableYui}">
+    <script src="${resURL}/scripts/yui/${module}/${module}-${yuiSuffix}.js" />
+  </j:if>
 </j:jelly>
