@@ -21,6 +21,7 @@ export const JenkinsSearchSource = {
             icon: Symbols.SEARCH,
             label: e.name,
             url: correctAddress(e.url),
+            group: e.group.displayName,
           }),
         );
       }),

@@ -6,12 +6,14 @@ import { xmlEscape } from "@/util/security";
  * @param {string} params.icon
  * @param {string} params.label
  * @param {string} params.url
+ * @param {string} params.group
  * @param {boolean | undefined} params.isExternal
  */
 export function LinkResult(params) {
   return {
     label: params.label,
     url: params.url,
+    group: params.group,
     render: () => {
       return `<a class="jenkins-command-palette__results__item" href="${xmlEscape(
         params.url,
