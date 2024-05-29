@@ -80,10 +80,12 @@ function init() {
 
       if (query.length === 0 || Object.keys(results).length > 0) {
         for (const [group, items] of Object.entries(results)) {
-          const heading = document.createElement("p");
-          heading.className = "jenkins-command-palette__results__heading";
-          heading.innerText = group;
-          searchResults.append(heading);
+          if (group !== 'TODO') {
+            const heading = document.createElement("p");
+            heading.className = "jenkins-command-palette__results__heading";
+            heading.innerText = group;
+            searchResults.append(heading);
+          }
 
           items.forEach(function (obj) {
             const link = createElementFromHtml(obj.render());
