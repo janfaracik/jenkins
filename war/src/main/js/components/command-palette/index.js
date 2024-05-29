@@ -5,7 +5,6 @@ import * as Symbols from "./symbols";
 import makeKeyboardNavigable from "@/util/keyboard";
 import { xmlEscape } from "@/util/security";
 import { createElementFromHtml } from "@/util/dom";
-import { groupResultsByCategory } from "@/components/command-palette/utils";
 
 const datasources = [JenkinsSearchSource];
 
@@ -36,11 +35,11 @@ function init() {
   );
 
   // Events
-  headerCommandPaletteButton.addEventListener("click", async function () {
+  headerCommandPaletteButton.addEventListener("click", function () {
     if (commandPalette.hasAttribute("open")) {
       hideCommandPalette();
     } else {
-      await showCommandPalette();
+      showCommandPalette();
     }
   });
 
@@ -52,64 +51,53 @@ function init() {
     hideCommandPalette();
   });
 
-  async function renderResults() {
+  function renderResults() {
     const query = commandPaletteInput.value;
     let results;
 
     if (query.length === 0) {
-      results = [
-        new LinkResult(
-          Symbols.HELP,
-          i18n.dataset.getHelp,
-          "https://www.jenkins.io/redirect/search-box",
-          true,
-          headerCommandPaletteButton.dataset.searchHelpUrl,
-          true,
-        ),
-      ];
+      results = Promise.all([
+        LinkResult({
+          icon: Symbols.HELP,
+          label: i18n.dataset.getHelp,
+          url: headerCommandPaletteButton.dataset.searchHelpUrl,
+          isExternal: true,
+        }),
+      ]);
     } else {
-      await Promise.all(datasources.map((ds) => ds.execute(query))).then(
-        (response) => {
-          results = response.flat();
-        },
+      results = Promise.all(datasources.map((ds) => ds.execute(query))).then(
+        (e) => e.flat(),
       );
     }
 
-    results = groupResultsByCategory(results);
+    results.then((results) => {
+      // Clear current search results
+      searchResults.innerHTML = "";
 
-    // Clear current search results
-    searchResults.innerHTML = "";
-
-    if (query.length === 0 || Object.keys(results).length > 0) {
-      for (const [group, items] of Object.entries(results)) {
-        const heading = document.createElement("p");
-        heading.className = "jenkins-command-palette__results__heading";
-        heading.innerText = group;
-        searchResults.append(heading);
-
-        items.forEach(function (obj) {
+      if (query.length === 0 || Object.keys(results).length > 0) {
+        results.forEach(function (obj) {
           const link = createElementFromHtml(obj.render());
           link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
           searchResults.append(link);
         });
+
+        updateSelectedItem(0);
+      } else {
+        const label = document.createElement("p");
+        label.className = "jenkins-command-palette__info";
+        label.innerHTML =
+          "<span>" +
+          i18n.dataset.noResultsFor +
+          "</span> " +
+          xmlEscape(commandPaletteInput.value);
+        searchResults.append(label);
       }
 
-      updateSelectedItem(0);
-    } else {
-      const label = document.createElement("p");
-      label.className = "jenkins-command-palette__info";
-      label.innerHTML =
-        "<span>" +
-        i18n.dataset.noResultsFor +
-        "</span> " +
-        xmlEscape(commandPaletteInput.value);
-      searchResults.append(label);
-    }
-
-    searchResultsContainer.style.height = searchResults.offsetHeight + "px";
-    commandPaletteSearchBarContainer.classList.remove(
-      "jenkins-search--loading",
-    );
+      searchResultsContainer.style.height = searchResults.offsetHeight + "px";
+      commandPaletteSearchBarContainer.classList.remove(
+        "jenkins-search--loading",
+      );
+    });
   }
 
   commandPaletteInput.addEventListener("input", () => {
@@ -118,7 +106,7 @@ function init() {
   });
 
   // Helper methods for visibility of command palette
-  async function showCommandPalette() {
+  function showCommandPalette() {
     commandPalette.showModal();
     commandPaletteInput.focus();
     commandPaletteInput.setSelectionRange(
@@ -126,7 +114,7 @@ function init() {
       commandPaletteInput.value.length,
     );
 
-    await renderResults();
+    renderResults();
   }
 
   function hideCommandPalette() {
@@ -151,7 +139,9 @@ function init() {
     }
 
     if (index < maxLength) {
-      const element = [...searchResults.getElementsByTagName("a")][index];
+      const element = Array.from(searchResults.getElementsByTagName("a"))[
+        index
+      ];
       element.classList.add(hoverClass);
 
       if (scrollIntoView) {
@@ -161,6 +151,4 @@ function init() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  init();
-});
+export default { init };
