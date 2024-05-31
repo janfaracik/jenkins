@@ -160,9 +160,9 @@ import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.SimplePageDecorator;
 import jenkins.model.navigation.BuildHistoryNavigationItem;
+import jenkins.model.navigation.CommandPaletteNavigationItem;
 import jenkins.model.navigation.DashboardNavigationItem;
 import jenkins.model.navigation.NavigationItem;
-import jenkins.model.navigation.PeopleNavigationItem;
 import jenkins.model.navigation.SettingsNavigationItem;
 import jenkins.model.navigation.UserNavigationItem;
 import jenkins.util.SystemProperties;
@@ -2500,8 +2500,8 @@ public class Functions {
     public static List<NavigationItem> getNavigationItems() {
         return List.of(
                 new DashboardNavigationItem(),
+                new CommandPaletteNavigationItem(),
                 new BuildHistoryNavigationItem(),
-                new PeopleNavigationItem(),
                 new UserNavigationItem(),
                 new SettingsNavigationItem()
         );

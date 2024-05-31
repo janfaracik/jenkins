@@ -10,8 +10,8 @@ const datasources = [JenkinsSearchSource];
 
 function init() {
   const i18n = document.getElementById("command-palette-i18n");
-  const headerCommandPaletteButton = document.getElementById(
-    "button-open-command-palette",
+  const headerCommandPaletteButton = document.querySelector(
+    "[tooltip='Search']",
   );
   const commandPalette = document.getElementById("command-palette");
   const commandPaletteWrapper = commandPalette.querySelector(
@@ -35,7 +35,8 @@ function init() {
   );
 
   // Events
-  headerCommandPaletteButton.addEventListener("click", function () {
+  headerCommandPaletteButton.addEventListener("click", function (e) {
+    e.preventDefault();
     if (commandPalette.hasAttribute("open")) {
       hideCommandPalette();
     } else {
@@ -60,7 +61,7 @@ function init() {
         LinkResult({
           icon: Symbols.HELP,
           label: i18n.dataset.getHelp,
-          url: headerCommandPaletteButton.dataset.searchHelpUrl,
+          url: document.querySelector('body').dataset.searchHelpUrl,
           isExternal: true,
         }),
       ]);

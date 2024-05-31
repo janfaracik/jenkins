@@ -1,19 +1,19 @@
 package jenkins.model.navigation;
 
-public class PeopleNavigationItem implements NavigationItem {
+public class CommandPaletteNavigationItem implements NavigationItem {
 
     @Override
     public String getDisplayName() {
-        return "People";
+        return "Search";
     }
 
     @Override
     public String getIcon() {
-        return "symbol-people";
+        return "symbol-search";
     }
 
     @Override
     public String getUrl() {
-        return "asynchPeople";
+        return null;
     }
 }
