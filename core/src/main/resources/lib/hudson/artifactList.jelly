@@ -41,42 +41,53 @@ THE SOFTWARE.
   <j:if test="${!h.isArtifactsPermissionEnabled() or h.isArtifactsPermissionEnabled() and h.hasPermission(it,attrs.permission)}">
     <j:set var="artifacts" value="${build.getArtifactsUpTo(build.LIST_CUTOFF+1)}" />
     <j:if test="${!empty(artifacts)}">
-      <t:summary icon="symbol-cube" href="${baseURL}artifact/">
-        <a href="${baseURL}artifact/">${caption}</a>
+      <l:card title="${caption}" expandable="${baseURL}artifact/">
         <j:if test="${build.building}">
           <p>
             ${%building}
           </p>
         </j:if>
-        <j:if test="${size(artifacts) le build.LIST_CUTOFF}">
-          <!-- if not too many, just list them -->
-          <table class="fileList">
-            <j:forEach var="f" items="${artifacts}">
-              <tr>
-                <td>
-                  <l:icon class="icon-document icon-sm"/>
-                </td>
-                <td>
-                  <a href="${baseURL}artifact/${f.href}">${f.displayPath}</a>
-                </td>
-                <td class="fileSize">
-                  ${h.humanReadableByteSize(f.getFileSize())}
-                </td>
-                <td>
-                  <j:if test="${app.fingerprintMap.ready}">
-                    <a href="${baseURL}artifact/${f.href}/*fingerprint*/">
-                      <l:icon class="icon-fingerprint icon-sm"/>
-                    </a>
-                    <st:nbsp/>
-                  </j:if>
-                  <a href="${baseURL}artifact/${f.href}/*view*/">${%view}</a>
-                </td>
-              </tr>
-            </j:forEach>
-          </table>
-        </j:if>
-          <!-- otherwise just show link to directory browser -->
-      </t:summary>
+        <j:choose>
+          <j:when test="${size(artifacts) le build.LIST_CUTOFF}">
+            <!-- if not too many, just list them -->
+            <table class="fileList">
+              <j:forEach var="f" items="${artifacts}">
+                <tr>
+                  <td>
+                    <l:icon class="icon-document icon-sm"/>
+                  </td>
+                  <td>
+                    <a href="${baseURL}artifact/${f.href}">${f.displayPath}</a>
+                  </td>
+                  <td class="fileSize">
+                    ${h.humanReadableByteSize(f.getFileSize())}
+                  </td>
+                  <td>
+                    <j:if test="${app.fingerprintMap.ready}">
+                      <a href="${baseURL}artifact/${f.href}/*fingerprint*/">
+                        <l:icon class="icon-fingerprint icon-sm"/>
+                      </a>
+                      <st:nbsp/>
+                    </j:if>
+                    <a href="${baseURL}artifact/${f.href}/*view*/">${%view}</a>
+                  </td>
+                </tr>
+              </j:forEach>
+            </table>
+          </j:when>
+          <j:otherwise>
+            <!-- otherwise just show link to directory browser -->
+            <a class="widgetthing" href="${baseURL}artifact/">
+              <div class="iconthing">
+                <l:icon src="symbol-folder" />
+              </div>
+              <div class="labell">
+                41 artifacts
+              </div>
+            </a>
+          </j:otherwise>
+        </j:choose>
+      </l:card>
     </j:if>
   </j:if>
 </j:jelly>

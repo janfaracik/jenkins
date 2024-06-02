@@ -92,11 +92,12 @@ THE SOFTWARE.
             </div>
           </div>
         </l:card>
+
+        <t:artifactList build="${it}" caption="${%Build Artifacts}"
+                        permission="${it.ARTIFACTS}" />
       </div>
 
       <table>
-        <t:artifactList build="${it}" caption="${%Build Artifacts}"
-          permission="${it.ARTIFACTS}" />
 
         <!-- give actions a chance to contribute summary item -->
         <j:forEach var="a" items="${it.allActions}">
