@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+Copyright (c) 2023 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-  Render build histories. 
--->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:i="jelly:fmt">
-  <j:set target="${it}" property="nextBuildNumberToFetch" value="${it.nextBuildNumber}" />
-  <j:invokeStatic className="java.time.LocalDate" method="now" var="now" />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+  <st:documentation>
+    <st:attribute name="user" use="required" type="hudson.model.User" />
+    <st:attribute name="animated" />
+  </st:documentation>
 
-  <j:forEach var="pageEntry" items="${it.runs}">
-    <i:formatDate value="${pageEntry.entry.timestamp.time}" var="date" type="date" dateStyle="long" />
-    <i:formatDate value="${pageEntry.entry.timestamp.time}" var="simpleDate" type="date" pattern="YYYY-MM-dd" />
+  <j:set var="avatarUrl" value="${h.getUserAvatar(attrs.user, '48x48')}" />
 
-    <j:if test="${pastDate != date}">
-      <span class="app-builds-container__heading">${simpleDate == now ? "%Today" : date}</span>
-      <j:set var="pastDate" value="${date}" />
-    </j:if>
-
-    <st:include page="/hudson/widgets/HistoryWidget/entry.jelly" />
-  </j:forEach>
+  <j:choose>
+    <j:when test="${avatarUrl.startsWith('symbol')}">
+      <div class="jenkins-avatar ${attrs.animated ? 'jenkins-avatar--animated' : ''}" data-fullname="${attrs.user.fullName}">
+        <span class="jenkins-avatar__initials" />
+      </div>
+    </j:when>
+    <j:otherwise>
+      <l:icon src="${avatarUrl}" />
+    </j:otherwise>
+  </j:choose>
 </j:jelly>

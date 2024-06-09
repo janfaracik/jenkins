@@ -105,7 +105,7 @@ THE SOFTWARE.
   <head data-rooturl="${rootURL}" data-resurl="${resURL}" data-imagesurl="${imagesURL}" resURL="${resURL}"
         data-extensions-available="${extensionsAvailable}"
         data-crumb-header="${h.getCrumbRequestField()}" data-crumb-value="${h.getCrumb(request)}"
-        data-unit-test="${h.isUnitTest}">
+        data-unit-test="${h.isUnitTest}" data-locale="${h.currentLocale}">
     ${h.checkPermission(it,permission)}
     ${h.checkAnyPermission(it, permissions)}
 
