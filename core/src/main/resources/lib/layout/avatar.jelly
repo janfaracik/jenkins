@@ -26,19 +26,21 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <st:documentation>
     <st:attribute name="user" use="required" type="hudson.model.User" />
-    <st:attribute name="animated" />
+    <st:attribute name="animated" type="boolean" />
   </st:documentation>
 
   <j:set var="avatarUrl" value="${h.getUserAvatar(attrs.user, '48x48')}" />
 
-  <j:choose>
-    <j:when test="${avatarUrl.startsWith('symbol')}">
-      <div class="jenkins-avatar ${attrs.animated ? 'jenkins-avatar--animated' : ''}" data-fullname="${attrs.user.fullName}">
-        <span class="jenkins-avatar__initials" />
-      </div>
-    </j:when>
-    <j:otherwise>
-      <l:icon src="${avatarUrl}" />
-    </j:otherwise>
-  </j:choose>
+  <div class="jenkins-avatar-container">
+    <j:choose>
+      <j:when test="${avatarUrl.startsWith('symbol')}">
+        <div class="jenkins-avatar ${attrs.animated ? 'jenkins-avatar--animated' : ''}" data-fullname="${attrs.user.fullName}">
+          <span class="jenkins-avatar__initials" />
+        </div>
+      </j:when>
+      <j:otherwise>
+        <l:icon src="${avatarUrl}" />
+      </j:otherwise>
+    </j:choose>
+  </div>
 </j:jelly>

@@ -80,7 +80,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 
-  svg {
+  svg, .jenkins-avatar-container {
     width: 2rem !important;
     height: 2rem !important;
   }
