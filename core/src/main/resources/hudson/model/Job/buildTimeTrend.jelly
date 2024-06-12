@@ -49,14 +49,9 @@ THE SOFTWARE.
         <l:icon src="symbol-status-disabled-anime" id="disabled-anime" />
       </template>
 
-      <div class="jenkins-app-bar jenkins-app-bar--sticky">
-          <div class="jenkins-app-bar__content">
-              <h1>${%Builds} <span class="jenkins-app-bar__subtitle">${it.builds.size()}</span></h1>
-          </div>
-          <div class="jenkins-app-bar__controls">
-              <l:search-bar id="search-bar-builds" />
-          </div>
-      </div>
+      <l:app-bar title="${%Builds}" subtitle="${it.builds.size()}">
+        <l:search-bar id="search-bar-builds" />
+      </l:app-bar>
 
       <script src="${resURL}/jsbundles/pages/project/builds.js" type="text/javascript" />
 
