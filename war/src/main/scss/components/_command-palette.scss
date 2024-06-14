@@ -14,11 +14,11 @@
   &::backdrop {
     background: var(--command-palette-backdrop-background);
     backdrop-filter: contrast(0.7) brightness(0.9) saturate(1.25) blur(3px);
-    animation: jenkins-dialog-backdrop-animate-in 0.15s linear;
+    animation: jenkins-dialog-backdrop-animate-in 0.1s linear;
   }
 
   &[open] {
-    animation: command-palette-animate-in 0.15s cubic-bezier(0, 0.68, 0.5, 1.5);
+    animation: command-palette-animate-in 0.1s cubic-bezier(0, 0.68, 0.5, 1.5);
   }
 
   &[closing] {
