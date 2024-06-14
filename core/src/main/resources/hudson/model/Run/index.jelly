@@ -30,6 +30,8 @@ THE SOFTWARE.
 
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
+      <script src="${resURL}/jsbundles/pages/job.js" type="text/javascript" defer="true" />
+
       <j:set var="controls">
         <t:editDescriptionButton permission="${it.UPDATE}"/>
         <l:hasPermission permission="${it.UPDATE}">
@@ -37,27 +39,60 @@ THE SOFTWARE.
         </l:hasPermission>
       </j:set>
 
-      <t:buildCaption controls="${controls}">${it.displayName} (<i:formatDate value="${it.timestamp.time}" type="both" dateStyle="medium" timeStyle="medium"/>)</t:buildCaption>
+      <t:buildCaption controls="${controls}">${it.displayName}</t:buildCaption>
 
       <div>
         <t:editableDescription permission="${it.UPDATE}" hideButton="true"/>
       </div>
 
-      <div style="float:right; z-index: 1; position:relative; margin-left: 1em">
-        <div style="margin-top:1em">
-          ${%startedAgo(it.timestampString)}
-        </div>
-        <div>
-          <j:if test="${it.building}">
-            ${%beingExecuted(it.executor.timestampString)}
-          </j:if>
-          <j:if test="${!it.building}">
-            ${%Took} <a href="${rootURL}/${it.parent.url}buildTimeTrend">${it.durationString}</a>
-          </j:if>
-          <st:include page="details.jelly" optional="true" />
-        </div>
-      </div>
+      <div class="app-build__details">
+        <l:card title="${%Details}">
+          <div class="jenkins-card__details">
+            <div class="jenkins-card__details__item">
+              <j:set var="minutes" value="${360 * (it.timestamp.time.minutes / 60)}" />
+              <i:formatDate var="hours" value="${it.timestamp.time}" pattern="h" />
+              <j:set var="hours" value="${360 * (hours / 12) + (30 * (it.timestamp.time.minutes / 60))}" />
 
+              <div class="jenkins-card__details__item__icon">
+                <div class="app-build__clock" style="--hours: ${hours}deg; --minutes: ${minutes}deg">
+                  <span class="app-build__clock__hours" />
+                  <span class="app-build__clock__minutes" />
+                </div>
+              </div>
+
+              <button aria-live="polite" id="button-started-at">
+                <div class="app-build__started-at">
+                  <div class="app-build__started-at__front" aria-hidden="false">
+                    ${%startedAgo(it.timestampString)}
+                  </div>
+                  <div class="app-build__started-at__back" aria-hidden="true">
+                    Started <i:formatDate value="${it.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
+                  </div>
+                </div>
+              </button>
+            </div>
+
+            <div class="jenkins-card__details__item">
+              <div class="jenkins-card__details__item__icon">
+                <l:icon src="symbol-timer" />
+              </div>
+              <div>
+                <j:choose>
+                  <j:when test="${it.building}">
+                    ${%beingExecuted(it.executor.timestampString)}
+                  </j:when>
+                  <j:otherwise>
+                    ${%Took} ${it.durationString}
+                  </j:otherwise>
+                </j:choose>
+                <j:if test="${!empty(app.nodes) or (it.builtOnStr != null and it.builtOnStr != '')}">
+                  ${%on} <t:node value="${it.builtOn}" valueStr="${it.builtOnStr}"/>
+                </j:if>
+              </div>
+            </div>
+          </div>
+        </l:card>
+      </div>
 
       <table>
         <t:artifactList build="${it}" caption="${%Build Artifacts}"
