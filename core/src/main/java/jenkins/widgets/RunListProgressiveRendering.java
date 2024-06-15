@@ -24,6 +24,7 @@
 
 package jenkins.widgets;
 
+import hudson.model.Job;
 import hudson.model.Run;
 import hudson.util.RunList;
 import java.util.ArrayList;
@@ -49,10 +50,19 @@ public abstract class RunListProgressiveRendering extends ProgressiveRendering {
     private static final double MAX_LIKELY_RUNS = 20;
     private final List<JSONObject> results = new ArrayList<>();
     private Iterable<? extends Run<?, ?>> builds;
+    private Job<?, ?> job;
 
     /** Jelly cannot call a constructor with arguments. */
     public void setBuilds(Iterable<? extends Run<?, ?>> builds) {
         this.builds = builds;
+    }
+
+    public void setJob(Job<?, ?> job) {
+        this.job = job;
+    }
+
+    protected Job<?, ?> getJob() {
+        return this.job;
     }
 
     @Override protected void compute() throws Exception {

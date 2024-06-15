@@ -51,7 +51,6 @@ window.buildTimeTrend_displayBuilds = function (data) {
     const tableRow = createElementFromHtml(`<tr>
           <td class="jenkins-table__cell--tight jenkins-table__icon" data="${item.iconColorOrdinal}"><div class="jenkins-table__cell__button-wrapper"><a href="${item.consoleUrl}">${generateSVGIcon(item.iconName)}</a></div></td>
           <td data="${item.number}"><a class="iamlink" href="${item.number}/">${xmlEscape(item.displayName)}</a></td>
-          <td data="${item.message}">${item.message}</td>
           <td data="${item.duration}">${xmlEscape(item.durationString)}</td>
           <td data="${item.completed}">${xmlEscape(item.completedString)}</td>
           ${distributedBuildColumn}

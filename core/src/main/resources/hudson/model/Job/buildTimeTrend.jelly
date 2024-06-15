@@ -31,6 +31,7 @@ THE SOFTWARE.
 
     <l:main-panel>
       <j:new var="handler" className="jenkins.widgets.BuildTimeTrend"/>
+      ${handler.setJob(it)}
       ${handler.setBuilds(it.builds)}
 
       <template id="jenkins-build-status-icons">
@@ -59,7 +60,7 @@ THE SOFTWARE.
         <j:forEach var="card" items="${handler.swagCards}">
           <x:element name="${card.url != null ? 'a' : 'div'}">
             <x:attribute name="class">iteem</x:attribute>
-            <x:attribute name="href">${card.url}</x:attribute>
+            <x:attribute name="href">${rootURL}/${card.url}</x:attribute>
 
             <l:icon src="${card.symbol}" />
             <div>${card.label}</div>
@@ -84,7 +85,6 @@ THE SOFTWARE.
             <th initialSortDir="up">${%Build}</th>
             <th>${%Summary}</th>
             <th>${%Duration}</th>
-            <th>${%Completed}</th>
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
             </j:if>

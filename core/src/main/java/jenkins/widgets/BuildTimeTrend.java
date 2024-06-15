@@ -26,11 +26,10 @@ package jenkins.widgets;
 
 import hudson.Util;
 import hudson.model.*;
-import hudson.scm.ChangeLogSet;
+import java.util.ArrayList;
 import java.util.List;
 import jenkins.console.ConsoleUrlProvider;
 import jenkins.model.Jenkins;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
@@ -51,28 +50,8 @@ public class BuildTimeTrend extends RunListProgressiveRendering {
         element.put("completedString", Util.getTimeSpanString(build.getTimeInMillis() + build.getDuration()));
         element.put("consoleUrl", ConsoleUrlProvider.getRedirectUrl(build));
 
-        // TODO
-        element.put("message", new JSONArray());
-
         if (build instanceof AbstractBuild) {
             AbstractBuild<?, ?> b = (AbstractBuild<?, ?>) build;
-            ChangeLogSet<? extends ChangeLogSet.Entry> changeSets = b.getChangeSet();
-
-//            String message = "";
-
-//            changeSets.iterator().forEachRemaining(e -> {
-//                message += e.getMsgAnnotated();
-//            });
-
-            List<? extends ChangeLogSet.Entry> thing = changeSets.getItems2();
-
-            var array = new JSONArray();
-            for (ChangeLogSet.Entry e : thing) {
-                array.add(e.getMsgAnnotated());
-            }
-
-            element.put("message", array);
-
             Node n = b.getBuiltOn();
             if (n == null) {
                 String ns = b.getBuiltOnStr();
@@ -128,11 +107,32 @@ public class BuildTimeTrend extends RunListProgressiveRendering {
     }
 
     public List<SwagCard> getSwagCards() {
-        return List.of(
-                new SwagCard("symbol-timer", "Average time", "8418ms"),
-                new SwagCard("symbol-play", "Last completed", "10 mins ago", "/"),
-                new SwagCard("symbol-status-blue", "Last successful", "#118", "/"),
-                new SwagCard("symbol-status-red", "Last failed", "#74", "/")
-        );
+        List<SwagCard> swagCards = new ArrayList<>();
+
+        Double averageTime = getJob().getBuilds().stream().mapToLong(Run::getDuration).average().getAsDouble();
+        if (averageTime > 0) {
+            swagCards.add(new SwagCard("symbol-timer", "Average time",
+                            Util.getTimeSpanString(averageTime.longValue())));
+        }
+
+        var lastCompletedBuild = getJob().getLastCompletedBuild();
+        if (lastCompletedBuild != null) {
+            swagCards.add(new SwagCard("symbol-play", "Last completed",
+                    lastCompletedBuild.getDisplayName(), lastCompletedBuild.getUrl()));
+        }
+
+        var lastSuccessfulBuild = getJob().getLastSuccessfulBuild();
+        if (lastSuccessfulBuild != null) {
+            swagCards.add(new SwagCard("symbol-status-blue", "Last successful",
+                    lastSuccessfulBuild.getDisplayName(), lastSuccessfulBuild.getUrl()));
+        }
+
+        var lastFailedBuild = getJob().getLastFailedBuild();
+        if (lastFailedBuild != null) {
+            swagCards.add(new SwagCard("symbol-status-red", "Last successful",
+                    lastFailedBuild.getDisplayName(), lastFailedBuild.getUrl()));
+        }
+
+        return swagCards;
     }
 }
