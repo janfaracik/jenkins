@@ -28,6 +28,9 @@ module.exports = (env, argv) => ({
         "src/main/js/pages/manage-jenkins/system-information",
       ),
     ],
+    "pages/project/builds": [
+      path.join(__dirname, "src/main/js/pages/project/builds"),
+    ],
     app: [path.join(__dirname, "src/main/js/app.js")],
     "pages/cloud-set": [
       path.join(__dirname, "src/main/js/pages/cloud-set/index.js"),

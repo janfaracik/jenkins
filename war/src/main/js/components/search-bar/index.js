@@ -1,15 +1,22 @@
 import { createElementFromHtml } from "@/util/dom";
 import makeKeyboardNavigable from "@/util/keyboard";
 import { xmlEscape } from "@/util/security";
+import behaviorShim from "../../util/behavior-shim";
 
 const SELECTED_CLASS = "jenkins-search__results-item--selected";
 
 function init() {
-  const searchBarInputs = document.querySelectorAll(".jenkins-search__input");
+  // const searchBarInputs = document.querySelectorAll(".jenkins-search__input");
 
-  Array.from(searchBarInputs)
-    .filter((searchBar) => searchBar.suggestions)
-    .forEach((searchBar) => {
+  behaviorShim.specify(
+    ".jenkins-search__input",
+    "jenkins-search__input",
+    0,
+    (searchBar) => {
+      if (!searchBar.suggestions) {
+        return;
+      }
+
       const searchWrapper = searchBar.parentElement.parentElement;
       const searchResultsContainer = createElementFromHtml(
         `<div class="jenkins-search__results-container"></div>`,
@@ -112,7 +119,12 @@ function init() {
 
         hideResultsContainer();
       });
-    });
+    },
+  );
+
+  // Array.from(searchBarInputs)
+  //   .filter((searchBar) => searchBar.suggestions)
+  //   .forEach((searchBar) => {
 }
 
 export default { init };
