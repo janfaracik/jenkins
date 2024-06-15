@@ -26,7 +26,7 @@ THE SOFTWARE.
 <!-- Displays the chart that show how long builds are taking -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:x="jelly:xml">
-  <l:layout title="${%title(it.displayName)}" type="one-column">
+  <l:layout title="${%Builds}" type="one-column">
     <l:breadcrumb title="${%Builds}" />
 
     <l:main-panel>
