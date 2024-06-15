@@ -6,8 +6,6 @@ import behaviorShim from "../../util/behavior-shim";
 const SELECTED_CLASS = "jenkins-search__results-item--selected";
 
 function init() {
-  // const searchBarInputs = document.querySelectorAll(".jenkins-search__input");
-
   behaviorShim.specify(
     ".jenkins-search__input",
     "jenkins-search__input",
@@ -121,10 +119,6 @@ function init() {
       });
     },
   );
-
-  // Array.from(searchBarInputs)
-  //   .filter((searchBar) => searchBar.suggestions)
-  //   .forEach((searchBar) => {
 }
 
 export default { init };
