@@ -50,6 +50,8 @@ THE SOFTWARE.
         <l:icon src="symbol-status-disabled-anime" id="disabled-anime" />
       </template>
 
+      <j:set var="hasBuilds" value="${!it.builds.isEmpty()}" />
+
       <l:app-bar title="${%Builds}" subtitle="${it.builds.size()}">
         <j:if test="${hasBuilds}">
           <l:search-bar id="search-bar-builds" />
@@ -57,8 +59,6 @@ THE SOFTWARE.
       </l:app-bar>
 
       <script src="${resURL}/jsbundles/pages/project/builds.js" type="text/javascript" />
-
-      <j:set var="hasBuilds" value="${!it.builds.isEmpty}" />
 
       <j:if test="${!hasBuilds}">
         <l:notice icon="symbol-build-history" text="${%NoBuilds}" />
@@ -92,7 +92,6 @@ THE SOFTWARE.
           <tr>
             <th class="jenkins-table__cell--tight">S</th>
             <th initialSortDir="up">${%Build}</th>
-            <th>${%Summary}</th>
             <th>${%Duration}</th>
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
