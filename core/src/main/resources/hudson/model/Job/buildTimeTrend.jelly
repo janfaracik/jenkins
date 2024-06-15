@@ -51,33 +51,42 @@ THE SOFTWARE.
       </template>
 
       <l:app-bar title="${%Builds}" subtitle="${it.builds.size()}">
-        <l:search-bar id="search-bar-builds" />
+        <j:if test="${hasBuilds}">
+          <l:search-bar id="search-bar-builds" />
+        </j:if>
       </l:app-bar>
 
       <script src="${resURL}/jsbundles/pages/project/builds.js" type="text/javascript" />
 
-      <div class="abouttodays">
-        <j:forEach var="card" items="${handler.swagCards}">
-          <x:element name="${card.url != null ? 'a' : 'div'}">
-            <x:attribute name="class">iteem</x:attribute>
-            <x:attribute name="href">${rootURL}/${card.url}</x:attribute>
+      <j:set var="hasBuilds" value="${!it.builds.isEmpty}" />
 
-            <l:icon src="${card.symbol}" />
-            <div>${card.label}</div>
-            <div>
-              ${card.value}
-            </div>
-          </x:element>
-        </j:forEach>
-      </div>
+      <j:if test="${!hasBuilds}">
+        <l:notice icon="symbol-build-history" text="${%NoBuilds}" />
+      </j:if>
 
-      <div class="canvaas">
-        <canvas id="myChart" data-labels="${it.swag.labels}" data-values="${it.swag.values}"></canvas>
-      </div>
+      <j:if test="${hasBuilds}">
+        <div class="abouttodays">
+          <j:forEach var="card" items="${handler.swagCards}">
+            <x:element name="${card.url != null ? 'a' : 'div'}">
+              <x:attribute name="class">iteem</x:attribute>
+              <x:attribute name="href">${rootURL}/${card.url}</x:attribute>
 
-      <j:set var="isDistributedBuildEnabled" value="${!empty(app.nodes)}"/>
-      <l:progressiveRendering handler="${handler}" callback="buildTimeTrend_displayBuilds"/>
-      <table class="jenkins-table sortable" id="trend"
+              <l:icon src="${card.symbol}" />
+              <div>${card.label}</div>
+              <div>
+                ${card.value}
+              </div>
+            </x:element>
+          </j:forEach>
+        </div>
+
+        <div class="canvaas">
+          <canvas id="myChart" data-labels="${it.swag.labels}" data-values="${it.swag.values}"></canvas>
+        </div>
+
+        <j:set var="isDistributedBuildEnabled" value="${!empty(app.nodes)}"/>
+        <l:progressiveRendering handler="${handler}" callback="buildTimeTrend_displayBuilds"/>
+        <table class="jenkins-table sortable" id="trend"
              data-is-distributed-build-enabled="${isDistributedBuildEnabled}">
         <thead>
           <tr>
@@ -93,6 +102,7 @@ THE SOFTWARE.
           <tbody></tbody>
         </thead>
       </table>
+      </j:if>
     </l:main-panel>
   </l:layout>
 </j:jelly>
