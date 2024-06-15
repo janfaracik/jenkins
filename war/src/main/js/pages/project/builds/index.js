@@ -6,13 +6,11 @@ import { xmlEscape } from "@/util/security";
  * @typedef {Object} Build
  * @property {string} iconName
  * @property {number} iconColorOrdinal
- * @property {string} iconColorDescription
  * @property {number} number
  * @property {string} displayName
  * @property {number} duration
  * @property {string} durationString
  * @property {string} consoleUrl
- * @property {string[]} message
  */
 
 /**
