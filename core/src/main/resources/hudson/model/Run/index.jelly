@@ -88,6 +88,7 @@ THE SOFTWARE.
                 <j:if test="${!empty(app.nodes) or (it.builtOnStr != null and it.builtOnStr != '')}">
                   ${%on} <t:node value="${it.builtOn}" valueStr="${it.builtOnStr}"/>
                 </j:if>
+                <st:include page="details.jelly" optional="true" />
               </div>
             </div>
           </div>
