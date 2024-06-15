@@ -39,19 +39,25 @@ function load(options = {}) {
         container.classList.remove("app-builds-container--loading");
         pageSearch.classList.remove("jenkins-search--loading");
 
-        // TODO
+        // Show the 'No builds' text if there are no builds
         if (responseText.trim() === "") {
           contents.innerHTML = "";
           noBuilds.style.display = "block";
+          updateCardControls({
+            pageHasUp: false,
+            pageHasDown: false,
+            pageEntryNewest: false,
+            pageEntryOldest: false,
+          });
           return;
         }
 
-        // TODO
+        // Show the refreshed builds list
         contents.innerHTML = responseText;
         noBuilds.style.display = "none";
         behaviorShim.applySubtree(contents);
 
-        // TODO
+        // Show the card controls
         const div = document.createElement("div");
         div.innerHTML = responseText;
         const innerChild = div.children[0];
@@ -62,6 +68,8 @@ function load(options = {}) {
           pageEntryOldest: innerChild.dataset.pageEntryOldest,
         });
       });
+    } else {
+      console.error("Failed to load 'Builds' card, response from API is:", rsp);
     }
   });
 }
@@ -72,7 +80,7 @@ function load(options = {}) {
  */
 function updateCardControls(parameters) {
   paginationControls.classList.toggle(
-    "jenkins-!-display-none",
+    "jenkins-hidden",
     !parameters.pageHasUp && !parameters.pageHasDown,
   );
   paginationPrevious.classList.toggle(
@@ -119,13 +127,15 @@ function cancelRefreshTimeout() {
   }
 }
 
+const debouncedLoad = debounce(() => {
+  load();
+}, 150);
+
 document.addEventListener("DOMContentLoaded", function () {
   pageSearchInput.addEventListener("input", function () {
     container.classList.add("app-builds-container--loading");
     pageSearch.classList.add("jenkins-search--loading");
-    debounce(() => {
-      load();
-    }, 300);
+    debouncedLoad();
   });
 
   load();

@@ -360,7 +360,6 @@ function findNearBy(e, name) {
 
   function locate(iterator, e) {
     // keep finding elements until we find the good match
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       e = iterator(e, name);
       if (e == null) {
@@ -593,7 +592,7 @@ function parseHtml(html) {
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#direct_and_indirect_eval
  */
 function geval(script) {
-  eval(script);
+  (0, eval)(script);
 }
 
 /**
@@ -693,6 +692,7 @@ function registerValidator(e) {
   var url = e.targetUrl();
   try {
     FormChecker.delayedCheck(url, method, e.targetElement);
+    // eslint-disable-next-line no-unused-vars
   } catch (x) {
     // this happens if the checkUrl refers to a non-existing element.
     // don't let this kill off the entire JavaScript
@@ -1756,15 +1756,6 @@ function rowvgStartEachRow(recursive, f) {
     },
   );
 
-  Behaviour.specify(
-    ".button-with-dropdown",
-    "-button-with-dropdown",
-    ++p,
-    function (e) {
-      new YAHOO.widget.Button(e, { type: "menu", menu: e.nextElementSibling });
-    },
-  );
-
   window.addEventListener("load", function () {
     // Add a class to the bottom bar when it's stuck to the bottom of the screen
     const el = document.querySelector("#bottom-sticker");
@@ -1901,8 +1892,11 @@ function xor(a, b) {
 // eslint-disable-next-line no-unused-vars
 function replaceDescription(initialDescription, submissionUrl) {
   var d = document.getElementById("description");
-  d.firstElementChild.nextElementSibling.innerHTML =
-    "<div class='jenkins-spinner'></div>";
+  let button = d.firstElementChild.nextElementSibling;
+  if (button !== null) {
+    d.firstElementChild.nextElementSibling.innerHTML =
+      "<div class='jenkins-spinner'></div>";
+  }
   let parameters = {};
   if (initialDescription !== null && initialDescription !== "") {
     parameters["description"] = initialDescription;
