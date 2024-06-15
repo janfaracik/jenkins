@@ -65,23 +65,8 @@ THE SOFTWARE.
       </j:if>
 
       <j:if test="${hasBuilds}">
-        <div class="abouttodays">
-          <j:forEach var="card" items="${handler.swagCards}">
-            <x:element name="${card.url != null ? 'a' : 'div'}">
-              <x:attribute name="class">iteem</x:attribute>
-              <x:attribute name="href">${rootURL}/${card.url}</x:attribute>
-
-              <l:icon src="${card.symbol}" />
-              <div>${card.label}</div>
-              <div>
-                ${card.value}
-              </div>
-            </x:element>
-          </j:forEach>
-        </div>
-
-        <div class="canvaas">
-          <canvas id="myChart" data-labels="${it.swag.labels}" data-values="${it.swag.values}"></canvas>
+        <div align="center" style="margin-bottom: var(--section-padding); background: white; border-radius: 10px">
+          <img class="build-time-graph" src="buildTimeGraph/png" width="500" height="400" lazymap="buildTimeGraph/map" alt="[${%Build time graph}]" />
         </div>
 
         <j:set var="isDistributedBuildEnabled" value="${!empty(app.nodes)}"/>
