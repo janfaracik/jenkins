@@ -31,7 +31,6 @@ THE SOFTWARE.
 
     <l:main-panel>
       <j:new var="handler" className="jenkins.widgets.BuildTimeTrend"/>
-      ${handler.setJob(it)}
       ${handler.setBuilds(it.builds)}
 
       <template id="jenkins-build-status-icons">
@@ -65,7 +64,7 @@ THE SOFTWARE.
       </j:if>
 
       <j:if test="${hasBuilds}">
-        <div align="center" style="margin-bottom: var(--section-padding); background: white; border-radius: 10px">
+        <div class="app-builds__graph">
           <img class="build-time-graph" src="buildTimeGraph/png" width="500" height="400" lazymap="buildTimeGraph/map" alt="[${%Build time graph}]" />
         </div>
 
@@ -81,7 +80,7 @@ THE SOFTWARE.
             <j:if test="${isDistributedBuildEnabled}">
               <th>${%Agent}</th>
             </j:if>
-            <th></th>
+            <th width="46"></th>
           </tr>
           <tbody></tbody>
         </thead>

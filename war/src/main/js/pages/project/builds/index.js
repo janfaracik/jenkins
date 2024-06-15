@@ -49,16 +49,18 @@ window.buildTimeTrend_displayBuilds = function (data) {
     }
 
     const tableRow = createElementFromHtml(`<tr>
-          <td class="jenkins-table__cell--tight jenkins-table__icon" data="${item.iconColorOrdinal}"><div class="jenkins-table__cell__button-wrapper"><a href="${item.consoleUrl}">${generateSVGIcon(item.iconName)}</a></div></td>
-          <td data="${item.number}"><a class="iamlink" href="${item.number}/">${xmlEscape(item.displayName)}</a></td>
-          <td data="${item.duration}">${xmlEscape(item.durationString)}</td>
-          ${distributedBuildColumn}
-          <td>
-            <button data-href="${item.number}/" class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"><div class="jenkins-overflow-button__ellipsis">
-              <span></span>
-              <span></span>
-             <span></span>
-            </div>
+        <td class="jenkins-table__cell--tight jenkins-table__icon" data="${item.iconColorOrdinal}">
+          <div class="jenkins-table__cell__button-wrapper">
+            <a href="${item.consoleUrl}" class="jenkins-!-display-contents">${generateSVGIcon(item.iconName)}</a></div>
+          </td>
+        <td data="${item.number}">
+          <a class="iamlink" href="${item.number}/">${xmlEscape(item.displayName)}</a>
+        </td>
+        <td data="${item.duration}">${xmlEscape(item.durationString)}</td>
+        ${distributedBuildColumn}
+        <td>
+          <button data-href="${item.number}/" class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><title>Chevron Down</title><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 184l144 144 144-144"/></svg>
           </button>
         </td>
       </tr>`);
@@ -73,7 +75,6 @@ window.buildTimeTrend_displayBuilds = function (data) {
 
 function generateSVGIcon(iconName) {
   const icons = document.querySelector("#jenkins-build-status-icons");
-
   return icons.content.querySelector(`#${iconName}`).outerHTML;
 }
 

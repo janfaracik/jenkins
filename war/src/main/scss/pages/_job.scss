@@ -182,3 +182,20 @@
     }
   }
 }
+
+.app-builds__graph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--section-padding);
+  background: white;
+  border-radius: 1rem;
+  padding: 10px;
+  height: 300px;
+  border: var(--card-border-width) solid var(--card-border-color);
+
+  img {
+    width: auto;
+    height: 100%;
+  }
+}
