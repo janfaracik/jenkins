@@ -592,7 +592,7 @@ function parseHtml(html) {
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval#direct_and_indirect_eval
  */
 function geval(script) {
-  eval(script);
+  (0, eval)(script);
 }
 
 /**
@@ -1661,7 +1661,8 @@ function rowvgStartEachRow(recursive, f) {
         }
       }
       changeTo(e, "-hover.png");
-      YAHOO.util.Event.stopEvent(event);
+      event.stopPropagation();
+      event.preventDefault();
       return false;
     };
     e = null; // memory leak prevention
@@ -1753,15 +1754,6 @@ function rowvgStartEachRow(recursive, f) {
     ++p,
     function (e) {
       e.classList.add("behavior-loading--hidden");
-    },
-  );
-
-  Behaviour.specify(
-    ".button-with-dropdown",
-    "-button-with-dropdown",
-    ++p,
-    function (e) {
-      new YAHOO.widget.Button(e, { type: "menu", menu: e.nextElementSibling });
     },
   );
 
@@ -1901,8 +1893,11 @@ function xor(a, b) {
 // eslint-disable-next-line no-unused-vars
 function replaceDescription(initialDescription, submissionUrl) {
   var d = document.getElementById("description");
-  d.firstElementChild.nextElementSibling.innerHTML =
-    "<div class='jenkins-spinner'></div>";
+  let button = d.firstElementChild.nextElementSibling;
+  if (button !== null) {
+    d.firstElementChild.nextElementSibling.innerHTML =
+      "<div class='jenkins-spinner'></div>";
+  }
   let parameters = {};
   if (initialDescription !== null && initialDescription !== "") {
     parameters["description"] = initialDescription;
