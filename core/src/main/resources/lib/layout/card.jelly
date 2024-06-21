@@ -41,7 +41,7 @@ THE SOFTWARE.
 
   <div class="jenkins-card" id="${attrs.id}">
     <div class="jenkins-card__title">
-      <div class="jenkins-card__title__backplate"></div>
+<!--      <div class="jenkins-card__title__backplate"></div>-->
       ${attrs.title}
       <div class="jenkins-card__controls">
         <j:out value="${controls}"/>
