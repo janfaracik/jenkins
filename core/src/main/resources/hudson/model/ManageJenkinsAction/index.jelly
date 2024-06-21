@@ -38,10 +38,6 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
-      <l:card>
-
-      </l:card>
-
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 
       <section class="manage-messages">

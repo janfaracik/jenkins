@@ -1,6 +1,6 @@
 @use "../abstracts/mixins";
 
-#buildHistoryPage {
+#buildHistoryPage, #buildQueue {
   margin: 10px 0 10px 10px;
 
   .jenkins-search {
