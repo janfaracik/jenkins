@@ -50,3 +50,61 @@
     }
   }
 }
+
+#page-body {
+  padding: 0 70px;
+
+  #main-panel {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.previ, .nexti {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  color: var(--text-color-secondary) !important;
+  z-index: 1;
+
+  svg {
+    width: 1.75rem;
+    height: 1.75rem;
+    opacity: 0.2;
+    transition: var(--standard-transition);
+
+    * {
+      stroke-width: 35px;
+    }
+  }
+
+  &:hover {
+    svg {
+      opacity: 1;
+    }
+
+    &.previ {
+      svg {
+        transform: translateX(-3px);
+      }
+    }
+
+    &.nexti {
+      svg {
+        transform: translateX(3px);
+      }
+    }
+  }
+}
+
+.previ {
+  left: 0;
+}
+
+.nexti {
+  right: 0;
+}

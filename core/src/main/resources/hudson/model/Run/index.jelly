@@ -26,7 +26,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt">
   <l:layout title="${it.fullDisplayName}">
-    <st:include page="sidepanel.jelly" />
+<!--    <st:include page="sidepanel.jelly" />-->
 
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
@@ -38,6 +38,62 @@ THE SOFTWARE.
       </j:set>
 
       <t:buildCaption controls="${controls}">${it.displayName} (<i:formatDate value="${it.timestamp.time}" type="both" dateStyle="medium" timeStyle="medium"/>)</t:buildCaption>
+
+      <l:card title="Oblivions" controls="${null}">
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+      </l:card>
 
       <div>
         <t:editableDescription permission="${it.UPDATE}" hideButton="true"/>
@@ -74,10 +130,23 @@ THE SOFTWARE.
       <st:include page="main.jelly" optional="true" />
 
       <j:set var="buildUrl" value="${h.decompose(request)}" />
+
       <l:previousNext previousUrl="${buildUrl.previousBuildUrl}"
                       previousDescription="${it.getPreviousBuild().displayName}"
                       nextUrl="${buildUrl.nextBuildUrl}"
                       nextDescription="${it.getNextBuild().displayName}" />
+
+      <j:if test="${buildUrl.previousBuildUrl != null}">
+        <a class="previ" href="${buildUrl.previousBuildUrl}">
+          <l:icon src="symbol-chevron-back-outline" />
+        </a>
+      </j:if>
+
+      <j:if test="${buildUrl.nextBuildUrl != null}">
+        <a class="nexti" href="${buildUrl.nextBuildUrl}">
+          <l:icon src="symbol-chevron-forward-outline" />
+        </a>
+      </j:if>
     </l:main-panel>
   </l:layout>
 </j:jelly>
