@@ -91,6 +91,7 @@
 
           span.sortarrow {
             position: absolute;
+            display: inline-flex;
             width: 0.875rem;
             height: 0.875rem;
             transition: 0.2s ease;
