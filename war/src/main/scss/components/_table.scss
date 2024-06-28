@@ -206,7 +206,6 @@
   }
 
   &__link {
-    //.sortheader {
     display: inline-flex;
   }
 
@@ -285,7 +284,6 @@
   }
 
   &__button,
-  //.sortheader,
   &__link {
     @include mixins.item;
 
@@ -308,7 +306,6 @@
     &::before,
     &::after {
       inset: -7px -10px;
-      border-radius: 6px;
     }
   }
 
