@@ -1,3 +1,11 @@
+import behaviorShim from "@/util/behavior-shim";
+
+function init() {
+  behaviorShim.specify("TABLE.sortable", "table-sortable", 20, function (e) {
+    e.sortable = new Sortable.Sortable(e);
+  });
+}
+
 /*
 The MIT Licence, for code from kryogenix.org
 
@@ -26,6 +34,7 @@ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 /*
 Usage
 =====
@@ -42,8 +51,7 @@ The script guesses the table data, and try to use the right sorting algorithm.
 But you can override this behavior by having 'data="..."' attribute on each row,
 in which case the sort will be done on that field.
 */
-
-var Sortable = (function () {
+const Sortable = (function () {
   function Sortable(table) {
     this.table = table;
     this.arrows = [];
@@ -106,6 +114,12 @@ var Sortable = (function () {
     }
 
     this.refresh();
+
+    // We only want the arrows to animate when interacted with,
+    // not on first load so defer applying the transition
+    setTimeout(() => {
+      this.table.style.setProperty("--sortheader-transition", "0.2s ease");
+    }, 0);
   }
 
   Sortable.prototype = {
@@ -467,17 +481,14 @@ var Sortable = (function () {
   };
 })();
 
-// eslint-disable-next-line no-unused-vars
-function ts_makeSortable(table) {
-  // backward compatibility
-  return new Sortable.Sortable(table);
-}
-
-/** Calls table.sortable.refresh() in case the sortable has been initialized; otherwise does nothing. */
-// eslint-disable-next-line no-unused-vars
-function ts_refresh(table) {
-  var s = table.sortable;
+/**
+ * Calls table.sortable.refresh() in case the sortable has been initialized; otherwise does nothing
+ */
+window.ts_refresh = (table) => {
+  const s = table.sortable;
   if (s != null) {
     s.refresh();
   }
-}
+};
+
+export default { init };

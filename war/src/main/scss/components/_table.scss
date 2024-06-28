@@ -2,6 +2,7 @@
 
 .jenkins-table {
   --table-padding: 0.55rem;
+  --sortheader-transition: 0s;
 
   position: relative;
   width: 100%;
@@ -95,7 +96,7 @@
             display: inline-flex;
             width: 0.875rem;
             height: 0.875rem;
-            transition: 0.2s ease;
+            transition: var(--sortheader-transition);
             opacity: 0;
             scale: 0.5;
             translate: -5px 0;
@@ -103,7 +104,7 @@
             svg {
               width: 0.875rem;
               height: 0.875rem;
-              transition: 0.2s ease;
+              transition: var(--sortheader-transition);
               opacity: 0.65;
             }
           }

@@ -1208,10 +1208,6 @@ function rowvgStartEachRow(recursive, f) {
   });
 
   var p = 20;
-  Behaviour.specify("TABLE.sortable", "table-sortable", ++p, function (e) {
-    // sortable table
-    e.sortable = new Sortable.Sortable(e);
-  });
 
   Behaviour.specify(
     "TABLE.progress-bar, div.app-progress-bar",
