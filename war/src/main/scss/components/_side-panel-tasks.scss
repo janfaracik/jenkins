@@ -39,15 +39,15 @@ $background-outset: 0.7rem;
     margin-left: var(--section-padding);
     margin-right: var(--section-padding);
 
-    & + #tasks > .jenkins-search-container {
-      margin-block: -0.5rem;
-    }
+    //& + #tasks > .jenkins-search-container {
+    //  margin-block: -0.5rem;
+    //}
   }
 
   & > #tasks > .jenkins-search-container {
     margin-left: -$background-outset;
     margin-right: -$background-outset;
-    margin-bottom: calc(var(--section-padding) / 2);
+    //margin-bottom: calc(var(--section-padding) / 2);
 
     .jenkins-search__icon {
       width: 2.8rem;
