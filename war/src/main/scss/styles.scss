@@ -3,3 +3,37 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.banana {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 100px;
+  margin-inline: 50px;
+
+  .side {
+    #tasks {
+      margin: 0;
+    }
+  }
+
+  .mainthing {
+    .jenkins-spinner {
+      position: fixed;
+      top: 50%;
+      left: calc(50% + 200px);
+      scale: 1.5;
+      animation: sendforme 0.2s ease both;
+    }
+
+    #main-panel {
+      padding: 0;
+      animation: sendforme 0.2s ease both;
+    }
+  }
+}
+
+@keyframes sendforme {
+  from {
+    opacity: 0;
+  }
+}

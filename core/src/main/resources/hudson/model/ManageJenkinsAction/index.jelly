@@ -25,6 +25,57 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <l:layout title="${%Manage Jenkins}" permissions="${app.MANAGE_AND_SYSTEM_READ}">
-     <st:redirect url="${rootURL}/manage/configure" />
+    <l:main-panel>
+      <div class="banana">
+        <div class="side">
+          <l:app-bar title="${%Manage Jenkins}"/>
+
+          <l:tasks>
+            <l:search-bar placeholder="${%Search}" id="settings-search-bar"/>
+
+            <j:invokeStatic var="j" className="jenkins.model.Jenkins" method="get"/>
+            <j:forEach var="category" items="${j.categorizedManagementLinks.entrySet()}">
+              <h2 class="jenkins-side-nav__heading">${category.key.label}</h2>
+              <j:forEach var="item" items="${category.value}">
+
+                <div class="task ">
+                  <a href="${item.urlName}"
+                     class="task-link"
+                     data-clazz="${item.urlName}">
+                    <span class="task-icon-link">
+                      <l:icon src="${item.iconFileName}" />
+                    </span>
+                    ${item.displayName}
+                  </a>
+                </div>
+
+<!--                <l:task title="${item.class.name}"-->
+<!--                    href="${rootURL}/manage/${item.urlName}"-->
+<!--                    icon="${item.iconFileName}"-->
+<!--                    badge="${item.badge}"-->
+<!--                    requiresConfirmation="${item.requiresConfirmation}"-->
+<!--                    post="${item.requiresPOST}"-->
+<!--                    confirmationMessage="${%sure}"/>-->
+              </j:forEach>
+            </j:forEach>
+          </l:tasks>
+        </div>
+        <div class="mainthing">
+
+          <st:bind var="a" value="${it}"/>
+
+          ${a}
+
+          <div id="msg" />
+
+<!--          <l:renderOnDemand tag="div" clazz="config-page" capture="descriptor,it,instance,${capture}">-->
+<!--          </l:renderOnDemand>-->
+        </div>
+      </div>
+
+      <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" defer="true" />
+
+      <!--   <st:redirect url="${rootURL}/manage/configure" />-->
+    </l:main-panel>
   </l:layout>
 </j:jelly>

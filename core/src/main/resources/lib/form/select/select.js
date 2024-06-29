@@ -6,6 +6,8 @@ function updateListBox(listBox, url, config) {
   var originalOnSuccess = config.onSuccess;
   var l = listBox;
 
+  console.log(config);
+
   // Hacky function to retrofit compatibility with tables-to-divs
   // If the <select> tag parent is a <td> element we can consider it's following a
   // form entry using tables-to-divs markup.
@@ -43,6 +45,7 @@ function updateListBox(listBox, url, config) {
     status.innerHTML = "";
   }
   config.onSuccess = function (rsp) {
+    console.log(rsp)
     rsp.json().then((result) => {
       l.classList.remove("select-ajax-pending");
       var currentSelection = l.value;

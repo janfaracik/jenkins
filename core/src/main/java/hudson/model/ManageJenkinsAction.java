@@ -24,20 +24,33 @@
 
 package hudson.model;
 
+
 import hudson.Extension;
 import hudson.Util;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
+import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyException;
+import org.apache.commons.jelly.JellyTagException;
+import org.apache.commons.jelly.Script;
 import org.jenkinsci.Symbol;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
+import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerFallback;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.WebApp;
+import org.kohsuke.stapler.bind.JavaScriptMethod;
+import org.kohsuke.stapler.jelly.DefaultScriptInvoker;
+import org.kohsuke.stapler.jelly.JellyClassTearOff;
 
 /**
  * Adds the "Manage Jenkins" link to the top page.
@@ -45,7 +58,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Kohsuke Kawaguchi
  */
 @Extension(ordinal = 100) @Symbol("manageJenkins")
-public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
+public class ManageJenkinsAction implements RootAction, ModelObjectWithContextMenu {
     @Override
     public String getIconFileName() {
         if (Jenkins.get().hasAnyPermission(Jenkins.MANAGE, Jenkins.SYSTEM_READ))
@@ -64,9 +77,8 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
         return "/manage";
     }
 
-    @Override
-    public Object getStaplerFallback() {
-        return Jenkins.get();
+    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        req.getView(this, "index.jelly").forward(req, rsp);
     }
 
     @Override
@@ -87,5 +99,53 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
         }
         // If neither is the case, rewrite the relative URL to point to inside the /manage/ URL space
         menu.add("manage/" + url, icon, iconXml, text, post, requiresConfirmation, badge, message);
+    }
+
+    private static final Logger LOGGER = Logger.getLogger(ManageJenkinsAction.class.getName());
+
+    @JavaScriptMethod
+    public HttpResponse render(String clazz) throws JellyException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        WebApp webApp = WebApp.getCurrent();
+        Object obj = Jenkins.get().getDynamic(clazz);
+        Script script =  webApp.getMetaClass(obj.getClass()).loadTearOff(JellyClassTearOff.class).findScript("index");
+
+        if (script == null) {
+            script = webApp.getMetaClass(Jenkins.class).loadTearOff(JellyClassTearOff.class).findScript(((ManagementLink)obj).getUrlName());
+            obj = Jenkins.get();
+        }
+
+        if (script == null) {
+            script = webApp.getMetaClass(Hudson.class).loadTearOff(JellyClassTearOff.class).findScript(((ManagementLink)obj).getUrlName());
+            obj = Hudson.get();
+        }
+
+        Map<String, Object> variables = Map.of("mindnotfriend", true);
+
+        Script finalScript = script;
+        Object finalObj = obj;
+        return new HttpResponse() {
+            @Override
+            public void generateResponse(StaplerRequest req, StaplerResponse rsp, Object node) throws IOException {
+                req.getWebApp().getDispatchValidator().allowDispatch(req, rsp);
+                try {
+                    new DefaultScriptInvoker() {
+                        @Override
+                        protected JellyContext createContext(StaplerRequest req, StaplerResponse rsp, Script script, Object it) {
+                            return super.createContext(req, rsp, script, it);
+                        }
+
+                        @Override
+                        protected void exportVariables(StaplerRequest req, StaplerResponse rsp, Script script, Object it, JellyContext context) {
+                            super.exportVariables(req, rsp, script, it, context);
+                            context.setVariables(variables);
+                            req.setAttribute("currentDescriptorByNameUrl", "configureDescriptor");
+                        }
+                    }.invokeScript(req, rsp, finalScript, finalObj);
+                } catch (JellyTagException e) {
+                    LOGGER.log(Level.WARNING, "Failed to evaluate the template closure", e);
+                    throw new IOException("Failed to evaluate the template closure", e);
+                }
+            }
+        };
     }
 }
