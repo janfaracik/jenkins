@@ -30,7 +30,7 @@ Array.from(document.querySelectorAll(".task-link")).forEach(link => {
     document.querySelectorAll(".task-link--active").forEach(b => b.classList.remove("task-link--active"));
     link.classList.add("task-link--active");
 
-    window.history.pushState(null, null, link.href);
+    window.history.pushState(null, null, "http://localhost:8080/jenkins/manage");
 
     a.render(clazz, function(t) {
       mainThing.innerHTML = t.responseText;

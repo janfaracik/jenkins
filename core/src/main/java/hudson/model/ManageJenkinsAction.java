@@ -32,7 +32,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletException;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -45,6 +44,7 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.Stapler;
+import org.kohsuke.stapler.StaplerFallback;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
 import org.kohsuke.stapler.WebApp;
@@ -58,7 +58,7 @@ import org.kohsuke.stapler.jelly.JellyClassTearOff;
  * @author Kohsuke Kawaguchi
  */
 @Extension(ordinal = 100) @Symbol("manageJenkins")
-public class ManageJenkinsAction implements RootAction, ModelObjectWithContextMenu {
+public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
     @Override
     public String getIconFileName() {
         if (Jenkins.get().hasAnyPermission(Jenkins.MANAGE, Jenkins.SYSTEM_READ))
@@ -77,9 +77,9 @@ public class ManageJenkinsAction implements RootAction, ModelObjectWithContextMe
         return "/manage";
     }
 
-    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
-        req.getView(this, "index.jelly").forward(req, rsp);
-    }
+//    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+//        req.getView(this, "index.jelly").forward(req, rsp);
+//    }
 
     @Override
     public ContextMenu doContextMenu(StaplerRequest request, StaplerResponse response) throws JellyException, IOException {
@@ -138,7 +138,7 @@ public class ManageJenkinsAction implements RootAction, ModelObjectWithContextMe
                         protected void exportVariables(StaplerRequest req, StaplerResponse rsp, Script script, Object it, JellyContext context) {
                             super.exportVariables(req, rsp, script, it, context);
                             context.setVariables(variables);
-                            req.setAttribute("currentDescriptorByNameUrl", "configureDescriptor");
+                            req.setAttribute("currentDescriptorByNameUrl", "manage");
                         }
                     }.invokeScript(req, rsp, finalScript, finalObj);
                 } catch (JellyTagException e) {
@@ -147,5 +147,10 @@ public class ManageJenkinsAction implements RootAction, ModelObjectWithContextMe
                 }
             }
         };
+    }
+
+    @Override
+    public Object getStaplerFallback() {
+        return Jenkins.get();
     }
 }
