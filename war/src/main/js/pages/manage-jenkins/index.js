@@ -30,7 +30,7 @@ Array.from(document.querySelectorAll(".task-link")).forEach(link => {
     document.querySelectorAll(".task-link--active").forEach(b => b.classList.remove("task-link--active"));
     link.classList.add("task-link--active");
 
-    window.history.pushState(null, null, "http://localhost:8080/jenkins/manage");
+    window.history.pushState(null, null, link.href);
 
     a.render(clazz, function(t) {
       mainThing.innerHTML = t.responseText;
@@ -56,10 +56,11 @@ function executeScripts(element) {
       const newScript = document.createElement('script');
       newScript.src = scriptSrc;
       newScript.type = 'text/javascript';
-      newScript.async = false; // Ensure scripts are loaded in order if necessary
+      newScript.defer = true;
+      // newScript.async = false; // Ensure scripts are loaded in order if necessary
       document.body.appendChild(newScript);
     }
   }
 }
 
-// document.querySelector(".task-link").click();
+document.querySelector(".task-link").click();
