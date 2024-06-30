@@ -32,19 +32,19 @@ Array.from(document.querySelectorAll(".task-link")).forEach(link => {
 
     window.history.pushState(null, null, link.href);
 
-    a.render(clazz, function(t) {
-      mainThing.innerHTML = t.responseText;
-      executeScripts(mainThing);
-      setTimeout(() => behaviorShim.applySubtree(mainThing, true), 100)
-    })
+    fetch("ting?url=" + clazz).then(response => {
+      response.text().then(text => {
+        mainThing.innerHTML = text;
+        executeScripts(mainThing);
+        setTimeout(() => behaviorShim.applySubtree(mainThing, true), 100)
+      })
+    });
   })
 })
 
 function executeScripts(element) {
   // Find all script tags
   const scripts = element.querySelector("#page-body").getElementsByTagName('script');
-
-  console.log(scripts);
 
   // Execute each script
   for (let i = 0; i < scripts.length; i++) {
