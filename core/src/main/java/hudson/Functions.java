@@ -1923,6 +1923,17 @@ public class Functions {
         }
     }
 
+    public static @CheckForNull ConsoleUrlProvider getConsoleProvider(Queue.Executable executable) {
+        if (executable == null) {
+            return null;
+        } else if (executable instanceof Run) {
+            return ConsoleUrlProvider.getProvider((Run<?, ?>) executable);
+        } else {
+            // Handles cases such as PlaceholderExecutable for Pipeline node steps.
+            return getConsoleProvider(executable.getParentExecutable());
+        }
+    }
+
     /**
      * Escapes the character unsafe for e-mail address.
      * See <a href="https://en.wikipedia.org/wiki/Email_address">the Wikipedia page</a> for the details,

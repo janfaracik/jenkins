@@ -72,14 +72,7 @@ public interface ConsoleUrlProvider extends Describable<ConsoleUrlProvider> {
         return Jenkins.get().getDescriptorOrDie(getClass());
     }
 
-    /**
-     * Get a URL relative to the web server root which should be used to link to the console for the specified build.
-     * <p>Should only be used in the context of serving an HTTP request.
-     * <p>Use {@link Functions#getConsoleUrl} to obtain this link in a Jelly template.
-     * @param run the build
-     * @return the URL for the console for the specified build, relative to the web server root
-     */
-    static @NonNull String getRedirectUrl(Run<?, ?> run) {
+    static List<ConsoleUrlProvider> all() {
         final List<ConsoleUrlProvider> providers = new ArrayList<>();
         User currentUser = User.current();
         if (currentUser != null) {
@@ -97,8 +90,39 @@ public interface ConsoleUrlProvider extends Describable<ConsoleUrlProvider> {
         if (globalProviders != null) {
             providers.addAll(globalProviders);
         }
+        return providers;
+    }
+
+    static @NonNull ConsoleUrlProvider getProvider(Run<?, ?> run) {
+        for (ConsoleUrlProvider provider : all()) {
+            try {
+                String tempUrl = provider.getConsoleUrl(run);
+                if (tempUrl != null) {
+                    if (new URI(tempUrl).isAbsolute()) {
+                        LOGGER.warning(() -> "Ignoring absolute console URL " + tempUrl + " for " + run + " from " + provider.getClass());
+                    } else {
+                        // Found a valid non-null URL.
+                        return provider;
+                    }
+                }
+            } catch (Exception e) { // Intentionally broad catch clause to guard against broken implementations.
+                LOGGER.log(Level.WARNING, e, () -> "Error looking up console URL for " + run + " from " + provider.getClass());
+            }
+        }
+
+        return new DefaultConsoleUrlProvider();
+    }
+
+    /**
+     * Get a URL relative to the web server root which should be used to link to the console for the specified build.
+     * <p>Should only be used in the context of serving an HTTP request.
+     * <p>Use {@link Functions#getConsoleUrl} to obtain this link in a Jelly template.
+     * @param run the build
+     * @return the URL for the console for the specified build, relative to the web server root
+     */
+    static @NonNull String getRedirectUrl(Run<?, ?> run) {
         String url = null;
-        for (ConsoleUrlProvider provider : providers) {
+        for (ConsoleUrlProvider provider : all()) {
             try {
                 String tempUrl = provider.getConsoleUrl(run);
                 if (tempUrl != null) {
