@@ -132,7 +132,9 @@ function updateSelectSpinner(select, show) {
   const spinner = parent.querySelector(".jenkins-spinner");
 
   if (spinner == null && show) {
-    parent.appendChild(createElementFromHtml(`<div class="jenkins-spinner"></div>`));
+    parent.appendChild(
+      createElementFromHtml(`<div class="jenkins-spinner"></div>`),
+    );
   }
 
   if (spinner !== null && !show) {
