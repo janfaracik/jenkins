@@ -3,3 +3,28 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.psychokiller {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  background: var(--input-color);
+  border: 2px solid color-mix(in srgb, var(--input-border), transparent);
+  border-radius: var(--form-input-border-radius);
+
+  div:first-of-type {
+    padding: calc(var(--form-input-padding) - 2px) var(--form-input-padding);
+  }
+
+  .lineeee {
+    white-space: pre-line;
+  }
+
+  button {
+    margin-top: 1px;
+
+    &::before, &::after {
+      display: none;
+    }
+  }
+}
