@@ -44,7 +44,7 @@ function updateListBox(listBox, url, config) {
   }
   config.onSuccess = function (rsp) {
     rsp.json().then((result) => {
-      todo(l.parentNode, false);
+      updateSelectSpinner(l, false);
 
       var currentSelection = l.value;
 
@@ -80,7 +80,7 @@ function updateListBox(listBox, url, config) {
   };
   config.onFailure = function (rsp) {
     rsp.text().then((responseText) => {
-      todo(l.parentNode, false);
+      updateSelectSpinner(l, false);
       status.innerHTML = responseText;
       if (status.firstElementChild) {
         status.firstElementChild.setAttribute("data-select-ajax-error", "true");
@@ -97,8 +97,7 @@ function updateListBox(listBox, url, config) {
     });
   };
 
-  const parentNode = l.parentNode;
-  todo(parentNode, true);
+  updateSelectSpinner(l, true);
 
   fetch(url, {
     method: "post",
@@ -126,15 +125,15 @@ function createElementFromHtml(html) {
 }
 
 /**
- *
- * @param {HTMLElement} selectParent
- * @param {boolean} show
+ * @param {HTMLElement} select the element to update
+ * @param {boolean} show whether to show the spinner or not
  */
-function todo(selectParent, show) {
-  const spinner = selectParent.querySelector(".jenkins-spinner");
+function updateSelectSpinner(select, show) {
+  const parent = select.parentNode;
+  const spinner = parent.querySelector(".jenkins-spinner");
 
   if (spinner == null && show) {
-    selectParent.appendChild(createElementFromHtml(`<div class="jenkins-spinner"></div>`));
+    parent.appendChild(createElementFromHtml(`<div class="jenkins-spinner"></div>`));
   }
 
   if (spinner !== null && !show) {
