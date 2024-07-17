@@ -49,6 +49,15 @@
     position: absolute;
     top: 10px;
     left: 10px;
+    animation: animate-in-select-spinner 0.2s 0.2s both;
+  }
+}
+
+@keyframes animate-in-select-spinner {
+  from {
+    opacity: 0;
+    scale: 0.7;
+    filter: blur(1px);
   }
 }
 
