@@ -846,17 +846,6 @@ td.matrix-cell {
   text-align: center;
 }
 
-/* ========================= select.jelly ================== */
-select.select-ajax-pending {
-  padding-left: 1.5em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  color: transparent;
-  background-image: url("../images/spinner.gif"); /* this is why here and not in an adjunct */
-  background-repeat: no-repeat;
-  background-position: 2px;
-}
-
 /* ========================= Button styles ================= */
 #disable-project {
   margin-top: 6px;

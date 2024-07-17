@@ -44,7 +44,8 @@ function updateListBox(listBox, url, config) {
   }
   config.onSuccess = function (rsp) {
     rsp.json().then((result) => {
-      l.classList.remove("select-ajax-pending");
+      todo(l.parentNode, false);
+
       var currentSelection = l.value;
 
       // clear the contents
@@ -79,7 +80,7 @@ function updateListBox(listBox, url, config) {
   };
   config.onFailure = function (rsp) {
     rsp.text().then((responseText) => {
-      l.classList.remove("select-ajax-pending");
+      todo(l.parentNode, false);
       status.innerHTML = responseText;
       if (status.firstElementChild) {
         status.firstElementChild.setAttribute("data-select-ajax-error", "true");
@@ -96,7 +97,9 @@ function updateListBox(listBox, url, config) {
     });
   };
 
-  l.classList.add("select-ajax-pending");
+  const parentNode = l.parentNode;
+  todo(parentNode, true);
+
   fetch(url, {
     method: "post",
     headers: crumb.wrap({
@@ -110,6 +113,33 @@ function updateListBox(listBox, url, config) {
       config.onFailure(response);
     }
   });
+}
+
+/**
+ * @param {string} html
+ * @return {HTMLElement}
+ */
+function createElementFromHtml(html) {
+  const template = document.createElement("template");
+  template.innerHTML = html.trim();
+  return template.content.firstElementChild;
+}
+
+/**
+ *
+ * @param {HTMLElement} selectParent
+ * @param {boolean} show
+ */
+function todo(selectParent, show) {
+  const spinner = selectParent.querySelector(".jenkins-spinner");
+
+  if (spinner == null && show) {
+    selectParent.appendChild(createElementFromHtml(`<div class="jenkins-spinner"></div>`));
+  }
+
+  if (spinner !== null && !show) {
+    spinner.remove();
+  }
 }
 
 Behaviour.specify("SELECT.select", "select", 1000, function (e) {
