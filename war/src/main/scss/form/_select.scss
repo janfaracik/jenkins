@@ -29,19 +29,22 @@
     transition: var(--standard-transition);
     min-height: 38px;
 
-    &:hover {
-      border-color: var(--input-border-hover);
-    }
-
-    &:active,
-    &:focus {
-      outline: none;
-      border-color: var(--focus-input-border);
-      box-shadow: 0 0 0 5px var(--focus-input-glow);
-    }
-
     &:disabled {
-      pointer-events: none;
+      border: 2px solid color-mix(in srgb, var(--input-border), transparent);
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled) {
+      &:hover {
+        border-color: var(--input-border-hover);
+      }
+
+      &:active,
+      &:focus {
+        outline: none;
+        border-color: var(--focus-input-border);
+        box-shadow: 0 0 0 5px var(--focus-input-glow);
+      }
     }
   }
 
