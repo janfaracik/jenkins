@@ -1,7 +1,9 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2012, Sun Microsystems, Inc., Kohsuke Kawaguchi, Tom Huybrechts, Rafa de la Torre
+Copyright (c) 2004-2022, Sun Microsystems, Inc., Kohsuke Kawaguchi,
+Daniel Dyer, Seiji Sogabe, Tom Huybrechts, Manufacture Francaise des Pneumatiques
+Michelin, Romain Seguy, CloudBees, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +23,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-	xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form"
-	xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
-	<j:set var="escapeEntryTitleAndDescription" value="false"/>
-	<f:entry title="${h.escape(it.name)}" description="${it.formattedDescription}">
-		<l:copyInput value="${it.value}" />
-	</f:entry>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+    <st:documentation>
+        Button that copies text into the user's clipboard upon click, either <code>text</code> or <code>ref</code> is required.
+
+        <st:attribute name="value" use="required">
+            Text to be copied into the clipboard.
+        </st:attribute>
+        <st:attribute name="clazz" />
+    </st:documentation>
+
+    <j:set var="uuid" value="${h.generateItemId()}" />
+    <div class="psychokiller">
+        <div id="${uuid}" class="lineeee ${attrs.clazz}">
+            ${attrs.value}
+        </div>
+        <l:copyButton ref="${uuid}" clazz="jenkins-button--tertiary" />
+    </div>
 </j:jelly>
