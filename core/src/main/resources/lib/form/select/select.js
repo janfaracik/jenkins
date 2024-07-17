@@ -113,10 +113,6 @@ function updateListBox(listBox, url, config) {
   });
 }
 
-/**
- * @param {string} html
- * @return {HTMLElement}
- */
 function createElementFromHtml(html) {
   const template = document.createElement("template");
   template.innerHTML = html.trim();
@@ -125,19 +121,19 @@ function createElementFromHtml(html) {
 
 /**
  * @param {HTMLElement} select the element to update
- * @param {boolean} show whether to show the spinner or not
+ * @param {boolean} showSpinner whether to show the spinner or not
  */
-function updateSelectSpinner(select, show) {
+function updateSelectSpinner(select, showSpinner) {
   const parent = select.parentNode;
   const spinner = parent.querySelector(".jenkins-spinner");
 
-  if (spinner == null && show) {
+  if (spinner === null && showSpinner) {
     parent.appendChild(
       createElementFromHtml(`<div class="jenkins-spinner"></div>`),
     );
   }
 
-  if (spinner !== null && !show) {
+  if (spinner !== null && !showSpinner) {
     spinner.remove();
   }
 }
