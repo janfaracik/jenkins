@@ -44,8 +44,6 @@ function updateListBox(listBox, url, config) {
   }
   config.onSuccess = function (rsp) {
     rsp.json().then((result) => {
-      updateSelectSpinner(l, false);
-
       var currentSelection = l.value;
 
       // clear the contents
@@ -80,7 +78,6 @@ function updateListBox(listBox, url, config) {
   };
   config.onFailure = function (rsp) {
     rsp.text().then((responseText) => {
-      updateSelectSpinner(l, false);
       status.innerHTML = responseText;
       if (status.firstElementChild) {
         status.firstElementChild.setAttribute("data-select-ajax-error", "true");
@@ -106,6 +103,8 @@ function updateListBox(listBox, url, config) {
     }),
     body: objectToUrlFormEncoded(config.parameters),
   }).then((response) => {
+    updateSelectSpinner(l, false);
+
     if (response.ok) {
       config.onSuccess(response);
     } else {
