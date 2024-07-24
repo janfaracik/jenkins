@@ -2,9 +2,8 @@
 
 .repeated-chunk {
   position: relative;
-  border: 2px solid var(--card-border-color);
+  border: var(--card-border-width) solid var(--card-border-color);
   background: var(--card-background);
-  //padding: 1rem;
   border-radius: 1rem;
   transition:
     opacity var(--standard-transition),
@@ -178,10 +177,10 @@ div.to-be-removed {
   // TODO: Update/remove when .jenkins-button PR is merged
   .repeatable-delete {
     position: absolute;
-    //top: 0.6rem;
-    //right: 0.6rem;
-    top: 0;
-    right: 0;
+    top: 0.3rem;
+    right: 0.3rem;
+    //top: 0;
+    //right: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -198,7 +197,7 @@ div.to-be-removed {
     &::before {
       content: "";
       position: absolute;
-      inset: 2px;
+      inset: 4px;
       background: currentColor;
       border-radius: 100px;
       z-index: -1;
@@ -209,7 +208,7 @@ div.to-be-removed {
     &::after {
       content: "";
       position: absolute;
-      inset: 2px;
+      inset: 4px;
       box-shadow: 0 0 0 10px transparent;
       border-radius: 100px;
       z-index: -1;
@@ -218,8 +217,8 @@ div.to-be-removed {
     }
 
     svg {
-      width: 1rem;
-      height: 1rem;
+      width: 0.875rem;
+      height: 0.875rem;
 
       * {
         stroke-width: 40px;
@@ -228,14 +227,14 @@ div.to-be-removed {
 
     &:hover {
       &::before {
-        opacity: 0.1;
+        opacity: 0.15;
       }
     }
 
     &:active,
     &:focus {
       &::before {
-        opacity: 0.15;
+        opacity: 0.2;
       }
 
       &::after {
