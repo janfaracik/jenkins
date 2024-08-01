@@ -18,6 +18,7 @@ function registerSortableDragDrop(e) {
   }
 
   new Sortable(e, {
+    animation: 150,
     draggable: ".repeated-chunk",
     handle: ".dd-handle",
     ghostClass: "repeated-chunk--sortable-ghost",

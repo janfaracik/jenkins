@@ -155,22 +155,22 @@ div.to-be-removed {
       height: 42px;
       cursor: move;
       opacity: 0.75;
+      color: var(--text-color-secondary);
+      transition: 0.1s ease-in-out;
 
       &::after {
         content: "";
         position: absolute;
         inset: 0;
-        background-color: var(--text-color-secondary);
+        background-color: currentColor;
         mask-image: url("data:image/svg+xml,%3Csvg width='8' height='13' viewBox='0 0 8 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_0_12)'%3E%3Ccircle cx='1.5' cy='1.5' r='1' stroke='black'/%3E%3Ccircle cx='6.5' cy='1.5' r='1' stroke='black'/%3E%3Ccircle cx='1.5' cy='6.5' r='1' stroke='black'/%3E%3Ccircle cx='6.5' cy='6.5' r='1' stroke='black'/%3E%3Ccircle cx='1.5' cy='11.5' r='1' stroke='black'/%3E%3Ccircle cx='6.5' cy='11.5' r='1' stroke='black'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_0_12'%3E%3Crect width='8' height='13' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
-        //mask-image: url("data:image/svg+xml,%3Csvg width='8' height='13' viewBox='0 0 8 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_0_12)'%3E%3Ccircle cx='1.5' cy='1.5' r='1.5' fill='%23D9D9D9'/%3E%3Ccircle cx='6.5' cy='1.5' r='1.5' fill='%23D9D9D9'/%3E%3Ccircle cx='1.5' cy='6.5' r='1.5' fill='%23D9D9D9'/%3E%3Ccircle cx='6.5' cy='6.5' r='1.5' fill='%23D9D9D9'/%3E%3Ccircle cx='1.5' cy='11.5' r='1.5' fill='%23D9D9D9'/%3E%3Ccircle cx='6.5' cy='11.5' r='1.5' fill='%23D9D9D9'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_0_12'%3E%3Crect width='8' height='13' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
-        //mask-image: url("data:image/svg+xml,%3Csvg width='12' height='20' viewBox='0 0 12 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_801_11)'%3E%3Ccircle cx='2' cy='2' r='2' fill='%23D9D9D9'/%3E%3Ccircle cx='10' cy='2' r='2' fill='%23D9D9D9'/%3E%3Ccircle cx='2' cy='10' r='2' fill='%23D9D9D9'/%3E%3Ccircle cx='10' cy='10' r='2' fill='%23D9D9D9'/%3E%3Ccircle cx='2' cy='18' r='2' fill='%23D9D9D9'/%3E%3Ccircle cx='10' cy='18' r='2' fill='%23D9D9D9'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_801_11'%3E%3Crect width='12' height='20' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E%0A");
         mask-position: center;
         mask-repeat: no-repeat;
-        //mask-size: 8px;
       }
 
       &:hover {
         opacity: 1;
+        color: var(--text-color);
       }
     }
   }
