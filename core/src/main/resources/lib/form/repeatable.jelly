@@ -153,7 +153,9 @@ THE SOFTWARE.
         <div class="repeated-chunk__header">
           <j:if test="${!empty(header)}"><div class="${readOnlyMode ? '' : 'dd-handle'}"/>${header}</j:if>
         </div>
-        <d:invokeBody />
+        <div class="notafoodwriter">
+          <d:invokeBody />
+        </div>
       </div>
     </j:forEach>
     <j:remove var="${var}" />
@@ -170,7 +172,7 @@ THE SOFTWARE.
       </j:forEach>
     </j:if>
 
-    <div class="repeatable-insertion-point" />
+    <template class="repeatable-insertion-point" />
     <j:if test="${!attrs.noAddButton}">
       <button type="button" class="jenkins-button repeatable-add">
         ${attrs.add?:'%Add'}

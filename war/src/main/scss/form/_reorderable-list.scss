@@ -4,14 +4,24 @@
   position: relative;
   border: var(--card-border-width) solid var(--card-border-color);
   background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
-  border-radius: var(--form-input-border-radius);
+  border-radius: calc(var(--form-input-border-radius) / 2);
   transition:
     opacity var(--standard-transition),
     max-height var(--standard-transition),
     rotate var(--standard-transition),
     box-shadow var(--standard-transition);
   height: unset !important;
-  margin: 0.4rem 0;
+  margin: 0 0 var(--card-border-width) 0;
+
+  &:first-of-type {
+    border-top-left-radius: var(--form-input-border-radius);
+    border-top-right-radius: var(--form-input-border-radius);
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: var(--form-input-border-radius);
+    border-bottom-right-radius: var(--form-input-border-radius);
+  }
 }
 
 .repeated-chunk.fade-in,
@@ -116,6 +126,7 @@ div.to-be-removed {
   box-shadow: 0 15px 30px rgba(0, 0, 20, 0.05);
   opacity: 1 !important;
   backdrop-filter: blur(10px);
+  border-radius: var(--form-input-border-radius);
 
   & > * {
     display: none;
@@ -132,11 +143,11 @@ div.to-be-removed {
   opacity: 0.2 !important;
 }
 
-.help-sibling {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+//.help-sibling {
+//  display: flex;
+//  flex-direction: column;
+//  gap: 10px;
+//}
 
 .repeated-chunk {
   & > div > *:last-of-type {
@@ -240,5 +251,13 @@ div.to-be-removed {
         box-shadow: 0 0 0 5px var(--red);
       }
     }
+  }
+}
+
+.notafoodwriter {
+  padding: 0.5rem 1rem 1rem;
+
+  &:empty {
+    display: none;
   }
 }
