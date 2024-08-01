@@ -3,7 +3,7 @@
 .repeated-chunk {
   position: relative;
   border: var(--card-border-width) solid var(--card-border-color);
-  background: var(--card-background);
+  background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
   border-radius: 1rem;
   transition:
     opacity var(--standard-transition),
@@ -115,6 +115,7 @@ div.to-be-removed {
   rotate: 0.5deg;
   box-shadow: 0 15px 30px rgba(0, 0, 20, 0.05);
   opacity: 1 !important;
+  backdrop-filter: blur(10px);
 
   & > * {
     display: none;
