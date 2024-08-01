@@ -4,14 +4,14 @@
   position: relative;
   border: var(--card-border-width) solid var(--card-border-color);
   background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
-  border-radius: 1rem;
+  border-radius: var(--form-input-border-radius);
   transition:
     opacity var(--standard-transition),
     max-height var(--standard-transition),
     rotate var(--standard-transition),
     box-shadow var(--standard-transition);
   height: unset !important;
-  margin: 0.5rem 0;
+  margin: 0.4rem 0;
 }
 
 .repeated-chunk.fade-in,
@@ -156,7 +156,7 @@ div.to-be-removed {
       cursor: move;
       opacity: 0.75;
       color: var(--text-color-secondary);
-      transition: 0.1s ease-in-out;
+      transition: var(--standard-transition);
 
       &::after {
         content: "";
@@ -178,10 +178,8 @@ div.to-be-removed {
   // TODO: Update/remove when .jenkins-button PR is merged
   .repeatable-delete {
     position: absolute;
-    top: 0.3rem;
-    right: 0.3rem;
-    //top: 0;
-    //right: 0;
+    top: 0.375rem;
+    right: 0.375rem;
     display: flex;
     align-items: center;
     justify-content: center;
