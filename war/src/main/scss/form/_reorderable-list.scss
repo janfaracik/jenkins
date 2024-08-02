@@ -151,10 +151,6 @@ div.to-be-removed {
 }
 
 .repeated-chunk {
-  //& > div > *:last-of-type {
-  //  margin-bottom: 0;
-  //}
-
   &__header {
     position: relative;
     display: flex;
