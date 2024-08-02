@@ -1,30 +1,5 @@
 /* ========================= repeatable elements ========================= */
 
-.repeated-chunk {
-  position: relative;
-  border: var(--card-border-width) solid var(--card-border-color);
-  background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
-  border-radius: calc(var(--form-input-border-radius) / 2);
-  transition:
-    opacity var(--standard-transition),
-    max-height var(--standard-transition),
-    rotate var(--standard-transition),
-    border-radius var(--standard-transition),
-    box-shadow var(--standard-transition);
-  height: unset !important;
-  margin: 0 0 var(--card-border-width) 0;
-
-  &:first-of-type {
-    border-top-left-radius: var(--form-input-border-radius);
-    border-top-right-radius: var(--form-input-border-radius);
-  }
-
-  &:last-of-type {
-    border-bottom-left-radius: var(--form-input-border-radius);
-    border-bottom-right-radius: var(--form-input-border-radius);
-  }
-}
-
 .repeated-chunk.fade-in,
 .repeated-chunk.fade-out {
   opacity: 0;
@@ -151,6 +126,29 @@ div.to-be-removed {
 }
 
 .repeated-chunk {
+  position: relative;
+  border: var(--card-border-width) solid var(--card-border-color);
+  background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
+  border-radius: calc(var(--form-input-border-radius) / 2);
+  transition:
+          opacity var(--standard-transition),
+          max-height var(--standard-transition),
+          rotate var(--standard-transition),
+          border-radius var(--standard-transition),
+          box-shadow var(--standard-transition);
+  height: unset !important;
+  margin: 0 0 var(--card-border-width) 0;
+
+  &:first-of-type {
+    border-top-left-radius: var(--form-input-border-radius);
+    border-top-right-radius: var(--form-input-border-radius);
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: var(--form-input-border-radius);
+    border-bottom-right-radius: var(--form-input-border-radius);
+  }
+
   &__header {
     position: relative;
     display: flex;
