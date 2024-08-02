@@ -9,6 +9,7 @@
     opacity var(--standard-transition),
     max-height var(--standard-transition),
     rotate var(--standard-transition),
+    border-radius var(--standard-transition),
     box-shadow var(--standard-transition);
   height: unset !important;
   margin: 0 0 var(--card-border-width) 0;
@@ -143,11 +144,11 @@ div.to-be-removed {
   opacity: 0.2 !important;
 }
 
-//.help-sibling {
-//  display: flex;
-//  flex-direction: column;
-//  gap: 10px;
-//}
+.help-sibling2 {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
 .repeated-chunk {
   & > div > *:last-of-type {
@@ -159,6 +160,7 @@ div.to-be-removed {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    font-weight: var(--form-label-font-weight);
 
     .dd-handle {
       position: relative;
