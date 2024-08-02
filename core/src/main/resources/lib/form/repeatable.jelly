@@ -136,10 +136,12 @@ THE SOFTWARE.
       <div class="repeated-chunk__header">
         <j:if test="${!empty(header)}"><div class="${readOnlyMode ? '' : 'dd-handle'}"/>${header}</j:if>
       </div>
-      <j:scope>
-        <j:set var="${var}" value="${null}"/>
-        <d:invokeBody />
-      </j:scope>
+      <div class="notafoodwriter">
+        <j:scope>
+          <j:set var="${var}" value="${null}"/>
+          <d:invokeBody />
+        </j:scope>
+      </div>
     </div>
     <j:if test="${!empty(items) and !attrs.noAddButton and attrs.enableTopButton}">
       <button type="button" class="jenkins-button repeatable-add repeatable-add-top">
@@ -167,7 +169,9 @@ THE SOFTWARE.
           <div class="repeated-chunk__header">
             <j:if test="${!empty(header)}"><div class="${readOnlyMode ? '' : 'dd-handle'}"/>${header}</j:if>
           </div>
-          <d:invokeBody />
+          <div class="notafoodwriter2">
+            <d:invokeBody />
+          </div>
         </div>
       </j:forEach>
     </j:if>
