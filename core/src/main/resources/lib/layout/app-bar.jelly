@@ -43,7 +43,7 @@ THE SOFTWARE.
   <j:if test="${mode=='main-panel' or mode=='side-panel'}">
     <div class="jenkins-app-bar">
       <div class="jenkins-app-bar__content">
-        <x:element name="${attrs.headingLevel ?: 'h1'}">
+        <x:element name="${headingLevel ?: 'h1'}">
           <j:if test="${attrs.icon != null}">
             <j:out value="${attrs.icon}" />
           </j:if>
