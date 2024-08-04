@@ -30,6 +30,7 @@ THE SOFTWARE.
         <st:include page="sidepanel.jelly" />
         <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
         <l:main-panel>
+          <!-- Icon support for Cloudbees Folder plugin -->
           <j:set var="icon">
             <j:if test="${it.owner != app}">
               <j:set var="iconClass" value="${it.owner.iconColor.getIconClassName()}"/>
@@ -48,8 +49,8 @@ THE SOFTWARE.
           </j:set>
 
           <l:app-bar title="${title}" icon="${icon}">
-            <t:editDescriptionButton permission="${it.CONFIGURE}"/>
-            <t:rssBar/>
+            <t:editDescriptionButton permission="${it.CONFIGURE}" />
+            <t:rssBar />
           </l:app-bar>
 
           <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">
