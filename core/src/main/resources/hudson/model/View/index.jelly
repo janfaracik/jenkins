@@ -31,18 +31,20 @@ THE SOFTWARE.
         <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
         <l:main-panel>
           <j:set var="icon">
-            <j:set var="iconClass" value="${it.owner.iconColor.getIconClassName()}"/>
-            <j:if test="${iconClass != null}">
-              <j:set var="iconClass" value="${iconClass} icon-xlg"/>
+            <j:if test="${it.owner != app}">
+              <j:set var="iconClass" value="${it.owner.iconColor.getIconClassName()}"/>
+              <j:if test="${iconClass != null}">
+                <j:set var="iconClass" value="${iconClass} icon-xlg"/>
+              </j:if>
+              <j:choose>
+                <j:when test="${iconClass != null}">
+                  <l:icon class="${iconClass}" tooltip="${it.owner.iconColor.description}" />
+                </j:when>
+                <j:otherwise>
+                  <l:icon src="${it.owner.iconColor.getImageOf('48x48')}" height="48" width="48" alt="${it.owner.iconColor.description}" tooltip="${it.owner.iconColor.description}" />
+                </j:otherwise>
+              </j:choose>
             </j:if>
-            <j:choose>
-              <j:when test="${iconClass != null}">
-                <l:icon class="${iconClass}" tooltip="${it.owner.iconColor.description}" />
-              </j:when>
-              <j:otherwise>
-                <l:icon src="${it.owner.iconColor.getImageOf('48x48')}" height="48" width="48" alt="${it.owner.iconColor.description}" tooltip="${it.owner.iconColor.description}" />
-              </j:otherwise>
-            </j:choose>
           </j:set>
 
           <l:app-bar title="${title}" icon="${icon}">
