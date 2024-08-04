@@ -32,7 +32,10 @@ THE SOFTWARE.
       Defaults to h1
     </st:attribute>
     <st:attribute name="subtitle">
-      The subtitle for the application bar
+      Optional subtitle for the application bar
+    </st:attribute>
+    <st:attribute name="icon" since="TODO">
+      Optional icon HTML for the application bar
     </st:attribute>
     Generates a row containing the page title and an optional set of controls
   </st:documentation>
@@ -40,7 +43,10 @@ THE SOFTWARE.
   <j:if test="${mode=='main-panel' or mode=='side-panel'}">
     <div class="jenkins-app-bar">
       <div class="jenkins-app-bar__content">
-        <x:element name="${headingLevel ?: 'h1'}">
+        <x:element name="${attrs.headingLevel ?: 'h1'}">
+          <j:if test="${attrs.icon != null}">
+            <j:out value="${attrs.icon}" />
+          </j:if>
           ${title}
           <j:if test="${attrs.subtitle != null}">
             <span class="jenkins-app-bar__subtitle">${attrs.subtitle}</span>
