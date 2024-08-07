@@ -126,7 +126,6 @@ div.to-be-removed {
   background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
   border-radius: calc(var(--form-input-border-radius) / 2);
   transition:
-          opacity var(--standard-transition),
           max-height var(--standard-transition),
           rotate var(--standard-transition),
           border-radius var(--standard-transition),
