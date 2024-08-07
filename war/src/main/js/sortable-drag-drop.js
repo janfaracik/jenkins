@@ -22,17 +22,18 @@ function registerSortableDragDrop(e) {
   const maxDistance = 150; // Maximum distance for the full rotation effect
 
   function onPointerMove(evt) {
-    if (!currentItem) return;
+    if (!currentItem) {
+      return;
+    }
 
     const currentX = evt.clientX + window.scrollX;
-    const distanceX = currentX - initialX;
+    const distanceX = currentX - initialX - 20;
 
     // Calculate rotation angle based on the distance moved
     const rotation = Math.max(-maxRotation, Math.min(maxRotation, (distanceX / maxDistance) * maxRotation));
 
-    // Apply the rotation transformation
     currentItem.style.rotate = `${rotation}deg`;
-    // currentItem.style.translate = (distanceX * -1) + 'px';
+    currentItem.style.translate = (distanceX * -0.75) + 'px';
   }
 
   new Sortable(e, {
