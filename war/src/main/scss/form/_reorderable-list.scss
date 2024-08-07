@@ -98,7 +98,6 @@ div.to-be-removed {
 .repeated-chunk--sortable-chosen {
   width: 100%;
   height: 100px;
-  rotate: 0.5deg;
   box-shadow: 0 15px 30px rgba(0, 0, 20, 0.05);
   opacity: 1 !important;
   backdrop-filter: blur(10px);
@@ -127,7 +126,6 @@ div.to-be-removed {
   border-radius: calc(var(--form-input-border-radius) / 2);
   transition:
           max-height var(--standard-transition),
-          rotate var(--standard-transition),
           border-radius var(--standard-transition),
           box-shadow var(--standard-transition);
   height: unset !important;
