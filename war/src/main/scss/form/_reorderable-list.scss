@@ -111,12 +111,7 @@ div.to-be-removed {
 
 // SortableJS drag & drop classes
 .repeated-chunk--sortable-ghost {
-  height: 100px;
-  width: 100%;
-  overflow: hidden;
-  rotate: 0deg !important;
-  filter: blur(1px);
-  opacity: 0.2 !important;
+  opacity: 0 !important;
 }
 
 .help-sibling2 {
