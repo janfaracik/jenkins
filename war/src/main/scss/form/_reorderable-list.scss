@@ -264,3 +264,8 @@ div.to-be-removed {
     margin-bottom: 0;
   }
 }
+
+.repeatable-insertion-point + .hetero-list-add {
+  margin-top: 1rem;
+  transition: none;
+}
