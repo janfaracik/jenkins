@@ -1,8 +1,8 @@
-package jenkins.model.run;
+package jenkins.model.user;
 
 import hudson.Extension;
 import hudson.model.Action;
-import hudson.model.Run;
+import hudson.model.User;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
@@ -12,23 +12,23 @@ import jenkins.model.menu.event.ConfirmationEvent;
 import jenkins.model.menu.event.Event;
 
 @Extension
-public class DeleteRunAction extends TransientActionFactory<Run> {
+public class DeleteUserAction extends TransientActionFactory<User> {
 
     @Override
-    public Class<Run> type() {
-        return Run.class;
+    public Class<User> type() {
+        return User.class;
     }
 
     @Override
-    public Collection<? extends Action> createFor(Run target) {
-        if (!target.hasPermission(Run.DELETE)) {
+    public Collection<? extends Action> createFor(User target) {
+        if (!target.canDelete()) {
             return Set.of();
         }
 
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return Messages.DeleteRunFactory_Delete();
+                return "Delete user";
             }
 
             @Override
@@ -43,7 +43,7 @@ public class DeleteRunAction extends TransientActionFactory<Run> {
 
             @Override
             public Event getEvent() {
-                return ConfirmationEvent.of(Messages.DeleteRunFactory_DeleteDialog_Title(), Messages.DeleteRunFactory_DeleteDialog_Description(),  "doDelete");
+                return ConfirmationEvent.of("are u sure", "???",  "doDelete");
             }
 
             @Override

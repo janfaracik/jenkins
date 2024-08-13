@@ -116,7 +116,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  * @author Kohsuke Kawaguchi
  */
 @ExportedBean
-public class User extends AbstractModelObject implements AccessControlled, DescriptorByNameOwner, Loadable, Saveable, Comparable<User>, ModelObjectWithContextMenu, StaplerProxy {
+public class User extends Actionable implements AccessControlled, DescriptorByNameOwner, Loadable, Saveable, Comparable<User>, ModelObjectWithContextMenu, StaplerProxy {
 
     public static final XStream2 XSTREAM = new XStream2();
     private static final Logger LOGGER = Logger.getLogger(User.class.getName());
@@ -995,6 +995,25 @@ public class User extends AbstractModelObject implements AccessControlled, Descr
         }
         return Collections.unmodifiableList(actions);
     }
+
+//    public List<Action> getMagic() {
+////        System.out.println(getAllActions());
+//        return getTransientActions().stream()
+//                .filter(e -> {
+//                    String icon = e.getIconFileName();
+//
+//                    if (e instanceof IconSpec) {
+//                        if (((IconSpec) e).getIconClassName() != null) {
+//                            icon = ((IconSpec) e).getIconClassName();
+//                        }
+//                    }
+//
+//                    return !StringUtils.isBlank(e.getDisplayName()) && !StringUtils.isBlank(icon);
+//                })
+//                .sorted(Comparator.comparingInt((Action e) -> e.getGroup().getOrder())
+//                        .thenComparing(e -> Objects.requireNonNullElse(e.getDisplayName(), "")))
+//                .collect(Collectors.toUnmodifiableList());
+//    }
 
     /**
      * Return all transient actions associated with this user.

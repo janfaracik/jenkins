@@ -23,17 +23,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-  Side panel for the user view
--->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:header />
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:side-panel>
+    <l:app-bar title="${%Configure}" />
     <l:tasks>
-      <l:task contextMenu="false" href="${rootURL}/${it.url}/" icon="symbol-person" title="${%Status}"/>
-      <l:task href="${rootURL}/${it.url}/builds" icon="symbol-build-history" title="${%Builds}"/>
-      <t:actions actions="${it.propertyActions}"/>
+      <t:actions actions="${it.transientActions}"/>
     </l:tasks>
   </l:side-panel>
 </j:jelly>

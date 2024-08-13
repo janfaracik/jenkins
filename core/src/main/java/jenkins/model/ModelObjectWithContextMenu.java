@@ -8,7 +8,7 @@ import hudson.model.Computer;
 import hudson.model.Job;
 import hudson.model.ModelObject;
 import hudson.model.Node;
-import hudson.model.Run;
+import hudson.model.User;
 import hudson.slaves.Cloud;
 import java.io.IOException;
 import java.net.URI;
@@ -244,7 +244,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
 
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest request, StaplerResponse response, String view) throws JellyException, IOException {
             // TODO - refactor this
-            if (self instanceof Run) {
+            if (self instanceof User) {
                 this.addAll(((Actionable) self).getMagic());
                 return this;
             }

@@ -1,8 +1,8 @@
-package jenkins.model.run;
+package jenkins.model.user;
 
 import hudson.Extension;
 import hudson.model.Action;
-import hudson.model.Run;
+import hudson.model.User;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
@@ -11,24 +11,29 @@ import jenkins.model.menu.event.Event;
 import jenkins.model.menu.event.LinkEvent;
 
 @Extension
-public class ConsoleAction extends TransientActionFactory<Run> {
+public class ConfigureUserAction extends TransientActionFactory<User> {
 
     @Override
-    public Class<Run> type() {
-        return Run.class;
+    public Class<User> type() {
+        return User.class;
     }
 
     @Override
-    public Collection<? extends Action> createFor(Run target) {
+    public Collection<? extends Action> createFor(User target) {
+        // TODO
+//        if (!target.hasPermission(User.UPDATE)) {
+//            return Set.of();
+//        }
+
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Console Output";
+                return "Configure";
             }
 
             @Override
             public String getIconFileName() {
-                return "symbol-terminal";
+                return "symbol-settings";
             }
 
             @Override
@@ -38,7 +43,7 @@ public class ConsoleAction extends TransientActionFactory<Run> {
 
             @Override
             public Event getEvent() {
-                return LinkEvent.of("console");
+                return LinkEvent.of("account");
             }
         });
     }
