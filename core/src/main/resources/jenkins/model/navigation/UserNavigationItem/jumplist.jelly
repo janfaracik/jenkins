@@ -18,7 +18,7 @@
                         <div>${userName}</div>
                     </a>
                     <div class="separator"></div>
-                    <a class="jenkins-button jenkins-button--tertiary" href="${rootURL}/${user.url}/configure">
+                    <a class="jenkins-button jenkins-button--tertiary" href="${rootURL}/${user.url}/account">
                         <l:icon src="symbol-settings" />
                         ${%Configure}
                     </a>
