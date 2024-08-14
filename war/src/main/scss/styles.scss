@@ -3,3 +3,9 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.geeks {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: var(--section-padding);
+}
