@@ -116,7 +116,6 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
     }
 
     public List<Action> getMagic() {
-        System.out.println(getAllActions());
         return getAllActions().stream()
                 .filter(e -> {
                     String icon = e.getIconFileName();

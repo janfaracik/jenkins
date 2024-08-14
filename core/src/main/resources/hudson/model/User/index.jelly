@@ -23,8 +23,7 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:layout title="${it.displayName}">
-    <st:include page="sidepanel.jelly" />
+  <l:layout title="${it.displayName}" type="one-column">
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
       <div class="jenkins-app-bar">
@@ -36,16 +35,17 @@ THE SOFTWARE.
             ${it.fullName}
           </h1>
         </div>
-        <div class="jenkins-app-bar__controls">
-          <t:editDescriptionButton permission="${app.ADMINISTER}"/>
-          <l:app-bar-controls />
-        </div>
+        <l:app-bar-controls />
       </div>
 
-      <t:editableDescription permission="${app.ADMINISTER}" hideButton="true"/>
-      <div>
+      <l:card title="Details">
         ${%Jenkins User ID}: ${it.id}
-      </div>
+      </l:card>
+
+      <l:card title="${%Bio}">
+        <t:editableDescription permission="${app.ADMINISTER}" />
+      </l:card>
+
       <!-- give properties a chance to contribute summary item -->
       <j:forEach var="p" items="${it.allProperties}">
         <st:include page="summary.jelly" from="${p}" optional="true" it="${p}" />
@@ -59,6 +59,8 @@ THE SOFTWARE.
           </j:forEach>
         </ul>
       </j:if>
+
+      <t:buildListTable builds="${it.builds}"/>
     </l:main-panel>
   </l:layout>
 </j:jelly>

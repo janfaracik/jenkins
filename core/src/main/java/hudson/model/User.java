@@ -996,24 +996,10 @@ public class User extends Actionable implements AccessControlled, DescriptorByNa
         return Collections.unmodifiableList(actions);
     }
 
-//    public List<Action> getMagic() {
-////        System.out.println(getAllActions());
-//        return getTransientActions().stream()
-//                .filter(e -> {
-//                    String icon = e.getIconFileName();
-//
-//                    if (e instanceof IconSpec) {
-//                        if (((IconSpec) e).getIconClassName() != null) {
-//                            icon = ((IconSpec) e).getIconClassName();
-//                        }
-//                    }
-//
-//                    return !StringUtils.isBlank(e.getDisplayName()) && !StringUtils.isBlank(icon);
-//                })
-//                .sorted(Comparator.comparingInt((Action e) -> e.getGroup().getOrder())
-//                        .thenComparing(e -> Objects.requireNonNullElse(e.getDisplayName(), "")))
-//                .collect(Collectors.toUnmodifiableList());
-//    }
+    @Override
+    public List<Action> getActions() {
+        return getPropertyActions();
+    }
 
     /**
      * Return all transient actions associated with this user.

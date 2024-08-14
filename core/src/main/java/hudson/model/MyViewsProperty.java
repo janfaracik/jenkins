@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
+import jenkins.model.menu.Group;
 import jenkins.util.SystemProperties;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
@@ -240,6 +241,11 @@ public class MyViewsProperty extends UserProperty implements ModifiableViewGroup
             return "symbol-browsers";
         else
             return null;
+    }
+
+    @Override
+    public Group getGroup() {
+        return Group.FIRST_IN_APP_BAR;
     }
 
     @Override
