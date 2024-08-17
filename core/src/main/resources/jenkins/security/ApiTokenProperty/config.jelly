@@ -68,12 +68,10 @@ THE SOFTWARE.
                             <j:set var="creationDateValue" value="${%NoCreationDateValue}" />
                             <j:if test="${token.creationDate != null}">
                                 <i:formatDate var="creationDateFormat" value="${token.creationDate}" type="both" dateStyle="medium" timeStyle="medium" />
-                                <!--TODO convert to "Today", "Tomorrow", "4 days ago", "2 weeks ago", etc. -->
-                                <j:set var="creationDateValue" value="${%TokenCreation(daysOld)}" />
+                                <j:set var="creationDateValue" value="${%TokenCreation(h.getTimeSpanString(token.creationDate))}" />
                             </j:if>
-                            <span class="token-creation ${oldClazz}" title="${creationDateFormat}">${creationDateValue}</span>
-                            
-                            <span class="to-right">
+
+                            <div class="areyouawake">
                                 <j:choose>
                                     <j:when test="${isStatisticsEnabled}">
                                         <j:set var="useCounter" value="${token.useCounter}" />
@@ -93,11 +91,9 @@ THE SOFTWARE.
                                                 </j:if>
                                             </j:when>
                                             <j:otherwise>
-                                                <span class="token-use-counter">
-                                                    <strong title="${%TokenNeverUsed.Title}">
-                                                        <l:icon class="icon-warning icon-sm"/>
-                                                        ${%TokenNeverUsed}
-                                                    </strong>
+                                                <span class="token-use-counter todododolo jenkins-!-warning-color" tooltip="${%TokenNeverUsed.Title}">
+                                                    <l:icon class="symbol-shield-warning" />
+                                                    ${%TokenNeverUsed}
                                                 </span>
                                             </j:otherwise>
                                         </j:choose>
@@ -108,22 +104,24 @@ THE SOFTWARE.
                                         </span>
                                     </j:otherwise>
                                 </j:choose>
+                                <span class="token-creation todo-meow ${oldClazz}" title="${creationDateFormat}">${creationDateValue}</span>
+                            </div>
 
-                                <a href="#"
-                                   class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color api-token-property-token-revoke"
-                                   data-message-if-legacy-revoked="${%RevokedToken}"
-                                   data-confirm="${%ConfirmRevokeSingle}"
-                                   data-confirm-title="${%ConfirmRevokeSingleTitle}"
-                                   data-target-url="${descriptor.descriptorFullUrl}/revoke">
-                                    <local:revokeIcon title="${%RevokeToken}" />
-                                </a>
-                            </span>
+                            <a href="#"
+                               tooltip="${%Revoke token}"
+                               class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color api-token-property-token-revoke"
+                               data-message-if-legacy-revoked="${%RevokedToken}"
+                               data-confirm="${%ConfirmRevokeSingle}"
+                               data-confirm-title="${%ConfirmRevokeSingleTitle}"
+                               data-target-url="${descriptor.descriptorFullUrl}/revoke">
+                                <l:icon src="symbol-trash" />
+                            </a>
                         </div>
                     </j:when>
                     <j:otherwise>
                         <div class="token-list-item token-list-new-item">
                             <input type="hidden" class="token-uuid-input" name="tokenUuid" value="${token.uuid}" />
-                            <f:textbox name="tokenName" clazz="token-name" placeholder="${%Default name}"/>
+                            <f:textbox name="tokenName" clazz="token-name" placeholder="${%Default name}" autofocus="true" />
                             <st:nbsp /><!-- without this non-breakable space, double click on the div will put the focus on the input -->
                             <span class="new-token-value"><!--will be filled by javascript--></span>
                             <span class="token-save">

@@ -21,23 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-.token-list {
-  /* reset to get rid of browser default */
-  margin: 0;
-  padding: 0;
-
-  max-width: 700px;
-  border: 1px solid #cccccc;
-  border-color: var(--medium-grey);
-  border-radius: 3px;
-}
-
-.token-list .token-list-item {
-  min-height: inherit;
-  padding: 8px 10px;
-  font-size: 0.875rem;
-  line-height: 26px;
-}
 .token-list .token-list-item.legacy-token {
   padding: 6px 5px 6px 5px;
   border: 2px solid #ffe262;
@@ -55,13 +38,6 @@
 .token-list .token-list-item .token-name-input {
   font-weight: bold;
 }
-.token-list .token-list-item .token-creation {
-  margin-left: 5px;
-  font-size: 0.75rem;
-}
-.token-list .token-list-item .token-creation.age-ok {
-  color: #6d7680;
-}
 .token-list .token-list-item .token-creation.age-mmmh {
   color: #e09307;
 }
@@ -71,13 +47,77 @@
 .token-list .token-list-item .token-hide {
   display: none;
 }
-.token-list .token-list-item .to-right {
-  float: right;
+
+.areyouawake {
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  flex-direction: column;
 }
-.token-list .token-list-item .token-use-counter {
-  font-size: 0.75rem;
-  color: #6d7680;
+
+.todododolo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  svg {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
 }
+
+.todo-meow {
+  color: var(--text-color-secondary);
+}
+
+.token-list-new-item {
+  display: grid;
+  grid-template-columns: 1fr 275px;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0 -1rem -1rem -1rem !important;
+  padding: 0.5rem;
+
+  input {
+    border: none;
+  }
+}
+
+.token-list-existing-item {
+  display: grid;
+  grid-template-columns: 1fr 275px auto;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0 -1rem -1rem -1rem !important;
+  padding: 0.5rem;
+
+  input {
+    font-weight: 500;
+
+    &:not(:hover, :active, :focus) {
+      background: none;
+      border: 2px solid transparent;
+    }
+  }
+
+  span {
+    font-size: 0.75rem;
+  }
+
+  .jenkins-button {
+    aspect-ratio: 1;
+    border-radius: 100px;
+    padding: 0;
+  }
+}
+
+.token-use-counter {
+  b {
+    font-weight: inherit;
+  }
+}
+
 .token-list .token-list-item .no-statistics {
   font-size: 0.75rem;
   color: #6d7680;
@@ -131,10 +171,7 @@
   vertical-align: baseline;
 }
 .token-list .repeated-chunk {
-  border-width: 0;
-  padding: 0;
-  margin: 0;
-}
-.token-list .repeatable-add {
-  margin: 6px 6px 3px 6px;
+  .repeated-chunk__header {
+    display: none;
+  }
 }
