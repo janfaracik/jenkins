@@ -93,8 +93,6 @@
   padding: 0.5rem;
 
   input {
-    font-weight: 500;
-
     &:not(:hover, :active, :focus) {
       background: none;
       border: 2px solid transparent;
