@@ -79,7 +79,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -105,6 +104,7 @@ import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
@@ -212,8 +212,14 @@ public abstract class View extends AbstractModelObject implements AccessControll
         }
     }
 
-    public List<BaseViewThing> getThings() {
+    @Restricted(NoExternalUse.class)
+    private ExtensionList<BaseViewThing> getThings() {
         return ExtensionList.lookup(BaseViewThing.class);
+    }
+
+    private BaseViewThing getThing(String clazz) {
+        return ExtensionList.lookup(BaseViewThing.class).stream()
+                .filter(e -> e.getClass().getName().equals(clazz)).findFirst().orElseThrow();
     }
 
     /**
@@ -222,19 +228,16 @@ public abstract class View extends AbstractModelObject implements AccessControll
     @RequirePOST
     public TopLevelItem doCreateItemMagic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
         JSONObject body = req.getSubmittedForm();
-        String name = body.getString("name");
-        String clazz = body.getString("clazz");
-        BaseViewThing currentClazz = getThings().stream().filter(e -> e.getClass().getName().equals(clazz)).findFirst().orElseThrow();
+        var name = body.getString("name");
+        var creator = getThing(body.getString("clazz"));
 
         // Validate the name of the project
         Jenkins.checkGoodName(name);
-        name = name.trim();
+        body.put("name", name.trim());
 
-        if (this.getItem(name) != null) {
+        if (getItem(name) != null) {
             throw new Failure(Messages.Hudson_JobAlreadyExists(name));
         }
-
-        body.put("name", name);
 
         // ⭐️Intention behind the design
         // Up front validation is done once (e.g. does the user have permission to create?)
@@ -243,9 +246,9 @@ public abstract class View extends AbstractModelObject implements AccessControll
         // It creates the item
         // we redirect to the item
 
-        var project = currentClazz.create(body, this);
+        var project = creator.create(body, this);
 
-        rsp.sendRedirect2(req.getContextPath() + '/' + project.getUrl() + "configure");
+        rsp.sendRedirect2(req.getContextPath() + '/' + project.getUrl());
 
         return project;
     }
