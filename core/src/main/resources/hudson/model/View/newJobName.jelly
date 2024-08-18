@@ -1,0 +1,7 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+  <div class="jenkins-form-item">
+    <label for="name" class="jenkins-form-label">${%Name}</label>
+    <input name="name" class="jenkins-input ultravox" id="name" data-valid="false" type="text" tabindex="0" autofocus="true" />
+  </div>
+</j:jelly>

@@ -33,6 +33,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.DescriptorExtensionList;
 import hudson.Extension;
+import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.Functions;
 import hudson.Indenter;
@@ -41,6 +42,7 @@ import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.model.Descriptor.FormException;
 import hudson.model.listeners.ItemListener;
+import hudson.model.testtest.BaseViewThing;
 import hudson.search.CollectionSearchIndex;
 import hudson.search.SearchIndexBuilder;
 import hudson.security.ACL;
@@ -77,6 +79,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -207,6 +210,25 @@ public abstract class View extends AbstractModelObject implements AccessControll
         } else {
             return getItems();
         }
+    }
+
+    public List<BaseViewThing> getThings() {
+        return ExtensionList.lookup(BaseViewThing.class);
+    }
+
+    @RequirePOST
+    public Item doCreateItemMagic(StaplerRequest req, StaplerResponse rsp) throws ServletException {
+        JSONObject something = req.getSubmittedForm();
+        String clazz = something.getString("clazz");
+        List<BaseViewThing> classes = getThings();
+        Optional<BaseViewThing> currentClazz = classes.stream()
+                .filter(e -> e.getClass().getName().equals(clazz)).findFirst();
+
+        if (currentClazz.isEmpty()) {
+            return null;
+        }
+
+        return currentClazz.get().doCreateItem(req, rsp);
     }
 
     /**
