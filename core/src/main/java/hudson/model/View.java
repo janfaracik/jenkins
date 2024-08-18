@@ -216,19 +216,31 @@ public abstract class View extends AbstractModelObject implements AccessControll
         return ExtensionList.lookup(BaseViewThing.class);
     }
 
+    /**
+     * TODO
+     * @param req
+     * @param rsp
+     * @return
+     * @throws ServletException
+     */
     @RequirePOST
     public Item doCreateItemMagic(StaplerRequest req, StaplerResponse rsp) throws ServletException {
-        JSONObject something = req.getSubmittedForm();
-        String clazz = something.getString("clazz");
-        List<BaseViewThing> classes = getThings();
-        Optional<BaseViewThing> currentClazz = classes.stream()
-                .filter(e -> e.getClass().getName().equals(clazz)).findFirst();
+        JSONObject data = req.getSubmittedForm();
+        String clazz = data.getString("clazz");
+        Optional<BaseViewThing> currentClazz = getThings().stream().filter(e -> e.getClass().getName().equals(clazz)).findFirst();
 
         if (currentClazz.isEmpty()) {
             return null;
         }
 
-        return currentClazz.get().doCreateItem(req, rsp);
+        // ⭐️Intention behind the design
+        // Up front validation is done once (e.g. does the user have permission to create?)
+        // Data is then passed to the class calling
+        // That class validates the data (whichever way it wants)
+        // It creates the item
+        // And redirects to that item
+
+        return currentClazz.get().createItem(data, this, req, rsp);
     }
 
     /**

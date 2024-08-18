@@ -140,22 +140,6 @@ public abstract class ItemGroupMixIn {
     /**
      * Creates a {@link TopLevelItem} for example from the submission of the {@code /lib/hudson/newFromList/form} tag
      * or throws an exception if it fails.
-     */
-    public synchronized TopLevelItem newCreateTopLevelItem(StaplerRequest req, TopLevelItem toCreate, StaplerResponse rsp) throws IOException, ServletException {
-        acl.checkPermission(Item.CREATE);
-
-        System.out.println("Navigating back!");
-
-        rsp.sendRedirect2(req.getContextPath() + '/' + toCreate.getUrl() + "configure");
-
-        System.out.println("returning!");
-
-        return toCreate;
-    }
-
-    /**
-     * Creates a {@link TopLevelItem} for example from the submission of the {@code /lib/hudson/newFromList/form} tag
-     * or throws an exception if it fails.
      *
      * @deprecated
      */

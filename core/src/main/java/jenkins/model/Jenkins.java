@@ -4287,14 +4287,6 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         return itemGroupMixIn.createTopLevelItem(req, rsp);
     }
 
-    @RequirePOST
-    public synchronized TopLevelItem doCreateItemNew(StaplerRequest req,
-                                                     TopLevelItem toCreate,
-                                                     StaplerResponse rsp) throws IOException, ServletException {
-        System.out.println("Called here!");
-        return itemGroupMixIn.newCreateTopLevelItem(req, toCreate, rsp);
-    }
-
     /**
      * @since 1.319
      */
