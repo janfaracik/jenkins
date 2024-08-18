@@ -57,10 +57,13 @@ THE SOFTWARE.
       </l:tasks>
     </l:side-panel>
 
-    <l:main-panel clazz="minithing">
+    <l:main-panel>
       <j:forEach var="item" items="${it.things}">
         <div class="dinnerbin">
-          <st:include page="newJob.jelly" from="${item}"/>
+          <form method="post" action="createItemMagic">
+            <input type="hidden" name="clazz" value="${item.class.name}" />
+            <st:include page="newJob.jelly" from="${item}"/>
+          </form>
         </div>
       </j:forEach>
     </l:main-panel>

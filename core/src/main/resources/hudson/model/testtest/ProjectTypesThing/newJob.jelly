@@ -1,38 +1,32 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:t="/lib/hudson">
-  <form method="post" action="createItemMagic">
-    <l:app-bar title="${from.displayName}">
-      <t:help href="https://www.jenkins.io/doc/book/using/working-with-projects/" />
-    </l:app-bar>
+  <l:app-bar title="${from.displayName}">
+    <t:help href="https://www.jenkins.io/doc/book/using/working-with-projects/" />
+  </l:app-bar>
 
-    <st:include page="newJobName.jelly"/>
+  <st:include page="newJobName.jelly"/>
 
-    <input type="hidden" name="clazz" value="${from.class}" />
-
-    <div class="jenkins-form-item">
-      <div class="jenkins-form-label">
-        ${%Type}
-      </div>
-      <div class="oceansounds">
-        <j:forEach var="category" items="${it.itemCategories.items}">
-          <j:forEach var="item" items="${category.items}">
-            <input id="type-${item.class}" type="radio" name="type" value="${item.class}" style="display: none" />
-            <label for="type-${item.class}" class="deepend">
-              <div class="deepend__icon">
-                <l:icon src="${item.iconClassName ?: item.iconFilePathPattern.replace(':size', '48x48')}" />
-              </div>
-              <div class="deepend__details">
-                <div>${item.displayName}</div>
-                <div class="descdesc">${item.description}</div>
-              </div>
-            </label>
-          </j:forEach>
-        </j:forEach>
-      </div>
+  <div class="jenkins-form-item">
+    <div class="jenkins-form-label">
+      ${%Type}
     </div>
+    <div class="oceansounds">
+      <j:forEach var="item" items="${from.itemCategories}">
+        <input id="type-${item.class}" type="radio" name="type" value="${item.id}" style="display: none" />
+        <label for="type-${item.class}" class="deepend">
+          <div class="deepend__icon">
+            <l:icon src="${item.iconClassName ?: item.iconFilePathPattern.replace(':size', '48x48')}" />
+          </div>
+          <div class="deepend__details">
+            <div>${item.displayName}</div>
+            <div class="descdesc">${item.description}</div>
+          </div>
+        </label>
+      </j:forEach>
+    </div>
+  </div>
 
-    <f:bottomButtonBar>
-      <st:include page="newJobButtonBar.jelly"/>
-    </f:bottomButtonBar>
-  </form>
+  <f:bottomButtonBar>
+    <st:include page="newJobButtonBar.jelly"/>
+  </f:bottomButtonBar>
 </j:jelly>

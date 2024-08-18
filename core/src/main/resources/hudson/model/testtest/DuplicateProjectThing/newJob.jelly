@@ -1,46 +1,42 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
-  <form method="post" action="createItem">
-    <l:app-bar title="${from.displayName}" />
+  <l:app-bar title="${from.displayName}" />
 
-    <j:choose>
-      <j:when test="${!from.itemMap.isEmpty()}">
-        <st:include page="newJobName.jelly" />
+  <j:choose>
+    <j:when test="${!from.itemMap.isEmpty()}">
+      <st:include page="newJobName.jelly" />
 
-        <input type="hidden" name="clazz" value="${from.class}" />
-
-        <div class="jenkins-form-item">
-          <div class="jenkins-form-label">
-            ${%Projects}
-          </div>
-          <div class="oceansounds">
-            <j:forEach var="item" items="${from.itemMap.values()}">
-              <input id="type-${item.displayName}" type="radio" name="mode" value="${item.displayName}" style="display: none" />
-              <label for="type-${item.displayName}" class="deepend">
-                <div class="deepend__icon">
-                  <l:icon src="symbol-status-${item.iconColor.iconName}" />
-                </div>
-                <div class="deepend__details">
-                  <div>${item.displayName}</div>
-                  <j:set var="lBuild" value="${item.lastSuccessfulBuild ?: item.lastFailedBuild}"/>
-                  <j:if test="${lBuild!=null}">
-                    <div class="descdesc">
-                      Last built ${lBuild.durationString}
-                    </div>
-                  </j:if>
-                </div>
-              </label>
-            </j:forEach>
-          </div>
+      <div class="jenkins-form-item">
+        <div class="jenkins-form-label">
+          ${%Projects}
         </div>
+        <div class="oceansounds">
+          <j:forEach var="item" items="${from.itemMap.values()}">
+            <input id="type-${item.displayName}" type="radio" name="from" value="${item.displayName}" style="display: none" />
+            <label for="type-${item.displayName}" class="deepend">
+              <div class="deepend__icon">
+                <l:icon src="symbol-status-${item.iconColor.iconName}" />
+              </div>
+              <div class="deepend__details">
+                <div>${item.displayName}</div>
+                <j:set var="lBuild" value="${item.lastSuccessfulBuild ?: item.lastFailedBuild}"/>
+                <j:if test="${lBuild!=null}">
+                  <div class="descdesc">
+                    Last built ${lBuild.durationString}
+                  </div>
+                </j:if>
+              </div>
+            </label>
+          </j:forEach>
+        </div>
+      </div>
 
-        <f:bottomButtonBar>
-          <st:include page="newJobButtonBar.jelly"/>
-        </f:bottomButtonBar>
-      </j:when>
-      <j:otherwise>
-        <l:notice icon="symbol-alert-circle" text="You don't have any existing projects" />
-      </j:otherwise>
-    </j:choose>
-  </form>
+      <f:bottomButtonBar>
+        <st:include page="newJobButtonBar.jelly"/>
+      </f:bottomButtonBar>
+    </j:when>
+    <j:otherwise>
+      <l:notice icon="symbol-alert-circle" text="You don't have any existing projects" />
+    </j:otherwise>
+  </j:choose>
 </j:jelly>

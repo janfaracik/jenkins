@@ -1,10 +1,9 @@
 package hudson.model.testtest;
 
 import hudson.model.TopLevelItem;
+import javax.servlet.ServletException;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
-
-import javax.servlet.ServletException;
 
 public abstract class BaseViewThing {
 
