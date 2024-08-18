@@ -4,8 +4,6 @@ import hudson.Extension;
 import hudson.model.TopLevelItem;
 import hudson.model.View;
 import net.sf.json.JSONObject;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 @Extension
 public class GithubProjectThing extends BaseViewThing {
@@ -21,7 +19,7 @@ public class GithubProjectThing extends BaseViewThing {
     }
 
     @Override
-    public TopLevelItem createItem(JSONObject data, View view, StaplerRequest req, StaplerResponse rsp) {
+    public TopLevelItem create(JSONObject data, View view) {
         return null;
     }
 }

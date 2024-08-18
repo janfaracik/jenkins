@@ -3,7 +3,6 @@ package hudson.model.testtest;
 import hudson.Extension;
 import hudson.model.Failure;
 import hudson.model.Item;
-import hudson.model.Messages;
 import hudson.model.TopLevelItem;
 import hudson.model.View;
 import java.io.IOException;
@@ -13,8 +12,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 @Extension
 public class DuplicateProjectThing extends BaseViewThing {
@@ -30,35 +27,14 @@ public class DuplicateProjectThing extends BaseViewThing {
     }
 
     @Override
-    public TopLevelItem createItem(JSONObject data, View view, StaplerRequest req, StaplerResponse rsp) {
-        String name = validateName(data.getString("name"), view);
+    public TopLevelItem create(JSONObject data, View view) {
         Item from = validateFrom(data.getString("from"));
 
-        TopLevelItem result;
         try {
-            result = Jenkins.getInstanceOrNull().copy((TopLevelItem) from, name);
+            return Jenkins.getInstanceOrNull().copy((TopLevelItem) from, data.getString("name"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        try {
-            rsp.sendRedirect2(req.getContextPath() + '/' + result.getUrl() + "configure");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return result;
-    }
-
-    private String validateName(String name, View view) {
-        Jenkins.checkGoodName(name);
-        name = name.trim();
-
-        if (view.getItem(name) != null) {
-            throw new Failure(Messages.Hudson_JobAlreadyExists(name));
-        }
-
-        return name;
     }
 
     private Item validateFrom(String existingProject) {

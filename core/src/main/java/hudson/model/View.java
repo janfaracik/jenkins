@@ -218,20 +218,27 @@ public abstract class View extends AbstractModelObject implements AccessControll
 
     /**
      * TODO
-     * @param req
-     * @param rsp
-     * @return
-     * @throws ServletException
      */
     @RequirePOST
-    public Item doCreateItemMagic(StaplerRequest req, StaplerResponse rsp) throws ServletException {
-        JSONObject data = req.getSubmittedForm();
-        String clazz = data.getString("clazz");
+    public TopLevelItem doCreateItemMagic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+        JSONObject body = req.getSubmittedForm();
+        String name = body.getString("name");
+        String clazz = body.getString("clazz");
         Optional<BaseViewThing> currentClazz = getThings().stream().filter(e -> e.getClass().getName().equals(clazz)).findFirst();
 
         if (currentClazz.isEmpty()) {
-            return null;
+            throw new RuntimeException("Invalid clazz: " + clazz);
         }
+
+        // Validate the name of the project
+        Jenkins.checkGoodName(name);
+        name = name.trim();
+
+        if (this.getItem(name) != null) {
+            throw new Failure(Messages.Hudson_JobAlreadyExists(name));
+        }
+
+        body.put("name", name);
 
         // ⭐️Intention behind the design
         // Up front validation is done once (e.g. does the user have permission to create?)
@@ -240,7 +247,11 @@ public abstract class View extends AbstractModelObject implements AccessControll
         // It creates the item
         // And redirects to that item
 
-        return currentClazz.get().createItem(data, this, req, rsp);
+        var project = currentClazz.get().create(body, this);
+
+        rsp.sendRedirect2(req.getContextPath() + '/' + project.getUrl() + "configure");
+
+        return project;
     }
 
     /**

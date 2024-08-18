@@ -8,8 +8,6 @@ import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
 
 @Extension
 public class ProjectTypesThing extends BaseViewThing {
@@ -52,26 +50,15 @@ public class ProjectTypesThing extends BaseViewThing {
     }
 
     @Override
-    public TopLevelItem createItem(JSONObject data, View view, StaplerRequest req, StaplerResponse rsp) {
-        String name = validateName(data.getString("name"), view);
+    public TopLevelItem create(JSONObject data, View view) {
         TopLevelItemDescriptor type = validateType(data.getString("type"), view);
 
         // Create the project, knowing its name and type are both valid
-        TopLevelItem result;
         try {
-            result = Jenkins.getInstanceOrNull().createProject(type, name, true);
+            return Jenkins.getInstanceOrNull().createProject(type, data.getString("name"), true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        // Redirect to the project's 'Configure' screen
-        try {
-            rsp.sendRedirect2(req.getContextPath() + '/' + result.getUrl() + "configure");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return result;
     }
 
     @Restricted(NoExternalUse.class)
