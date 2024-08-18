@@ -224,11 +224,7 @@ public abstract class View extends AbstractModelObject implements AccessControll
         JSONObject body = req.getSubmittedForm();
         String name = body.getString("name");
         String clazz = body.getString("clazz");
-        Optional<BaseViewThing> currentClazz = getThings().stream().filter(e -> e.getClass().getName().equals(clazz)).findFirst();
-
-        if (currentClazz.isEmpty()) {
-            throw new RuntimeException("Invalid clazz: " + clazz);
-        }
+        BaseViewThing currentClazz = getThings().stream().filter(e -> e.getClass().getName().equals(clazz)).findFirst().orElseThrow();
 
         // Validate the name of the project
         Jenkins.checkGoodName(name);
@@ -245,9 +241,9 @@ public abstract class View extends AbstractModelObject implements AccessControll
         // Data is then passed to the class calling
         // That class validates the data (whichever way it wants)
         // It creates the item
-        // And redirects to that item
+        // we redirect to the item
 
-        var project = currentClazz.get().create(body, this);
+        var project = currentClazz.create(body, this);
 
         rsp.sendRedirect2(req.getContextPath() + '/' + project.getUrl() + "configure");
 
