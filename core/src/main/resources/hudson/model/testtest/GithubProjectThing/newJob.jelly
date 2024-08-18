@@ -1,0 +1,5 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <l:app-bar title="${from.displayName}" />
+  <l:notice icon="symbol-github" text="Connect to GitHub" />
+</j:jelly>
