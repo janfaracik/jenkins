@@ -1,3 +1,83 @@
+@use "../../scss/abstracts/mixins";
+
+.dinnerbin {
+  animation: fadeinn 0.2s ease-in-out both;
+}
+
+@keyframes fadeinn {
+  from {
+    opacity: 0;
+    filter: blur(1px);
+    translate: 0 5px;
+  }
+}
+
+.ultravox {
+  padding: 0.75rem;
+  border-radius: 0.66rem;
+}
+
+.minithing {
+  max-width: 750px !important;
+}
+
+.swag {
+  color: var(--text-color-secondary);
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.oceansounds {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 -0.8rem;
+
+  .deepend {
+    @include mixins.item;
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+    cursor: pointer;
+    padding: 0.9rem 2rem 0.9rem 0.8rem;
+    font-size: 0.875rem;
+
+    &:not(:has(.descdesc)) {
+      align-items: center;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      svg, img {
+        width: 1.75rem !important;
+        height: 1.75rem !important;
+      }
+
+      // Legacy - to keep projects with images (not symbols) relatively the same size
+      img {
+        scale: 1.25;
+      }
+    }
+
+    &__details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+
+      .descdesc {
+        color: var(--text-color-secondary);
+        line-height: 1.66;
+      }
+    }
+  }
+}
+
+// ------
+
 .configure-instance {
   padding: 20px 100px;
   margin: 8px;

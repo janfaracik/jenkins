@@ -1,3 +1,5 @@
+/* eslint no-undef: 0 */
+
 const path = require("path");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
@@ -16,7 +18,6 @@ module.exports = (env, argv) => ({
     ],
     "add-item": [
       path.join(__dirname, "src/main/js/add-item.js"),
-      path.join(__dirname, "src/main/js/add-item.scss"),
     ],
     "pages/computer-set": [
       path.join(__dirname, "src/main/js/pages/computer-set"),
@@ -50,8 +51,8 @@ module.exports = (env, argv) => ({
     "components/row-selection-controller": [
       path.join(__dirname, "src/main/js/components/row-selection-controller"),
     ],
-    "pages/project/builds-card": [
-      path.join(__dirname, "src/main/js/pages/project/builds-card.js"),
+    "filter-build-history": [
+      path.join(__dirname, "src/main/js/filter-build-history.js"),
     ],
     "simple-page": [path.join(__dirname, "src/main/scss/simple-page.scss")],
     styles: [path.join(__dirname, "src/main/scss/styles.scss")],
