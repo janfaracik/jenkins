@@ -213,7 +213,7 @@ public abstract class View extends AbstractModelObject implements AccessControll
     }
 
     @Restricted(NoExternalUse.class)
-    private ExtensionList<BaseViewThing> getThings() {
+    public ExtensionList<BaseViewThing> getThings() {
         return ExtensionList.lookup(BaseViewThing.class);
     }
 

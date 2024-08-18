@@ -39,7 +39,7 @@ THE SOFTWARE.
       <l:tasks>
         <j:forEach var="item" items="${it.things}" indexVar="index">
           <j:if test="${index == 2}">
-            <div class="swag">Integrate with</div>
+            <div class="swag">${%Integrate with}</div>
           </j:if>
           <div class="task">
             <span class="task-link-wrapper">
