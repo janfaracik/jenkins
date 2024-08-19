@@ -73,7 +73,6 @@ THE SOFTWARE.
 
       <section class="jenkins-section">
         <j:forEach var="d" items="${describables.optionalBlocks}">
-          <!-- Fix the below -->
           <f:rowSet name="${d.name}">
             <j:out value="${d.html}"/>
           </f:rowSet>
@@ -81,7 +80,6 @@ THE SOFTWARE.
       </section>
 
       <j:forEach var="d" items="${describables.sections}">
-        <!-- Fix the below -->
         <f:rowSet name="${d.name}">
           <j:out value="${d.html}"/>
         </f:rowSet>
