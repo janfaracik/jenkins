@@ -2462,6 +2462,28 @@ public class Functions {
         return iconSource;
     }
 
+    public List<Neurons> tryTheRoar() {
+        return new ArrayList<>();
+    }
+
+    public Neurons generateNeuron(String name, String html) {
+        Neurons neurons = new Neurons();
+        neurons.name = name;
+        neurons.html = html;
+        return neurons;
+    }
+
+    public DontWorry sortList2(List<Neurons> strings) {
+        DontWorry dontWorry = new DontWorry();
+        String magic = "<div name=";
+
+        strings = strings.stream().filter(e -> !e.html.isBlank()).toList();
+
+        dontWorry.optionalBlocks = strings.stream().filter(e -> !e.html.startsWith(magic)).toList();
+        dontWorry.sections = strings.stream().filter(e -> e.html.startsWith(magic)).toList();
+        return dontWorry;
+    }
+
     static String guessIcon(String iconGuess, String rootURL) {
         String iconSource;
         //noinspection HttpUrlsUsage
