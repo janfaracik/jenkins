@@ -363,39 +363,6 @@ pre.console {
 
 /* ====================== help ===================================== */
 
-.help {
-  position: relative;
-  display: none; /* hidden until loaded */
-  padding: 1rem;
-  margin: 1rem 0;
-  word-break: break-word;
-  border-radius: 6px;
-  z-index: 0;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: var(--text-color);
-    opacity: 0.05;
-    z-index: -1;
-    border-radius: inherit;
-  }
-
-  p:first-of-type {
-    margin-top: 0;
-  }
-
-  p:last-of-type {
-    margin-bottom: 0;
-  }
-}
-
-.help .from-plugin {
-  text-align: right;
-  color: #666;
-}
-
 .icon-help,
 .svg-icon.icon-help {
   height: 1.25rem;
