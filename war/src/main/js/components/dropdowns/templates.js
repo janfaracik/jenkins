@@ -146,7 +146,9 @@ function menuItem(menuItem, type = "jenkins-dropdown__item") {
         );
     });
   }
-
+  if (options.onKeyPress) {
+    item.onkeypress = options.onKeyPress;
+  }
   return item;
 }
 
