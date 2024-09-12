@@ -41,70 +41,68 @@ THE SOFTWARE.
               <strong>${%proxyMovedBlurb(rootURL+"/manage/configure")}</strong>
           </div>
 
-          <div class="jenkins-form">
+            <div class="jenkins-form">
+                <l:isAdmin>
+                    <f:section title="${%Deploy Plugin}" description=" ${%deploytext}">
+                        <f:form method="post" action="uploadPlugin" name="uploadPlugin" enctype="multipart/form-data">
+                            <f:entry title="${%File}" field="name">
+                                <f:file accept=".hpi,.jpi" />
+                            </f:entry>
+                            <p>${%Or}</p>
+                            <f:entry title="${%URL}">
+                                <f:textbox name="pluginUrl"
+                                           class="jenkins-input validated" checkUrl="checkPluginUrl" checkDependsOn="" />
+                            </f:entry>
+                            <div class="jenkins-form-item">
+                                <f:submit value="${%Deploy}"/>
+                            </div>
+                        </f:form>
+                    </f:section>
+                </l:isAdmin>
 
-            <l:isAdmin>
-                <section class="jenkins-section jenkins-!-margin-bottom-5">
-                    <h2 class="jenkins-section__title">${%Deploy Plugin}</h2>
-                    <f:form method="post" action="uploadPlugin" name="uploadPlugin" enctype="multipart/form-data">
-                        <div style="margin-bottom: 1em;">
-                            ${%deploytext}
-                        </div>
-                        <f:entry title="${%File}" field="name">
-                            <f:file accept=".hpi,.jpi" />
+                <f:section title="${%Update Site}" description="Enter the URL of the Jenkins update site to check for plugin and system updates.">
+                    <f:form method="post" action="siteConfigure" name="siteConfigure">
+                        <f:entry>
+                            <l:isAdmin>
+                                <j:if test="${app.updateCenter.ID_DEFAULT.equals(app.updateCenter.PREDEFINED_UPDATE_SITE_ID)}">
+                                    <div class="jenkins-!-margin-bottom-3">
+                                        <a id="reset-to-default" href="#">${%Reset to default}</a>
+                                    </div>
+                                </j:if>
+                            </l:isAdmin>
+                            <f:textbox name="site"
+                                       id="update-site-url"
+                                       value="${app.updateCenter.getSite(app.updateCenter.ID_DEFAULT).url}"
+                                       checkUrl="checkUpdateSiteUrl" checkDependsOn=""/>
                         </f:entry>
-                        <p>${%Or}</p>
-                        <f:entry title="${%URL}">
-                            <f:textbox name="pluginUrl"
-                                       class="jenkins-input validated" checkUrl="checkPluginUrl" checkDependsOn="" />
-                        </f:entry>
-                        <f:submit value="${%Deploy}"/>
-                    </f:form>
-                </section>
-            </l:isAdmin>
-
-            <section class="jenkins-section jenkins-!-margin-bottom-5">
-                <h2 class="jenkins-section__title">${%Update Site}</h2>
-                <f:form method="post" action="siteConfigure" name="siteConfigure">
-                    <f:entry title="${%URL}">
                         <l:isAdmin>
-                            <j:if test="${app.updateCenter.ID_DEFAULT.equals(app.updateCenter.PREDEFINED_UPDATE_SITE_ID)}">
-                                <a id="reset-to-default" href="#">${%Reset to default}</a>
-                            </j:if>
+                            <st:adjunct includes="hudson.PluginManager._updateSite"/>
+                            <div class="jenkins-form-item">
+                                <f:submit/>
+                            </div>
                         </l:isAdmin>
-                        <f:textbox name="site"
-                                   id="update-site-url"
-                                   value="${app.updateCenter.getSite(app.updateCenter.ID_DEFAULT).url}"
-                                   checkUrl="checkUpdateSiteUrl" checkDependsOn=""/>
-                    </f:entry>
-                    <l:isAdmin>
-                        <st:adjunct includes="hudson.PluginManager._updateSite"/>
-                        <f:block>
-                            <f:submit/>
-                        </f:block>
-                    </l:isAdmin>
-                </f:form>
+                    </f:form>
+                </f:section>
+
                 <j:set var="hasNonDefault" value="${false}"/>
                 <j:forEach var="site" items="${app.updateCenter.sites}">
                     <j:if test="${site.id != app.updateCenter.ID_DEFAULT}">
                         <j:set var="hasNonDefault" value="${true}"/>
                     </j:if>
                 </j:forEach>
-            </section>
 
-            <j:if test="${hasNonDefault}">
-                <section class="jenkins-section jenkins-!-margin-bottom-5">
-                    <h2 class="jenkins-section__title">${%Other Sites}</h2>
-                    <ul>
-                        <j:forEach var="site" items="${app.updateCenter.sites}">
-                            <j:if test="${site.id != app.updateCenter.ID_DEFAULT}">
-                                <li>${site.url}</li>
-                            </j:if>
-                        </j:forEach>
-                    </ul>
-                </section>
-            </j:if>
-          </div>
+                <j:if test="${hasNonDefault}">
+                    <f:section title="${%Other Sites}">
+                        <ul>
+                            <j:forEach var="site" items="${app.updateCenter.sites}">
+                                <j:if test="${site.id != app.updateCenter.ID_DEFAULT}">
+                                    <li>${site.url}</li>
+                                </j:if>
+                            </j:forEach>
+                        </ul>
+                    </f:section>
+                </j:if>
+            </div>
         </l:main-panel>
     </l:layout>
 </j:jelly>
