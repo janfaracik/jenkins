@@ -24,7 +24,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:dd="/lib/layout/dropdowns" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout title="${it.displayName}">
     <st:include page="sidepanel.jelly" />
     <l:breadcrumb title="${%Build History}" />
@@ -34,12 +34,9 @@ THE SOFTWARE.
                           icon="symbol-filter"
                           tooltip="${null}">
           <j:forEach var="v" items="${app.views}">
-            <a href="${rootURL}/view/${v.displayName}/builds" class="jenkins-dropdown__item">
-              <div class="jenkins-dropdown__item__icon">
-                <l:icon src="${it.displayName == v.displayName ? 'symbol-check' : 'symbol-browsers'}" />
-              </div>
-              ${v.displayName}
-            </a>
+            <dd:item text="${v.displayName}"
+                     href="${rootURL}/view/${v.displayName}/builds"
+                     icon="${it.displayName == v.displayName ? 'symbol-check' : 'symbol-browsers'}" />
           </j:forEach>
         </l:overflowButton>
 
