@@ -66,5 +66,5 @@ THE SOFTWARE.
     </thead>
     <tbody></tbody>
   </table>
-  <t:rssBar-with-iconSize/>
+  <t:iconSize />
 </j:jelly>
