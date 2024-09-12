@@ -42,12 +42,14 @@ THE SOFTWARE.
             </a>
           </j:forEach>
         </l:overflowButton>
+
+        <t:rssBar />
       </l:app-bar>
 
-      <j:if test="${!request.getParameter('suppressTimelineControl')}"> <!-- cf. BuildListTableTest; breaks HtmlUnit -->
-        <st:include page="control.jelly" it="${it.timeline}"/>
-      </j:if>
-
+      <div class="jenkins-description">
+        The ‘Build history’ page shows a timeline of past builds, including their status, duration, and any related details.
+      </div>
+      
       <t:buildListTable builds="${it.builds}"/>
     </l:main-panel>
   </l:layout>
