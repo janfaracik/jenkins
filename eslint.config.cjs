@@ -1,4 +1,4 @@
-const eslintConfigPrettier = require("eslint-config-prettier");
+const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
 const globals = require("globals");
 const js = require("@eslint/js");
 
@@ -82,7 +82,7 @@ module.exports = [
   },
   // Uses eslint default ruleset
   js.configs.recommended,
-  eslintConfigPrettier,
+  eslintPluginPrettierRecommended,
   {
     rules: {
       curly: "error",
