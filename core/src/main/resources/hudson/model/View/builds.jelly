@@ -49,7 +49,7 @@ THE SOFTWARE.
       <div class="jenkins-description">
         The ‘Build history’ page shows a timeline of past builds, including their status, duration, and any related details.
       </div>
-      
+
       <t:buildListTable builds="${it.builds}"/>
     </l:main-panel>
   </l:layout>

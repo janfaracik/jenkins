@@ -48,6 +48,7 @@ import hudson.util.FormValidation;
 import hudson.util.HttpResponses;
 import hudson.util.RingBufferLogHandler;
 import hudson.util.XStream2;
+import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -71,8 +72,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
+import jenkins.model.Loadable;
 import jenkins.security.MasterToSlaveCallable;
 import jenkins.util.MemoryReductionUtil;
 import net.sf.json.JSONObject;
@@ -81,8 +82,8 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.kohsuke.stapler.verb.POST;
 
@@ -99,7 +100,7 @@ import org.kohsuke.stapler.verb.POST;
  * @author Kohsuke Kawaguchi
  * @see LogRecorderManager
  */
-public class LogRecorder extends AbstractModelObject implements Saveable {
+public class LogRecorder extends AbstractModelObject implements Loadable, Saveable {
     private volatile String name;
 
     /**
@@ -392,7 +393,7 @@ public class LogRecorder extends AbstractModelObject implements Saveable {
 
         void broadcast() {
             for (Computer c : Jenkins.get().getComputers()) {
-                if (c.getName().length() > 0) { // i.e. not master
+                if (!c.getName().isEmpty()) { // i.e. not master
                     VirtualChannel ch = c.getChannel();
                     if (ch != null) {
                         try {
@@ -438,7 +439,7 @@ public class LogRecorder extends AbstractModelObject implements Saveable {
      * Accepts submission from the configuration page.
      */
     @POST
-    public synchronized void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public synchronized void doConfigSubmit(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
 
         JSONObject src = req.getSubmittedForm();
@@ -476,6 +477,7 @@ public class LogRecorder extends AbstractModelObject implements Saveable {
     /**
      * Loads the settings from a file.
      */
+    @Override
     public synchronized void load() throws IOException {
         getConfigFile().unmarshal(this);
         loggers.forEach(Target::enable);
@@ -534,7 +536,17 @@ public class LogRecorder extends AbstractModelObject implements Saveable {
      * Deletes this recorder, then go back to the parent.
      */
     @RequirePOST
-    public synchronized void doDoDelete(StaplerResponse rsp) throws IOException, ServletException {
+    public synchronized void doDoDelete(StaplerResponse2 rsp) throws IOException, ServletException {
+        delete();
+        rsp.sendRedirect2("..");
+    }
+
+    /**
+     * Deletes this log recorder.
+     * @throws IOException In case anything went wrong while deleting the configuration file.
+     * @since 2.425
+     */
+    public void delete() throws IOException {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
 
         getConfigFile().delete();
@@ -544,13 +556,13 @@ public class LogRecorder extends AbstractModelObject implements Saveable {
         loggers.forEach(Target::disable);
 
         getParent().getRecorders().forEach(logRecorder -> logRecorder.getLoggers().forEach(Target::enable));
-        rsp.sendRedirect2("..");
+        SaveableListener.fireOnChange(this, getConfigFile());
     }
 
     /**
      * RSS feed for log entries.
      */
-    public void doRss(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doRss(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         LogRecorderManager.doRss(req, rsp, getLogRecords());
     }
 
@@ -583,7 +595,7 @@ public class LogRecorder extends AbstractModelObject implements Saveable {
             }
         });
         for (Computer c : Jenkins.get().getComputers()) {
-            if (c.getName().length() == 0) {
+            if (c.getName().isEmpty()) {
                 continue; // master
             }
             List<LogRecord> recs = new ArrayList<>();
