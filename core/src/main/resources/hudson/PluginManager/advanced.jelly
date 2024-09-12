@@ -78,7 +78,7 @@ THE SOFTWARE.
                         <l:isAdmin>
                             <st:adjunct includes="hudson.PluginManager._updateSite"/>
                             <div class="jenkins-form-item">
-                                <f:submit/>
+                                <f:submit value="${%Save}" />
                             </div>
                         </l:isAdmin>
                     </f:form>

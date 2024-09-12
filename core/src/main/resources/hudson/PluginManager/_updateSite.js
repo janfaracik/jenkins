@@ -2,9 +2,9 @@
   const resetButton = document.getElementById("reset-to-default");
   const siteUrlInput = document.getElementById("update-site-url");
   if (siteUrlInput.value === "https://updates.jenkins.io/update-center.json") {
-    resetButton.style.display = "none";
+    resetButton.parentNode.style.display = "none";
   } else {
-    resetButton.style.display = "";
+    resetButton.parentNode.style.display = "";
   }
 })();
 
