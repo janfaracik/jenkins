@@ -180,3 +180,7 @@ $min-button-size: 36px;
     height: 1rem;
   }
 }
+
+#projectstatus-tabBar {
+  margin: calc(var(--section-padding) * -0.25) 0;
+}
