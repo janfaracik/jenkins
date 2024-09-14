@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2013 Jesse Glick.
+ * Copyright 2024 Jan Faracik
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,14 +33,9 @@ import java.util.List;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
-
 public abstract class DetailFactory<T> implements ExtensionPoint {
 
     public abstract Class<T> type();
-
-    public Class<? extends Detail> detailType() {
-        return Detail.class;
-    }
 
     public abstract @NonNull Collection<? extends Detail> createFor(@NonNull T target);
 
