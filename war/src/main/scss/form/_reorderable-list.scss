@@ -100,12 +100,8 @@ div.to-be-removed {
   height: 100px;
   box-shadow: 0 15px 30px rgba(0, 0, 20, 0.05);
   opacity: 1 !important;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
   border-radius: var(--form-input-border-radius) !important;
-
-  & > * {
-    display: none;
-  }
 }
 
 // SortableJS drag & drop classes
