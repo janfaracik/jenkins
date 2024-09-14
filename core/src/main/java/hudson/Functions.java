@@ -157,6 +157,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import jenkins.console.ConsoleUrlProvider;
 import jenkins.console.WithConsoleUrl;
+import jenkins.model.Detail;
+import jenkins.model.DetailFactory;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
 import jenkins.model.Jenkins;
@@ -2575,5 +2577,16 @@ public class Functions {
     @Restricted(NoExternalUse.class)
     public static String generateItemId() {
         return String.valueOf(Math.floor(Math.random() * 3000));
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static List<Detail> getDetailsFor(Run<?, ?> object) {
+        List<Detail> details = new ArrayList<>();
+
+        for (DetailFactory<Run> taf : DetailFactory.factoriesFor(Run.class)) {
+             details.addAll(taf.createFor(object));
+        }
+
+        return details;
     }
 }

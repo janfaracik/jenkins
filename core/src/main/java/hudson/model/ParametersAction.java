@@ -28,6 +28,7 @@ import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.EnvVars;
+import hudson.Extension;
 import hudson.Util;
 import hudson.diagnosis.OldDataMonitor;
 import hudson.model.Queue.QueueAction;
@@ -47,6 +48,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jenkins.model.Detail;
+import jenkins.model.DetailFactory;
 import jenkins.model.RunAction2;
 import jenkins.util.SystemProperties;
 import org.kohsuke.accmod.Restricted;
@@ -366,4 +369,34 @@ public class ParametersAction implements RunAction2, Iterable<ParameterValue>, Q
 
     private static final Logger LOGGER = Logger.getLogger(ParametersAction.class.getName());
 
+    @Extension
+    public static final class ParametersDetailFactory extends DetailFactory<Run> {
+
+        @Override
+        public Class<Run> type() {
+            return Run.class;
+        }
+
+        @NonNull @Override public Collection<? extends Detail> createFor(@NonNull Run target) {
+            ParametersAction action = target.getAction(ParametersAction.class);
+
+            if (action == null) {
+                return Collections.emptyList();
+            }
+
+            return List.of(
+                    new Detail() {
+                        @Override
+                        public String getIconFileName() {
+                            return "symbol-parameters";
+                        }
+
+                        @Override
+                        public String getDisplayName() {
+                            return action.getParameters().size() + " Parameters";
+                        }
+                    }
+            );
+        }
+    }
 }
