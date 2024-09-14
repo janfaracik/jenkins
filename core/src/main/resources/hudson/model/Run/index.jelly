@@ -48,15 +48,20 @@ THE SOFTWARE.
       <div class="app-build__details">
         <l:card title="${%Details}">
           <div class="jenkins-card__details">
-            <j:forEach var="detail" items="${h.getDetailsFor(it)}">
-              <st:include page="detail.jelly" from="${detail}" optional="true">
-                <div class="jenkins-card__details__item">
-                  <div class="jenkins-card__details__item__icon">
-                    <l:icon src="${detail.iconFileName}" />
+            <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
+              <j:if test="${index gt 0}">
+                <hr />
+              </j:if>
+              <j:forEach var="detail" items="${group.value}">
+                <st:include page="detail.jelly" from="${detail}" optional="true">
+                  <div class="jenkins-card__details__item">
+                    <div class="jenkins-card__details__item__icon">
+                      <l:icon src="${detail.iconFileName}" />
+                    </div>
+                    ${detail.displayName}
                   </div>
-                  ${detail.displayName}
-                </div>
-              </st:include>
+                </st:include>
+              </j:forEach>
             </j:forEach>
           </div>
         </l:card>
