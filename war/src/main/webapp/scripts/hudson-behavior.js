@@ -1097,33 +1097,30 @@ function labelAttachPreviousOnClick() {
   }
 }
 
-function helpButtonOnClick() {
-  var tr =
-    findFollowingTR(this, "help-area", "help-sibling") ||
-    findFollowingTR(this, "help-area", "setting-help") ||
-    findFollowingTR(this, "help-area");
-  var div = tr.firstElementChild;
-  if (!div.classList.contains("help")) {
-    div = div.nextElementSibling.firstElementChild;
-  }
+/**
+ * Shows and hides the help area for a given help button
+ * @param {HTMLButtonElement} helpButton - The help button
+ */
+function helpButtonOnClick(helpButton) {
+  const helpId = helpButton.dataset.helpId;
+  const host = document.querySelector(`[data-help-host='${helpId}']`);
 
-  if (div.style.display != "block") {
-    div.style.display = "block";
-    // make it visible
+  if (host.style.display !== "block") {
+    host.style.display = "block";
 
-    fetch(this.getAttribute("helpURL")).then((rsp) => {
+    fetch(helpButton.getAttribute("helpURL")).then((rsp) => {
       rsp.text().then((responseText) => {
         if (rsp.ok) {
-          var from = rsp.headers.get("X-Plugin-From");
-          // Which plugin is this from?
-          div.innerHTML =
+          // If a plugin owns this help content, display a 'From <plugin>' label
+          const from = rsp.headers.get("X-Plugin-From");
+          host.innerHTML =
             responseText +
             (from ? "<div class='from-plugin'>" + from + "</div>" : "");
 
           // Ensure links open in new window unless explicitly specified otherwise
-          var links = div.getElementsByTagName("a");
-          for (var i = 0; i < links.length; i++) {
-            var link = links[i];
+          const links = host.getElementsByTagName("a");
+          for (let i = 0; i < links.length; i++) {
+            const link = links[i];
             if (link.hasAttribute("href")) {
               // ignore document anchors
               if (!link.hasAttribute("target")) {
@@ -1135,18 +1132,16 @@ function helpButtonOnClick() {
             }
           }
         } else {
-          div.innerHTML =
+          host.innerHTML =
             "<b>ERROR</b>: Failed to load help file: " + rsp.statusText;
         }
         layoutUpdateCallback.call();
       });
     });
   } else {
-    div.style.display = "none";
+    host.style.display = "none";
     layoutUpdateCallback.call();
   }
-
-  return false;
 }
 
 function isCommandKey(event) {
@@ -1333,20 +1328,20 @@ function rowvgStartEachRow(recursive, f) {
   );
 
   Behaviour.specify(
-    "A.jenkins-help-button",
+    ".jenkins-help-button",
     "a-jenkins-help-button",
     ++p,
     function (e) {
-      e.onclick = helpButtonOnClick;
+      e.onclick = () => helpButtonOnClick(e);
       e.tabIndex = 9999; // make help link unnavigable from keyboard
     },
   );
 
   // legacy class name
-  Behaviour.specify("A.help-button", "a-help-button", ++p, function (e) {
-    e.onclick = helpButtonOnClick;
-    e.tabIndex = 9999; // make help link unnavigable from keyboard
-  });
+  // Behaviour.specify("A.help-button", "a-help-button", ++p, function (e) {
+  //   e.onclick = helpButtonOnClick;
+  //   e.tabIndex = 9999; // make help link unnavigable from keyboard
+  // });
 
   // Script Console : settings and shortcut key
   Behaviour.specify("TEXTAREA.script", "textarea-script", ++p, function (e) {

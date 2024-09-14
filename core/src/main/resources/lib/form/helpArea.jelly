@@ -27,9 +27,8 @@ THE SOFTWARE.
   <st:documentation>
     Place holder to lazy-load help text via AJAX.
   </st:documentation>
-  <div class="help-area tr">
-      <div class="help">
-        <l:spinner text="${%Loading...}" />
-      </div>
+
+  <div class="jenkins-help-area" data-help-host="${helpId}">
+    <l:spinner text="${%Loading...}" />
   </div>
 </j:jelly>
