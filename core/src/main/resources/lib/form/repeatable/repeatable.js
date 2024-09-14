@@ -40,8 +40,6 @@ var repeatableSupport = {
       addOnTop = false;
     }
 
-    // importNode isn't supported in IE.
-    // nc = document.importNode(node,true);
     var nc = document.createElement("div");
     nc.className = "repeated-chunk fade-in";
     nc.setAttribute("name", this.name);
@@ -59,7 +57,6 @@ var repeatableSupport = {
       registerSortableDragDrop(nc);
     }
 
-    nc.classList.remove("fade-in");
     Behaviour.applySubtree(nc, true);
     this.update();
   },
@@ -101,15 +98,17 @@ var repeatableSupport = {
           parentOfButton.insertBefore(addTopButton, parentOfButton.firstChild);
           Behaviour.applySubtree(addTopButton, true);
         }
-        children[0].className = "repeated-chunk first last only";
+        children[0].className = "repeated-chunk fade-in first last only";
       } else {
-        children[0].className = "repeated-chunk first";
+        children[0].className = "repeated-chunk first fade-in";
         for (var i = 1; i < children.length - 1; i++) {
-          children[i].className = "repeated-chunk middle";
+          children[i].className = "repeated-chunk middle fade-in";
         }
-        children[children.length - 1].className = "repeated-chunk last";
+        children[children.length - 1].className = "repeated-chunk last fade-in";
       }
     }
+
+
   },
 
   // these are static methods that don't rely on 'this'
@@ -133,6 +132,9 @@ var repeatableSupport = {
       // transition end not triggered in tests
       n.ontransitionend.call(n, {});
     }
+
+    // TODO - Improve animation
+    // n.style.maxHeight = "0px";
     n.style.maxHeight = n.offsetHeight + "px";
     n.classList.add("fade-out");
     setTimeout(() => {
