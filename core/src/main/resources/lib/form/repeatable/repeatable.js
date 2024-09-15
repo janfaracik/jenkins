@@ -107,8 +107,6 @@ var repeatableSupport = {
         children[children.length - 1].className = "repeated-chunk last fade-in";
       }
     }
-
-
   },
 
   // these are static methods that don't rely on 'this'
