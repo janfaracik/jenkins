@@ -5,6 +5,7 @@ import hudson.model.ModelObject;
 public abstract class Detail implements ModelObject {
 
     /**
+     * TODO
      */
     public abstract String getIconFileName();
 
@@ -15,7 +16,7 @@ public abstract class Detail implements ModelObject {
     public abstract String getDisplayName();
 
     /**
-     * @return the group, e.g. 'GIT' for git information, null for no grouping
+     * @return TODO
      */
     public Group getGroup() {
         return Group.GENERIC;
