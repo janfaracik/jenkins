@@ -12,7 +12,6 @@ $exit-animation: 0.2s;
           box-shadow var(--standard-transition);
   height: unset !important;
   margin: 0 0 var(--card-border-width) 0;
-  //overflow: hidden;
 
   &::after {
     content: "";
@@ -104,8 +103,6 @@ $exit-animation: 0.2s;
   }
 }
 
-/* ========================= repeatable elements ========================= */
-
 @keyframes testest {
   from {
     scale: 0.99;
@@ -131,6 +128,59 @@ $exit-animation: 0.2s;
   z-index: -10;
   animation: testestreverse #{$exit-animation} both;
 }
+
+//.hetero-list-container.with-drag-drop .repeated-chunk,
+//.repeated-container.with-drag-drop .repeated-chunk {
+//  //margin-bottom: 1rem;
+//}
+
+.repeated-chunk--sortable-chosen {
+  width: 100%;
+  height: 100px;
+  box-shadow: 0 15px 30px rgba(0, 0, 20, 0.05);
+  opacity: 1 !important;
+  backdrop-filter: blur(20px);
+  border-radius: var(--form-input-border-radius) !important;
+}
+
+.repeated-chunk--sortable-ghost {
+  opacity: 0 !important;
+}
+
+.help-sibling2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.notafoodwriter2 {
+  &:empty {
+    display: none;
+  }
+
+  & > *:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.notafoodwriter {
+  padding: 0 1rem 1rem;
+
+  &:empty {
+    display: none;
+  }
+
+  & > *:last-of-type {
+    margin-bottom: 0;
+  }
+}
+
+.repeated-chunk + .repeatable-insertion-point + .hetero-list-add {
+  margin-top: 1rem;
+  transition: none;
+}
+
+/* ========================= repeatable elements ========================= */
 
 .repeated-chunk .show-if-last {
   visibility: hidden;
@@ -213,58 +263,4 @@ $exit-animation: 0.2s;
 */
 div.to-be-removed {
   display: none;
-}
-
-/* ========================= D&D support in heterogenous/repeatable lists = */
-
-.hetero-list-container.with-drag-drop .repeated-chunk,
-.repeated-container.with-drag-drop .repeated-chunk {
-  //margin-bottom: 1rem;
-}
-
-.repeated-chunk--sortable-chosen {
-  width: 100%;
-  height: 100px;
-  box-shadow: 0 15px 30px rgba(0, 0, 20, 0.05);
-  opacity: 1 !important;
-  backdrop-filter: blur(20px);
-  border-radius: var(--form-input-border-radius) !important;
-}
-
-// SortableJS drag & drop classes
-.repeated-chunk--sortable-ghost {
-  opacity: 0 !important;
-}
-
-.help-sibling2 {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.notafoodwriter2 {
-  &:empty {
-    display: none;
-  }
-
-  & > *:last-of-type {
-    margin-bottom: 0;
-  }
-}
-
-.notafoodwriter {
-  padding: 0 1rem 1rem;
-
-  &:empty {
-    display: none;
-  }
-
-  & > *:last-of-type {
-    margin-bottom: 0;
-  }
-}
-
-.repeated-chunk + .repeatable-insertion-point + .hetero-list-add {
-  margin-top: 1rem;
-  transition: none;
 }
