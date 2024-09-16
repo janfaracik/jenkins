@@ -26,7 +26,7 @@ THE SOFTWARE.
   Manage monitoring
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
   <l:layout permissions="${app.MANAGE_AND_SYSTEM_READ}" title="${%Node Monitoring Configuration}" type="one-column">
     <j:set var="readOnlyMode" value="${!app.hasPermission(app.MANAGE)}" />
     <l:breadcrumb title="${%Configure Node Monitors}" />

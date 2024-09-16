@@ -28,7 +28,7 @@ THE SOFTWARE.
   Side panel for the project view.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:p="/lib/hudson/project">
   <l:header title="${it.name}">
     <st:include page="rssHeader.jelly" />
     <link rel="alternate" title="Jenkins:${it.name} (changelog)" href="rssChangelog" type="application/rss+xml" />

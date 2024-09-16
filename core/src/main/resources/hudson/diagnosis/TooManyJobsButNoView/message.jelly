@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
   <div id="tooManyJobsButNoView" class="jenkins-alert jenkins-alert-warning">
     <l:isAdmin>
       <form method="post" action="${rootURL}/${it.url}/act" name="${it.id}">

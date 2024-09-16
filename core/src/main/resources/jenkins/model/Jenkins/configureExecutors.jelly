@@ -27,7 +27,7 @@ THE SOFTWARE.
   explain what happened.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
 <l:layout title="This page has moved">
   <st:include page="sidepanel.jelly" />
   <l:main-panel>

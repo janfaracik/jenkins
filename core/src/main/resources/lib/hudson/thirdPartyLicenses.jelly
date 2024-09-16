@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 <!-- Third party license acknowledgements page -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define">
   <d:taglib uri="licenses">
     <d:tag name="dependencies">
       <table class="jenkins-table sortable">

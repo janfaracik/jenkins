@@ -30,7 +30,7 @@ THE SOFTWARE.
     new.jelly -> ComputerSet.doCreateItem -> _new2.jelly -> ComputerSet.doDoCreateItem
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <j:getStatic var="createPermission" className="hudson.model.Computer" field="CREATE"/>
   <l:layout title="${%New node}" permission="${createPermission}" type="one-column">
     <st:include page="sidepanel.jelly" />

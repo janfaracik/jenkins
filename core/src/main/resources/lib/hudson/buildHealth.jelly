@@ -30,7 +30,7 @@ THE SOFTWARE.
   <%@ attribute name="link" required="false" type="java.lang.String" %>
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:l="/lib/layout">
   <j:set var="healthReports" value="${job.buildHealthReports}"/>
   <j:new var="emptyHealthReport" className="hudson.model.HealthReport"/>
   <j:set var="buildHealth" value="${empty(healthReports) ? emptyHealthReport : healthReports[0]}"/>

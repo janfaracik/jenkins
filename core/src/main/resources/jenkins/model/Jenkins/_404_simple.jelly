@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"  xmlns:x="jelly:xml">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout"  xmlns:x="jelly:xml">
     <!--
       This is the page designated by web.xml to handle 404 errors on the resource domain.
       We do not have access to all the javascript and css resources here, so render a simple page.

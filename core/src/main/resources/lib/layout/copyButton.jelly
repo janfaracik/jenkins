@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:i="jelly:fmt" xmlns:x="jelly:xml">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
   <st:documentation>
     Button that copies text into the user's clipboard upon click, either <code>text</code> or <code>ref</code> is required.
 

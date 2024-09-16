@@ -24,6 +24,6 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core">
   <a href="${rootURL}/${app.securityRealm.loginUrl}?from=${app.securityRealm.from}">${%login}</a>
 </j:jelly>

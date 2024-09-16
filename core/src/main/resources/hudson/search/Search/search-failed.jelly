@@ -26,7 +26,7 @@ THE SOFTWARE.
   Used when the search didn't have the exact hit.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <j:set var="q" value="${request.getParameter('q')}"/>
   <j:new var="h" className="hudson.Functions" /><!-- needed for printing title. -->
   <l:layout title="${%Search for} '${q}'">

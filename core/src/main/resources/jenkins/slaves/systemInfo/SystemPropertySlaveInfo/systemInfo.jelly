@@ -28,6 +28,6 @@ THE SOFTWARE.
   TODO: merge this with Hudson/systemInfo.jelly
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
   <t:propertyTable items="${it.systemProperties}" sensitive="true" />
 </j:jelly>

@@ -26,7 +26,7 @@ THE SOFTWARE.
   Log view
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
 <l:layout title="${%Log Recorders}" type="one-column">
   <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
   <l:main-panel xmlns:local="local">

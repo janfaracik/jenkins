@@ -30,7 +30,7 @@ THE SOFTWARE.
   This file is pulled into the layout.jelly
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
     <j:if test="${it.due}">
       <j:set var="statData" value="${it.statData}"/>
       <j:if test="${statData != null}">
