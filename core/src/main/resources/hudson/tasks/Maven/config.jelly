@@ -55,6 +55,6 @@ THE SOFTWARE.
     </f:entry>
 
     <f:dropdownDescriptorSelector title="${%Settings file}"  field="settings" default="${descriptor.defaultSettingsProvider}"/>
-	<f:dropdownDescriptorSelector title="${%Global Settings file}" field="globalSettings"  default="${descriptor.defaultGlobalSettingsProvider}"/>
+  <f:dropdownDescriptorSelector title="${%Global Settings file}" field="globalSettings"  default="${descriptor.defaultGlobalSettingsProvider}"/>
   </f:advanced>
 </j:jelly>

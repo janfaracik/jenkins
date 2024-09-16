@@ -40,13 +40,13 @@ THE SOFTWARE.
             <div id="error-description" style="text-align: center">
                 <h2>${%title(jakarta.servlet.error.message?:'Not Found')}</h2>
                 <j:if test="${!request.getAttribute('jenkins.security.ResourceDomainRootAction.error')}">
-	                <p>
-	                    <j:choose>
-	                        <j:when test="${app.useSecurity}">
+                  <p>
+                      <j:choose>
+                          <j:when test="${app.useSecurity}">
                                 ${%noAccess}
-		                    </j:when>
-		                    <j:otherwise>
-		                        ${%notFound}
+                        </j:when>
+                        <j:otherwise>
+                            ${%notFound}
                             </j:otherwise>
                         </j:choose>
                     </p>

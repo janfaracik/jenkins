@@ -25,26 +25,26 @@ THE SOFTWARE.
 <!--
   Link to a range of build. Used by fingerprint/index.jsp
 
-	<%@ attribute name="range" type="java.lang.Object" use="required" %>
-	<%@ attribute name="job" type="hudson.model.Job" use="required" %>
+  <%@ attribute name="range" type="java.lang.Object" use="required" %>
+  <%@ attribute name="job" type="hudson.model.Job" use="required" %>
 -->
 <!-- it's hudson.model.Fingerprint.RangeSet but Tomcat can't seem to handler inner classes -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-	<j:forEach var="r" items="${range.ranges}">
-	  <j:choose>
-	    <j:when test="${r.start==r.end-1}">
-	      <t:buildLink job="${job}" number="${r.start}" />
+  <j:forEach var="r" items="${range.ranges}">
+    <j:choose>
+      <j:when test="${r.start==r.end-1}">
+        <t:buildLink job="${job}" number="${r.start}" />
       </j:when>
-	    <j:when test="${r.start==r.end-2}">
-	      <t:buildLink job="${job}" number="${r.start}" />
+      <j:when test="${r.start==r.end-2}">
+        <t:buildLink job="${job}" number="${r.start}" />
         <st:nbsp/>
-	      <t:buildLink job="${job}" number="${r.end-1}" />
-	    </j:when>
-	    <j:otherwise>
-	      <t:buildLink job="${job}" number="${r.start}" />-<t:buildLink job="${job}" number="${r.end-1}" />
-	    </j:otherwise>
-	  </j:choose>
+        <t:buildLink job="${job}" number="${r.end-1}" />
+      </j:when>
+      <j:otherwise>
+        <t:buildLink job="${job}" number="${r.start}" />-<t:buildLink job="${job}" number="${r.end-1}" />
+      </j:otherwise>
+    </j:choose>
     <st:nbsp/>
   </j:forEach>
 </j:jelly>
