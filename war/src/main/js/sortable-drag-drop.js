@@ -17,7 +17,7 @@ function registerSortableDragDrop(e) {
     return false;
   }
 
-  let initialX, initialY, currentItem;
+  let initialX, currentItem;
   const maxRotation = 2; // Maximum rotation in degrees
   const maxDistance = 150; // Maximum distance for the full rotation effect
 
@@ -30,10 +30,13 @@ function registerSortableDragDrop(e) {
     const distanceX = currentX - initialX - 20;
 
     // Calculate rotation angle based on the distance moved
-    const rotation = Math.max(-maxRotation, Math.min(maxRotation, (distanceX / maxDistance) * maxRotation));
+    const rotation = Math.max(
+      -maxRotation,
+      Math.min(maxRotation, (distanceX / maxDistance) * maxRotation),
+    );
 
     currentItem.style.rotate = `${rotation}deg`;
-    currentItem.style.translate = (distanceX * -0.75) + 'px';
+    currentItem.style.translate = distanceX * -0.75 + "px";
   }
 
   new Sortable(e, {
@@ -45,20 +48,19 @@ function registerSortableDragDrop(e) {
     forceFallback: true, // Do not use html5 drag & drop behaviour because it does not work with autoscroll
     scroll: true,
     bubbleScroll: true,
-    onStart: function(evt) {
+    onStart: function (evt) {
       const rect = evt.item.getBoundingClientRect();
       initialX = rect.left + window.scrollX;
-      initialY = rect.top + window.scrollY;
-      currentItem = document.querySelector('.sortable-drag')
-      document.addEventListener('pointermove', onPointerMove);
+      currentItem = document.querySelector(".sortable-drag");
+      document.addEventListener("pointermove", onPointerMove);
     },
-    onEnd: function() {
-      document.removeEventListener('pointermove', onPointerMove);
+    onEnd: function () {
+      document.removeEventListener("pointermove", onPointerMove);
       if (currentItem) {
-        currentItem.style.rotate = ''; // Reset rotation
+        currentItem.style.rotate = ""; // Reset rotation
         currentItem = null;
       }
-    }
+    },
   });
 }
 

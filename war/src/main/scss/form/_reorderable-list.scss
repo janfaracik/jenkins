@@ -4,12 +4,16 @@ $exit-animation: 0.2s;
 
 .repeated-chunk {
   position: relative;
-  background: color-mix(in srgb, color-mix(in srgb, var(--white) 10%, var(--background)) 60%, transparent);
+  background: color-mix(
+    in sRGB,
+    color-mix(in sRGB, var(--white) 10%, var(--background)) 60%,
+    transparent
+  );
   border-radius: calc(var(--form-input-border-radius) / 2);
   transition:
-          max-height #{$exit-animation} ease,
-          border-radius var(--standard-transition),
-          box-shadow var(--standard-transition);
+    max-height #{$exit-animation} ease,
+    border-radius var(--standard-transition),
+    box-shadow var(--standard-transition);
   height: unset !important;
   margin: 0 0 var(--card-border-width) 0;
 
@@ -70,34 +74,84 @@ $exit-animation: 0.2s;
   .repeatable-delete {
     @include mixins.item;
 
-    --item-background: color-mix(in srgb, currentColor 7.5%, transparent);
-    --item-background--hover: color-mix(in srgb, currentColor 15%, transparent);
-    --item-background--active: color-mix(in srgb, currentColor 25%, transparent);
-    --item-box-shadow--focus: color-mix(in srgb, currentColor 7.5%, transparent);
+    --item-background: color-mix(in sRGB, currentColor 7.5%, transparent);
+    --item-background--hover: color-mix(in sRGB, currentColor 15%, transparent);
+    --item-background--active: color-mix(
+      in sRGB,
+      currentColor 25%,
+      transparent
+    );
+    --item-box-shadow--focus: color-mix(
+      in sRGB,
+      currentColor 7.5%,
+      transparent
+    );
 
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    place-items: center;
+    place-content: center;
     width: 30px;
     height: 30px;
     margin-left: auto;
     color: var(--red);
     padding: 0;
-    border-radius: 100px;
+    transition: var(--standard-transition);
+    font-size: 0.65rem;
 
-    &::before, &::after {
-      inset: 3px;
+    &::before,
+    &::after {
+      inset: 4px;
+      border-radius: 0.5rem;
+    }
+
+    // Center and overlap SVG and text content
+    * {
+      grid-area: container;
     }
 
     svg {
       width: 0.875rem;
       height: 0.875rem;
+      transition: var(--standard-transition);
 
       * {
         stroke-width: 40px;
+      }
+    }
+
+    span {
+      opacity: 0;
+      transition: var(--standard-transition);
+      filter: blur(2px);
+      scale: 0.5;
+      text-wrap: nowrap;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+      // This value is set in Jelly - see repeatableDeleteButton.jelly
+      width: var(--width);
+
+      &::before,
+      &::after {
+        border-radius: 1rem;
+      }
+
+      svg {
+        opacity: 0;
+        filter: blur(2px);
+        scale: 0.6;
+        rotate: -90deg;
+      }
+
+      span {
+        opacity: 1;
+        filter: none;
+        scale: 1;
       }
     }
   }
