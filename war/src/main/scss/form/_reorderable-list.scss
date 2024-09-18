@@ -1,5 +1,6 @@
 @use "../abstracts/mixins";
 
+$inset: 1rem;
 $exit-animation: 0.2s;
 
 .repeated-chunk {
@@ -64,6 +65,10 @@ $exit-animation: 0.2s;
         opacity: 1;
         color: var(--text-color);
       }
+    }
+
+    &--TODO {
+      padding-left: $inset;
     }
   }
 
@@ -209,7 +214,7 @@ $exit-animation: 0.2s;
 }
 
 .notafoodwriter {
-  padding: 0 1rem 1rem;
+  padding: 0 $inset $inset;
 
   &:empty {
     display: none;
