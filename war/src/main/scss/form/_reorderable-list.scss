@@ -111,6 +111,10 @@ $exit-animation: 0.2s;
       border-radius: 0.5rem;
     }
 
+    &::before {
+      border: 1px solid color-mix(in srgb, currentColor 2.5%, transparent);
+    }
+
     // Center and overlap SVG and text content
     * {
       grid-area: container;
