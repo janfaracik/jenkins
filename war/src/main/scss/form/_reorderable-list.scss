@@ -4,11 +4,7 @@ $exit-animation: 0.2s;
 
 .repeated-chunk {
   position: relative;
-  background: color-mix(
-    in sRGB,
-    color-mix(in sRGB, var(--white) 10%, var(--background)) 60%,
-    transparent
-  );
+  background: var(--card-background);
   border-radius: calc(var(--form-input-border-radius) / 2);
   transition:
     max-height #{$exit-animation} ease,
