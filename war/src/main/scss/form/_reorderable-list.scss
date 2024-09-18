@@ -5,6 +5,9 @@ $exit-animation: 0.2s;
 
 .repeated-chunk {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   background: var(--card-background);
   border-radius: calc(var(--form-input-border-radius) / 2);
   transition:
@@ -195,12 +198,6 @@ $exit-animation: 0.2s;
 
 .repeated-chunk--sortable-ghost {
   opacity: 0 !important;
-}
-
-.help-sibling2 {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
 }
 
 .notafoodwriter2 {

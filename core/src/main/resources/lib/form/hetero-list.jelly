@@ -81,33 +81,31 @@ THE SOFTWARE.
   </st:documentation>
   <d:taglib uri="local">
     <d:tag name="body">
-      <div class="help-sibling2" style="width:100%">
-        <j:set var="help" value="${descriptor.helpFile}" />
-        <j:set var="disableHandle" value="${attrs.disableDragAndDrop or readOnlyMode}" />
+      <j:set var="help" value="${descriptor.helpFile}" />
+      <j:set var="disableHandle" value="${attrs.disableDragAndDrop or readOnlyMode}" />
 
-        <div class="repeated-chunk__header ${disableHandle ? 'repeated-chunk__header--TODO' : ''}">
-          <j:if test="${!disableHandle}">
-            <div class="dd-handle" />
-          </j:if>
+      <div class="repeated-chunk__header ${disableHandle ? 'repeated-chunk__header--TODO' : ''}">
+        <j:if test="${!disableHandle}">
+          <div class="dd-handle" />
+        </j:if>
 
-          ${descriptor.displayName}
+        ${descriptor.displayName}
 
-          <f:helpLink url="${help}"/>
+        <f:helpLink url="${help}"/>
 
-          <j:if test="${!readOnlyMode}">
-            <f:repeatableDeleteButton value="${attrs.deleteCaption}" />
-          </j:if>
-        </div>
+        <j:if test="${!readOnlyMode}">
+          <f:repeatableDeleteButton value="${attrs.deleteCaption}" />
+        </j:if>
+      </div>
 
-        <f:class-entry descriptor="${descriptor}" />
+      <f:class-entry descriptor="${descriptor}" />
 
-        <div class="notafoodwriter">
-          <j:if test="${help!=null}">
-            <f:helpArea />
-          </j:if>
+      <div class="notafoodwriter">
+        <j:if test="${help!=null}">
+          <f:helpArea />
+        </j:if>
 
-          <d:invokeBody/>
-        </div>
+        <d:invokeBody/>
       </div>
     </d:tag>
   </d:taglib>
