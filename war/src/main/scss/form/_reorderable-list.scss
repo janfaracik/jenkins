@@ -204,6 +204,8 @@ $exit-animation: 0.2s;
 }
 
 .notafoodwriter2 {
+  padding: 0 $inset $inset;
+  
   &:empty {
     display: none;
   }
