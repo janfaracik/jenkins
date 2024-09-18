@@ -194,6 +194,7 @@ $exit-animation: 0.2s;
   opacity: 1 !important;
   backdrop-filter: blur(20px);
   border-radius: var(--form-input-border-radius) !important;
+  z-index: 10;
 }
 
 .repeated-chunk--sortable-ghost {
