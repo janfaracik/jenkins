@@ -26,7 +26,7 @@
 
 package hudson.model;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -63,6 +63,7 @@ import hudson.slaves.OfflineCause.ByCLI;
 import hudson.slaves.RetentionStrategy;
 import hudson.slaves.WorkspaceList;
 import hudson.triggers.SafeTimerTask;
+import hudson.util.ClassLoaderSanityThreadFactory;
 import hudson.util.DaemonThreadFactory;
 import hudson.util.EditDistance;
 import hudson.util.ExceptionCatchingThreadFactory;
@@ -72,6 +73,7 @@ import hudson.util.NamingThreadFactory;
 import hudson.util.RemotingDiagnostics;
 import hudson.util.RemotingDiagnostics.HeapDump;
 import hudson.util.RunList;
+import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -104,7 +106,6 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.ServletException;
 import jenkins.model.Jenkins;
 import jenkins.security.ImpersonatingExecutorService;
 import jenkins.security.MasterToSlaveCallable;
@@ -115,7 +116,6 @@ import jenkins.util.Listeners;
 import jenkins.util.SystemProperties;
 import jenkins.widgets.HasWidgets;
 import net.jcip.annotations.GuardedBy;
-import org.apache.commons.lang.StringUtils;
 import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
 import org.kohsuke.accmod.Restricted;
@@ -129,8 +129,8 @@ import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerProxy;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.WebMethod;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -227,7 +227,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
      * @since 1.607
      */
     public void recordTermination() {
-        StaplerRequest request = Stapler.getCurrentRequest();
+        StaplerRequest2 request = Stapler.getCurrentRequest2();
         if (request != null) {
             terminatedBy.add(new TerminationRequest(
                     String.format("Termination requested at %s by %s [id=%d] from HTTP request for %s",
@@ -416,7 +416,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
     /**
      * If {@link #getChannel()}==null, attempts to relaunch the agent.
      */
-    public abstract void doLaunchSlaveAgent(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException;
+    public abstract void doLaunchSlaveAgent(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException;
 
     /**
      * @deprecated since 2009-01-06.  Use {@link #connect(boolean)}
@@ -427,7 +427,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
     }
 
     /**
-     * Do the same as {@link #doLaunchSlaveAgent(StaplerRequest, StaplerResponse)}
+     * Do the same as {@link #doLaunchSlaveAgent(StaplerRequest2, StaplerResponse2)}
      * but outside the context of serving a request.
      *
      * <p>
@@ -738,8 +738,12 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
     public String getIcon() {
         // The machine was taken offline by someone
         if (isTemporarilyOffline() && getOfflineCause() instanceof OfflineCause.UserCause) return "symbol-computer-disconnected";
-        // There is a "technical" reason the computer will not accept new builds
-        if (isOffline() || !isAcceptingTasks()) return "symbol-computer-offline";
+        // The computer is not accepting tasks, e.g. because the availability demands it being offline.
+        if (!isAcceptingTasks()) {
+            return "symbol-computer-not-accepting";
+        }
+        // The computer is not connected or it is temporarily offline due to a node monitor
+        if (isOffline()) return "symbol-computer-offline";
         return "symbol-computer";
     }
 
@@ -756,11 +760,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
      */
     @Exported
     public String getIconClassName() {
-        // The machine was taken offline by someone
-        if (isTemporarilyOffline() && getOfflineCause() instanceof OfflineCause.UserCause) return "symbol-computer-disconnected";
-        // There is a "technical" reason the computer will not accept new builds
-        if (isOffline() || !isAcceptingTasks()) return "symbol-computer-offline";
-        return "symbol-computer";
+        return getIcon();
     }
 
     public String getIconAltText() {
@@ -1102,6 +1102,8 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
                     if (ciBase != null) { // TODO confirm safe to assume non-null and use getInstance()
                         ciBase.removeComputer(Computer.this);
                     }
+                } else if (isIdle()) {
+                    threadPoolForRemoting.submit(() -> Listeners.notify(ComputerListener.class, false, l -> l.onIdle(this)));
                 }
             }
         };
@@ -1381,7 +1383,9 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
                 Executors.newCachedThreadPool(
                     new ExceptionCatchingThreadFactory(
                         new NamingThreadFactory(
-                            new DaemonThreadFactory(), "Computer.threadPoolForRemoting")))), ACL.SYSTEM2));
+                            new ClassLoaderSanityThreadFactory(new DaemonThreadFactory()),
+                            "Computer.threadPoolForRemoting")))),
+            ACL.SYSTEM2));
 
 //
 //
@@ -1389,12 +1393,12 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
 //
 //
     @Restricted(DoNotUse.class)
-    public void doRssAll(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doRssAll(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         RSS.rss(req, rsp, "Jenkins:" + getDisplayName() + " (all builds)", getUrl(), getBuilds());
     }
 
     @Restricted(DoNotUse.class)
-    public void doRssFailed(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doRssFailed(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         RSS.rss(req, rsp, "Jenkins:" + getDisplayName() + " (failed builds)", getUrl(), getBuilds().failureOnly());
     }
 
@@ -1405,7 +1409,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
      * @since 2.215
      */
     @Restricted(DoNotUse.class)
-    public void doRssLatest(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doRssLatest(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         final List<Run> lastBuilds = new ArrayList<>();
         for (AbstractProject<?, ?> p : Jenkins.get().allItems(AbstractProject.class)) {
             if (p.getLastBuild() != null) {
@@ -1450,12 +1454,12 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
     /**
      * Dumps the contents of the export table.
      */
-    public void doDumpExportTable(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException, InterruptedException {
+    public void doDumpExportTable(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException, InterruptedException {
         // this is a debug probe and may expose sensitive information
         checkPermission(Jenkins.ADMINISTER);
 
         rsp.setContentType("text/plain");
-        try (PrintWriter w = new PrintWriter(rsp.getCompressedWriter(req))) {
+        try (PrintWriter w = new PrintWriter(rsp.getWriter())) {
             VirtualChannel vc = getChannel();
             if (vc instanceof Channel) {
                 w.println("Controller to agent");
@@ -1486,18 +1490,18 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
      * For system diagnostics.
      * Run arbitrary Groovy script.
      */
-    public void doScript(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doScript(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         _doScript(req, rsp, "_script.jelly");
     }
 
     /**
      * Run arbitrary Groovy script and return result as plain text.
      */
-    public void doScriptText(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doScriptText(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         _doScript(req, rsp, "_scriptText.jelly");
     }
 
-    protected void _doScript(StaplerRequest req, StaplerResponse rsp, String view) throws IOException, ServletException {
+    protected void _doScript(StaplerRequest2 req, StaplerResponse2 rsp, String view) throws IOException, ServletException {
         Jenkins._doScript(req, rsp, req.getView(this, view), getChannel(), getACL());
     }
 
@@ -1505,7 +1509,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
      * Accepts the update to the node configuration.
      */
     @POST
-    public void doConfigSubmit(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException, FormException {
+    public void doConfigSubmit(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException, FormException {
         checkPermission(CONFIGURE);
 
         String proposedName = Util.fixEmptyAndTrim(req.getSubmittedForm().getString("name"));
@@ -1522,7 +1526,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
         }
 
         String nExecutors = req.getSubmittedForm().getString("numExecutors");
-        if (StringUtils.isBlank(nExecutors) || Integer.parseInt(nExecutors) <= 0) {
+        if (nExecutors == null || nExecutors.isBlank() || Integer.parseInt(nExecutors) <= 0) {
             throw new FormException(Messages.Slave_InvalidConfig_Executors(nodeName), "numExecutors");
         }
 
@@ -1545,7 +1549,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
      * Accepts {@code config.xml} submission, as well as serve it.
      */
     @WebMethod(name = "config.xml")
-    public void doConfigDotXml(StaplerRequest req, StaplerResponse rsp)
+    public void doConfigDotXml(StaplerRequest2 req, StaplerResponse2 rsp)
             throws IOException, ServletException {
 
         if (req.getMethod().equals("GET")) {
@@ -1624,7 +1628,7 @@ public /*transient*/ abstract class Computer extends Actionable implements Acces
     /**
      * Handles incremental log.
      */
-    public void doProgressiveLog(StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public void doProgressiveLog(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException {
         getLogText().doProgressText(req, rsp);
     }
 

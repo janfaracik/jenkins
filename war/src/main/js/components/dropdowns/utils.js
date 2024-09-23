@@ -11,12 +11,13 @@ const SELECTED_ITEM_CLASS = "jenkins-dropdown__item--selected";
  * @param element - the element to generate the dropdown for
  * @param callback - called to retrieve the list of dropdown items
  */
-function generateDropdown(element, callback) {
+function generateDropdown(element, callback, immediate) {
   tippy(
     element,
     Object.assign({}, Templates.dropdown(), {
+      hideOnClick: element.dataset["hideOnClick"] !== "false",
       onCreate(instance) {
-        instance.reference.addEventListener("mouseenter", () => {
+        const onload = () => {
           if (instance.loaded) {
             return;
           }
@@ -26,10 +27,12 @@ function generateDropdown(element, callback) {
           });
 
           callback(instance);
-        });
-      },
-      onShown(instance) {
-        behaviorShim.applySubtree(instance.popper);
+        };
+        if (immediate) {
+          onload();
+        } else {
+          instance.reference.addEventListener("mouseenter", onload);
+        }
       },
     }),
   );
@@ -47,6 +50,10 @@ function generateDropdownItems(items, compact) {
 
   items
     .map((item) => {
+      if (item.type === "CUSTOM") {
+        return item.contents;
+      }
+
       if (item.type === "HEADER") {
         return Templates.heading(item.label);
       }
@@ -85,7 +92,10 @@ function generateDropdownItems(items, compact) {
     menuItems,
     () => menuItems.querySelectorAll(".jenkins-dropdown__item"),
     SELECTED_ITEM_CLASS,
-    (selectedItem, key) => {
+    (selectedItem, key, evt) => {
+      if (!selectedItem) {
+        return;
+      }
       switch (key) {
         case "ArrowLeft": {
           const root = selectedItem.closest("[data-tippy-root]");
@@ -109,6 +119,10 @@ function generateDropdownItems(items, compact) {
             .classList.add(SELECTED_ITEM_CLASS);
           break;
         }
+        default:
+          if (selectedItem.onkeypress) {
+            selectedItem.onkeypress(evt);
+          }
       }
     },
     (container) => {
@@ -139,7 +153,57 @@ function generateDropdownItems(items, compact) {
   return menuItems;
 }
 
+function convertHtmlToItems(children) {
+  const items = [];
+  Array.from(children).forEach((child) => {
+    const attributes = child.dataset;
+    const type = child.dataset.dropdownType;
+
+    switch (type) {
+      case "ITEM": {
+        const item = {
+          label: attributes.dropdownText,
+          id: attributes.dropdownId,
+          icon: attributes.dropdownIcon,
+          iconXml: attributes.dropdownIcon,
+          clazz: attributes.dropdownClazz,
+        };
+
+        if (attributes.dropdownHref) {
+          item.url = attributes.dropdownHref;
+          item.type = "link";
+        } else {
+          item.type = "button";
+        }
+
+        items.push(item);
+        break;
+      }
+      case "SUBMENU":
+        items.push({
+          type: "ITEM",
+          label: attributes.dropdownText,
+          icon: attributes.dropdownIcon,
+          iconXml: attributes.dropdownIcon,
+          subMenu: () => convertHtmlToItems(child.content.children),
+        });
+        break;
+      case "SEPARATOR":
+        items.push({ type: type });
+        break;
+      case "HEADER":
+        items.push({ type: type, label: attributes.dropdownText });
+        break;
+      case "CUSTOM":
+        items.push({ type: type, contents: child.content.cloneNode(true) });
+        break;
+    }
+  });
+  return items;
+}
+
 export default {
+  convertHtmlToItems,
   generateDropdown,
   generateDropdownItems,
 };
