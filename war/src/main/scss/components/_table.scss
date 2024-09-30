@@ -13,13 +13,16 @@
   background-clip: padding-box;
   margin-bottom: var(--section-padding);
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: -4px -4px -2px;
-    border: var(--card-border-width) solid var(--table-border-color);
-    border-radius: inherit;
-    pointer-events: none;
+  // The '::before' pseudo-element is causing overflow issues in Firefox, so disable it for that browser
+  @supports (not (-moz-appearance: none)) {
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -4px -4px -2px;
+      border: var(--card-border-width) solid var(--table-border-color);
+      border-radius: inherit;
+      pointer-events: none;
+    }
   }
 
   * {
@@ -167,11 +170,12 @@
   .jenkins-button {
     margin: -10px 0;
     padding: 0.5rem 0.75rem;
+    min-height: 1.75rem;
 
     // Increase the size of symbols compared to regular buttons
     svg {
-      width: 1.375rem !important;
-      height: 1.375rem !important;
+      width: 1.5rem !important;
+      height: 1.5rem !important;
     }
   }
 
@@ -180,8 +184,8 @@
     svg,
     .build-status-icon__wrapper,
     img {
-      width: 1.375rem !important;
-      height: 1.375rem !important;
+      width: 1.5rem !important;
+      height: 1.5rem !important;
     }
   }
 
@@ -198,6 +202,15 @@
       svg,
       .build-status-icon__wrapper,
       img {
+        width: 1.3rem !important;
+        height: 1.3rem !important;
+      }
+    }
+
+    .jenkins-button {
+      padding: 0.4rem 0.6rem;
+
+      svg {
         width: 1.3rem !important;
         height: 1.3rem !important;
       }
@@ -221,6 +234,15 @@
       svg,
       .build-status-icon__wrapper,
       img {
+        width: 1rem !important;
+        height: 1rem !important;
+      }
+    }
+
+    .jenkins-button {
+      padding: 0.3rem 0.5rem;
+
+      svg {
         width: 1rem !important;
         height: 1rem !important;
       }
