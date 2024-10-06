@@ -112,7 +112,7 @@ $exit-animation: 0.2s;
     }
 
     &::before {
-      border: 1px solid color-mix(in srgb, currentColor 2.5%, transparent);
+      border: 1px solid color-mix(in sRGB, currentColor 2.5%, transparent);
     }
 
     // Center and overlap SVG and text content
@@ -207,7 +207,7 @@ $exit-animation: 0.2s;
 
 .notafoodwriter2 {
   padding: 0 $inset $inset;
-  
+
   &:empty {
     display: none;
   }

@@ -245,19 +245,19 @@ $semantics: (
   --card-background--hover: transparent;
   --card-background--active: transparent;
   --card-border-color: color-mix(
-                  in sRGB,
-                  var(--text-color-secondary) 15%,
-                  transparent
+    in sRGB,
+    var(--text-color-secondary) 15%,
+    transparent
   );
   --card-border-color--hover: color-mix(
-                  in sRGB,
-                  var(--text-color-secondary) 25%,
-                  transparent
+    in sRGB,
+    var(--text-color-secondary) 25%,
+    transparent
   );
   --card-border-color--active: color-mix(
-                  in sRGB,
-                  var(--text-color-secondary) 35%,
-                  transparent
+    in sRGB,
+    var(--text-color-secondary) 35%,
+    transparent
   );
   --card-border-width: 2px;
 
