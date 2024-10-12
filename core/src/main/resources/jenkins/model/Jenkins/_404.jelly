@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
     <!--
       This is the page designated by web.xml to handle 404 errors. Show a nice error message and suggest logging in if applicable.
       Generally kept very similar to 'oops.jelly'.
@@ -40,13 +40,16 @@ THE SOFTWARE.
             <div id="error-description" style="text-align: center">
                 <h2>${%title(jakarta.servlet.error.message?:'Not Found')}</h2>
                 <j:if test="${!request.getAttribute('jenkins.security.ResourceDomainRootAction.error')}">
-                  <p>
-                      <j:choose>
-                          <j:when test="${app.useSecurity}">
+	                <p>
+	                    <j:choose>
+	                        <j:when test="${app.useSecurity}">
                                 ${%noAccess}
-                        </j:when>
-                        <j:otherwise>
-                            ${%notFound}
+                                <j:if test="${h.isAnonymous()}">
+                                    ${%tryLoggingIn}
+                                </j:if>
+		                    </j:when>
+		                    <j:otherwise>
+		                        ${%notFound}
                             </j:otherwise>
                         </j:choose>
                     </p>
