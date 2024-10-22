@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Ullrich Hafner
+Copyright (c) 2024, CloudBees, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-  Displays the link to delete the build.
--->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
-  <j:if test="${!it.logUpdated and !it.keepLog}">
-    <l:task href="${buildUrl.baseUrl}/confirmDelete" icon="icon-edit-delete icon-md" permission="${it.DELETE}" title="${%delete.build(it.displayName)}"/>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <st:documentation>
+    Creates the bottom bar for the "Save" and "Apply" buttons.
+    In read only mode (&lt;j:set var="readOnlyMode" value="true"/&gt;) the buttons are not displayed.
+  </st:documentation>
+
+  <j:if test="${!readOnlyMode}">
+    <f:bottomButtonBar>
+      <f:submit value="${%Save}" />
+      <f:apply/>
+    </f:bottomButtonBar>
+    <st:adjunct includes="lib.form.confirm" />
   </j:if>
 </j:jelly>
