@@ -1556,6 +1556,9 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
      *      if we fail to delete.
      */
     public void delete() throws IOException {
+        if (isLogUpdated()) {
+            throw new IOException("Unable to delete " + this + " because it is still running");
+        }
         synchronized (this) {
             // Avoid concurrent delete. See https://issues.jenkins.io/browse/JENKINS-61687
             if (isPendingDelete) {
@@ -1575,6 +1578,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
             ));
             //Still firing the delete listeners; just no need to clean up rootDir
             RunListener.fireDeleted(this);
+            SaveableListener.fireOnDeleted(this, getDataFile());
             synchronized (this) { // avoid holding a lock while calling plugin impls of onDeleted
                 removeRunFromParent();
             }
@@ -1583,6 +1587,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
 
         //The root dir exists and is a directory that needs to be purged
         RunListener.fireDeleted(this);
+        SaveableListener.fireOnDeleted(this, getDataFile());
 
         if (artifactManager != null) {
             deleteArtifacts();
@@ -1887,12 +1892,6 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
                 } catch (IOException e) {
                     LOGGER.log(Level.SEVERE, "Failed to save build record", e);
                 }
-            }
-
-            try {
-                getParent().logRotate();
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Failed to rotate log", e);
             }
         } finally {
             onEndBuilding();
