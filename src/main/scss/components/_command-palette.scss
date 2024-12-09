@@ -67,9 +67,7 @@
     --search-bar-height: 3rem !important;
 
     background: transparent;
-    box-shadow:
-      0 0 0 20px transparent,
-      var(--command-palette-inset-shadow);
+    box-shadow: var(--command-palette-inset-shadow);
     margin-bottom: 1.5rem;
     border-radius: 1rem;
     transition: var(--standard-transition);
