@@ -9,42 +9,40 @@
   max-width: 100vw !important;
   margin: 0 !important;
   padding: 0 !important;
-  transform-style: preserve-3d;
+  user-select: none;
 
   &::backdrop {
     background: var(--command-palette-backdrop-background);
     backdrop-filter: contrast(0.7) brightness(0.9) saturate(1.25) blur(3px);
-    animation: jenkins-dialog-backdrop-animate-in 0.2s ease;
+    animation: jenkins-dialog-backdrop-animate-in 0.1s linear;
   }
 
   &[open] {
-    animation: command-palette-animate-in 0.2s cubic-bezier(0, 0.68, 0.5, 1.5);
+    animation: command-palette-animate-in 0.1s cubic-bezier(0, 0.68, 0.5, 1.5);
   }
 
   &[closing] {
-    animation: command-palette-animate-out 0.15s linear;
+    animation: command-palette-animate-out 0.1s linear;
 
     &::backdrop {
-      animation: jenkins-dialog-backdrop-animate-out 0.15s linear;
+      animation: jenkins-dialog-backdrop-animate-out 0.1s linear;
     }
   }
 }
 
 @keyframes command-palette-animate-in {
   from {
-    translate: 0 5px;
-    scale: 97.5%;
+    translate: 0 4px;
+    scale: 98.5%;
     opacity: 0;
-    filter: blur(15px);
-    transform: rotateX(40deg);
+    transform: rotateX(30deg);
   }
 }
 
 @keyframes command-palette-animate-out {
   to {
-    scale: 95%;
+    scale: 98.5%;
     opacity: 0;
-    filter: blur(2.5px);
   }
 }
 
@@ -113,7 +111,7 @@
     padding: 0.5rem;
 
     &__heading {
-      font-weight: 550;
+      font-weight: 500;
       font-size: 0.875rem;
       margin: 0;
       padding: 0.75rem 0.75rem 0.625rem;
@@ -144,7 +142,6 @@
       background: transparent;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      font-weight: 550;
       cursor: pointer;
       color: var(--text-color) !important;
       transition: var(--standard-transition);
@@ -193,7 +190,6 @@
   }
 
   &__info {
-    font-weight: 550;
     font-size: 0.875rem;
     margin: 0;
     padding: 0 14px;
