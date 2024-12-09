@@ -161,6 +161,11 @@ public class Search implements StaplerProxy {
         Result r = new Result();
         for (SuggestedItem item : getSuggestions(req, query)) {
             String symbolName = item.item.getSearchIcon();
+
+            if (symbolName == null || !symbolName.startsWith("symbol-")) {
+                symbolName = "symbol-search";
+            }
+
             r.suggestions.add(new Item(item.getPath(), item.getUrl(), "",
                     Symbol.get(new SymbolRequest.Builder().withRaw(symbolName).build())));
         }
