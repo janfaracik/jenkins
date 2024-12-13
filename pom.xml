@@ -28,7 +28,7 @@ THE SOFTWARE.
   <parent>
     <groupId>org.jenkins-ci</groupId>
     <artifactId>jenkins</artifactId>
-    <version>1.125</version>
+    <version>1.126</version>
     <relativePath />
   </parent>
 
@@ -73,9 +73,9 @@ THE SOFTWARE.
   </issueManagement>
 
   <properties>
-    <revision>2.483</revision>
+    <revision>2.490</revision>
     <changelist>-SNAPSHOT</changelist>
-    <project.build.outputTimestamp>2024-10-22T13:43:00Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-12-10T13:55:06Z</project.build.outputTimestamp>
 
     <!-- configuration for patch tracker plugin  -->
     <project.patchManagement.system>github</project.patchManagement.system>
@@ -87,7 +87,7 @@ THE SOFTWARE.
     <changelog.url>https://www.jenkins.io/changelog</changelog.url>
 
     <!-- Bundled Remoting version -->
-    <remoting.version>3273.v4cfe589b_fd83</remoting.version>
+    <remoting.version>3283.v92c105e0f819</remoting.version>
 
     <spotbugs.effort>Max</spotbugs.effort>
     <spotbugs.threshold>Medium</spotbugs.threshold>
@@ -98,7 +98,7 @@ THE SOFTWARE.
     <spotless.check.skip>false</spotless.check.skip>
     <!-- Make sure to keep the jetty-ee9-maven-plugin version in war/pom.xml in sync with the Jetty release in Winstone: -->
     <winstone.version>8.2</winstone.version>
-    <node.version>20.18.0</node.version>
+    <node.version>20.18.1</node.version>
   </properties>
 
   <!--
@@ -281,7 +281,7 @@ THE SOFTWARE.
             <dependency>
               <groupId>com.puppycrawl.tools</groupId>
               <artifactId>checkstyle</artifactId>
-              <version>10.18.2</version>
+              <version>10.21.0</version>
             </dependency>
           </dependencies>
           <executions>
