@@ -116,4 +116,10 @@ $background-outset: 0.7rem;
       box-shadow: none !important;
     }
   }
+
+  &:not(:hover, &:active, &:focus, &--active) {
+    &::before {
+      border-color: transparent;
+    }
+  }
 }

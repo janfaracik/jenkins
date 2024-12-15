@@ -169,6 +169,16 @@ $semantics: (
   --btn-link-color--active: var(--primary-active);
   --btn-link-bg--active: var(--light-grey);
 
+
+  --jenkins-border-width: 1.5px;
+  --jenkins-border: var(--jenkins-border-width) solid color-mix(in srgb, currentColor 1%, transparent);
+  //--jenkins-border: var(--jenkins-border-width) solid var(--red);
+  // hsla(240, 25%, 75%, 0.25)
+
+  @media (prefers-contrast: more) {
+    --jenkins-border: var(--jenkins-border-width) solid currentColor;
+  }
+
   // Table
   --table-background: var(--panel-header-bg-color);
   --table-header-foreground: var(--text-color);
@@ -260,7 +270,7 @@ $semantics: (
   --card-border-color: hsla(240, 25%, 75%, 0.25);
   --card-border-color--hover: hsla(240, 25%, 75%, 0.5);
   --card-border-color--active: hsla(240, 25%, 75%, 0.75);
-  --card-border-width: 2px;
+  --card-border-width: var(--jenkins-border-width);
 
   // Tab bar
   --tabs-background: var(--panel-header-bg-color);

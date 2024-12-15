@@ -8,19 +8,20 @@
   position: relative;
 
   &__input {
-    appearance: none;
-    background: var(--item-background--hover);
-    border: none;
-    outline: none;
-    border-radius: 0.625rem;
-    width: 100%;
-    margin: 0;
-    padding: 0 0.5rem 0 var(--search-bar-height);
+    //appearance: none;
+    ////background: var(--item-background--hover);
+    ////border: none;
+    //outline: none;
+    //border-radius: 0.625rem;
+    //border: var(--jenkins-border-width) solid var(--input-border);
+    //width: 100%;
+    //margin: 0;
+    padding: 0 0.5rem 0 34px;
     line-height: 1;
-    box-shadow:
-      0 0 0 2px transparent,
-      0 0 0 12px transparent;
-    transition: var(--standard-transition);
+    //box-shadow:
+    //  0 0 0 2px transparent,
+    //  0 0 0 12px transparent;
+    //transition: var(--standard-transition);
     height: var(--search-bar-height);
 
     &::placeholder {
@@ -58,17 +59,17 @@
     }
 
     &:not(:disabled) {
-      &:hover {
-        background: var(--item-background--active);
-      }
+      //&:hover {
+      //  background: var(--item-background--active);
+      //}
 
       &:active,
       &:focus {
-        outline: none;
-        background: var(--item-background--active);
-        box-shadow:
-          0 0 0 2px var(--focus-input-border),
-          0 0 0 7px var(--focus-input-glow);
+        //outline: none;
+        ////background: var(--item-background--active);
+        //box-shadow:
+        //  0 0 0 2px var(--focus-input-border),
+        //  0 0 0 7px var(--focus-input-glow);
 
         &::-webkit-search-cancel-button {
           opacity: 0.5;
@@ -80,11 +81,11 @@
 
     &:active,
     &:focus {
-      outline: none;
-      background: var(--item-background--active);
-      box-shadow:
-        0 0 0 2px var(--focus-input-border),
-        0 0 0 7px var(--focus-input-glow);
+      //outline: none;
+      //background: var(--item-background--active);
+      //box-shadow:
+      //  0 0 0 2px var(--focus-input-border),
+      //  0 0 0 7px var(--focus-input-glow);
 
       &::-webkit-search-cancel-button {
         opacity: 1;
@@ -93,9 +94,9 @@
       }
     }
 
-    &:disabled {
-      cursor: not-allowed;
-    }
+    //&:disabled {
+    //  cursor: not-allowed;
+    //}
   }
 
   &__icon {
@@ -108,10 +109,10 @@
     pointer-events: none;
 
     svg {
-      width: 45%;
-      height: 45%;
-      max-width: 1.1rem;
-      max-height: 1.1rem;
+      width: 1rem;
+      height: 1rem;
+      max-width: 1rem;
+      max-height: 1rem;
       grid-column-start: 1;
       grid-row-start: 1;
       place-self: center center;

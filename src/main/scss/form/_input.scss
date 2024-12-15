@@ -1,7 +1,7 @@
 .jenkins-input {
   display: block;
   background: var(--input-color);
-  border: 2px solid var(--input-border);
+  border: var(--jenkins-border-width) solid var(--input-border);
   padding: var(--form-input-padding);
   border-radius: var(--form-input-border-radius);
   width: 100%;

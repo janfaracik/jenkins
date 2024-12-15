@@ -79,6 +79,12 @@
   &::before {
     background: transparent;
   }
+
+  &:not(:hover, &:active, &:focus) {
+    &::before {
+      border-color: transparent;
+    }
+  }
 }
 
 // Support for custom colors
