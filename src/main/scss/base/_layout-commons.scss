@@ -79,9 +79,12 @@
     #opencloseting {
       aspect-ratio: 1;
       padding: 0;
+      margin: 0 10px 0 -5px;
 
       svg {
         pointer-events: none;
+        width: 1.5rem;
+        height: 1.5rem;
       }
     }
 

@@ -17,7 +17,7 @@ ConfirmationLink.init();
 Dialogs.init();
 
 const sidepanel = document.querySelector("#side-panel")
-const thing = document.querySelector("#opencloseting");
+const thing = document.querySelector("#main-panel #opencloseting");
 
 console.log(sidepanel, thing)
 thing.addEventListener("click", () => {
