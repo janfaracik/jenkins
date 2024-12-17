@@ -124,7 +124,7 @@ import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import jenkins.MasterToSlaveFileCallable;
-import jenkins.SlaveToMasterFileCallable;
+import jenkins.agents.ControllerToAgentFileCallable;
 import jenkins.model.Jenkins;
 import jenkins.security.MasterToSlaveCallable;
 import jenkins.util.ContextResettingExecutorService;
@@ -321,7 +321,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
             buf.append(m.group(1));
             path = path.substring(m.end());
         }
-        boolean isAbsolute = buf.length() > 0;
+        boolean isAbsolute = !buf.isEmpty();
         // Split remaining path into tokens, trimming any duplicate or trailing separators
         List<String> tokens = new ArrayList<>();
         int s = 0, end = path.length();
@@ -366,7 +366,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
         }
         // Recombine tokens
         for (String token : tokens) buf.append(token);
-        if (buf.length() == 0) buf.append('.');
+        if (buf.isEmpty()) buf.append('.');
         return buf.toString();
     }
 
@@ -520,21 +520,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
         return act(new Archive(factory, out, scanner, verificationRoot, openOptions));
     }
 
-    private static class Archive extends MasterToSlaveFileCallable<Integer> {
-        private final ArchiverFactory factory;
-        private final OutputStream out;
-        private final DirScanner scanner;
-        private final String verificationRoot;
-        private OpenOption[] openOptions;
-
-        Archive(ArchiverFactory factory, OutputStream out, DirScanner scanner, String verificationRoot, OpenOption... openOptions) {
-            this.factory = factory;
-            this.out = out;
-            this.scanner = scanner;
-            this.verificationRoot = verificationRoot;
-            this.openOptions = openOptions;
-        }
-
+    private record Archive(ArchiverFactory factory, OutputStream out, DirScanner scanner, String verificationRoot, OpenOption... openOptions) implements ControllerToAgentFileCallable<Integer> {
         @Override
             public Integer invoke(File f, VirtualChannel channel) throws IOException {
                 try (Archiver a = factory.create(out)) {
@@ -542,8 +528,6 @@ public final class FilePath implements SerializableOnlyOverRemoting {
                     return a.countEntries();
                 }
             }
-
-            private static final long serialVersionUID = 1L;
     }
 
     public int archive(final ArchiverFactory factory, OutputStream os, final FileFilter filter) throws IOException, InterruptedException {
@@ -997,8 +981,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
                 }
             }
 
-            if (con instanceof HttpURLConnection) {
-                HttpURLConnection httpCon = (HttpURLConnection) con;
+            if (con instanceof HttpURLConnection httpCon) {
                 int responseCode = httpCon.getResponseCode();
                 if (responseCode == HttpURLConnection.HTTP_MOVED_PERM
                         || responseCode == HttpURLConnection.HTTP_MOVED_TEMP) {
@@ -1186,12 +1169,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
     /**
      * Code that gets executed on the machine where the {@link FilePath} is local.
      * Used to act on {@link FilePath}.
-     * <strong>Warning:</strong> implementations must be serializable, so prefer a static nested class to an inner class.
-     *
-     * <p>
-     * Subtypes would likely want to extend from either {@link MasterToSlaveCallable}
-     * or {@link SlaveToMasterFileCallable}.
-     *
+     * A typical implementation would be a {@code record} implementing {@link ControllerToAgentFileCallable}.
      * @see FilePath#act(FileCallable)
      */
     public interface FileCallable<T> extends Serializable, RoleSensitive {
@@ -1445,7 +1423,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
         public Void invoke(File f, VirtualChannel channel) throws IOException {
             for (File file : listParentFiles(f)) {
                 if (file.getName().startsWith(f.getName() + WorkspaceList.COMBINATOR)) {
-                    Util.deleteRecursive(file.toPath(), path -> path.toFile());
+                    Util.deleteRecursive(file.toPath(), Path::toFile);
                 }
             }
 
@@ -1476,7 +1454,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
 
         @Override
         public Void invoke(File f, VirtualChannel channel) throws IOException {
-            Util.deleteRecursive(fileToPath(f), path -> path.toFile());
+            Util.deleteRecursive(fileToPath(f), Path::toFile);
             return null;
         }
     }
@@ -1493,7 +1471,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
 
         @Override
         public Void invoke(File f, VirtualChannel channel) throws IOException {
-            Util.deleteContentsRecursive(fileToPath(f), path -> path.toFile());
+            Util.deleteContentsRecursive(fileToPath(f), Path::toFile);
             return null;
         }
     }
@@ -3511,7 +3489,7 @@ public final class FilePath implements SerializableOnlyOverRemoting {
     }
 
     private static void checkPermissionForValidate() {
-        AccessControlled subject = Stapler.getCurrentRequest().findAncestorObject(AbstractProject.class);
+        AccessControlled subject = Stapler.getCurrentRequest2().findAncestorObject(AbstractProject.class);
         if (subject == null)
             Jenkins.get().checkPermission(Jenkins.MANAGE);
         else
