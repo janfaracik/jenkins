@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:x="jelly:xml">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:x="jelly:xml" xmlns:l="/lib/layout">
   <st:documentation>
     <st:attribute name="title" use="required">
       The title for the application bar
@@ -38,6 +38,9 @@ THE SOFTWARE.
   </st:documentation>
 
   <div class="jenkins-app-bar">
+    <button id="opencloseting" class="jenkins-button">
+      <l:icon src="symbol-ellipsis-horizontal-circle-outline plugin-ionicons-api" />
+    </button>
     <div class="jenkins-app-bar__content">
       <x:element name="${headingLevel ?: 'h1'}">
         ${title}

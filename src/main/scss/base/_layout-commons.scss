@@ -68,6 +68,51 @@
   /* stylelint-disable-next-line media-query-no-invalid */
   @media (max-width: breakpoints.$tablet-breakpoint) {
     flex-direction: column;
+    padding-top: 0;
+    gap: 0;
+
+    // TODO - might not need
+    #main-panel {
+      margin-top: 0 !important;
+    }
+
+    #opencloseting {
+      aspect-ratio: 1;
+      padding: 0;
+
+      svg {
+        pointer-events: none;
+      }
+    }
+
+    &__side-panel {
+
+      position: fixed;
+      background: var(--background);
+      z-index: 1000;
+      top: 1rem;
+      left: 1rem;
+      right: 5rem;
+      bottom: 1rem;
+      border-radius: 10px;
+      overflow-y: auto;
+      padding: 2rem;
+      width: unset;
+      box-shadow: 0 0 100px rgba(0, 0, 0, 0.4), 0 0 0 100px rgba(0, 0, 0, 0.4);
+      padding-top: 60px;
+
+      &:not(.opennn) {
+        display: none;
+      }
+
+      .app-sidepanel__jenkins-logo {
+        display: none;
+      }
+
+      .jenkins-app-bar {
+        display: none;
+      }
+    }
   }
 }
 

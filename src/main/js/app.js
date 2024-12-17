@@ -15,3 +15,14 @@ Tooltips.init();
 StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
+
+const sidepanel = document.querySelector("#side-panel")
+const thing = document.querySelector("#opencloseting");
+
+console.log(sidepanel, thing)
+thing.addEventListener("click", () => {
+  console.log('hi')
+  sidepanel.classList.toggle("opennn");
+})
+
+// sidepanel.classList.toggle("opennn");

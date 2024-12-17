@@ -1,4 +1,5 @@
 @use "../abstracts/mixins";
+@use "../base/breakpoints";
 
 .jenkins-breadcrumbs {
   position: sticky;
@@ -128,6 +129,12 @@
         background: transparent;
       }
     }
+  }
+
+  @media (max-width: breakpoints.$tablet-breakpoint) {
+    --text-color: var(--text-color-secondary);
+    position: relative;
+    background: transparent;
   }
 }
 
