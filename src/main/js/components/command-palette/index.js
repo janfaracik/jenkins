@@ -32,6 +32,8 @@ function init() {
     searchResultsContainer,
     () => searchResults.querySelectorAll("a"),
     hoverClass,
+    () => {},
+    () => commandPalette.open,
   );
 
   // Events
@@ -59,6 +61,7 @@ function init() {
       results = Promise.all([
         LinkResult({
           icon: Symbols.HELP,
+          type: "symbol",
           label: i18n.dataset.getHelp,
           url: headerCommandPaletteButton.dataset.searchHelpUrl,
           isExternal: true,
