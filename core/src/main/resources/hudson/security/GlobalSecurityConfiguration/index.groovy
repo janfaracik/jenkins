@@ -3,7 +3,6 @@ package hudson.security.GlobalSecurityConfiguration
 import hudson.security.SecurityRealm
 import hudson.markup.MarkupFormatterDescriptor
 import hudson.security.AuthorizationStrategy
-import jenkins.AgentProtocol
 import hudson.Functions
 import hudson.model.Descriptor
 
@@ -21,12 +20,12 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request.getP
         div(class:"behavior-loading") {
             l.spinner(text: _("LOADING"))
         }
-        f.form(method:"post",name:"config",action:"configure", class: "jenkins-form") {
-            set("instance",my)
+        f.form(method:"post", name:"config", action:"configure", class: "jenkins-form") {
+            set("instance", my)
             set("descriptor", my.descriptor)
 
             f.section(title:_("Authentication")) {
-                f.entry() {
+                f.entry(help: '/descriptor/hudson.security.GlobalSecurityConfiguration/help/disableRememberMe') {
                     f.checkbox(title:_("Disable remember me"), field: "disableRememberMe")
                 }
                 f.dropdownDescriptorSelector(title: _("Security Realm"), field: 'securityRealm', descriptors: h.filterDescriptors(app, SecurityRealm.all()))
@@ -34,7 +33,7 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request.getP
             }
 
             f.section(title: _("Markup Formatter")) {
-                f.dropdownDescriptorSelector(title:_("Markup Formatter"),descriptors: MarkupFormatterDescriptor.all(), field: 'markupFormatter')
+                f.dropdownDescriptorSelector(title:_("Markup Formatter"), descriptors: MarkupFormatterDescriptor.all(), field: 'markupFormatter')
             }
 
             f.section(title: _("Agents")) {
@@ -51,38 +50,11 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request.getP
                         f.serverTcpPort()
                     }
                 }
-                f.advanced(title: _("Agent protocols"), align:"left") {
-                    f.entry(title: _("Agent protocols")) {
-                        def agentProtocols = my.agentProtocols
-                        div() {
-                            for (AgentProtocol p : AgentProtocol.all()) {
-                                if (p.name != null && !p.required) {
-                                    f.block() {
-                                        f.checkbox(name: "agentProtocol",
-                                                title: p.displayName,
-                                                checked: agentProtocols.contains(p.name),
-                                                json: p.name)
-                                    }
-                                    div(class: "tr") {
-                                        div(class:"setting-description"){
-                                            st.include(from:p, page: "description", optional:true)
-                                            if (p.deprecated) {
-                                              br()
-                                              text(b(_("Deprecated. ")))
-                                              st.include(from:p, page: "deprecationCause", optional:true)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
 
             Functions.getSortedDescriptorsForGlobalConfigByDescriptor(my.FILTER).each { Descriptor descriptor ->
-                set("descriptor",descriptor)
-                set("instance",descriptor)
+                set("descriptor", descriptor)
+                set("instance", descriptor)
                 f.rowSet(name:descriptor.jsonSafeClassName) {
                     st.include(from:descriptor, page:descriptor.globalConfigPage)
                 }
