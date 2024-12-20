@@ -179,7 +179,7 @@ $semantics: (
   // hsla(240, 25%, 75%, 0.25)
 
   @media (prefers-contrast: more) {
-    --jenkins-border: var(--jenkins-border-width) solid currentColor;
+    --jenkins-border: var(--jenkins-border-width) solid var(--text-color);
   }
 
   // Table
@@ -278,6 +278,9 @@ $semantics: (
     from var(--text-color-secondary) l c h / 0.5
   );
   --card-border-width: var(--jenkins-border-width);
+  @media (prefers-contrast: more) {
+    --card-border-color: var(--text-color);
+  }
 
   // Tab bar
   --tabs-background: oklch(from var(--text-color-secondary) l c h / 0.1);
@@ -326,6 +329,10 @@ $semantics: (
   --form-item-max-width--medium: min(50vw, 1400px);
   --form-item-max-width--small: min(35vw, 1200px);
 
+  @media (prefers-contrast: more) {
+    --input-border: var(--text-color);
+  }
+
   /* stylelint-disable-next-line media-query-no-invalid */
   @media screen and (max-width: breakpoints.$tablet-breakpoint) {
     --section-padding: 1.25rem;
@@ -337,8 +344,8 @@ $semantics: (
   --form-label-font-weight: 450;
   --form-input-padding: 0.625rem;
   --form-input-border-radius: 0.625rem;
-  --form-input-glow: 0 0 0 10px transparent;
-  --form-input-glow--focus: 0 0 0 5px var(--focus-input-glow);
+  --form-input-glow: 0 0 0 8px transparent;
+  --form-input-glow--focus: 0 0 0 4px var(--focus-input-glow);
   --pre-background: rgba(0, 0, 0, 0.05);
   --pre-color: var(--text-color);
   --selection-color: oklch(from var(--accent-color) l c h / 0.2);

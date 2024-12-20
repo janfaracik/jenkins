@@ -52,4 +52,8 @@
       color: var(--alert-danger-text-color);
     }
   }
+
+  @media (prefers-contrast: more) {
+    border-color: var(--text-color);
+  }
 }
