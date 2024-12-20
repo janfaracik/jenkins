@@ -16,13 +16,17 @@ StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
 
+const closer = document.querySelector("#closer")
 const sidepanel = document.querySelector("#side-panel")
 const thing = document.querySelector("#main-panel #opencloseting");
 
 console.log(sidepanel, thing)
 thing.addEventListener("click", () => {
-  console.log('hi')
+  closer.classList.toggle("opennn");
   sidepanel.classList.toggle("opennn");
 })
 
-// sidepanel.classList.toggle("opennn");
+closer.addEventListener("click", () => {
+  closer.classList.toggle("opennn");
+  sidepanel.classList.toggle("opennn");
+})

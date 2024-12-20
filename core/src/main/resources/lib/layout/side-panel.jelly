@@ -36,6 +36,7 @@ THE SOFTWARE.
   <!-- ModelObjectWithContextMenu.ContextMenu#from uses the 'side-panel' mode to only render this
        component when building context menus, e.g. for breadcrumbs or model-links -->
   <j:if test="${mode == 'main' or mode == 'side-panel'}">
+    <div id="closer"></div>
     <div id="side-panel" class="app-page-body__side-panel ${attrs.sticky == 'true' ? 'app-page-body__side-panel--sticky' : ''}">
       <d:invokeBody />
       <!-- add YUI logger if debugging YUI -->
