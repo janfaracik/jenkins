@@ -30,7 +30,7 @@
       padding: 0.2rem 0.4rem;
 
       & > a {
-        @include mixins.item;
+        @include mixins.item($border: false);
 
         display: inline-flex;
         align-items: center;

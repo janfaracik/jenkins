@@ -56,7 +56,7 @@
   }
 }
 
-@mixin item {
+@mixin item($border: true) {
   position: relative;
   z-index: 0;
   text-decoration: none !important;
@@ -112,6 +112,14 @@
       &::after {
         box-shadow: 0 0 0 0.2rem var(--text-color) !important;
         opacity: 1 !important;
+      }
+    }
+  }
+
+  @if $border == false {
+    &:not(:hover, &:active, &:focus) {
+      &::before {
+        border-color: transparent;
       }
     }
   }

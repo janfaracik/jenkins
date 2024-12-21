@@ -257,7 +257,7 @@
   &__button,
   .sortheader,
   &__link {
-    @include mixins.item;
+    @include mixins.item($border: false);
 
     align-items: center;
     justify-content: center;
