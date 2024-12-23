@@ -200,7 +200,6 @@ THE SOFTWARE.
       <j:if test="${newNavigation}">
         <div class="app-navigation">
           <j:forEach var="nav" items="${h.getNavigationItems()}">
-            <j:set var="isRoot" value="${nav.url.equals(rootURL)}" />
             <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(nav.url)}" />
             <j:set var="tooltip">
               <st:include it="${nav}" page="jumplist.jelly" optional="true" />
@@ -217,7 +216,7 @@ THE SOFTWARE.
 
             <x:element name="${nav.url == null ? 'button' : 'a'}">
               <x:attribute name="id">${nav.class.simpleName}</x:attribute>
-              <x:attribute name="href">${isRoot ? rootURL : rootURL + '/' + nav.url}</x:attribute>
+              <x:attribute name="href">${rootURL + '/' + nav.url}</x:attribute>
               <x:attribute name="tooltip">${nav.displayName}</x:attribute>
               <x:attribute name="data-html-tooltip" escapeText="false"><j:out value="${tooltip}" /></x:attribute>
               <x:attribute name="data-tooltip-interactive">true</x:attribute>
