@@ -17,21 +17,11 @@
   gap: 0.8rem;
 
   &__item {
-    @include mixins.item;
-
-    appearance: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
     width: 3.125rem;
     height: 3.125rem;
     border-radius: 1rem;
-    cursor: pointer;
 
     svg {
-      width: 1.125rem;
-      height: 1.125rem;
       color: var(--navigation-color);
     }
 

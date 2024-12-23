@@ -215,19 +215,21 @@ THE SOFTWARE.
               </j:set>
             </j:if>
 
-            <a href="${isRoot ? rootURL : rootURL + '/' + nav.url}"
-               tooltip="${nav.displayName}"
-               data-html-tooltip="${tooltip}"
-               data-tooltip-interactive="true"
-               data-tooltip-type="sidebar"
-               draggable="false"
-               class="app-navigation__item ${isCurrent ? 'app-navigation__item--active' : null}">
+            <x:element name="${nav.url == null ? 'button' : 'a'}">
+              <x:attribute name="id">${nav.class.simpleName}</x:attribute>
+              <x:attribute name="href">${isRoot ? rootURL : rootURL + '/' + nav.url}</x:attribute>
+              <x:attribute name="tooltip">${nav.displayName}</x:attribute>
+              <x:attribute name="data-html-tooltip" escapeText="false"><j:out value="${tooltip}" /></x:attribute>
+              <x:attribute name="data-tooltip-interactive">true</x:attribute>
+              <x:attribute name="data-tooltip-type">sidebar</x:attribute>
+              <x:attribute name="draggable">false</x:attribute>
+              <x:attribute name="class">jenkins-button jenkins-button--tertiary app-navigation__item ${isCurrent ? 'app-navigation__item--active' : null}</x:attribute>
               <l:icon src="${nav.icon}" />
               <span class="jenkins-visually-hidden">${nav.displayName}</span>
               <j:if test="${nav.badge != null}">
                 <span class="app-navigation__item__badge app-navigation__item__badge--${nav.badge.severity}" />
               </j:if>
-            </a>
+            </x:element>
           </j:forEach>
         </div>
       </j:if>
