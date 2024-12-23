@@ -76,7 +76,7 @@ $dropdown-padding: 0.4rem;
 
   &__separator {
     position: relative;
-    height: 0.125rem;
+    height: var(--jenkins-border-width);
     margin: $dropdown-padding calc($dropdown-padding * -1);
     border: none;
 
@@ -123,7 +123,7 @@ $dropdown-padding: 0.4rem;
     --item-background--active: var(--button-background--active);
     --item-box-shadow--focus: var(--button-box-shadow--focus);
 
-    @include mixins.item;
+    @include mixins.item($border: false);
 
     appearance: none;
     display: inline-flex;

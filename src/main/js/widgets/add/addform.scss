@@ -192,7 +192,7 @@
   }
 
   li {
-    @include mixins.item;
+    @include mixins.item($border: false);
 
     -webkit-touch-callout: none;
 
