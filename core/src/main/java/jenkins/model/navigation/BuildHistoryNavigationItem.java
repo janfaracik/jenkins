@@ -4,7 +4,7 @@ public class BuildHistoryNavigationItem implements NavigationItem {
 
     @Override
     public String getDisplayName() {
-        return "Build history";
+        return "Build History";
     }
 
     @Override
