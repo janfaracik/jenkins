@@ -60,7 +60,7 @@
 }
 
 .jenkins-section__item a {
-  @include mixins.item;
+  @include mixins.item($border: false);
 
   display: flex;
   text-decoration: none;
@@ -95,6 +95,7 @@
       border-radius: 100%;
       pointer-events: none;
       background: var(--item-background--active);
+      border: var(--jenkins-border);
     }
 
     img,

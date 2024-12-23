@@ -106,6 +106,7 @@
     display: flex;
     flex-direction: column;
     border-radius: 1rem;
+    border: var(--jenkins-border);
     backdrop-filter: var(--command-palette-results-backdrop-filter);
     box-shadow: var(--command-palette-inset-shadow);
     // If set to 0, Safari won't always show the backdrop-filter
@@ -133,7 +134,7 @@
     }
 
     &__item {
-      @include mixins.item;
+      @include mixins.item($border: false);
 
       --item-background--hover: color-mix(
         in sRGB,
