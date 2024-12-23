@@ -311,13 +311,13 @@ $semantics: (
   --section-padding: 1.625rem;
   --input-color: color-mix(
     in sRGB,
-    var(--text-color-secondary) 1.5%,
+    var(--text-color-secondary) 1%,
     var(--background)
   );
   --input-border: color-mix(
     in sRGB,
-    var(--text-color-secondary) 25%,
-    transparent
+    var(--text-color-secondary) 20%,
+    var(--card-background)
   );
   --input-border-hover: color-mix(
     in sRGB,

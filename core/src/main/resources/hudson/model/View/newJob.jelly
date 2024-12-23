@@ -53,7 +53,7 @@ THE SOFTWARE.
 
             <div>
               <div class="jenkins-form-label">${%ItemType.label}</div>
-              <div id="items" class="categories flat" role="radiogroup" aria-labelledby="Items" data-valid="false" />
+              <ul id="items" class="categories" role="radiogroup" aria-labelledby="Items" data-valid="false" />
             </div>
 
 <!--            <j:if test="${!empty(app.items)}">-->

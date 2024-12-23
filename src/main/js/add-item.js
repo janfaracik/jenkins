@@ -114,28 +114,6 @@ $.when(getItems()).done(function (data) {
     //////////////////////////////////
     // Draw functions
 
-    function drawCategory(category) {
-      var $category = $("<div/>")
-        .addClass("category")
-        .attr("id", "j-add-item-type-" + cleanClassName(category.id));
-      var $items = $("<ul/>").addClass("j-item-options");
-      var $catHeader = $('<div class="header" />');
-      var title = "<h2>" + category.name + "</h2>";
-      var description = "<p>" + category.description + "</p>";
-
-      // Add items
-      $.each(category.items, function (i, elem) {
-        $items.append(drawItem(elem));
-      });
-
-      $catHeader.append(title);
-      $catHeader.append(description);
-      $category.append($catHeader);
-      $category.append($items);
-
-      return $category;
-    }
-
     function drawItem(elem) {
       var item = document.createElement("li");
       item.tabIndex = 0;
@@ -256,9 +234,19 @@ $.when(getItems()).done(function (data) {
     $("#add-item-panel").removeAttr("style");
 
     // Render all categories
-    var $categories = $("div.categories");
+    var $categories = $("ul.categories");
     $.each(data.categories, function (i, elem) {
-      drawCategory(elem).appendTo($categories);
+      // drawCategory(elem).appendTo($categories);
+
+      console.log(elem.items);
+
+      elem.items.forEach(e => {
+        console.log(drawItem(e))
+        // drawItem(e).appendTo($categories);
+
+        $categories.append(drawItem(e));
+      })
+
     });
 
     // Focus
