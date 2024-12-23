@@ -23,48 +23,25 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <st:documentation>
-    <st:attribute name="shortcut" use="required">
-      The shortcut to display
+<j:jelly xmlns:j="jelly:core" xmlns:s="jelly:stapler" xmlns:l="/lib/layout">
+  <s:documentation>
+    The command palette overlay
+  </s:documentation>
 
-      CMD will automatically be translated to the user's operating system's appropriate variant
+  <div id="command-palette-i18n" class="i18n"
+       data-no-results-for="${%No results for}"
+       data-help="${%Help}"
+       data-get-help="${%Get help using Jenkins search}"
+  />
 
-      This attribute also supports Jenkins Symbols, values prefixed with 'symbol-' will be displayed as expected
-    </st:attribute>
-    <st:attribute name="message">
-      Optional tooltip message for the shortcut. Use the placeholder {0} escaped (wrapped in '). A minimal message consisting of
-      only the shortcut would be '{0}'
-    </st:attribute>
-    Displays a keyboard shortcut chip
-  </st:documentation>
-
-  <j:set var="tooltip">
-    <div class="jenkins-keyboard-shortcut__tooltip">
-      <j:set var="body">
-        <div class="jenkins-keyboard-shortcut jenkins-keyboard-shortcut--tooltip">
-          <j:choose>
-            <j:when test="${attrs.shortcut.startsWith('symbol-')}">
-              <l:icon src="${attrs.shortcut}" />
-            </j:when>
-            <j:otherwise>
-              ${attrs.shortcut}
-            </j:otherwise>
-          </j:choose>
+  <dialog id="command-palette" class="jenkins-command-palette__dialog">
+    <div class="jenkins-command-palette__wrapper">
+      <div class="jenkins-command-palette">
+        <l:search-bar id="command-bar" clazz="jenkins-command-palette__search" hasKeyboardShortcut="false" />
+        <div id="search-results-container" class="jenkins-command-palette__results-container">
+          <div id="search-results" class="jenkins-command-palette__results" />
         </div>
-      </j:set>
-      <j:out value="${h.formatMessage(message, h.translateModifierKeysForUsersPlatform(body))}"/>
+      </div>
     </div>
-  </j:set>
-
-  <div class="jenkins-keyboard-shortcut" data-html-tooltip="${attrs.message != null ? tooltip : null}">
-    <j:choose>
-      <j:when test="${attrs.shortcut.startsWith('symbol-')}">
-        <l:icon src="${attrs.shortcut}" />
-      </j:when>
-      <j:otherwise>
-        ${h.translateModifierKeysForUsersPlatform(attrs.shortcut)}
-      </j:otherwise>
-    </j:choose>
-  </div>
+  </dialog>
 </j:jelly>
