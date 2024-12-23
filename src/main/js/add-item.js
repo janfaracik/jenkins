@@ -236,18 +236,11 @@ $.when(getItems()).done(function (data) {
     // Render all categories
     var $categories = $("ul.categories");
     $.each(data.categories, function (i, elem) {
-      // drawCategory(elem).appendTo($categories);
-
-      console.log(elem.items);
-
       elem.items.forEach(e => {
-        console.log(drawItem(e))
-        // drawItem(e).appendTo($categories);
-
         $categories.append(drawItem(e));
       })
-
     });
+    $categories.children()[0].classList.add("active");
 
     // Focus
     $("#add-item-panel").find("#name").focus();

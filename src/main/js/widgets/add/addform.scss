@@ -52,6 +52,8 @@
     background: color-mix(in srgb, var(--text-color-secondary) 2.5%, transparent);
     border: 1.5px solid var(--input-border);
     border-radius: 0.35rem;
+    perspective: 1000px;
+    transition: 0.4s ease;
 
     svg, img {
       position: relative;
@@ -59,21 +61,21 @@
       height: 1.25rem;
     }
 
-    &::after {
-      content: "";
-      position: absolute;
-      background: var(--card-background);
-      border: 5px solid var(--accent-color);
-      top: -0.4rem;
-      right: -0.4rem;
-      width: 0.8rem;
-      height: 0.8rem;
-      border-radius: 5rem;
-      scale: 0;
-      filter: blur(5px);
-      transition: var(--elastic-transition);
-      opacity: 0;
-    }
+    //&::after {
+    //  content: "";
+    //  position: absolute;
+    //  background: var(--card-background);
+    //  border: 0px solid var(--text-color);
+    //  top: -0.4rem;
+    //  right: -0.4rem;
+    //  width: 0.8rem;
+    //  height: 0.8rem;
+    //  border-radius: 5rem;
+    //  scale: 0;
+    //  filter: blur(5px);
+    //  transition: var(--elastic-transition);
+    //  opacity: 0;
+    //}
   }
 
   .default-icon {
@@ -212,14 +214,10 @@
         }
 
         .icon {
-          background: var(--background);
-          border-color: var(--accent-color);
-
-          &::after {
-            scale: 1;
-            filter: blur(0);
-            opacity: 1;
-          }
+          background: var(--text-color-secondary);
+          border-color: var(--text-color-secondary);
+          color: var(--background);
+          transform: rotateY(180deg);
         }
       }
     }
