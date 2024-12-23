@@ -23,29 +23,6 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<<<<<<<< HEAD:core/src/main/resources/lib/layout/command-palette.jelly
-<j:jelly xmlns:j="jelly:core" xmlns:s="jelly:stapler" xmlns:l="/lib/layout">
-  <s:documentation>
-    The command palette overlay
-  </s:documentation>
-
-  <div id="command-palette-i18n" class="i18n"
-       data-no-results-for="${%No results for}"
-       data-help="${%Help}"
-       data-get-help="${%Get help using Jenkins search}"
-  />
-
-  <dialog id="command-palette" class="jenkins-command-palette__dialog">
-    <div class="jenkins-command-palette__wrapper">
-      <div class="jenkins-command-palette">
-        <l:search-bar id="command-bar" clazz="jenkins-command-palette__search" hasKeyboardShortcut="false" />
-        <div id="search-results-container" class="jenkins-command-palette__results-container">
-          <div id="search-results" class="jenkins-command-palette__results" />
-        </div>
-      </div>
-    </div>
-  </dialog>
-========
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <st:documentation>
     <st:attribute name="shortcut" use="required">
@@ -90,5 +67,4 @@ THE SOFTWARE.
       </j:otherwise>
     </j:choose>
   </div>
->>>>>>>> master:core/src/main/resources/lib/layout/keyboard-shortcut.jelly
 </j:jelly>
