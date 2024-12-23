@@ -361,6 +361,28 @@ pre.console {
   height: 32px;
 }
 
+/**/
+
+//#page-header {
+//  display: none;
+//}
+//
+//#breadcrumbBar {
+//  opacity: 0;
+//}
+
+.spaceinvader {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 360px 1fr;
+  gap: calc(var(--section-padding) / 2);
+
+  .jenkins-app-bar, .tabBar {
+    grid-column: span 2;
+    margin-bottom: 0;
+  }
+}
+
 /* ====================== help ===================================== */
 
 .help {

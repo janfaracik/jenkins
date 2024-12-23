@@ -8,9 +8,10 @@
   align-items: center;
   flex-wrap: wrap;
   background: var(--tabs-background);
-  border-radius: var(--tabs-border-radius);
-  padding: 2px;
+  border-radius: 10px;
   margin-bottom: var(--section-padding);
+  padding: 3px;
+  gap: 3px;
 
   &::before {
     content: "";
@@ -33,12 +34,11 @@
   justify-content: center;
   min-width: 3rem;
   text-decoration: none;
-  margin: 2px;
   padding: 0.4rem 1.2rem;
-  border-radius: 100px;
+  border-radius: 7px;
   background: var(--tabs-item-background);
-  color: var(--tabs-item-foreground);
-  font-weight: 500;
+  color: var(--text-color-secondary);
+  //font-weight: 500;
   font-size: 0.875rem;
   transition: var(--standard-transition);
   cursor: pointer;
@@ -67,9 +67,10 @@
 
 .tabBar .tab.active a {
   background: var(--tabs-item-background--selected);
-  color: var(--tabs-item-foreground--selected);
+  color: var(--text-color);
   z-index: 2;
   cursor: default;
+  font-weight: 500;
 }
 
 .tabBarBaseline {
