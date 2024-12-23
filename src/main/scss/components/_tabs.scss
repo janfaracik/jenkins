@@ -8,7 +8,7 @@
   align-items: center;
   flex-wrap: wrap;
   background: var(--tabs-background);
-  border-radius: 10px;
+  border-radius: 100px;
   margin-bottom: var(--section-padding);
   padding: 3px;
   gap: 3px;
@@ -35,7 +35,7 @@
   min-width: 3rem;
   text-decoration: none;
   padding: 0.4rem 1.2rem;
-  border-radius: 7px;
+  border-radius: 100px;
   background: var(--tabs-item-background);
   color: var(--text-color-secondary);
   //font-weight: 500;

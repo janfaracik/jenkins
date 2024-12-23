@@ -10,6 +10,7 @@
   backdrop-filter: blur(15px);
   overflow-x: auto;
   background: var(--breadcrumbs-bar-background);
+  opacity: 0;
 
   &__list {
     display: contents;

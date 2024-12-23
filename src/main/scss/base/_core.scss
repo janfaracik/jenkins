@@ -11,6 +11,11 @@ body {
   display: flex;
   flex-direction: column;
   background-color: var(--background);
+  border-left: 60px solid black;
+}
+
+#page-header {
+  display: none;
 }
 
 *,
