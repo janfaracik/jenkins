@@ -37,7 +37,8 @@ function init() {
   );
 
   // Events
-  headerCommandPaletteButton.addEventListener("click", function () {
+  headerCommandPaletteButton.addEventListener("click", function (e) {
+    e.preventDefault();
     if (commandPalette.hasAttribute("open")) {
       hideCommandPalette();
     } else {
