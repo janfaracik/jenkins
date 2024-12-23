@@ -81,7 +81,7 @@ THE SOFTWARE.
   </st:documentation>
   <d:taglib uri="local">
     <d:tag name="body">
-      <div class="help-sibling2" style="width:100%">
+      <div class="help-sibling" style="width:100%">
         <j:set var="help" value="${descriptor.helpFile}" />
 
         <div class="repeated-chunk__header">
@@ -96,15 +96,13 @@ THE SOFTWARE.
           </j:if>
         </div>
 
+        <j:if test="${help!=null}">
+          <f:helpArea />
+        </j:if>
+
         <f:class-entry descriptor="${descriptor}" />
 
-        <div class="notafoodwriter">
-          <j:if test="${help!=null}">
-            <f:helpArea />
-          </j:if>
-
-          <d:invokeBody/>
-        </div>
+        <d:invokeBody/>
       </div>
     </d:tag>
   </d:taglib>
@@ -122,7 +120,7 @@ THE SOFTWARE.
       </div>
     </j:forEach>
 
-    <template class="repeatable-insertion-point" />
+    <div class="repeatable-insertion-point" />
 
     <div class="prototypes to-be-removed">
       <!-- render one prototype for each type -->
@@ -155,8 +153,10 @@ THE SOFTWARE.
     </div>
 
     <j:if test="${!readOnlyMode}">
-      <button type="button" class="jenkins-button hetero-list-add" menualign="${attrs.menuAlign}" suffix="${attrs.name}">${attrs.addCaption?:'%Add'}<l:icon src="symbol-chevron-down"/>
-      </button>
+      <div>
+        <button type="button" class="jenkins-button hetero-list-add" menualign="${attrs.menuAlign}" suffix="${attrs.name}">${attrs.addCaption?:'%Add'}<l:icon src="symbol-chevron-down"/>
+        </button>
+      </div>
     </j:if>
   </div>
 </j:jelly>
