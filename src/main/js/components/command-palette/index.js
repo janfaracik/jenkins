@@ -63,7 +63,7 @@ function init() {
           icon: Symbols.HELP,
           type: "symbol",
           label: i18n.dataset.getHelp,
-          url: headerCommandPaletteButton.dataset.searchHelpUrl,
+          url: headerCommandPaletteButton.dataset.searchHelpUrl || "TODO",
           isExternal: true,
         }),
       ]);
