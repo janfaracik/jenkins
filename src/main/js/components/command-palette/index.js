@@ -10,8 +10,8 @@ const datasources = [JenkinsSearchSource];
 
 function init() {
   const i18n = document.getElementById("command-palette-i18n");
-  const headerCommandPaletteButton = document.getElementById(
-    "button-open-command-palette",
+  const headerCommandPaletteButton = document.querySelector(
+    "[tooltip='Search']",
   );
   const commandPalette = document.getElementById("command-palette");
   const commandPaletteWrapper = commandPalette.querySelector(
