@@ -48,13 +48,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 2.5rem;
-    width: 2.5rem;
+    height: 2.25rem;
+    width: 2.25rem;
+    background: color-mix(in srgb, var(--text-color-secondary) 2.5%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--text-color-secondary) 9%, transparent);
+    border-radius: 0.25rem;
 
-    img {
+    svg, img {
       position: relative;
-      width: 100%;
-      height: 100%;
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
 
@@ -131,6 +134,10 @@
   }
 
   .categories {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+
     .category {
       .header {
         padding: 0 20px;
@@ -171,12 +178,14 @@
   position: relative;
 }
 
-.j-item-options {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+.category, .j-item-options {
+  display: contents;
+}
 
+.j-item-options {
   li.active {
+    border: 1.5px solid color-mix(in srgb, var(--text-color-secondary) 20%, var(--card-background));
+
     &::before {
       background: var(--item-background--hover);
     }
@@ -186,13 +195,27 @@
     @include mixins.item;
 
     -webkit-touch-callout: none;
+
+
+    background: var(--card-background);
+    border: 1.5px solid var(--input-border);
     user-select: none;
-    padding: 0.75rem 1rem;
-    min-height: 68px;
+    padding: 0.75rem;
     cursor: pointer;
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 0.25rem 1rem;
+    border-radius: 0.25rem;
+
+    &:first-of-type {
+      border-top-left-radius: var(--form-input-border-radius);
+      border-top-right-radius: var(--form-input-border-radius);
+    }
+
+    &:last-of-type {
+      border-bottom-left-radius: var(--form-input-border-radius);
+      border-bottom-right-radius: var(--form-input-border-radius);
+    }
 
     .icon {
       grid-row: span 2;
@@ -201,7 +224,7 @@
     label {
       display: block;
       font-size: var(--font-size-sm);
-      font-weight: 500;
+      font-weight: 450;
       color: var(--text-color);
       cursor: pointer;
 
@@ -215,6 +238,7 @@
 
     .desc {
       grid-column: 2;
+      padding-right: 2rem;
     }
   }
 }

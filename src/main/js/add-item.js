@@ -145,10 +145,10 @@ $.when(getItems()).done(function (data) {
 
       var iconDiv = drawIcon(elem);
       item.appendChild(iconDiv);
-      var labelContainer = document.createElement("div");
-      item.appendChild(labelContainer);
+      // var labelContainer = document.createElement("div");
+      // item.appendChild(labelContainer);
 
-      var label = labelContainer.appendChild(document.createElement("label"));
+      var label = item.appendChild(document.createElement("label"));
 
       var radio = label.appendChild(document.createElement("input"));
       radio.type = "radio";
@@ -160,7 +160,7 @@ $.when(getItems()).done(function (data) {
 
       displayName.appendChild(document.createTextNode(elem.displayName));
 
-      var desc = labelContainer.appendChild(document.createElement("div"));
+      var desc = item.appendChild(document.createElement("div"));
       desc.className = "desc";
       desc.innerHTML = checkForLink(elem.description);
 
