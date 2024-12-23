@@ -56,17 +56,17 @@ THE SOFTWARE.
               <div id="items" class="categories flat" role="radiogroup" aria-labelledby="Items" data-valid="false" />
             </div>
 
-            <j:if test="${!empty(app.items)}">
-              <div class="item-copy">
-                <p class="jenkins-form-label">${%CopyOption.description}</p>
-                <div class="add-item-copy">
-                  <input type="radio" name="mode" value="copy" />
-                  <label>${%CopyOption.label}</label>
-                  <j:set var="descriptor" value="${it.descriptor}" />
-                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
-                </div>
-              </div>
-            </j:if>
+<!--            <j:if test="${!empty(app.items)}">-->
+<!--              <div class="item-copy">-->
+<!--                <p class="jenkins-form-label">${%CopyOption.description}</p>-->
+<!--                <div class="add-item-copy">-->
+<!--                  <input type="radio" name="mode" value="copy" />-->
+<!--                  <label>${%CopyOption.label}</label>-->
+<!--                  <j:set var="descriptor" value="${it.descriptor}" />-->
+<!--                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </j:if>-->
 
             <s:bottomButtonBar>
               <st:include page="newJobButtonBar.jelly"/>
