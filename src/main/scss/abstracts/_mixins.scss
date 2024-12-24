@@ -61,7 +61,7 @@
   z-index: 0;
   text-decoration: none !important;
   font-weight: normal;
-  border-radius: 0.66rem;
+  border-radius: var(--form-input-border-radius);
 
   &::before,
   &::after {

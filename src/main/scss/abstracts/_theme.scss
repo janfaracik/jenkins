@@ -174,7 +174,7 @@ $semantics: (
 
 
   --jenkins-border-width: 1.5px;
-  --jenkins-border: var(--jenkins-border-width) solid color-mix(in srgb, currentColor 1%, transparent);
+  --jenkins-border: var(--jenkins-border-width) solid color-mix(in srgb, currentColor 1.5%, transparent);
   //--jenkins-border: var(--jenkins-border-width) solid var(--red);
   // hsla(240, 25%, 75%, 0.25)
 

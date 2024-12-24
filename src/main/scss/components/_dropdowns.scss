@@ -3,7 +3,7 @@
 $dropdown-padding: 0.4rem;
 
 .tippy-box[data-theme~="dropdown"] {
-  border-radius: 15px;
+  border-radius: 1rem;
   box-shadow: var(--dropdown-box-shadow);
   outline: none !important;
   background: color-mix(in sRGB, var(--background) 85%, transparent);
@@ -138,7 +138,7 @@ $dropdown-padding: 0.4rem;
     text-decoration: none !important;
     background: transparent;
     color: var(--text-color) !important;
-    border-radius: 0.66rem;
+    border-radius: 0.6rem;
     cursor: pointer;
     min-height: 36px;
     white-space: nowrap;
