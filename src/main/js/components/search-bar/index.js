@@ -1,6 +1,6 @@
 import { createElementFromHtml } from "@/util/dom";
 import makeKeyboardNavigable from "@/util/keyboard";
-// import { xmlEscape } from "@/util/security";
+import { xmlEscape } from "@/util/security";
 
 const SELECTED_CLASS = "jenkins-search__results-item--selected";
 
@@ -21,64 +21,67 @@ function init() {
       searchResultsContainer.appendChild(searchResults);
 
       searchBar.addEventListener("input", () => {
+        const fillUrl = searchBar.getAttribute("fillUrl");
 
-        console.log('bugger')
-        fetch(searchBar.getAttribute("fillUrl"), {
-          headers: crumb.wrap({
-            "Content-Type": "application/x-www-form-urlencoded",
-          }),
-          method: "post",
-          body: new URLSearchParams({ value: searchBar.value }),
-        }).then((rsp) => {
-          if (rsp.ok) {
-            rsp.json().then((json) => {
-              console.log(json);
-            });
-          } else {
-            console.log("bugger", rsp.body)
-          }
+        const mockPromise = new Promise((resolve) => {
+          resolve([])// searchBar.suggestions());
         });
 
-        // const query = searchBar.value.toLowerCase();
-        //
-        // // Hide the suggestions if the search query is empty
-        // if (query.length === 0) {
-        //   hideResultsContainer();
-        //   return;
-        // }
-        //
-        // showResultsContainer();
-        //
-        // function appendResults(container, results) {
-        //   results.forEach((item, index) => {
-        //     container.appendChild(
-        //       createElementFromHtml(
-        //         `<a class="${index === 0 ? SELECTED_CLASS : ""}" href="${
-        //           item.url
-        //         }"><div>${item.icon}</div>${xmlEscape(item.label)}</a>`,
-        //       ),
-        //     );
-        //   });
-        //
-        //   if (results.length === 0 && container === searchResults) {
-        //     container.appendChild(
-        //       createElementFromHtml(
-        //         `<p class="jenkins-search__results__no-results-label">No results</p>`,
-        //       ),
-        //     );
-        //   }
-        // }
-        //
-        //
-        // // Filter results
-        // const results = searchBar
-        //   .suggestions()
-        //   .filter((item) => item.label.toLowerCase().includes(query))
-        //   .slice(0, 5);
-        //
-        // searchResults.innerHTML = "";
-        // appendResults(searchResults, results);
-        // searchResultsContainer.style.height = searchResults.offsetHeight + "px";
+        const fetchPromise = fillUrl
+          ? fetch(fillUrl, {
+            headers: crumb.wrap({
+              "Content-Type": "application/x-www-form-urlencoded",
+            }),
+            method: "post",
+            body: new URLSearchParams({ value: searchBar.value }),
+          })
+          : mockPromise;
+
+        fetchPromise.then((rsp) => {
+          if (rsp.ok) {
+            rsp.json().then((json) => {
+              const query = searchBar.value.toLowerCase();
+
+              // Hide the suggestions if the search query is empty
+              if (query.length === 0) {
+                hideResultsContainer();
+                return;
+              }
+
+              showResultsContainer();
+
+              function appendResults(container, results) {
+                results.forEach((item, index) => {
+                  container.appendChild(
+                    createElementFromHtml(
+                      `<a class="${index === 0 ? SELECTED_CLASS : ""}" href="${
+                        item.url
+                      }"><div>${item.icon}</div>${xmlEscape(item.displayName)}</a>`,
+                    ),
+                  );
+                });
+
+                if (results.length === 0 && container === searchResults) {
+                  container.appendChild(
+                    createElementFromHtml(
+                      `<p class="jenkins-search__results__no-results-label">No results</p>`,
+                    ),
+                  );
+                }
+              }
+
+
+              // Filter results
+              const results = json
+                .filter((item) => item.displayName.toLowerCase().includes(query))
+                .slice(0, 5);
+
+              searchResults.innerHTML = "";
+              appendResults(searchResults, results);
+              searchResultsContainer.style.height = searchResults.offsetHeight + "px";
+            });
+          }
+        });
       });
 
       function showResultsContainer() {
