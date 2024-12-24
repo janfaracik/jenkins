@@ -35,8 +35,7 @@ THE SOFTWARE.
 
     <l:main-panel>
       <l:app-bar title="${%Manage Jenkins}">
-        <j:set var="descriptor" value="${it.descriptor}" />
-        <l:search-bar field="search" placeholder="${%Search settings}" />
+        <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
