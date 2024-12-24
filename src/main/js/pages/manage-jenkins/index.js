@@ -8,6 +8,16 @@ searchBarInput.suggestions = function () {
         ".jenkins-section__item__icon svg, .jenkins-section__item__icon img",
       ).outerHTML,
       displayName: item.querySelector("dt").textContent,
+      children: [
+        {
+          url: item.querySelector("a").href,
+          icon: item.querySelector(
+            ".jenkins-section__item__icon svg, .jenkins-section__item__icon img",
+          ).outerHTML,
+          displayName: 'hello world',
+          children: []
+        }
+      ]
     }))
     .filter((item) => !item.url.endsWith("#"));
 };

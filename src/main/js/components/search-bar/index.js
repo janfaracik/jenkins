@@ -69,6 +69,9 @@ function init() {
                       }"><div>${item.icon}</div>${xmlEscape(item.displayName)}</a>`,
                     ),
                   );
+                  if (item.children && item.children.length > 0) {
+                    appendResults(container, item.children);
+                  }
                 });
 
                 if (results.length === 0 && container === searchResults) {
