@@ -26,8 +26,10 @@ package hudson.model;
 
 import hudson.Extension;
 import hudson.Util;
-import hudson.util.ComboBoxModel;
+import hudson.util.SearchModelThing;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -83,10 +85,19 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
 
     @Extension
     public static final class DescriptorImpl extends Descriptor<ManageJenkinsAction> {
-        public ComboBoxModel doFillSearchItems(@QueryParameter String value) {
-            System.out.println("I am being called");
-            System.out.println(value);
-            return new ComboBoxModel("english", "muffin");
+        public SearchModelThing doFillSearchItems(@QueryParameter String value) {
+            List<ManagementLink> managementLinks = ManagementLink.all();
+
+            List<SearchModelThing.SearchInner> items = managementLinks.stream()
+                    .filter(e -> e.getDisplayName() != null && e.getIconFileName() != null)
+                    .filter(e -> e.getDisplayName().toLowerCase().contains(value.toLowerCase()))
+                    .map(managementLink ->
+                        new SearchModelThing.SearchInner(managementLink.getDisplayName(),
+                            managementLink.getUrlName(),
+                                managementLink.getIconFileName(),
+                                Collections.emptyList())).toList();
+
+            return new SearchModelThing(items);
         }
     }
 
