@@ -26,6 +26,7 @@ package hudson.model;
 
 import hudson.Extension;
 import hudson.Util;
+import hudson.util.ComboBoxModel;
 import java.io.IOException;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
@@ -34,6 +35,7 @@ import org.apache.commons.jelly.JellyException;
 import org.jenkinsci.Symbol;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerFallback;
 import org.kohsuke.stapler.StaplerRequest2;
@@ -45,7 +47,7 @@ import org.kohsuke.stapler.StaplerResponse2;
  * @author Kohsuke Kawaguchi
  */
 @Extension(ordinal = 100) @Symbol("manageJenkins")
-public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
+public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu, Describable<ManageJenkinsAction> {
     @Override
     public String getIconFileName() {
         if (Jenkins.get().hasAnyPermission(Jenkins.MANAGE, Jenkins.SYSTEM_READ))
@@ -72,6 +74,20 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
     @Override
     public ContextMenu doContextMenu(StaplerRequest2 request, StaplerResponse2 response) throws JellyException, IOException {
         return new ContextMenu().from(this, request, response, "index");
+    }
+
+    @Override
+    public ManageJenkinsAction.DescriptorImpl getDescriptor() {
+        return Jenkins.get().getDescriptorByType(ManageJenkinsAction.DescriptorImpl.class);
+    }
+
+    @Extension
+    public static final class DescriptorImpl extends Descriptor<ManageJenkinsAction> {
+        public ComboBoxModel doFillSearchItems(@QueryParameter String value) {
+            System.out.println("I am being called");
+            System.out.println(value);
+            return new ComboBoxModel("english", "muffin");
+        }
     }
 
     /**

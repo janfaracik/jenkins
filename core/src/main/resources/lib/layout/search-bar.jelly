@@ -25,6 +25,9 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <st:documentation>
+    <st:attribute name="field" use="optional" since="TODO">
+      Used for data-binding for suggestions.
+    </st:attribute>
     <st:attribute name="value" />
     <st:attribute name="placeholder" />
     <st:attribute name="id" />
@@ -41,6 +44,10 @@ THE SOFTWARE.
     @since 2.369
   </st:documentation>
 
+  <j:if test="${attrs.field != null}">
+    ${descriptor.calcFillSettings(attrs.field, attrs)}
+  </j:if>
+
   <div class="jenkins-search-container">
     <div class="jenkins-search ${attrs.enabled == false ? 'jenkins-search--disabled' : ''} ${attrs.clazz}">
       <div class="jenkins-search__icon">
@@ -56,7 +63,9 @@ THE SOFTWARE.
              autocorrect="off"
              autocapitalize="off"
              spellcheck="false"
-             disabled="${attrs.enabled == false ? true : null}" />
+             disabled="${attrs.enabled == false ? true : null}"
+             fillUrl="${attrs.fillUrl}"
+             fillDependsOn="${attrs.fillDependsOn}" />
       <j:if test="${attrs.hasKeyboardShortcut != 'false'}">
         <l:keyboard-shortcut shortcut="symbol-search-shortcut" message="${%shortcut}" />
       </j:if>
