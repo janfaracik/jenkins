@@ -330,7 +330,7 @@ $semantics: (
   --form-item-max-width--small: min(35vw, 1200px);
 
   @media (prefers-contrast: more) {
-    --input-border: var(--text-color);
+    --input-border: var(--text-color) !important;
   }
 
   /* stylelint-disable-next-line media-query-no-invalid */
