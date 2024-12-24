@@ -7,7 +7,7 @@ searchBarInput.suggestions = function () {
       icon: item.querySelector(
         ".jenkins-section__item__icon svg, .jenkins-section__item__icon img",
       ).outerHTML,
-      label: item.querySelector("dt").textContent,
+      displayName: item.querySelector("dt").textContent,
     }))
     .filter((item) => !item.url.endsWith("#"));
 };

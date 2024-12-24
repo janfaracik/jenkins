@@ -8,7 +8,7 @@ function init() {
   const searchBarInputs = document.querySelectorAll(".jenkins-search__input");
 
   Array.from(searchBarInputs)
-    // .filter((searchBar) => searchBar.suggestions)
+    .filter((searchBar) => searchBar.suggestions || searchBar.getAttribute("fillUrl"))
     .forEach((searchBar) => {
       const searchWrapper = searchBar.parentElement.parentElement;
       const searchResultsContainer = createElementFromHtml(
@@ -24,7 +24,17 @@ function init() {
         const fillUrl = searchBar.getAttribute("fillUrl");
 
         const mockPromise = new Promise((resolve) => {
-          resolve([])// searchBar.suggestions());
+          const query = searchBar.value.toLowerCase();
+          resolve({
+            ok: true,
+            json: () =>
+              Promise.resolve(
+                searchBar
+                  .suggestions()
+                  .filter((item) => item.displayName.toLowerCase().includes(query))
+                  .slice(0, 5)
+              ),
+          });
         });
 
         const fetchPromise = fillUrl
@@ -39,7 +49,7 @@ function init() {
 
         fetchPromise.then((rsp) => {
           if (rsp.ok) {
-            rsp.json().then((json) => {
+            rsp.json().then((results) => {
               const query = searchBar.value.toLowerCase();
 
               // Hide the suggestions if the search query is empty
@@ -69,12 +79,6 @@ function init() {
                   );
                 }
               }
-
-
-              // Filter results
-              const results = json
-                .filter((item) => item.displayName.toLowerCase().includes(query))
-                .slice(0, 5);
 
               searchResults.innerHTML = "";
               appendResults(searchResults, results);
