@@ -223,14 +223,25 @@ $dropdown-padding: 0.4rem;
 
   &:hover {
     .jenkins-dropdown__item--selected {
-      background: transparent;
+      &::before {
+        opacity: 0;
+      }
     }
   }
 }
 
 .jenkins-dropdown__item--selected {
-  background: var(--item-background--hover);
-  animation: pulse 1s ease-in-out forwards;
+  &::before {
+    background: var(--item-background--hover);
+    border: var(--jenkins-border) !important;
+    animation: pulse 1s ease-in-out forwards;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 1 !important;
+    }
+  }
 
   @keyframes pulse {
     50% {
