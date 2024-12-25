@@ -629,7 +629,7 @@ table.fingerprint-in-build td {
     top: 0;
     left: 10px;
     bottom: 0;
-    width: 2px;
+    width: var(--jenkins-border-width);
     background: var(--input-border);
     border-radius: 2px;
     transition: var(--standard-transition);
