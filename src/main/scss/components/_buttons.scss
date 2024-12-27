@@ -159,11 +159,11 @@
   }
 }
 
-//.jenkins-button--tertiary[class*="color"] {
-//  &::before {
-//    opacity: 0;
-//  }
-//}
+.jenkins-button--tertiary[class*="color"] {
+  &::before {
+    opacity: 0;
+  }
+}
 
 // Additional button related classes
 .jenkins-buttons-row {
