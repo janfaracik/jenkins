@@ -88,6 +88,8 @@
     max-width: unset;
 
     input {
+      border: none;
+      padding: 0 0.5rem 0 45px;
       background: transparent !important;
       border-radius: inherit;
 
@@ -106,7 +108,6 @@
     display: flex;
     flex-direction: column;
     border-radius: 1rem;
-    border: var(--jenkins-border);
     backdrop-filter: var(--command-palette-results-backdrop-filter);
     box-shadow: var(--command-palette-inset-shadow);
     // If set to 0, Safari won't always show the backdrop-filter
@@ -150,15 +151,10 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      background: transparent;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      cursor: pointer;
       color: var(--text-color) !important;
       transition: var(--standard-transition);
-      box-shadow: 0 0 0 10px transparent;
-      border: none;
-      outline: none;
 
       &--hover {
         &::before {
