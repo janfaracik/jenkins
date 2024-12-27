@@ -1,7 +1,7 @@
 $jenkins-dialog-padding: 1.3rem;
 
 .jenkins-dialog {
-  border-radius: 0.6rem;
+  border-radius: var(--form-input-border-radius);
   border: none;
   background-color: var(--card-background);
   box-shadow: var(--dialog-box-shadow);
