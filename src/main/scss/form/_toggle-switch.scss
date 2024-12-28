@@ -107,6 +107,7 @@
   cursor: pointer;
   line-height: 30px;
   font-weight: var(--form-label-font-weight);
+  user-select: none;
 
   &::before {
     display: inline-block;
