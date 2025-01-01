@@ -75,7 +75,7 @@
   }
 
   &::before {
-    background-color: transparent;
+    background-color: var(--item-background);
     border: var(--jenkins-border);
   }
 
