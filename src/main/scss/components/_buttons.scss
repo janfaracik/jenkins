@@ -81,7 +81,7 @@
   }
 
   @media (prefers-contrast: no-preference) {
-    &:not(:hover, &:active, &:focus) {
+    &:not(:hover, &:active, &:focus, &[class*="--active"]) {
       &::before {
         border-color: transparent;
       }

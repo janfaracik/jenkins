@@ -21,8 +21,8 @@ function registerTooltip(element) {
   let type = {};
   if (element.hasAttribute("data-tooltip-type")) {
     type = {
-      theme: "sidebar",
-      animation: "sidebar",
+      theme: "tooltip",
+      animation: "tooltip",
       placement: "right",
       offset: [0, 7],
     };
