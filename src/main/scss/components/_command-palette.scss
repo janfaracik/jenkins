@@ -88,6 +88,8 @@
     max-width: unset;
 
     input {
+      border: none;
+      padding: 0 0.5rem 0 45px;
       background: transparent !important;
       border-radius: inherit;
 
@@ -122,7 +124,7 @@
 
     &__heading {
       font-weight: 500;
-      font-size: 0.875rem;
+      font-size: var(--font-size-sm);
       margin: 0;
       padding: 0.75rem 0.75rem 0.625rem;
       color: var(--text-color-secondary);
@@ -133,7 +135,7 @@
     }
 
     &__item {
-      @include mixins.item;
+      @include mixins.item($border: false);
 
       --item-background--hover: color-mix(
         in sRGB,
@@ -149,15 +151,10 @@
       display: flex;
       align-items: center;
       justify-content: flex-start;
-      background: transparent;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      cursor: pointer;
       color: var(--text-color) !important;
       transition: var(--standard-transition);
-      box-shadow: 0 0 0 10px transparent;
-      border: none;
-      outline: none;
 
       &--hover {
         &::before {
@@ -200,7 +197,7 @@
   }
 
   &__info {
-    font-size: 0.875rem;
+    font-size: var(--font-size-sm);
     margin: 0;
     padding: 0 14px;
     line-height: 46px;

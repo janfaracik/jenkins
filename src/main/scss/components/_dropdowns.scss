@@ -3,7 +3,7 @@
 $dropdown-padding: 0.4rem;
 
 .tippy-box[data-theme~="dropdown"] {
-  border-radius: 15px;
+  border-radius: 1rem;
   box-shadow: var(--dropdown-box-shadow);
   outline: none !important;
   background: color-mix(in sRGB, var(--background) 85%, transparent);
@@ -76,7 +76,7 @@ $dropdown-padding: 0.4rem;
 
   &__separator {
     position: relative;
-    height: 0.125rem;
+    height: var(--jenkins-border-width);
     margin: $dropdown-padding calc($dropdown-padding * -1);
     border: none;
 
@@ -93,7 +93,7 @@ $dropdown-padding: 0.4rem;
     color: var(--text-color-secondary) !important;
     margin: $dropdown-padding 0.55rem;
     font-size: 0.8125rem;
-    font-weight: 500;
+    font-weight: 450;
     opacity: 0.8;
 
     &:not(:first-of-type) {
@@ -123,7 +123,7 @@ $dropdown-padding: 0.4rem;
     --item-background--active: var(--button-background--active);
     --item-box-shadow--focus: var(--button-box-shadow--focus);
 
-    @include mixins.item;
+    @include mixins.item($border: false);
 
     appearance: none;
     display: inline-flex;
@@ -138,7 +138,7 @@ $dropdown-padding: 0.4rem;
     text-decoration: none !important;
     background: transparent;
     color: var(--text-color) !important;
-    border-radius: 0.66rem;
+    border-radius: 0.6rem;
     cursor: pointer;
     min-height: 36px;
     white-space: nowrap;
@@ -223,14 +223,25 @@ $dropdown-padding: 0.4rem;
 
   &:hover {
     .jenkins-dropdown__item--selected {
-      background: transparent;
+      &::before {
+        opacity: 0;
+      }
     }
   }
 }
 
 .jenkins-dropdown__item--selected {
-  background: var(--item-background--hover);
-  animation: pulse 1s ease-in-out forwards;
+  &::before {
+    background: var(--item-background--hover);
+    border: var(--jenkins-border) !important;
+    animation: pulse 1s ease-in-out forwards;
+  }
+
+  &:hover {
+    &::before {
+      opacity: 1 !important;
+    }
+  }
 
   @keyframes pulse {
     50% {
