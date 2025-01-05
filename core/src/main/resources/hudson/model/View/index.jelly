@@ -31,13 +31,18 @@ THE SOFTWARE.
         <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
         <l:main-panel>
           <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">
+
+            <l:app-bar title="Dashboard">
+              <t:editDescriptionButton permission="${it.CONFIGURE}" />
+              <t:iconSize><t:rssBar/></t:iconSize>
+            </l:app-bar>
+
             <!-- allow the owner to take over the top section, but we also need the default to be backward compatible -->
             <div id="view-message">
                 <div id="systemmessage">
                   <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />
                 </div>
-              <t:editableDescription permission="${it.CONFIGURE}"/>
-              <t:iconSize><t:rssBar/></t:iconSize>
+              <t:editableDescription permission="${it.CONFIGURE}" hideButton="true" />
             </div>
           </st:include>
 
