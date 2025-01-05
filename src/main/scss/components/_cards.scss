@@ -27,13 +27,15 @@ $card-padding: 1rem;
   }
 
   &:not(:hover) {
-    .jenkins-card__unveil, .jenkins-card__reveal {
+    .jenkins-card__unveil,
+    .jenkins-card__reveal {
       color: var(--text-color-secondary);
     }
   }
 
   @media (prefers-contrast: more) {
-    .jenkins-card__unveil, .jenkins-card__reveal {
+    .jenkins-card__unveil,
+    .jenkins-card__reveal {
       color: var(--text-color) !important;
     }
   }
