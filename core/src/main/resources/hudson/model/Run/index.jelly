@@ -44,6 +44,11 @@ THE SOFTWARE.
       <div>
         <t:editableDescription permission="${it.UPDATE}" hideButton="true"/>
       </div>
+      
+      <l:userExperimentalFlag var="showConsoleWidget" flagClassName="jenkins.model.experimentalflags.ConsoleWidgetUserExperimentalFlag" />
+      <j:if test="${showConsoleWidget}">
+        <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
+      </j:if>
 
       <div class="app-build__details">
         <l:card title="${%Details}">
