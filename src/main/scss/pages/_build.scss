@@ -8,13 +8,24 @@
   gap: 10px;
 }
 
-/* stylelint-disable-next-line media-query-no-invalid */
-@media (min-width: breakpoints.$tablet-breakpoint) {
-  .app-build__details {
-    float: right;
-    width: 360px;
-    margin-left: 1rem;
+.build-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: calc(var(--section-padding) / 2);
+
+  .jenkins-card {
+    margin-bottom: 0; // Remove when .jenkins-card no longer has a default margin
+    height: 100%;
   }
+
+  & > .jenkins-card:last-of-type {
+    grid-column: span 2;
+  }
+}
+
+.losangeles {
+  border: 2px solid red;
+  grid-column: span 2;
 }
 
 .app-build__clock {
