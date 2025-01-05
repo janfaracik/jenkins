@@ -28,9 +28,10 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" />
     <l:breadcrumb title="${%Build History}" />
     <l:main-panel>
-      <h1>
-        ${%title(it.displayName)}
-      </h1>
+      <l:app-bar title="${%title(it.displayName)}">
+        <t:iconSize><t:rssBar/></t:iconSize>
+      </l:app-bar>
+
       <p>
         <em>${%disclaimer}</em>
       </p>

@@ -24,21 +24,18 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:dd="/lib/layout/dropdowns" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <div id="rss-bar" class="jenkins-buttons-row jenkins-buttons-row--invert">
-    <l:overflowButton clazz="jenkins-button--tertiary">
-      <dd:item icon="symbol-information-circle" id="button-icon-legend" text="${%Legend}" />
-      <dd:separator />
-      <dd:submenu icon="symbol-rss" text="${%Atom feed}">
-        <dd:item icon="symbol-rss" text="${%All}" href="rssAll" />
-        <dd:item icon="symbol-rss" text="${%Failures}" href="rssFailed" />
-        <dd:item icon="symbol-rss" text="${%LatestBuilds}" href="rssLatest" />
-      </dd:submenu>
-    </l:overflowButton>
-  </div>
+  <dd:item icon="symbol-information-circle" id="button-icon-legend" text="${%Legend}" />
+  <dd:separator />
+  <dd:submenu icon="symbol-rss" text="${%Atom feed}">
+    <dd:item icon="symbol-rss" text="${%All}" href="rssAll" />
+    <dd:item icon="symbol-rss" text="${%Failures}" href="rssFailed" />
+    <dd:item icon="symbol-rss" text="${%LatestBuilds}" href="rssLatest" />
+  </dd:submenu>
+  <dd:custom>
+    <template id="template-icon-legend" data-title="${%Icon legend}">
+      <st:include page="_legend.jelly" it="${app}" />
+    </template>
 
-  <template id="template-icon-legend" data-title="${%Icon legend}">
-    <st:include page="_legend.jelly" it="${app}" />
-  </template>
-
-  <script src="${resURL}/jsbundles/pages/dashboard.js" type="text/javascript" defer="true" />
+    <script src="${resURL}/jsbundles/pages/dashboard.js" type="text/javascript" defer="true" />
+  </dd:custom>
 </j:jelly>
