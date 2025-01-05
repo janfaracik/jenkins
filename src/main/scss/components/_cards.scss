@@ -48,7 +48,6 @@ $card-padding: 1rem;
     display: flex;
     flex-direction: column;
     padding: 0 $card-padding $card-padding;
-    color: var(--text-color-secondary);
 
     &:empty {
       display: none;
