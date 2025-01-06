@@ -58,6 +58,19 @@ THE SOFTWARE.
         </div>
       </div>
 
+      <l:card title="${%Changes}">
+        <j:set var="changeSets" value="${it.changeSets}" />
+        <j:choose>
+          <j:when test="${!changeSets.isEmpty()}">
+            <j:forEach var="changeSet" items="${changeSets}">
+              <st:include it="${changeSet}" page="digest.jelly" />
+            </j:forEach>
+          </j:when>
+          <j:otherwise>
+            <st:include class="hudson.scm.EmptyChangeLogSet" page="digest.jelly" />
+          </j:otherwise>
+        </j:choose>
+      </l:card>
 
       <table>
         <t:artifactList build="${it}" caption="${%Build Artifacts}"
