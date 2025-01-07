@@ -143,6 +143,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -158,9 +159,13 @@ import java.util.logging.SimpleFormatter;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import jenkins.console.ConsoleUrlProvider;
+import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.console.WithConsoleUrl;
+import jenkins.model.Detail;
+import jenkins.model.DetailFactory;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
+import jenkins.model.Group;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -1994,6 +1999,14 @@ public class Functions {
     }
 
     /**
+     * @param run the run
+     * @return the Console Provider for the given run, if null, the default Console Provider
+     */
+    public static ConsoleUrlProvider getConsoleProviderFor(Run<?, ?> run) {
+        return Optional.ofNullable(ConsoleUrlProvider.getProvider(run)).orElse(new DefaultConsoleUrlProvider());
+    }
+
+    /**
      * Escapes the character unsafe for e-mail address.
      * See <a href="https://en.wikipedia.org/wiki/Email_address">the Wikipedia page</a> for the details,
      * but here the vocabulary is even more restricted.
@@ -2577,6 +2590,34 @@ public class Functions {
     @Restricted(NoExternalUse.class)
     public static String generateItemId() {
         return String.valueOf(Math.floor(Math.random() * 3000));
+    }
+
+    /**
+     * TODO!
+     */
+    @Restricted(NoExternalUse.class)
+    public static Map<Group, List<Detail>> getDetailsFor(Run<?, ?> object) {
+        List<Detail> details = new ArrayList<>();
+
+        for (DetailFactory<Run> taf : DetailFactory.factoriesFor(Run.class)) {
+            details.addAll(taf.createFor(object));
+        }
+
+        // Create a TreeMap with a Comparator for Group objects
+        Map<Group, List<Detail>> orderedMap = new TreeMap<>(Comparator.comparingInt(Group::getOrder));
+
+        // Populate the TreeMap, grouping by Group and sorting Details within each group
+        for (Detail detail : details) {
+            orderedMap.computeIfAbsent(detail.getGroup(), k -> new ArrayList<>()).add(detail);
+        }
+
+        // Sort each List of Detail objects by Detail's order
+        for (Map.Entry<Group, List<Detail>> entry : orderedMap.entrySet()) {
+            List<Detail> detailList = entry.getValue();
+            detailList.sort(Comparator.comparingInt(Detail::getOrder));
+        }
+
+        return orderedMap;
     }
 
     @Restricted(NoExternalUse.class)
