@@ -58,11 +58,12 @@ THE SOFTWARE.
         </div>
       </div>
 
-      <l:card title="${%Changes}">
+      <l:card title="${%Changes}" expandable="changes">
         <j:set var="changeSets" value="${it.changeSets}" />
         <j:choose>
           <j:when test="${!changeSets.isEmpty()}">
             <j:forEach var="changeSet" items="${changeSets}">
+              <!-- https://github.com/jenkinsci/git-plugin/blob/bdc231417b9de86831d8a93249fea2aa5583fbcd/src/main/resources/hudson/plugins/git/GitChangeSetList/digest.jelly-->
               <st:include it="${changeSet}" page="digest.jelly" />
             </j:forEach>
           </j:when>
