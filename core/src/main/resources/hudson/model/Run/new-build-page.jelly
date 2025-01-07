@@ -45,8 +45,9 @@ THE SOFTWARE.
         <t:editableDescription permission="${it.UPDATE}" hideButton="true"/>
       </div>
 
-      <div class="build-grid">
+      <div class="app-build__grid">
         <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
+
         <l:card title="${%Details}">
           <div class="jenkins-card__details">
             <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
@@ -65,6 +66,44 @@ THE SOFTWARE.
               </j:forEach>
             </j:forEach>
           </div>
+        </l:card>
+
+        <l:card title="${%Changes}" expandable="changes">
+          <j:set var="changeSets" value="${it.changeSets}" />
+          <j:choose>
+            <j:when test="${!changeSets.isEmpty()}">
+              <j:forEach var="changeSet" items="${changeSets}">
+                <j:set var="browser" value="${changeSet.browser}"/>
+                <!-- https://github.com/jenkinsci/git-plugin/blob/bdc231417b9de86831d8a93249fea2aa5583fbcd/src/main/resources/hudson/plugins/git/GitChangeSetList/digest.jelly-->
+                <!--              <st:include it="${changeSet}" page="digest.jelly" />-->
+                <j:choose>
+                  <j:when test="${changeSet.emptySet}">
+                    ${%No changes.}
+                  </j:when>
+                  <j:otherwise>
+                    <ol class="timeline">
+                      <j:forEach var="cs" items="${changeSet.logs}">
+                        <li>
+                          <j:out value="${cs.msgAnnotated}"/>
+                          (<a href="changes#${cs.id}">${%details}</a>
+                          <j:set var="cslink" value="${browser.getChangeSetLink(cs)}"/>
+                          <j:if test="${cslink!=null}">
+                            /
+                            <a href="${cslink}">${browser.descriptor.displayName}</a>
+                          </j:if>
+                          )
+                          <div class="roman">${cs.paths.size()} files changed</div>
+                        </li>
+                      </j:forEach>
+                    </ol>
+                  </j:otherwise>
+                </j:choose>
+              </j:forEach>
+            </j:when>
+            <j:otherwise>
+              <st:include class="hudson.scm.EmptyChangeLogSet" page="digest.jelly" />
+            </j:otherwise>
+          </j:choose>
         </l:card>
 
         <l:card title="Summary">
