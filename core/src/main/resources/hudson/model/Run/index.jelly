@@ -43,35 +43,60 @@ THE SOFTWARE.
         <t:editableDescription permission="${it.UPDATE}" hideButton="true"/>
       </div>
 
-      <div style="float:right; z-index: 1; position:relative; margin-left: 1em">
-        <div style="margin-top:1em">
-          ${%startedAgo(it.timestampString)}
-        </div>
-        <div>
-          <j:if test="${it.building}">
-            ${%beingExecuted(it.executor.timestampString)}
-          </j:if>
-          <j:if test="${!it.building}">
-            ${%Took} <a href="${rootURL}/${it.parent.url}buildTimeTrend">${it.durationString}</a>
-          </j:if>
-          <st:include page="details.jelly" optional="true" />
-        </div>
-      </div>
+<!--      <div style="float:right; z-index: 1; position:relative; margin-left: 1em">-->
+<!--        <div style="margin-top:1em">-->
+<!--          ${%startedAgo(it.timestampString)}-->
+<!--        </div>-->
+<!--        <div>-->
+<!--          <j:if test="${it.building}">-->
+<!--            ${%beingExecuted(it.executor.timestampString)}-->
+<!--          </j:if>-->
+<!--          <j:if test="${!it.building}">-->
+<!--            ${%Took} <a href="${rootURL}/${it.parent.url}buildTimeTrend">${it.durationString}</a>-->
+<!--          </j:if>-->
+<!--          <st:include page="details.jelly" optional="true" />-->
+<!--        </div>-->
+<!--      </div>-->
 
-      <l:card title="${%Changes}" expandable="changes">
-        <j:set var="changeSets" value="${it.changeSets}" />
-        <j:choose>
-          <j:when test="${!changeSets.isEmpty()}">
-            <j:forEach var="changeSet" items="${changeSets}">
-              <!-- https://github.com/jenkinsci/git-plugin/blob/bdc231417b9de86831d8a93249fea2aa5583fbcd/src/main/resources/hudson/plugins/git/GitChangeSetList/digest.jelly-->
-              <st:include it="${changeSet}" page="digest.jelly" />
-            </j:forEach>
-          </j:when>
-          <j:otherwise>
-            <st:include class="hudson.scm.EmptyChangeLogSet" page="digest.jelly" />
-          </j:otherwise>
-        </j:choose>
-      </l:card>
+      <div style="width: 450px">
+        <l:card title="${%Changes}" expandable="changes">
+          <j:set var="changeSets" value="${it.changeSets}" />
+          <j:choose>
+            <j:when test="${!changeSets.isEmpty()}">
+              <j:forEach var="changeSet" items="${changeSets}">
+                <j:set var="browser" value="${changeSet.browser}"/>
+                <!-- https://github.com/jenkinsci/git-plugin/blob/bdc231417b9de86831d8a93249fea2aa5583fbcd/src/main/resources/hudson/plugins/git/GitChangeSetList/digest.jelly-->
+                <!--              <st:include it="${changeSet}" page="digest.jelly" />-->
+                <j:choose>
+                  <j:when test="${changeSet.emptySet}">
+                    ${%No changes.}
+                  </j:when>
+                  <j:otherwise>
+                    <ol class="timeline">
+                      <j:forEach var="cs" items="${changeSet.logs}">
+                        <li>
+                          <j:out value="${cs.msgAnnotated}"/>
+                          (<a href="changes#${cs.id}">${%details}</a>
+                          <j:set var="cslink" value="${browser.getChangeSetLink(cs)}"/>
+                          <j:if test="${cslink!=null}">
+                            /
+                            <a href="${cslink}">${browser.descriptor.displayName}</a>
+                          </j:if>
+                          )
+                          <div class="roman">${cs.paths.size()} files changed</div>
+                        </li>
+                      </j:forEach>
+                    </ol>
+                  </j:otherwise>
+                </j:choose>
+              </j:forEach>
+            </j:when>
+            <j:otherwise>
+              <st:include class="hudson.scm.EmptyChangeLogSet" page="digest.jelly" />
+            </j:otherwise>
+          </j:choose>
+        </l:card>
+      </div>
 
       <table>
         <t:artifactList build="${it}" caption="${%Build Artifacts}"
