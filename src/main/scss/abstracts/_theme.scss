@@ -287,7 +287,7 @@ $semantics: (
   // Tab bar
   --tabs-background: oklch(from var(--text-color-secondary) l c h / 0.1);
   --tabs-item-background: transparent;
-  --tabs-item-foreground: var(--text-color);
+  --tabs-item-foreground: color-mix(in srgb, var(--text-color-secondary), var(--text-color));
   --tabs-item-background--hover: rgb(0 0 0 / 0.05);
   --tabs-item-foreground--hover: var(--text-color);
   --tabs-item-background--active: rgb(0 0 0 / 0.1);

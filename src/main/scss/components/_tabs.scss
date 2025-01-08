@@ -1,5 +1,7 @@
 @use "../abstracts/mixins";
 
+$border-radius: 100px;
+
 .tabBarFrame {
   position: relative;
 }
@@ -10,9 +12,8 @@
   align-items: center;
   flex-wrap: wrap;
   background: var(--button-background);
-  border-radius: 100px;
+  border-radius: $border-radius;
   padding: 2px;
-  gap: 2px;
   margin-bottom: var(--section-padding);
 
   &::before {
@@ -35,18 +36,22 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 3rem;
   min-height: 36px;
   padding: 0 1.2rem;
-  border-radius: 100px;
+  border-radius: $border-radius;
   color: var(--tabs-item-foreground);
   font-size: var(--font-size-sm);
   font-weight: 400;
+  min-width: 3.75rem;
+
+  &::before, &::after {
+    inset: 2px;
+  }
 }
 
 .tabBar .tab .addTab svg {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .tabBar .tab [type="radio"] {
@@ -57,30 +62,21 @@
   z-index: 2;
   cursor: default;
   font-weight: 450;
+  color: var(--tabs-item-foreground--active);
 
   &::before {
     background-clip: padding-box;
     background-color: var(--tabs-item-background--selected) !important;
+    border: var(--jenkins-border) !important;
   }
 
   &::after {
     display: none;
   }
-}
 
-.tabBarBaseline {
-  border-top: var(--tab-baseline-width) solid var(--tab-baseline-color);
-  z-index: 1;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-
-  /* Baseline is hidden by default.  See next rule fo adding visibility. */
-  display: var(--tab-baseline-default-display, none);
-}
-
-.tabBarFrame.showBaseline .tabBarBaseline {
-  display: block;
+  &::before, &::after {
+    inset: 0;
+  }
 }
 
 .jenkins-tab-pane__title {
