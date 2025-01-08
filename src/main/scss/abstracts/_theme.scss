@@ -94,6 +94,13 @@ $semantics: (
     from var(--text-color) 96.8% 0.005 h / 0.8
   );
 
+  // App bar
+  --bottom-app-bar-shadow: color-mix(
+    in sRGB,
+    var(--text-color-secondary) 7.5%,
+    transparent
+  );
+
   // Alert call outs
   --alert-success-text-color: var(--success-color);
   --alert-success-bg-color: color-mix(
@@ -171,11 +178,10 @@ $semantics: (
   --btn-link-bg--hover: var(--very-light-grey);
   --btn-link-color--active: var(--primary-active);
   --btn-link-bg--active: var(--light-grey);
-
-
   --jenkins-border-color: color-mix(in sRGB, currentColor 1.5%, transparent);
   --jenkins-border-width: 1.5px;
-  --jenkins-border: var(--jenkins-border-width) solid var(--jenkins-border-color);
+  --jenkins-border: var(--jenkins-border-width) solid
+    var(--jenkins-border-color);
   //--jenkins-border: var(--jenkins-border-width) solid var(--red);
   // hsla(240, 25%, 75%, 0.25)
 
@@ -287,7 +293,11 @@ $semantics: (
   // Tab bar
   --tabs-background: oklch(from var(--text-color-secondary) l c h / 0.1);
   --tabs-item-background: transparent;
-  --tabs-item-foreground: color-mix(in srgb, var(--text-color-secondary), var(--text-color));
+  --tabs-item-foreground: color-mix(
+    in sRGB,
+    var(--text-color-secondary),
+    var(--text-color)
+  );
   --tabs-item-background--hover: rgb(0 0 0 / 0.05);
   --tabs-item-foreground--hover: var(--text-color);
   --tabs-item-background--active: rgb(0 0 0 / 0.1);

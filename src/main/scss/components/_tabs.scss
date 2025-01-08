@@ -44,7 +44,8 @@ $border-radius: 100px;
   font-weight: 400;
   min-width: 3.75rem;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     inset: 2px;
   }
 }
@@ -74,7 +75,8 @@ $border-radius: 100px;
     display: none;
   }
 
-  &::before, &::after {
+  &::before,
+  &::after {
     inset: 0;
   }
 }
