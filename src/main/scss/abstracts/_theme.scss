@@ -63,8 +63,8 @@ $semantics: (
   --focus-btn-danger: #{color.change(#cc0003, $alpha: 0.5)};
 
   // State colors
-  --primary-hover: #0587d4;
-  --primary-active: #095683;
+  --primary-hover: var(--link-color);
+  --primary-active: var(--link-color--hover);
   --danger-hover: #eb383b;
   --danger-active: #b50003;
 
