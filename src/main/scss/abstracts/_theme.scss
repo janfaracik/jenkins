@@ -362,7 +362,7 @@ $semantics: (
   --form-input-border-radius: 0.625rem;
   --form-input-glow: 0 0 0 8px transparent;
   --form-input-glow--focus: 0 0 0 4px var(--focus-input-glow);
-  --pre-background: rgb(0 0 0 / 0.05);
+  --pre-background: var(--button-background);
   --pre-color: var(--text-color);
   --selection-color: oklch(from var(--accent-color) l c h / 0.2);
 
