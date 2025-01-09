@@ -185,6 +185,10 @@ $semantics: (
   //--jenkins-border: var(--jenkins-border-width) solid var(--red);
   // hsla(240, 25%, 75%, 0.25)
 
+  @media (resolution: 1x) {
+    --jenkins-border-width: 2px;
+  }
+
   @media (prefers-contrast: more) {
     --jenkins-border-color: var(--text-color);
   }
