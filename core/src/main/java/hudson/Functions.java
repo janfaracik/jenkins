@@ -62,6 +62,7 @@ import hudson.model.User;
 import hudson.model.View;
 import hudson.scm.SCM;
 import hudson.scm.SCMDescriptor;
+import hudson.search.SearchFactory;
 import hudson.search.SearchableModelObject;
 import hudson.security.ACL;
 import hudson.security.AccessControlled;
@@ -124,6 +125,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -141,6 +143,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -156,6 +159,7 @@ import java.util.logging.SimpleFormatter;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import jenkins.console.ConsoleUrlProvider;
+import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.console.WithConsoleUrl;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
@@ -1992,6 +1996,14 @@ public class Functions {
     }
 
     /**
+     * @param run the run
+     * @return the Console Provider for the given run, if null, the default Console Provider
+     */
+    public static ConsoleUrlProvider getConsoleProviderFor(Run<?, ?> run) {
+        return Optional.ofNullable(ConsoleUrlProvider.getProvider(run)).orElse(new DefaultConsoleUrlProvider());
+    }
+
+    /**
      * Escapes the character unsafe for e-mail address.
      * See <a href="https://en.wikipedia.org/wiki/Email_address">the Wikipedia page</a> for the details,
      * but here the vocabulary is even more restricted.
@@ -2575,5 +2587,35 @@ public class Functions {
     @Restricted(NoExternalUse.class)
     public static String generateItemId() {
         return String.valueOf(Math.floor(Math.random() * 3000));
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static ExtensionList<SearchFactory> getSearchFactories() {
+        return SearchFactory.all();
+    }
+
+    /**
+     * @param keyboardShortcut the shortcut to be translated
+     * @return the translated shortcut, e.g. CMD+K to ⌘+K for macOS, CTRL+K for Windows
+     */
+    @Restricted(NoExternalUse.class)
+    public static String translateModifierKeysForUsersPlatform(String keyboardShortcut) {
+        StaplerRequest2 currentRequest = Stapler.getCurrentRequest2();
+        currentRequest.getWebApp().getDispatchValidator().allowDispatch(currentRequest, Stapler.getCurrentResponse2());
+        String userAgent = currentRequest.getHeader("User-Agent");
+
+        List<String> platformsThatUseCommand = List.of("MAC", "IPHONE", "IPAD");
+        boolean useCmdKey = platformsThatUseCommand.stream().anyMatch(e -> userAgent.toUpperCase().contains(e));
+
+        return keyboardShortcut.replace("CMD", useCmdKey ? "⌘" : "CTRL");
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static String formatMessage(String format, Object args) {
+        if (format == null) {
+            return args.toString();
+        }
+
+        return MessageFormat.format(format, args);
     }
 }

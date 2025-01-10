@@ -168,10 +168,6 @@ THE SOFTWARE.
     </dependency>
     <dependency>
       <groupId>commons-jelly</groupId>
-      <artifactId>commons-jelly-tags-fmt</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-jelly</groupId>
       <artifactId>commons-jelly-tags-xml</artifactId>
       <exclusions>
         <exclusion>
@@ -287,17 +283,6 @@ THE SOFTWARE.
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-compress</artifactId>
-      <exclusions>
-        <!-- Only needed for Pack200UnpackerAdapter, which we do not use -->
-        <exclusion>
-          <groupId>org.apache.commons</groupId>
-          <artifactId>commons-lang3</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.commons</groupId>
       <artifactId>commons-fileupload2-core</artifactId>
     </dependency>
     <dependency>
@@ -320,6 +305,10 @@ THE SOFTWARE.
     <dependency>
       <groupId>org.jenkins-ci</groupId>
       <artifactId>annotation-indexer</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci</groupId>
+      <artifactId>commons-jelly-tags-fmt</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci</groupId>
