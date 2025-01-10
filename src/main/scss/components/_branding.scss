@@ -135,13 +135,13 @@ $positions: (
       content: "";
       position: absolute;
       inset: 0;
-      backdrop-filter: invert(2%) blur(100px);
+      backdrop-filter: invert(3%) blur(50px);
       mask-image: repeating-conic-gradient(
                       from var(--rotation),
                       var(--background) 0deg,
                       transparent 20deg
       );
-      opacity: 0.4;
+      opacity: 0.45;
       flex: 1;
 
       @media (prefers-reduced-motion: no-preference) {
