@@ -1,0 +1,8 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core">
+  <div class="app-branding">
+    <div class="idk">
+      <img src="${imagesURL}/svgs/logo.svg" alt="${%Jenkins illustration}" />
+    </div>
+  </div>
+</j:jelly>

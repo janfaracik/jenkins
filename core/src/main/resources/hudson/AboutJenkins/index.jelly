@@ -32,8 +32,7 @@ THE SOFTWARE.
     
     <l:main-panel>
       <div class="app-about-branding">
-        <div class="app-about-branding__aurora"></div>
-        <img src="${imagesURL}/svgs/logo.svg" alt="${%logo}" />
+        <l:branding />
       </div>
 
       <div class="jenkins-app-bar">

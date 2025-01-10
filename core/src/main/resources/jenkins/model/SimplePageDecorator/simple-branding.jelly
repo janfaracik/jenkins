@@ -22,9 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <section class="app-sign-in-register__branding">
-    <div class="app-sign-in-register__branding__starburst"></div>
-    <img src="${imagesURL}/svgs/logo.svg" alt="${%logo}"/>
+    <l:branding />
   </section>
 </j:jelly>

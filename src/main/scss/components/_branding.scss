@@ -1,0 +1,162 @@
+@property --rotation {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes sunburst-rotation {
+  to {
+    --rotation: 360deg;
+  }
+}
+
+$positions: (
+  (75%, 25%), // Top-right
+  (75%, 50%), // Center-right
+  (75%, 75%), // Bottom-right
+  (50%, 75%), // Bottom-center
+  (25%, 75%), // Bottom-left
+  (25%, 50%), // Center-left
+  (25%, 25%), // Top-left
+  (50%, 25%)  // Top-center
+);
+
+// Generate @property definitions for each --x{index} and --y{index}
+@mixin generate-properties($positions) {
+  @for $i from 1 through length($positions) {
+    @property --x#{$i} {
+      syntax: "<percentage>";
+      initial-value: nth(nth($positions, $i), 1); // Use initial value from positions
+      inherits: false;
+    }
+
+    @property --y#{$i} {
+      syntax: "<percentage>";
+      initial-value: nth(nth($positions, $i), 2); // Use initial value from positions
+      inherits: false;
+    }
+  }
+}
+
+@mixin generate-keyframes($positions) {
+  $total: length($positions);
+
+  @keyframes aurora {
+    @for $i from 1 through $total {
+      $step: $i / $total * 100%; // Calculate the percentage for this step
+      $position: nth($positions, $i);
+      $x: nth($position, 1);
+      $y: nth($position, 2);
+
+      #{$step} {
+        @for $j from 1 through $total {
+          $current-position: nth($positions, ($i + $j - 1) % $total + 1);
+          $current-x: nth($current-position, 1);
+          $current-y: nth($current-position, 2);
+
+          --x#{$j}: #{$current-x};
+          --y#{$j}: #{$current-y};
+        }
+      }
+    }
+  }
+}
+
+@mixin generate-gradients($positions) {
+  $colors: (var(--light-purple), var(--light-orange), var(--light-blue), var(--light-red), var(--light-red), var(--light-cyan), var(--light-indigo), var(--light-pink)); // Define colors
+  $gradient-list: ();
+
+  @for $i from 1 through length($positions) {
+    $color: nth($colors, $i); // Get the color for this gradient
+    $gradient: radial-gradient(circle at var(--x#{$i}) var(--y#{$i}), #{$color} 0%, transparent 50%);
+    $gradient-list: append($gradient-list, $gradient, comma);
+  }
+
+  background-image: $gradient-list;
+}
+
+@mixin generate-gradients2($positions) {
+  $colors: (var(--light-orange), var(--light-cyan), var(--light-yellow), var(--light-indigo), var(--light-blue), var(--light-pink), var(--light-green), var(--light-pink)); // Define colors
+  $gradient-list: ();
+
+  @for $i from 1 through length($positions) {
+    $color: nth($colors, $i); // Get the color for this gradient
+    $gradient: radial-gradient(circle at var(--x#{$i}) var(--y#{$i}), #{$color} 0%, transparent 50%);
+    $gradient-list: append($gradient-list, $gradient, comma);
+  }
+
+  background-image: $gradient-list;
+}
+
+// Use the mixin to generate the keyframes
+@include generate-properties($positions);
+@include generate-keyframes($positions);
+
+.app-branding {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: var(--standard-transition);
+  z-index: 0;
+
+  &::before, &::after {
+    content: "";
+    position: absolute;
+    inset: -100px;
+    z-index: -1;
+    opacity: 0.4;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: aurora 10s infinite linear;
+    }
+  }
+
+  &::before {
+    @include generate-gradients($positions);
+  }
+
+  &::after {
+    @include generate-gradients2($positions);
+    rotate: -180deg;
+    animation-duration: 6s;
+    opacity: 0.5;
+  }
+
+  .idk {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      backdrop-filter: invert(2%) blur(100px);
+      mask-image: repeating-conic-gradient(
+                      from var(--rotation),
+                      var(--background) 0deg,
+                      transparent 20deg
+      );
+      opacity: 0.4;
+      flex: 1;
+
+      @media (prefers-reduced-motion: no-preference) {
+        animation: sunburst-rotation 100s infinite linear;
+      }
+    }
+
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-height: 80px;
+      height: 60%;
+      max-height: 250px
+    }
+  }
+}
