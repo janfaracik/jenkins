@@ -14,6 +14,10 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request.getP
     l.main_panel {
         l.app_bar(title: my.displayName)
 
+        div(class: "jenkins-page-description") {
+            text(my.description)
+        }
+
         set("readOnlyMode", !app.hasPermission(app.ADMINISTER))
 
         p()

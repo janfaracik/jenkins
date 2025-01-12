@@ -12,6 +12,10 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName, type:"one-column") {
     l.main_panel {
         l.app_bar(title: my.displayName)
 
+        div(class: "jenkins-page-description") {
+            text(my.description)
+        }
+
         div(class:"behavior-loading") {
             l.spinner(text: _("LOADING"))
         }
