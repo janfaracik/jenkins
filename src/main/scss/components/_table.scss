@@ -6,7 +6,9 @@
   position: relative;
   width: 100%;
   background: var(--table-background);
-  border-radius: calc(var(--table-border-radius) + (var(--card-border-width) * 2));
+  border-radius: calc(
+    var(--table-border-radius) + (var(--card-border-width) * 2)
+  );
   border: calc(var(--card-border-width) * 2) solid var(--table-background);
   border-bottom-width: var(--card-border-width);
   border-spacing: 0 var(--card-border-width);
@@ -18,8 +20,8 @@
     &::before {
       content: "";
       position: absolute;
-      inset: -4px -4px -2px;
-      border: var(--card-border-width) solid var(--table-border-color);
+      inset: -3px -3px -2px;
+      border: var(--jenkins-border);
       border-radius: inherit;
       pointer-events: none;
     }
