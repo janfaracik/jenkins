@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+Copyright (c) 2024 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,20 +23,22 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
-  <st:documentation>
-    Generates a left side content as part of a Jenkins page. Typically known as two-column or left-side +  main-content layouts
-    <st:attribute name="sticky">
-      Make the side panel sticky. Should not be used on pages that include widgets in the sidepanel and when plugins can
-      add their own tasks, so the number of tasks is not fixed.
-    </st:attribute>
+<j:jelly xmlns:j="jelly:core" xmlns:i="jelly:fmt">
+  <j:set var="object" value="${it.getObject()}" />
+  <i:formatDate var="tooltip" value="${object.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
 
-  </st:documentation>
+  <div class="jenkins-card__details__item" tooltip="${tooltip}" data-tooltip-delay="500">
+    <j:set var="minutes" value="${360 * (object.timestamp.time.minutes / 60)}" />
+    <i:formatDate var="hours" value="${object.timestamp.time}" pattern="h" />
+    <j:set var="hours" value="${360 * (hours / 12) + (30 * (object.timestamp.time.minutes / 60))}" />
 
-  <j:if test="${mode=='side-panel'}">
-    <div id="side-panel" class="app-page-body__sidebar ${attrs.sticky == 'true' ? 'app-page-body__sidebar--sticky' : ''}">
-      <d:invokeBody />
+    <div class="jenkins-card__details__item__icon">
+      <div class="app-build__clock" style="--hours: ${hours}deg; --minutes: ${minutes}deg">
+        <span class="app-build__clock__hours" />
+        <span class="app-build__clock__minutes" />
+      </div>
     </div>
-  </j:if>
 
+    ${%startedAgo(object.timestampString)}
+  </div>
 </j:jelly>

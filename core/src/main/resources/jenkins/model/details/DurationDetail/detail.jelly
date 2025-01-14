@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+Copyright (c) 2024 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,20 +23,25 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
-  <st:documentation>
-    Generates a left side content as part of a Jenkins page. Typically known as two-column or left-side +  main-content layouts
-    <st:attribute name="sticky">
-      Make the side panel sticky. Should not be used on pages that include widgets in the sidepanel and when plugins can
-      add their own tasks, so the number of tasks is not fixed.
-    </st:attribute>
-
-  </st:documentation>
-
-  <j:if test="${mode=='side-panel'}">
-    <div id="side-panel" class="app-page-body__sidebar ${attrs.sticky == 'true' ? 'app-page-body__sidebar--sticky' : ''}">
-      <d:invokeBody />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+  <j:set var="object" value="${it.object}" />
+  <div class="jenkins-card__details__item">
+    <div class="jenkins-card__details__item__icon">
+      <l:icon src="symbol-timer" />
     </div>
-  </j:if>
-
+    <div>
+      <j:choose>
+        <j:when test="${object.building}">
+          ${%beingExecuted(object.executor.timestampString)}
+        </j:when>
+        <j:otherwise>
+          ${%Took} ${object.durationString}
+        </j:otherwise>
+      </j:choose>
+      <j:if test="${!empty(app.nodes) or (object.builtOnStr != null and object.builtOnStr != '')}">
+        ${%on} <t:node value="${object.builtOn}" valueStr="${object.builtOnStr}"/>
+      </j:if>
+      <st:include page="details.jelly" optional="true" />
+    </div>
+  </div>
 </j:jelly>

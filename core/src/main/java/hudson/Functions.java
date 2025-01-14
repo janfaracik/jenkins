@@ -36,6 +36,7 @@ import hudson.console.ConsoleAnnotatorFactory;
 import hudson.init.InitMilestone;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
+import hudson.model.Actionable;
 import hudson.model.Computer;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
@@ -163,9 +164,9 @@ import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.console.WithConsoleUrl;
 import jenkins.model.Detail;
 import jenkins.model.DetailFactory;
+import jenkins.model.DetailGroup;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
-import jenkins.model.Group;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -667,17 +668,14 @@ public class Functions {
     }
 
     /**
-     * Gets the suffix to use for YUI JavaScript.
-     */
-    public static String getYuiSuffix() {
-        return DEBUG_YUI ? "debug" : "min";
-    }
-
-    /**
-     * Set to true if you need to use the debug version of YUI.
+     * No longer used, to be removed after enough plugins have adopted a version of the test harness with
+     * <a href="https://github.com/jenkinsci/jenkins-test-harness/pull/874">jenkins-test-harness/pull/874</a> in it.
+     *
+     * @deprecated removed without replacement
      */
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "for script console")
-    public static boolean DEBUG_YUI = SystemProperties.getBoolean("debug.YUI");
+    @Deprecated(forRemoval = true, since = "TODO")
+    public static boolean DEBUG_YUI;
 
     /**
      * Creates a sub map by using the given range (both ends inclusive).
@@ -2593,26 +2591,25 @@ public class Functions {
     }
 
     /**
-     * TODO!
+     * Returns a grouped list of Detail objects for the given Actionable object
      */
     @Restricted(NoExternalUse.class)
-    public static Map<Group, List<Detail>> getDetailsFor(Run<?, ?> object) {
+    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object) {
         List<Detail> details = new ArrayList<>();
 
-        for (DetailFactory<Run> taf : DetailFactory.factoriesFor(Run.class)) {
+        for (DetailFactory taf : DetailFactory.factoriesFor(object.getClass())) {
             details.addAll(taf.createFor(object));
         }
 
-        // Create a TreeMap with a Comparator for Group objects
-        Map<Group, List<Detail>> orderedMap = new TreeMap<>(Comparator.comparingInt(Group::getOrder));
+        Map<DetailGroup, List<Detail>> orderedMap = new TreeMap<>(Comparator.comparingInt(DetailGroup::getOrder));
 
-        // Populate the TreeMap, grouping by Group and sorting Details within each group
         for (Detail detail : details) {
-            orderedMap.computeIfAbsent(detail.getGroup(), k -> new ArrayList<>()).add(detail);
+            if (detail.isApplicable()) {
+                orderedMap.computeIfAbsent(detail.getGroup(), k -> new ArrayList<>()).add(detail);
+            }
         }
 
-        // Sort each List of Detail objects by Detail's order
-        for (Map.Entry<Group, List<Detail>> entry : orderedMap.entrySet()) {
+        for (Map.Entry<DetailGroup, List<Detail>> entry : orderedMap.entrySet()) {
             List<Detail> detailList = entry.getValue();
             detailList.sort(Comparator.comparingInt(Detail::getOrder));
         }

@@ -20,6 +20,10 @@
     display: flex;
     flex-direction: column;
     grid-template-columns: 1fr 1fr;
+
+    .jenkins-card__content {
+      max-height: 300px;
+    }
   }
 
   @media (width >= 1000px) {
@@ -29,7 +33,6 @@
     margin-top: calc(var(--section-padding) * -0.25);
 
     .jenkins-card {
-      height: 340px;
       overflow: clip;
       margin-bottom: 0; // Remove when .jenkins-card no longer has a default margin
 
@@ -40,6 +43,10 @@
       &:last-of-type {
         grid-column: span 2;
       }
+    }
+
+    .jenkins-card__content {
+      height: 300px;
     }
   }
 
@@ -84,21 +91,6 @@
       }
     }
   }
-}
-
-.app-build__actions {
-  display: flex;
-  flex-direction: column;
-
-  svg {
-    width: 1rem;
-    height: 1rem;
-  }
-}
-
-.losangeles {
-  border: 2px solid red;
-  grid-column: span 2;
 }
 
 .app-build__clock {
@@ -150,37 +142,7 @@
   }
 }
 
-.app-build__started-at {
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-content: start;
-  perspective: 1000px;
-
-  &__front,
-  &__back {
-    justify-self: start;
-    grid-area: 1 / 1;
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
-    transition: 1s cubic-bezier(0, 0.68, 0.5, 1.5);
-  }
-
-  &__back {
-    transform: rotateX(180deg);
-  }
-
-  &.app-build__started-at--flipped &__front {
-    transform: rotateX(-180deg);
-  }
-
-  &.app-build__started-at--flipped &__back {
-    transform: rotateX(0deg);
-  }
-}
-
 .app-console-output-widget {
-  min-height: 340px;
-  max-height: 340px;
   overflow-y: auto;
   margin: 0 -1rem -1rem;
   padding: 0 1rem 1rem;
@@ -191,47 +153,5 @@
     padding: 0;
     line-height: 1.75;
     font-size: var(--font-size-sm);
-  }
-}
-
-.app-build__pagination {
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: var(--section-padding);
-  margin-bottom: calc(var(--section-padding) * -1);
-  border-bottom: 2px solid color-mix(in srgb, var(--text-color-secondary) 10%, white);
-
-  .jdl-previous-button,
-  .jdl-next-button {
-    display: flex;
-    gap: 0.8rem;
-
-    svg * {
-      stroke-width: 36px;
-    }
-
-    & > * {
-      transition: transform var(--elastic-transition);
-    }
-  }
-
-  .jdl-previous-button {
-    &:hover {
-      transform: translateX(-1px);
-
-      & > * {
-        transform: translateX(-2px);
-      }
-    }
-  }
-
-  .jdl-next-button {
-    &:hover {
-      transform: translateX(1px);
-
-      & > * {
-        transform: translateX(2px);
-      }
-    }
   }
 }

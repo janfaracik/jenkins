@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2024 Jan Faracik
+ * Copyright 2025 Jan Faracik
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,28 @@ package jenkins.model;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
+import hudson.model.Actionable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
-public abstract class DetailFactory<T> implements ExtensionPoint {
+/**
+ * Allows you to add multiple details to an Actionable object at once.
+ * @param <T> the type of object to add to; typically an {@link Actionable} subtype
+ * @since TODO
+ */
+public abstract class DetailFactory<T extends Actionable> implements ExtensionPoint {
 
     public abstract Class<T> type();
 
     public abstract @NonNull Collection<? extends Detail> createFor(@NonNull T target);
 
     @Restricted(NoExternalUse.class)
-    public static <T> Iterable<DetailFactory<T>> factoriesFor(Class<T> type) {
+    public static <T extends Actionable> Iterable<DetailFactory<T>> factoriesFor(Class<T> type) {
         List<DetailFactory<T>> result = new ArrayList<>();
-        for (DetailFactory wf : ExtensionList.lookup(DetailFactory.class)) {
+        for (DetailFactory<T> wf : ExtensionList.lookup(DetailFactory.class)) {
             if (wf.type().isAssignableFrom(type)) {
                 result.add(wf);
             }
