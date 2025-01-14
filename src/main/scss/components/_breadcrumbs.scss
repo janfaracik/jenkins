@@ -6,7 +6,7 @@
   z-index: 999;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.625rem;
   //padding: 0.55rem 1.25rem 0.55rem 1.25rem;
   //backdrop-filter: blur(15px);
   overflow-x: auto;
@@ -27,8 +27,14 @@
       align-items: center;
       justify-content: center;
       font-weight: 500;
-      font-size: 0.9375rem;
+      font-size: 15px;
       padding: 0;
+
+      &:first-of-type {
+        font-family: "Georgia";
+        font-weight: 600;
+        font-size: 1.125rem;
+      }
 
       & > a {
         display: inline-flex;
@@ -41,7 +47,7 @@
         color: var(--text-color);
         text-decoration: none;
         margin-right: 0 !important;
-        transition: var(--standard-transition);
+        transition: opacity var(--standard-transition);
 
         &:hover {
           opacity: 0.75;
@@ -70,12 +76,12 @@
         mask-position: center;
         mask-repeat: no-repeat;
         mask-image: url("data:image/svg+xml,%3Csvg width='10' height='20' viewBox='0 0 10 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 18L8 2' stroke='black' stroke-width='1.5px' stroke-linecap='round'/%3E%3C/svg%3E%0A");
-        opacity: 0.25;
+        opacity: 0.2;
         scale: 1.1;
       }
     }
 
-    .separator {
+    .separator, .children {
       &:last-of-type {
         display: none;
       }

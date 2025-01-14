@@ -23,13 +23,23 @@
   position: relative;
 }
 
+body[data-model-type*='io.jenkins.plugins.designlibrary'] {
+  #main-panel {
+    margin-top: 0;
+  }
+
+  #side-panel .jenkins-app-bar {
+    margin-top: 25px;
+  }
+}
+
+.app-sidepanel__jenkins-logo {
+  display: none;
+}
+
 #jenkins-head-icon {
   height: 2rem;
   margin-left: 0.15rem;
-}
-
-#jenkins-name-icon {
-  margin-left: 0.25rem;
 }
 
 /* -------------------------------------- */
