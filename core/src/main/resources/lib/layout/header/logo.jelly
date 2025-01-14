@@ -1,18 +1,13 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core">
-  <div class="page-header__brand">
-    <div class="logo">
-      <a id="jenkins-home-link" href="${rootURL}/">
-        <img id="jenkins-head-icon" src="${imagesURL}/svgs/logo.svg" alt="[${logoAlt}]" />
-        <img id="jenkins-name-icon" src="${imagesURL}/title.svg" alt="${title}" width="139" height="34" />
-      </a>
-    </div>
-
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <div class="banana">
     <a class="page-header__brand-link" href="${rootURL}/">
-      <img src="${imagesURL}/svgs/logo.svg"
-           alt="[${logoAlt}]"
-           class="page-header__brand-image" />
-      <span class="page-header__brand-name">Jenkins</span>
+      <img id="jenkins-head-icon" src="${imagesURL}/svgs/logo.svg" alt="[${logoAlt}]" />
     </a>
+
+    <l:breadcrumbBar>
+      <j:set var="mode" value="breadcrumbs" />
+      <!--      <d:invokeBody/>-->
+    </l:breadcrumbBar>
   </div>
 </j:jelly>

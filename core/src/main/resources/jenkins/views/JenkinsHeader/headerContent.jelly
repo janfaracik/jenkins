@@ -2,7 +2,9 @@
 <j:jelly xmlns:j="jelly:core" xmlns:h="/lib/layout/header">
     <header id="page-header" class="page-header">
       <h:logo/>
-      <h:searchbox/>
-      <h:login/>
+      <div class="theend">
+        <h:searchbox/>
+        <h:login/>
+      </div>
     </header>
 </j:jelly>

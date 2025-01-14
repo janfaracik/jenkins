@@ -17,16 +17,15 @@
               <j:set var="userName" value="${user.fullName}"/>
             </j:otherwise>
           </j:choose>
-          <a href="${rootURL}/${user.url}" class="model-link">
+          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary">
             <l:icon src="symbol-person-circle" class="icon-md"/>
-            <span class="hidden-xs hidden-sm">${userName}</span>
           </a>
-          <j:if test="${app.securityRealm.canLogOut()}">
-            <a href="${rootURL}/logout">
-              <l:icon src="symbol-log-out" class="icon-md" />
-              <span class="hidden-xs hidden-sm">${logout}</span>
-            </a>
-          </j:if>
+<!--          <j:if test="${app.securityRealm.canLogOut()}">-->
+<!--            <a href="${rootURL}/logout" class="jenkins-button jenkins-button&#45;&#45;tertiary">-->
+<!--              <l:icon src="symbol-log-out" class="icon-md" />-->
+<!--              <span class="hidden-xs hidden-sm">${logout}</span>-->
+<!--            </a>-->
+<!--          </j:if>-->
         </j:when>
         <j:otherwise>
           <st:include it="${app.securityRealm}" page="loginLink.jelly" />

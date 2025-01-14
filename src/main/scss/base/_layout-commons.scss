@@ -2,8 +2,11 @@
 
 /* --------------- header --------------- */
 
+#page-header {
+  padding: 0 var(--section-padding);
+}
+
 #page-header .logo {
-  margin-left: 1.2rem;
   display: inline-flex;
   align-items: center;
   position: relative;
@@ -11,12 +14,21 @@
   width: 100%;
 }
 
+#jenkins-name-icon {
+  height: 1.5rem;
+  width: auto;
+}
+
 #jenkins-home-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   position: relative;
 }
 
 #jenkins-head-icon {
-  height: 2.5rem;
+  height: 2rem;
 }
 
 #jenkins-name-icon {
