@@ -14,16 +14,16 @@
   border: none;
   outline: none;
   margin: 0;
-  padding: 0.5rem 0.9rem;
-  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  font-size: var(--font-size-sm);
   text-decoration: none !important;
   background: transparent;
   color: var(--text-color) !important;
-  border-radius: 0.66rem;
   cursor: pointer;
-  min-height: 2.25rem;
+  min-height: 2.375rem;
   white-space: nowrap;
   gap: 1ch;
+  font-weight: normal;
 
   &::before {
     background: var(--button-background);
@@ -49,25 +49,25 @@
   }
 
   &::after {
-    box-shadow: 0 0 0 0.66rem var(--accent-color);
+    box-shadow: 0 0 0 0.5rem var(--accent-color);
     opacity: 0;
   }
 
   &:not(:disabled) {
     &:hover {
       &::before {
-        opacity: 0.9;
+        background: oklch(from var(--accent-color) l c h / 0.9);
       }
     }
 
     &:active,
     &:focus-visible {
       &::before {
-        opacity: 0.8;
+        background: oklch(from var(--accent-color) l c h / 0.8);
       }
 
       &::after {
-        box-shadow: 0 0 0 0.33rem var(--accent-color);
+        box-shadow: 0 0 0 0.25rem var(--accent-color);
         opacity: 0.2;
       }
     }
@@ -78,6 +78,14 @@
   &::before {
     background: transparent;
   }
+
+  @media (prefers-contrast: no-preference) {
+    &:not(:hover, &:active, &:focus) {
+      &::before {
+        border-color: transparent;
+      }
+    }
+  }
 }
 
 // Support for custom colors
@@ -87,29 +95,28 @@
   color: var(--color) !important;
 
   &::before {
-    background: currentColor !important;
-    opacity: 0.1;
+    background: oklch(from currentColor l c h / 0.1) !important;
   }
 
   &::after {
-    box-shadow: 0 0 0 0.66rem currentColor;
+    box-shadow: 0 0 0 0.5rem currentColor;
     opacity: 0;
   }
 
   &:not(:disabled) {
     &:hover {
       &::before {
-        opacity: 0.15;
+        background: oklch(from currentColor l c h / 0.15) !important;
       }
     }
 
     &:active {
       &::before {
-        opacity: 0.2;
+        background: oklch(from currentColor l c h / 0.2) !important;
       }
 
       &::after {
-        box-shadow: 0 0 0 0.33rem currentColor;
+        box-shadow: 0 0 0 0.25rem currentColor;
         opacity: 0.1;
       }
     }
@@ -126,25 +133,25 @@
   }
 
   &::after {
-    box-shadow: 0 0 0 0.66rem var(--color);
+    box-shadow: 0 0 0 0.5rem var(--color);
     opacity: 0;
   }
 
   &:not(:disabled) {
     &:hover {
       &::before {
-        opacity: 0.9;
+        background: oklch(from var(--color) l c h / 0.9) !important;
       }
     }
 
     &:active,
     &:focus-visible {
       &::before {
-        opacity: 0.8;
+        background: oklch(from var(--color) l c h / 0.8) !important;
       }
 
       &::after {
-        box-shadow: 0 0 0 0.33rem var(--color);
+        box-shadow: 0 0 0 0.25rem var(--color);
         opacity: 0.3;
       }
     }
