@@ -73,7 +73,7 @@ $semantics: (
   --unstable-build-icon-color: var(--orange);
 
   // Background colors
-  --background: var(--white);
+  --background: color-mix(in srgb, var(--blue) 1%, white);
 
   // Header
   --brand-link-color: var(--secondary);
@@ -278,7 +278,7 @@ $semantics: (
   --pane-link-color--visited: black;
 
   // Cards
-  --card-background: var(--background);
+  --card-background: var(--white);
   --card-background--hover: transparent;
   --card-background--active: transparent;
   --card-border-color: oklch(from var(--text-color-secondary) l c h / 0.15);

@@ -24,12 +24,12 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:x="jelly:xml">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:dd="/lib/layout/dropdowns" xmlns:x="jelly:xml">
   <l:layout title="${it.fullDisplayName}">
-    <st:include page="sidepanel.jelly" />
-
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
+      <j:set var="buildUrl" value="${h.decompose(request)}" />
+
       <script src="${resURL}/jsbundles/pages/job.js" type="text/javascript" defer="true" />
 
       <j:set var="controls">
@@ -37,6 +37,16 @@ THE SOFTWARE.
         <l:hasPermission permission="${it.UPDATE}">
           <st:include page="logKeep.jelly" />
         </l:hasPermission>
+        <l:overflowButton>
+          <dd:custom>
+            <div class="app-build__actions">
+              <st:include page="tasks.jelly" optional="true" />
+              <st:include page="delete.jelly" />
+              <st:include page="actions.jelly" />
+              <t:actions actions="${it.transientActions}"/>
+            </div>
+          </dd:custom>
+        </l:overflowButton>
       </j:set>
 
       <t:buildCaption controls="${controls}">${it.displayName}</t:buildCaption>
@@ -47,6 +57,7 @@ THE SOFTWARE.
 
       <div class="app-build__grid">
         <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
+
         <l:card title="${%Details}">
           <div class="jenkins-card__details">
             <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
@@ -69,6 +80,44 @@ THE SOFTWARE.
           </div>
         </l:card>
 
+        <l:card title="${%Changes}" expandable="changes">
+          <j:set var="changeSets" value="${it.changeSets}" />
+          <j:choose>
+            <j:when test="${!changeSets.isEmpty()}">
+              <j:forEach var="changeSet" items="${changeSets}">
+                <j:set var="browser" value="${changeSet.browser}"/>
+                <!-- https://github.com/jenkinsci/git-plugin/blob/bdc231417b9de86831d8a93249fea2aa5583fbcd/src/main/resources/hudson/plugins/git/GitChangeSetList/digest.jelly-->
+                <!--              <st:include it="${changeSet}" page="digest.jelly" />-->
+                <j:choose>
+                  <j:when test="${changeSet.emptySet}">
+                    ${%No changes.}
+                  </j:when>
+                  <j:otherwise>
+                    <ol class="timeline">
+                      <j:forEach var="cs" items="${changeSet.logs}">
+                        <li>
+                          <j:out value="${cs.msgAnnotated}"/>
+                          (<a href="changes#${cs.id}">${%details}</a>
+                          <j:set var="cslink" value="${browser.getChangeSetLink(cs)}"/>
+                          <j:if test="${cslink!=null}">
+                            /
+                            <a href="${cslink}">${browser.descriptor.displayName}</a>
+                          </j:if>
+                          )
+                          <div class="roman">${cs.paths.size()} files changed</div>
+                        </li>
+                      </j:forEach>
+                    </ol>
+                  </j:otherwise>
+                </j:choose>
+              </j:forEach>
+            </j:when>
+            <j:otherwise>
+              <st:include class="hudson.scm.EmptyChangeLogSet" page="digest.jelly" />
+            </j:otherwise>
+          </j:choose>
+        </l:card>
+
         <l:card title="Summary">
           <div>
             <table>
@@ -85,6 +134,25 @@ THE SOFTWARE.
             <st:include page="main.jelly" optional="true" />
           </div>
         </l:card>
+      </div>
+
+      <div class="app-build__pagination">
+        <div>
+          <j:if test="${it.previousBuild!=null}">
+            <a href="${buildUrl.previousBuildUrl}" class="jenkins-button jenkins-button--tertiary jdl-previous-button">
+              <l:icon src="symbol-arrow-left" class="jdl-previous-next-controls__arrow" />
+              <span>#${it.previousBuild.number}</span>
+            </a>
+          </j:if>
+        </div>
+        <div>
+          <j:if test="${it.nextBuild!=null}">
+            <a href="${buildUrl.nextBuildUrl}" class="jenkins-button jenkins-button--tertiary jdl-next-button">
+              <span>#${it.nextBuild.number}</span>
+              <l:icon src="symbol-arrow-right" class="jdl-previous-next-controls__arrow" />
+            </a>
+          </j:if>
+        </div>
       </div>
     </l:main-panel>
   </l:layout>

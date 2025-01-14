@@ -3,3 +3,59 @@
 @use "components";
 @use "form";
 @use "pages";
+
+@function px-to-rem($pixels, $base-font-size: 16) {
+  @return #{$pixels / $base-font-size}rem;
+}
+
+$inset-thing: 10px;
+.timeline {
+  position: relative;
+  margin: -0.25rem 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    position: relative;
+    margin: 0 0;
+    padding: px-to-rem(3) px-to-rem(18);
+    color: var(--text-color);
+
+    // The connecting line
+    &:before {
+      content: "";
+      position: absolute;
+      left: px-to-rem(3);
+      top: $inset-thing;
+      bottom: -$inset-thing;
+      width: 2px;
+      background: var(--text-color-secondary);
+      border-radius: 100px;
+      opacity: 0.09;
+    }
+
+    // The circle
+    &:after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: $inset-thing;
+      width: px-to-rem(8);
+      height: px-to-rem(8);
+      border-radius: 100px;
+      background: var(--card-background);
+      border: 1.5px solid var(--text-color);
+      box-shadow: 0 0 0 3px var(--card-background);
+    }
+
+    &:last-of-type {
+      &::before {
+        display: none;
+      }
+    }
+  }
+}
+
+.roman {
+  color: var(--text-color-secondary);
+}
