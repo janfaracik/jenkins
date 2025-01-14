@@ -10,6 +10,7 @@
   z-index: 999;
   display: flex;
   align-items: center;
+  gap: 6px;
   //padding: 0.55rem 1.25rem 0.55rem 1.25rem;
   //backdrop-filter: blur(15px);
   overflow-x: auto;
@@ -29,10 +30,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--text-color-secondary);
       font-weight: 450;
-      font-size: 0.875rem;
-      padding: 0.2rem 0.4rem;
+      font-size: 0.9375rem;
+      padding: 0;
 
       & > a {
         @include mixins.item($border: false);
@@ -44,7 +44,7 @@
         font-size: inherit;
         margin: 0;
         padding: 0;
-        color: var(--text-color-secondary);
+        color: var(--text-color);
         text-decoration: none;
         margin-right: 0 !important;
         transition: var(--standard-transition);
@@ -80,7 +80,6 @@
       position: relative;
       width: 1rem;
       height: 1rem;
-      margin: 0.375rem 0.2rem;
 
       &::after {
         content: "";
@@ -89,7 +88,6 @@
         transition: var(--standard-transition);
         background: var(--text-color-secondary);
         mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Ctitle%3EChevron Forward%3C/title%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='48' d='M184 112l144 144-144 144'/%3E%3C/svg%3E");
-        opacity: 0.6;
       }
     }
 

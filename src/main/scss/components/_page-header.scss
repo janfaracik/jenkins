@@ -6,10 +6,13 @@
   justify-content: space-between;
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
-  //background-color: var(--header-bg-classic);
-  //background-color: color-mix(in srgb, var(--text-color-secondary) 5%, transparent);
-  margin-top: calc(var(--section-padding) / 1.5);
+  padding-top: calc(var(--section-padding) / 1.5);
   margin-bottom: calc(var(--section-padding) * -0.5);
+  padding-inline: var(--section-padding);
+
+  .jenkins-button {
+    aspect-ratio: 1;
+  }
 }
 
 .banana {
