@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2025 Jan Faracik
+Copyright (c) 2004-2011, Seiji Sogabe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,19 +21,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <j:forEach var="entry" items="${it.causeCounts.entrySet()}">
-    <st:include page="detail.jelly" it="${entry.key}" optional="true">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <j:choose>
+    <j:when test="${it.userId != null}">
       <div class="jenkins-card__details__item">
         <div class="jenkins-card__details__item__icon">
-          <l:icon src="symbol-information-circle" />
+          <l:icon src="${it.userAvatar}"/>
         </div>
-        <div>
-          <st:include page="description.jelly" it="${entry.key}" />
-        </div>
+        <span>
+          ${%started_by_user(it.userUrl, it.userName, rootURL)}
+        </span>
       </div>
-    </st:include>
-  </j:forEach>
+    </j:when>
+    <j:otherwise>
+      <div class="jenkins-card__details__item">
+        <div class="jenkins-card__details__item__icon">
+          <l:icon src="symbol-person-circle"/>
+        </div>
+        <span>
+          ${%started_by_anonymous}
+        </span>
+      </div>
+    </j:otherwise>
+  </j:choose>
 </j:jelly>
