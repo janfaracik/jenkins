@@ -17,8 +17,11 @@
               <j:set var="userName" value="${user.fullName}"/>
             </j:otherwise>
           </j:choose>
-          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary">
-            <l:icon src="symbol-person-circle" class="icon-md"/>
+          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" tooltip="Settings">
+            <l:icon src="symbol-settings" />
+          </a>
+          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" tooltip="${userName}">
+            <l:icon src="symbol-person-circle" />
           </a>
 <!--          <j:if test="${app.securityRealm.canLogOut()}">-->
 <!--            <a href="${rootURL}/logout" class="jenkins-button jenkins-button&#45;&#45;tertiary">-->
