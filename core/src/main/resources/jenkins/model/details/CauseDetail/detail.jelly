@@ -23,25 +23,17 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-  <j:set var="object" value="${it.object}" />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <div class="jenkins-card__details__item">
     <div class="jenkins-card__details__item__icon">
-      <l:icon src="symbol-timer" />
+      <l:icon src="symbol-close" />
     </div>
     <div>
-      <j:choose>
-        <j:when test="${object.building}">
-          ${%beingExecuted(object.executor.timestampString)}
-        </j:when>
-        <j:otherwise>
-          ${%Took} ${object.durationString}
-        </j:otherwise>
-      </j:choose>
-      <j:if test="${!empty(app.nodes) or (object.builtOnStr != null and object.builtOnStr != '')}">
-        ${%on} <t:node value="${object.builtOn}" valueStr="${object.builtOnStr}"/>
-      </j:if>
-      <st:include page="details.jelly" optional="true" />
+      <j:forEach var="entry" items="${it.causeCounts.entrySet()}">
+        <div>
+          <st:include page="description.jelly" it="${entry.key}" />
+        </div>
+      </j:forEach>
     </div>
   </div>
 </j:jelly>
