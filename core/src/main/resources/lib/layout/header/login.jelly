@@ -17,7 +17,7 @@
               <j:set var="userName" value="${user.fullName}"/>
             </j:otherwise>
           </j:choose>
-          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" tooltip="Settings">
+          <a href="${rootURL}/manage" class="jenkins-button jenkins-button--tertiary" tooltip="Settings">
             <l:icon src="symbol-settings" />
           </a>
           <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" tooltip="${userName}">

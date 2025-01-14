@@ -1,14 +1,34 @@
 @use "../abstracts/mixins";
 
 .page-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
-  padding-top: calc(var(--section-padding) / 1.5);
-  margin-bottom: calc(var(--section-padding) * -0.5);
-  padding-inline: var(--section-padding);
+  margin-bottom: calc(var(--section-padding) * -1);
+  padding: calc(var(--section-padding) / 1.5) var(--section-padding);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(20px);
+    z-index: -1;
+    mask-image: linear-gradient(red 75%, transparent);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(var(--background) 25%, transparent);
+    opacity: 0.75;
+  }
 
   .jenkins-button {
     aspect-ratio: 1;
@@ -19,7 +39,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
+  gap: 1.45rem;
 }
 
 .theend {
@@ -29,9 +49,9 @@
   gap: 0.5rem;
 }
 
-#side-panel {
-  display: none;
-}
+//#side-panel {
+//  display: none;
+//}
 
 .page-header__brand {
   display: inline-flex;
@@ -50,11 +70,12 @@
   color: inherit;
 }
 
-.page-header__brand-image {
-  height: 2rem;
-  width: 1.5rem;
-  margin-right: 0.75rem;
-}
+//.page-header__brand-image {
+//  height: 2rem;
+//  width: 1.5rem;
+//  margin-right: 0.75rem;
+//  margin-left: 0.25rem;
+//}
 
 .page-header__am-wrapper {
   display: contents;
