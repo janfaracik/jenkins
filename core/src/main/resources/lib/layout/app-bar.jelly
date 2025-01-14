@@ -38,7 +38,7 @@ THE SOFTWARE.
   </st:documentation>
 
   <j:if test="${mode=='main-panel' or mode=='side-panel'}">
-    <div class="jenkins-app-bar jenkins-app-bar--sticky">
+    <div class="jenkins-app-bar">
       <div class="jenkins-app-bar__content">
         <x:element name="${headingLevel ?: 'h1'}">
           ${title}
