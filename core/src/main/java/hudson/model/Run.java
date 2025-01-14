@@ -40,6 +40,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.AbortException;
 import hudson.BulkChange;
 import hudson.EnvVars;
+import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.FeedAdapter;
@@ -115,11 +116,15 @@ import jenkins.model.ArtifactManager;
 import jenkins.model.ArtifactManagerConfiguration;
 import jenkins.model.ArtifactManagerFactory;
 import jenkins.model.BuildDiscarder;
+import jenkins.model.Detail;
+import jenkins.model.DetailFactory;
 import jenkins.model.HistoricalBuild;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.model.RunAction2;
 import jenkins.model.StandardArtifactManager;
+import jenkins.model.details.DurationDetail;
+import jenkins.model.details.TimestampDetail;
 import jenkins.model.lazy.BuildReference;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.security.MasterToSlaveCallable;
@@ -2667,6 +2672,19 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
             PrintWriter out = rsp.getWriter();
             Util.printRedirect(req.getContextPath(), "..", "Not found", out);
             out.flush();
+        }
+    }
+
+    @Extension
+    public static final class BasicRunDetailFactory extends DetailFactory<Run> {
+
+        @Override
+        public Class<Run> type() {
+            return Run.class;
+        }
+
+        @NonNull @Override public Collection<? extends Detail> createFor(@NonNull Run target) {
+            return List.of(new TimestampDetail(target), new DurationDetail(target));
         }
     }
 }
