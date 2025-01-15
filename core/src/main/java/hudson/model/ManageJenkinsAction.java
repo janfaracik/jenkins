@@ -56,7 +56,7 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
 
     @Override
     public String getDisplayName() {
-        return Messages.ManageJenkinsAction_DisplayName();
+        return "Settings";
     }
 
     @Override
