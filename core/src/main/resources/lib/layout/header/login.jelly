@@ -1,19 +1,15 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <div class="login page-header__hyperlinks">
-    <j:forEach var="action" items="${app.actions}">
-      <j:if test="${action.iconFileName != null}">
-        <a href="${h.getActionUrl(app.url, action)}" class="jenkins-button jenkins-button--tertiary" tooltip="${action.displayName}">
-          <l:icon src="${action.iconFileName}" />
-        </a>
-      </j:if>
-    </j:forEach>
+  <j:forEach var="action" items="${app.actions}">
+    <j:if test="${action.iconFileName != null}">
+      <a href="${h.getActionUrl(app.url, action)}" class="jenkins-button jenkins-button--tertiary" tooltip="${action.displayName}">
+        <l:icon src="${action.iconFileName}" />
+      </a>
+    </j:if>
+  </j:forEach>
 
-    <div id="visible-am-insertion" class="page-header__am-wrapper" />
-    <div id="visible-sec-am-insertion" class="page-header__am-wrapper" />
-
-    <!-- user icon and login/logout links; only show if authentication is enabled and we're not handling a servlet error -->
-    <j:if test="${app.useSecurity}">
+  <!-- user icon and login/logout links; only show if authentication is enabled and we're not handling a servlet error -->
+  <j:if test="${app.useSecurity}">
       <j:choose>
         <j:when test="${!h.isAnonymous()}">
           <j:invokeStatic var="user" className="hudson.model.User" method="current" />
@@ -61,5 +57,4 @@
         </j:otherwise>
       </j:choose>
     </j:if>
-  </div>
 </j:jelly>
