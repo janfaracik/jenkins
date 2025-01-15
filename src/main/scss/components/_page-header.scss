@@ -16,18 +16,9 @@
     content: "";
     position: absolute;
     inset: 0;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(40px);
+    background: color-mix(in srgb, var(--background) 75%, transparent);
     z-index: -1;
-    mask-image: linear-gradient(red 75%, transparent);
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(var(--background) 25%, transparent);
-    opacity: 0.75;
   }
 
   .jenkins-button {
