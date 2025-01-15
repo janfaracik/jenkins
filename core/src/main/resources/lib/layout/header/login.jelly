@@ -17,9 +17,15 @@
               <j:set var="userName" value="${user.fullName}"/>
             </j:otherwise>
           </j:choose>
-          <a href="${rootURL}/manage" class="jenkins-button jenkins-button--tertiary" tooltip="Settings">
-            <l:icon src="symbol-settings" />
-          </a>
+
+          <j:forEach var="action" items="${app.actions}">
+            <j:if test="${action.iconFileName != null}">
+              <a href="${h.getActionUrl(app.url, action)}" class="jenkins-button jenkins-button--tertiary" tooltip="${action.displayName}">
+                <l:icon src="${action.iconFileName}" />
+              </a>
+            </j:if>
+          </j:forEach>
+
           <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" tooltip="${userName}">
             <l:icon src="symbol-person-circle" />
           </a>

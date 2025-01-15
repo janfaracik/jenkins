@@ -44,20 +44,23 @@ THE SOFTWARE.
       <j:forEach var="anc" items="${request.ancestors}" indexVar="index">
         <j:if test="${h.isModel(anc.object) and anc.prev.url!=anc.url}">
           <j:set var="mode" value="breadcrumbs" />
-          <l:breadcrumb title="${anc.object == app ? '%Jenkins' : anc.object.displayName}"
-                        href="${anc.url}/"
-                        hasMenu="${h.isModelWithContextMenu(anc.object)}" />
+
           <j:choose>
-            <j:when test="${h.isModelWithChildren(anc.object)}">
-              <li class="children" data-href="${anc.url}/">
-                <!-- shows '>' for rendering children -->
+            <j:when test="${anc.object == app}">
+              <li class="jenkins-breadcrumbs__list-item" aria-current="page">
+                <a href="${rootURL}">
+                  <img id="jenkins-head-icon" src="${imagesURL}/svgs/logo.svg" alt="${logoAlt}" />
+                  ${%Jenkins}
+                </a>
               </li>
             </j:when>
             <j:otherwise>
-              <li class="separator">
-              </li>
+              <l:breadcrumb title="${anc.object.displayName}"
+                            href="${anc.url}/"
+                            hasMenu="${h.isModelWithContextMenu(anc.object)}" />
             </j:otherwise>
           </j:choose>
+          <li class="separator" />
         </j:if>
       </j:forEach>
 

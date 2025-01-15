@@ -1,13 +1,9 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define">
   <div class="banana">
-    <a class="page-header__brand-link" href="${rootURL}/">
-      <img id="jenkins-head-icon" src="${imagesURL}/svgs/logo.svg" alt="[${logoAlt}]" />
-    </a>
-
     <l:breadcrumbBar>
       <j:set var="mode" value="breadcrumbs" />
-      <!--      <d:invokeBody/>-->
+      <d:invokeBody/>
     </l:breadcrumbBar>
   </div>
 </j:jelly>

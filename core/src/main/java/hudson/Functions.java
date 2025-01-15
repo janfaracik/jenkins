@@ -1464,6 +1464,7 @@ public class Functions {
      * @since 1.512
      */
     public static List<TopLevelItem> getAllTopLevelItems(ItemGroup root) {
+      System.out.println(root.getAllItems(TopLevelItem.class));
       return root.getAllItems(TopLevelItem.class);
     }
 

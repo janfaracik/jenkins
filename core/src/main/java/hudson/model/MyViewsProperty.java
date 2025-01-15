@@ -312,11 +312,12 @@ public class MyViewsProperty extends UserProperty implements ModifiableViewGroup
         @Override
         public String getIconFileName() {
             // do not show when not logged in
-            if (User.current() == null) {
-                return null;
-            }
+//            if (User.current() == null) {
+//                return null;
+//            }
 
-            return "symbol-browsers";
+            // Temporary!
+            return null;
         }
 
         @Override
