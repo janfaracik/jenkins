@@ -24,36 +24,14 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" 
-         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <div class="jenkins-icon-size">
-    <d:taglib uri="local">
-      <d:tag name="iconSizeLink">
-        <j:choose>
-          <j:when test="${sz==iconSize}">
-            <li class="jenkins-icon-size__items-item" tooltip="${title}">
-              ${title.charAt(0)}<span class="jenkins-visually-hidden">${title.substring(1)}</span>
-            </li>
-          </j:when>
-          <j:otherwise>
-            <li>
-              <a class="jenkins-button jenkins-button--tertiary" href="${rootURL}/iconSize?${sz}" tooltip="${title}">
-                ${title.charAt(0)}<span class="jenkins-visually-hidden">${title.substring(1)}</span>
-              </a>
-            </li>
-          </j:otherwise>
-        </j:choose>
-      </d:tag>
-    </d:taglib>
-
-    <div class="jenkins-icon-size__items jenkins-buttons-row" xmlns:local="local">
-      <span>${%Icon}:</span>
-      <ol>
-        <local:iconSizeLink title="${%S}" sz="16x16" />
-        <local:iconSizeLink title="${%M}" sz="24x24" />
-        <local:iconSizeLink title="${%L}" sz="32x32" />
-      </ol>
-    </div>
-
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:dd="/lib/layout/dropdowns">
+  <t:setIconSize />
+  <l:overflowButton>
+    <dd:submenu icon="symbol-close-circle" text="${%Icon size}">
+      <dd:item icon="${iconSize == '32x32' ? 'symbol-check' : null}" text="${%Large}" href="${rootURL}/iconSize?32x32" />
+      <dd:item icon="${iconSize == '24x24' ? 'symbol-check' : null}" text="${%Medium}" href="${rootURL}/iconSize?24x24" />
+      <dd:item icon="${iconSize == '16x16' ? 'symbol-check' : null}" text="${%Small}" href="${rootURL}/iconSize?16x16" />
+    </dd:submenu>
     <d:invokeBody />
-  </div>
+  </l:overflowButton>
 </j:jelly>

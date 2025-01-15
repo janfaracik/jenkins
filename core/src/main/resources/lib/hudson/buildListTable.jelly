@@ -46,7 +46,6 @@ THE SOFTWARE.
     <l:icon src="symbol-terminal" id="console" />
   </template>
 
-  <t:setIconSize/>
   <st:adjunct includes="hudson.model.Job.buildTimeTrend_resources" />
   <j:new var="handler" className="jenkins.widgets.BuildListTable"/>
   ${handler.setBuilds(attrs.builds)}
@@ -66,5 +65,4 @@ THE SOFTWARE.
     </thead>
     <tbody></tbody>
   </table>
-  <t:rssBar-with-iconSize/>
 </j:jelly>
