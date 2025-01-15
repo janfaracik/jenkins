@@ -25,5 +25,5 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
-  <a href="${rootURL}/${app.securityRealm.loginUrl}?from=${app.securityRealm.from}">${%login}</a>
+  <a class="jenkins-button" href="${rootURL}/${app.securityRealm.loginUrl}?from=${app.securityRealm.from}" style="aspect-ratio: unset; padding: 0.5rem 1rem">${%Sign in}</a>
 </j:jelly>
