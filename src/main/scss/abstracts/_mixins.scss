@@ -88,6 +88,8 @@
   }
 
   &:not(:disabled) {
+    &[aria-describedby],
+    &[aria-expanded='true'],
     &:hover,
     &:focus-visible {
       &::before {

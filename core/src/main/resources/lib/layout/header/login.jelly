@@ -26,7 +26,33 @@
             </j:otherwise>
           </j:choose>
 
-          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" tooltip="${userName}">
+          <j:set var="dropdown">
+            <div style="display: flex; flex-direction: column; margin: 0 -0.4rem">
+              <a class="jenkins-dropdown__item" href="${rootURL}/${user.url}">
+                <div class="jenkins-dropdown__item__icon">
+                  <l:icon src="symbol-person-circle" />
+                </div>
+                ${userName}
+              </a>
+              <a class="jenkins-dropdown__item" href="${rootURL}/${user.url}/account">
+                <div class="jenkins-dropdown__item__icon">
+                  <l:icon src="symbol-settings" />
+                </div>
+                Configure
+              </a>
+              <div class="jenkins-dropdown__separator" />
+              <a class="jenkins-dropdown__item" href="${rootURL}/logout">
+                <div class="jenkins-dropdown__item__icon">
+                  <div class="jenkins-dropdown__item__icon">
+                    <l:icon src="symbol-log-out" />
+                  </div>
+                </div>
+                Sign out
+              </a>
+            </div>
+          </j:set>
+
+          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" data-html-tooltip="${dropdown}" data-tooltip-interactive="true">
             <l:icon src="symbol-person-circle" />
           </a>
         </j:when>
