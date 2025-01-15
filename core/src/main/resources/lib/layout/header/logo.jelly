@@ -1,9 +1,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define">
-  <div class="banana">
-    <l:breadcrumbBar>
-      <j:set var="mode" value="breadcrumbs" />
-      <d:invokeBody/>
-    </l:breadcrumbBar>
-  </div>
+  <l:breadcrumbBar>
+    <j:set var="mode" value="breadcrumbs" />
+    <d:invokeBody/>
+  </l:breadcrumbBar>
 </j:jelly>
