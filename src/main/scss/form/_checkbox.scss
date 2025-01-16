@@ -32,7 +32,7 @@
       & + label {
         &::before {
           box-shadow:
-            0 0 0 4px var(--focus-input-glow),
+            var(--form-input-glow--focus),
             inset 0 0 0 5px var(--focus-input-border);
         }
       }
@@ -44,7 +44,7 @@
         & + label {
           &::before {
             box-shadow:
-              0 0 0 4px var(--focus-input-glow),
+              var(--form-input-glow--focus),
               inset 0 0 0 12px var(--focus-input-border);
           }
         }
@@ -58,7 +58,7 @@
       & + label {
         &::before {
           box-shadow:
-            0 0 0 4px var(--focus-input-glow),
+            var(--form-input-glow--focus),
             inset 0 0 0 12px var(--focus-input-border);
         }
       }
@@ -71,7 +71,7 @@
       &:focus {
         &::before {
           box-shadow:
-            0 0 0 4px var(--focus-input-glow),
+            var(--form-input-glow--focus),
             inset 0 0 0 12px var(--focus-input-border);
         }
       }
@@ -180,7 +180,7 @@
   &:focus {
     &::before {
       box-shadow:
-        0 0 0 4px var(--focus-input-glow),
+        var(--form-input-glow--focus),
         inset 0 0 0 5px var(--focus-input-border);
     }
   }

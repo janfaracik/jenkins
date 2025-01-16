@@ -80,8 +80,7 @@ $dropdown-padding: 0.375rem;
     height: var(--jenkins-border-width);
     margin: $dropdown-padding calc($dropdown-padding * -1);
     border: none;
-    background-color: var(--text-color-secondary);
-    opacity: 0.1;
+    background-color: var(--jenkins-section-color);
   }
 
   &__heading {
