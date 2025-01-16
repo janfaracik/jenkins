@@ -372,7 +372,6 @@ $semantics: (
   --pre-color: var(--text-color);
   --selection-color: oklch(from var(--accent-color) l c h / 0.2);
 
-
   @media (prefers-contrast: more) {
     --input-border: var(--text-color) !important;
     --input-border-hover: var(--text-color) !important;
