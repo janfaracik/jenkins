@@ -15,3 +15,8 @@ Tooltips.init();
 StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
+
+window.addEventListener("scroll", () => {
+  const navigation = document.querySelector("#page-header");
+  navigation.style.setProperty("--border-opacity", Math.min(10, window.scrollY / 5) + "%");
+})
