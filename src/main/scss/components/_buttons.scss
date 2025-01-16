@@ -1,6 +1,7 @@
 @use "../abstracts/mixins";
 
 .jenkins-button {
+  --item-background: var(--button-background);
   --item-background--hover: var(--button-background--hover);
   --item-background--active: var(--button-background--active);
   --item-box-shadow--focus: var(--button-box-shadow--focus);
@@ -25,10 +26,6 @@
   gap: 1ch;
   font-weight: normal;
 
-  &::before {
-    background: var(--button-background);
-  }
-
   svg {
     width: 1.125rem;
     height: 1.125rem;
@@ -42,125 +39,38 @@
 }
 
 .jenkins-button--primary {
+  --button-background: oklch(from var(--accent-color) l c h);
+  --button-background--hover: oklch(from var(--accent-color) l c h / 0.9);
+  --button-background--active: oklch(from var(--accent-color) l c h / 0.8);
+  --button-box-shadow--focus: oklch(from var(--accent-color) l c h / 0.4);
   color: var(--button-color--primary) !important;
-
-  &::before {
-    background: var(--accent-color) !important;
-  }
-
-  &::after {
-    box-shadow: 0 0 0 0.5rem var(--accent-color);
-    opacity: 0;
-  }
-
-  &:not(:disabled) {
-    &:hover {
-      &::before {
-        background: oklch(from var(--accent-color) l c h / 0.9);
-      }
-    }
-
-    &:active,
-    &:focus-visible {
-      &::before {
-        background: oklch(from var(--accent-color) l c h / 0.8);
-      }
-
-      &::after {
-        box-shadow: 0 0 0 0.25rem var(--accent-color);
-        opacity: 0.2;
-      }
-    }
-  }
-}
-
-.jenkins-button--tertiary {
-  &::before {
-    background: transparent;
-  }
-
-  @media (prefers-contrast: no-preference) {
-    &:not(:hover, &:active, &:focus) {
-      &::before {
-        border-color: transparent;
-      }
-    }
-  }
 }
 
 // Support for custom colors
 // Modifier classes must include 'color' in name to work
 .jenkins-button[class*="color"] {
-  background: transparent;
+  --button-background: oklch(from currentColor l c h / 0.1);
+  --button-background--hover: oklch(from currentColor l c h / 0.15);
+  --button-background--active: oklch(from currentColor l c h / 0.25);
+  --button-box-shadow--focus: oklch(from currentColor l c h / 0.125);
   color: var(--color) !important;
-
-  &::before {
-    background: oklch(from currentColor l c h / 0.1) !important;
-  }
-
-  &::after {
-    box-shadow: 0 0 0 0.5rem currentColor;
-    opacity: 0;
-  }
-
-  &:not(:disabled) {
-    &:hover {
-      &::before {
-        background: oklch(from currentColor l c h / 0.15) !important;
-      }
-    }
-
-    &:active {
-      &::before {
-        background: oklch(from currentColor l c h / 0.2) !important;
-      }
-
-      &::after {
-        box-shadow: 0 0 0 0.25rem currentColor;
-        opacity: 0.1;
-      }
-    }
-  }
 }
 
 .jenkins-button--primary[class*="color"] {
-  background: transparent;
+  --button-background: oklch(from var(--color) l c h);
+  --button-background--hover: oklch(from var(--color) l c h / 0.9);
+  --button-background--active: oklch(from var(--color) l c h / 0.8);
+  --button-box-shadow--focus: oklch(from var(--color) l c h / 0.4);
   color: var(--background) !important;
-
-  &::before {
-    background: var(--color) !important;
-    opacity: 1;
-  }
-
-  &::after {
-    box-shadow: 0 0 0 0.5rem var(--color);
-    opacity: 0;
-  }
-
-  &:not(:disabled) {
-    &:hover {
-      &::before {
-        background: oklch(from var(--color) l c h / 0.9) !important;
-      }
-    }
-
-    &:active,
-    &:focus-visible {
-      &::before {
-        background: oklch(from var(--color) l c h / 0.8) !important;
-      }
-
-      &::after {
-        box-shadow: 0 0 0 0.25rem var(--color);
-        opacity: 0.3;
-      }
-    }
-  }
 }
 
-.jenkins-button--tertiary[class*="color"] {
-  &::before {
-    opacity: 0;
+.jenkins-button--tertiary {
+  --button-background: transparent !important;
+
+  &:not(:hover, &:active, &:focus) {
+    &::before {
+      border-color: transparent;
+    }
   }
 }
 
