@@ -48,7 +48,9 @@
             </div>
           </j:set>
 
-          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary" data-html-tooltip="${dropdown}" data-tooltip-interactive="true">
+          <a href="${rootURL}/${user.url}" class="jenkins-button jenkins-button--tertiary"
+             data-tippy-placement="bottom-end"
+             data-html-tooltip="${dropdown}" data-tooltip-interactive="true">
             <l:icon src="symbol-person-circle" />
           </a>
         </j:when>
