@@ -1,17 +1,10 @@
 @use "../abstracts/mixins";
 
 .jenkins-breadcrumbs {
-  //position: sticky;
-  //top: 0;
-  z-index: 999;
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  //padding: 0.55rem 1.25rem 0.55rem 1.25rem;
-  //backdrop-filter: blur(15px);
   overflow-x: auto;
-  //background: var(--breadcrumbs-bar-background);
-  //margin-bottom: -30px;
 
   &__list {
     display: contents;
@@ -45,7 +38,7 @@
         font-size: inherit;
         margin: 0;
         padding: 0;
-        color: var(--text-color);
+        color: inherit;
         text-decoration: none;
         margin-right: 0 !important;
         transition: opacity var(--standard-transition);
