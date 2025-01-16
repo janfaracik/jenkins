@@ -38,33 +38,15 @@
   gap: 0.5rem;
 }
 
-//#side-panel {
-//  display: none;
-//}
-
 .page-header__brand {
   display: inline-flex;
   position: relative;
   flex: 1; // push controls to the end of the block
 }
 
-// Need to use the element selector to increase weight otherwise it will be overriden by the
-// a:visited selector if it is declared later
-// Only styled by the overrides with the new UI enabled
-//a.page-header__brand-link {
-//  display: none;
-//}
-
 .page-header__brand-name {
   color: inherit;
 }
-
-//.page-header__brand-image {
-//  height: 2rem;
-//  width: 1.5rem;
-//  margin-right: 0.75rem;
-//  margin-left: 0.25rem;
-//}
 
 .page-header__am-wrapper {
   display: contents;
@@ -72,13 +54,9 @@
 
 .page-header__hyperlinks {
   display: contents;
-  //display: flex;
-  //align-items: center;
 }
 
-.page-header__hyperlinks > a,
-.page-header__hyperlinks > button,
-.am-container > a {
+.page-header .jenkins-button {
   padding: 0.5rem;
 }
 
