@@ -36,6 +36,7 @@
   --button-background--hover: oklch(from var(--accent-color) l c h / 0.9);
   --button-background--active: oklch(from var(--accent-color) l c h / 0.8);
   --button-box-shadow--focus: oklch(from var(--accent-color) l c h / 0.4);
+
   color: var(--button-color--primary) !important;
 }
 
@@ -46,6 +47,7 @@
   --button-background--hover: oklch(from currentColor l c h / 0.15);
   --button-background--active: oklch(from currentColor l c h / 0.25);
   --button-box-shadow--focus: oklch(from currentColor l c h / 0.125);
+
   color: var(--color) !important;
 }
 
@@ -54,6 +56,7 @@
   --button-background--hover: oklch(from var(--color) l c h / 0.9);
   --button-background--active: oklch(from var(--color) l c h / 0.8);
   --button-box-shadow--focus: oklch(from var(--color) l c h / 0.4);
+
   color: var(--background) !important;
 }
 

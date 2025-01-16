@@ -92,7 +92,7 @@
 }
 
 .jenkins-help-button {
-  @include mixins.item();
+  @include mixins.item;
 
   --item-background: var(--button-background);
 

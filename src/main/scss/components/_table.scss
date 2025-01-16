@@ -285,17 +285,22 @@
   }
 
   &__badge {
-    @include mixins.item();
+    @include mixins.item;
 
-    --item-background: color-mix(in srgb, currentColor 5%, transparent);
-    --item-background--hover: color-mix(in srgb, currentColor 10%, transparent);
-    --item-background--active: color-mix(in srgb, currentColor 15%, transparent);
-    --item-box-shadow--focus: color-mix(in srgb, currentColor 5%, transparent);
+    --item-background: color-mix(in sRGB, currentColor 5%, transparent);
+    --item-background--hover: color-mix(in sRGB, currentColor 10%, transparent);
+    --item-background--active: color-mix(
+      in sRGB,
+      currentColor 15%,
+      transparent
+    );
+    --item-box-shadow--focus: color-mix(in sRGB, currentColor 5%, transparent);
 
     margin-left: 1rem !important;
     border-radius: 13px;
 
-    &::before, &::after {
+    &::before,
+    &::after {
       inset: -5px -8px;
     }
   }
