@@ -73,7 +73,7 @@
           box-shadow:
             inset 0 0 0 1.5px
               color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
-            0 0 0 4px var(--focus-input-glow);
+            var(--form-input-glow--focus);
         }
 
         &::after {
