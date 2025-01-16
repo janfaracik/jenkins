@@ -58,10 +58,15 @@
 
 @mixin item($border: true) {
   position: relative;
+  appearance: none;
   z-index: 0;
   text-decoration: none !important;
   font-weight: normal;
   border-radius: var(--form-input-border-radius);
+  cursor: pointer;
+  background: transparent;
+  outline: none;
+  border: none;
 
   &::before,
   &::after {

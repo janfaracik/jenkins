@@ -8,18 +8,13 @@
 
   @include mixins.item;
 
-  appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  outline: none;
   margin: 0;
   padding: 0.5rem 1rem;
   font-size: var(--font-size-sm);
-  background: transparent;
   color: var(--text-color) !important;
-  cursor: pointer;
   min-height: 2.375rem;
   white-space: nowrap;
   gap: 1ch;
@@ -164,7 +159,7 @@
       in sRGB,
       var(--success-color) 10%,
       transparent
-    );
+    ) !important;
     --button-background--hover: var(--button-background);
     --button-background--active: var(--button-background);
 

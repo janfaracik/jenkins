@@ -65,13 +65,8 @@ $background-outset: 0.7rem;
   padding: 0.5rem $background-outset;
   gap: 0.65rem;
   width: 100%;
-  cursor: pointer;
   font-size: var(--font-size-sm);
   color: var(--text-color);
-  background: transparent;
-  outline: none;
-  border: none;
-  text-decoration: none;
   margin: 0;
   transition: opacity var(--standard-transition);
 
