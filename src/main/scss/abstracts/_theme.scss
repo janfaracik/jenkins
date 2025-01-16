@@ -178,6 +178,7 @@ $semantics: (
   --btn-link-bg--hover: var(--very-light-grey);
   --btn-link-color--active: var(--primary-active);
   --btn-link-bg--active: var(--light-grey);
+  --jenkins-section-color: color-mix(in sRGB, var(--text-color-secondary) 10%, transparent);
   --jenkins-border-color: color-mix(in sRGB, currentColor 1.5%, transparent);
   --jenkins-border-width: 1.5px;
   --jenkins-border: var(--jenkins-border-width) solid
@@ -190,6 +191,7 @@ $semantics: (
   }
 
   @media (prefers-contrast: more) {
+    --jenkins-section-color: var(--text-color);
     --jenkins-border-color: var(--text-color);
   }
 

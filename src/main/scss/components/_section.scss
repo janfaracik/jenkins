@@ -1,7 +1,7 @@
 @use "../abstracts/mixins";
 
 .jenkins-section {
-  border-top: var(--jenkins-border-width) solid var(--panel-border-color);
+  border-top: var(--jenkins-border-width) solid var(--jenkins-section-color);
   padding: var(--section-padding) 0 0 0;
   max-width: 1800px;
 
