@@ -1,6 +1,8 @@
 @use "../abstracts/mixins";
 
 .page-header {
+  --background-opacity: 0%;
+  --background-blur: 0;
   --border-opacity: 0%;
   position: sticky;
   top: 0;
@@ -17,8 +19,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    backdrop-filter: blur(50px);
-    background: color-mix(in srgb, var(--background) 70%, transparent);
+    backdrop-filter: blur(var(--background-blur));
+    background: color-mix(in srgb, var(--background) var(--background-opacity), transparent);
     border-bottom: 1.5px solid color-mix(in srgb, var(--text-color-secondary) var(--border-opacity), transparent);
     z-index: -1;
     background-clip: padding-box;
