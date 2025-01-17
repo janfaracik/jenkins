@@ -6,9 +6,9 @@
 }
 
 .textarea-preview {
-  border-radius: var(--form-input-border-radius);
   background-color: var(--button-background);
   border: var(--jenkins-border);
   padding: var(--form-input-padding);
   margin-top: 0.5rem;
+  border-radius: var(--form-input-border-radius);
 }
