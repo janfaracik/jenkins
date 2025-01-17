@@ -155,10 +155,6 @@
     width: 100%;
     margin-block: -6px;
 
-    .jenkins-search__input {
-      padding: 0 0.5rem 0 45px;
-    }
-
     @media (min-width: breakpoints.$tablet-breakpoint) {
       max-width: 50vw;
     }
