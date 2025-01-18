@@ -27,7 +27,7 @@ THE SOFTWARE.
          xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:dd="/lib/layout/dropdowns">
   <t:setIconSize />
   <l:overflowButton>
-    <dd:submenu icon="symbol-close-circle" text="${%Icon size}">
+    <dd:submenu icon="symbol-check-circle" text="${%Icon size}">
       <dd:item icon="${iconSize == '32x32' ? 'symbol-check' : null}" text="${%Large}" href="${rootURL}/iconSize?32x32" />
       <dd:item icon="${iconSize == '24x24' ? 'symbol-check' : null}" text="${%Medium}" href="${rootURL}/iconSize?24x24" />
       <dd:item icon="${iconSize == '16x16' ? 'symbol-check' : null}" text="${%Small}" href="${rootURL}/iconSize?16x16" />
