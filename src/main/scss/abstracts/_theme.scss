@@ -196,7 +196,7 @@ $semantics: (
   // Table
   --table-background: oklch(from var(--text-color-secondary) l c h / 0.075);
   --table-header-foreground: var(--text-color);
-  --table-body-background: var(--background);
+  --table-body-background: var(--white);
   --table-body-foreground: var(--text-color);
   --table-border-radius: 0.75rem;
   --table-row-border-radius: 0.3125rem;
