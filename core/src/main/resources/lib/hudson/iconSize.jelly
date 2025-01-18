@@ -34,4 +34,5 @@ THE SOFTWARE.
     </dd:submenu>
     <d:invokeBody />
   </l:overflowButton>
+  <script src="${resURL}/jsbundles/pages/dashboard.js" type="text/javascript" defer="true" />
 </j:jelly>

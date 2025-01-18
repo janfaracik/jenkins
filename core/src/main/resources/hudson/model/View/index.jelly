@@ -27,12 +27,10 @@ THE SOFTWARE.
     <l:layout title="${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app) ? '%Dashboard' : it.displayName}${not empty it.ownerItemGroup.fullDisplayName?' ['+it.ownerItemGroup.fullDisplayName+']':''}">
       <j:set var="view" value="${it}"/> <!-- expose view to the scripts we include from owner -->
         <st:include page="sidepanel.jelly" />
-
         <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
         <l:main-panel>
           <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">
-
-            <l:app-bar title="Dashboard">
+            <l:app-bar title="${%Dashboard}">
               <t:editDescriptionButton permission="${it.CONFIGURE}" />
               <t:iconSize><t:rssBar/></t:iconSize>
             </l:app-bar>

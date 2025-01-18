@@ -35,7 +35,5 @@ THE SOFTWARE.
     <template id="template-icon-legend" data-title="${%Icon legend}">
       <st:include page="_legend.jelly" it="${app}" />
     </template>
-
-    <script src="${resURL}/jsbundles/pages/dashboard.js" type="text/javascript" defer="true" />
   </dd:custom>
 </j:jelly>
