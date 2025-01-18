@@ -124,7 +124,7 @@
 }
 
 .app-about-version {
-  font-weight: 450;
+  font-weight: var(--font-bold-weight);
   color: var(--text-color-secondary);
   margin: 0;
 }
@@ -132,5 +132,5 @@
 .app-about-paragraph {
   font-size: 1rem;
   margin-bottom: var(--section-padding);
-  font-weight: 450;
+  font-weight: var(--font-bold-weight);
 }

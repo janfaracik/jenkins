@@ -87,7 +87,7 @@ $dropdown-padding: 0.375rem;
     color: var(--text-color-secondary) !important;
     margin: $dropdown-padding 0.65rem;
     font-size: 0.8125rem;
-    font-weight: 450;
+    font-weight: var(--font-bold-weight);
     opacity: 0.8;
 
     &:not(:first-of-type) {
