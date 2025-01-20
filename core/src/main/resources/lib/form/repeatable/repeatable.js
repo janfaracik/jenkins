@@ -131,8 +131,6 @@ var repeatableSupport = {
       n.ontransitionend.call(n, {});
     }
 
-    // TODO - Improve animation
-    // n.style.maxHeight = "0px";
     n.style.maxHeight = n.offsetHeight + "px";
     n.classList.add("fade-out");
     setTimeout(() => {

@@ -84,7 +84,7 @@ THE SOFTWARE.
       <j:set var="help" value="${descriptor.helpFile}" />
       <j:set var="disableHandle" value="${attrs.disableDragAndDrop or readOnlyMode}" />
 
-      <div class="repeated-chunk__header ${disableHandle ? 'repeated-chunk__header--TODO' : ''}">
+      <div class="repeated-chunk__header ${disableHandle ? 'repeated-chunk__header--no-handle' : ''}">
         <j:if test="${!disableHandle}">
           <div class="dd-handle" />
         </j:if>
