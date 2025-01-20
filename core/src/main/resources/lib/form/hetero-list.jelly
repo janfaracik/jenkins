@@ -100,7 +100,7 @@ THE SOFTWARE.
 
       <f:class-entry descriptor="${descriptor}" />
 
-      <div class="notafoodwriter">
+      <div class="jenkins-repeated-chunk__content">
         <j:if test="${help!=null}">
           <f:helpArea />
         </j:if>
