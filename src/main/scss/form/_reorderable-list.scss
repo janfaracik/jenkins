@@ -165,7 +165,7 @@ $exit-animation: 0.2s;
   }
 }
 
-@keyframes testest {
+@keyframes repeated-chunk-entrance-animation {
   from {
     scale: 0.99;
     opacity: 0;
@@ -173,7 +173,7 @@ $exit-animation: 0.2s;
   }
 }
 
-@keyframes testestreverse {
+@keyframes repeated-chunk-exit-animation {
   to {
     scale: 0.98;
     opacity: 0;
@@ -183,12 +183,12 @@ $exit-animation: 0.2s;
 }
 
 .repeated-chunk.fade-in {
-  animation: testest 0.3s both;
+  animation: repeated-chunk-entrance-animation 0.3s both;
 }
 
 .repeated-chunk.fade-out {
   z-index: -10;
-  animation: testestreverse #{$exit-animation} both;
+  animation: repeated-chunk-exit-animation #{$exit-animation} both;
 }
 
 .repeated-chunk--sortable-chosen {
