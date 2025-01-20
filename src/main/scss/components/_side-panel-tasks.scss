@@ -32,10 +32,9 @@ $background-outset: 0.7rem;
   }
 
   & > #tasks > .jenkins-search-container {
-    margin-top: -10px;
     margin-left: -$background-outset;
     margin-right: -$background-outset;
-    margin-bottom: 1rem;
+    margin-bottom: calc(var(--section-padding) / 2);
 
     .jenkins-search__icon {
       width: 2.8rem;
