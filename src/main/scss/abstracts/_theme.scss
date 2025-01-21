@@ -58,8 +58,8 @@ $semantics: (
   --focus-input-glow: color-mix(in sRGB, var(--accent-color) 15%, transparent);
 
   // State colors
-  --primary-hover: var(--link-color);
-  --primary-active: var(--link-color--hover);
+  --primary-hover: var(--accent-color);
+  --primary-active: var(--accent-color);
 
   // Status icon colors
   --weather-icon-color: var(--accent-color);
