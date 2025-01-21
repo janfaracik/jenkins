@@ -40,8 +40,8 @@ $border-radius: 100px;
   padding: 0 1.2rem;
   border-radius: $border-radius;
   color: var(--tabs-item-foreground);
-  font-size: var(--font-size-sm);
   font-weight: normal;
+  font-size: var(--font-size-sm);
   min-width: 3.75rem;
 
   &::before,
