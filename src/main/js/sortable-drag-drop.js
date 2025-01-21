@@ -57,7 +57,7 @@ function registerSortableDragDrop(e) {
     onEnd: function () {
       document.removeEventListener("pointermove", onPointerMove);
       if (currentItem) {
-        currentItem.style.rotate = ""; // Reset rotation
+        currentItem.style.rotate = "";
         currentItem = null;
       }
     },
