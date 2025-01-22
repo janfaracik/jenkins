@@ -137,7 +137,8 @@ $semantics: (
     var(--text-color-secondary) 10%,
     transparent
   );
-  --jenkins-border-color: color-mix(in sRGB, currentColor 1.5%, transparent);
+  //--jenkins-border-color: color-mix(in sRGB, currentColor 1.5%, transparent);
+  --jenkins-border-color: color-mix(in sRGB, red, transparent);
   --jenkins-border-width: 1.5px;
   --jenkins-border: var(--jenkins-border-width) solid
     var(--jenkins-border-color);
