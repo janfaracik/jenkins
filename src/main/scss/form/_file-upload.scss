@@ -43,7 +43,7 @@
     background: var(--button-background);
     transition: var(--standard-transition);
     box-shadow: var(--form-input-glow);
-    border: var(--jenkins-border);
+    border: var(--jenkins-border--subtle);
 
     &:hover {
       background: var(--button-background--hover);

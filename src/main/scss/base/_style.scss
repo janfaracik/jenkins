@@ -152,7 +152,7 @@ pre {
   margin: 0 0 var(--section-padding);
   padding: 0.8rem 1rem;
   border-radius: var(--form-input-border-radius);
-  border: var(--jenkins-border);
+  border: var(--jenkins-border--subtle);
   background-color: var(--pre-background);
   color: var(--pre-color);
   font-family: var(--font-family-mono);
@@ -293,7 +293,7 @@ pre.console {
   word-break: break-word;
   border-radius: var(--form-input-border-radius);
   background-color: var(--button-background);
-  border: var(--jenkins-border);
+  border: var(--jenkins-border--subtle);
   z-index: 0;
 
   --section-padding: 0.8rem;

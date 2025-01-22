@@ -13,15 +13,17 @@
     height 0s,
     padding 0s;
 
-  &:hover {
-    border-color: var(--input-border-hover);
-  }
+  &:not(:disabled) {
+    &:hover {
+      border-color: var(--input-border-hover);
+    }
 
-  &:active,
-  &:focus {
-    outline: none;
-    border-color: var(--focus-input-border);
-    box-shadow: var(--form-input-glow--focus);
+    &:active,
+    &:focus {
+      outline: none;
+      border-color: var(--focus-input-border);
+      box-shadow: var(--form-input-glow--focus);
+    }
   }
 
   &:disabled {

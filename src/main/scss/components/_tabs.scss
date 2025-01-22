@@ -20,7 +20,7 @@ $border-radius: 100px;
     content: "";
     position: absolute;
     inset: 0;
-    border: var(--jenkins-border);
+    border: var(--jenkins-border--subtle);
     border-radius: inherit;
     pointer-events: none;
   }
@@ -68,7 +68,7 @@ $border-radius: 100px;
   &::before {
     background-clip: padding-box;
     background-color: var(--tabs-item-background--selected) !important;
-    border: var(--jenkins-border) !important;
+    border: var(--jenkins-border--subtle) !important;
   }
 
   &::after {

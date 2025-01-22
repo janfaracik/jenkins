@@ -28,7 +28,7 @@
 
   &::after {
     inset: 0;
-    border: var(--jenkins-border);
+    border: var(--jenkins-border--subtle);
     border-radius: inherit;
   }
 

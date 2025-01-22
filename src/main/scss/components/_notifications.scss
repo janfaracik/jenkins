@@ -37,7 +37,7 @@
     border-radius: inherit;
     z-index: -1;
     background: oklch(from var(--background) l c h / 0.3);
-    border: var(--jenkins-border);
+    border: var(--jenkins-border--subtle);
   }
 
   @supports not (backdrop-filter: blur(15px)) {
