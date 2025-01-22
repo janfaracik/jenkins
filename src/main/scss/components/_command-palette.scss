@@ -86,7 +86,6 @@
     max-width: unset;
 
     input {
-      border: none;
       padding: 0 0.5rem 0 45px;
       background: transparent !important;
 
@@ -162,6 +161,7 @@
       &--hover {
         &::before {
           background-color: var(--item-background--hover);
+          border: var(--jenkins-border--subtle) !important;
         }
       }
 
