@@ -9,7 +9,8 @@
   overflow: hidden;
   border-radius: 1rem;
 
-  &::before, &::after {
+  &::before,
+  &::after {
     content: "";
     position: absolute;
     z-index: 1;
