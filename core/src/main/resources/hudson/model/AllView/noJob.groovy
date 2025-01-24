@@ -6,6 +6,7 @@ import hudson.model.Job
 import jenkins.model.Jenkins
 
 def l = namespace(lib.LayoutTagLib)
+def f = namespace(lib.FormTagLib)
 
 def isTopLevelAllView = my.owner == Jenkins.get();
 def canSetUpDistributedBuilds = Jenkins.get().hasPermission(Computer.CREATE) &&
@@ -14,15 +15,18 @@ def canSetUpDistributedBuilds = Jenkins.get().hasPermission(Computer.CREATE) &&
 def hasAdministerJenkinsPermission = Jenkins.get().hasPermission(Jenkins.ADMINISTER);
 def hasItemCreatePermission = my.owner.itemGroup.hasPermission(Item.CREATE);
 
-div {
+div(class:"ownerthing") {
+
+    div(class: "colourthing")
+    div(class: "radialthing")
 
     div(class: "empty-state-block") {
         if (isTopLevelAllView) {
             if (canSetUpDistributedBuilds || hasItemCreatePermission) {
-                h1(_("Welcome to Jenkins!"))
+                h1(class:"jenkinsintro", _("Welcome to Jenkins"))
 
-                p(_("noJobDescription"))
-                
+                p(class:"jenkinsdesc", _("noJobDescription"))
+
                 section(class: "empty-state-section") {
                     h2(_("startBuilding"), class: "h4")
 
