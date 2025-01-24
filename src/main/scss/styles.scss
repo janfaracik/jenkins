@@ -4,33 +4,6 @@
 @use "form";
 @use "pages";
 
-.colourthing, .radialthing {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 135vw;
-  height: 135vw;
-  translate: -50% -60%;
-  mask-image: radial-gradient(black, transparent 75%);
-  z-index: -1;
-  border-radius: 100%;
-}
-
-.colourthing {
-  background: linear-gradient(45deg, var(--light-red), var(--light-blue), var(--light-orange), var(--light-cyan));
-  opacity: 0.1;
-  animation: app-about-starburst 100s linear infinite;
-}
-
-//.radialthing {
-//  background: repeating-conic-gradient(
-//                  var(--background) 0deg,
-//                  rgb(100 100 100 / 0.005) 20deg
-//  );
-//  animation: app-about-starburst 100s linear infinite;
-//  //opacity: 0;
-//}
-
 #side-panel, #view-message, .rest-api, #root-action-SearchAction {
   display: none;
 }

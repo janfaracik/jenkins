@@ -16,10 +16,6 @@ def hasAdministerJenkinsPermission = Jenkins.get().hasPermission(Jenkins.ADMINIS
 def hasItemCreatePermission = my.owner.itemGroup.hasPermission(Item.CREATE);
 
 div(class:"ownerthing") {
-
-    div(class: "colourthing")
-    div(class: "radialthing")
-
     div(class: "empty-state-block") {
         if (isTopLevelAllView) {
             if (canSetUpDistributedBuilds || hasItemCreatePermission) {
@@ -104,12 +100,12 @@ div(class:"ownerthing") {
         if (h.isAnonymous() && !hasItemCreatePermission) {
             def canSignUp = app.securityRealm.allowsSignup()
 
-            h1(_("Welcome to Jenkins!"))
+            h1(class:"jenkinsintro", _("Welcome to Jenkins"))
 
             if (canSignUp) {
-                p(_("anonymousDescriptionSignUpEnabled"))
+                p(class:"jenkinsdesc", _("anonymousDescriptionSignUpEnabled"))
             } else {
-                p(_("anonymousDescription"))
+                p(class:"jenkinsdesc", _("anonymousDescription"))
             }
 
             section(class: "empty-state-section") {
