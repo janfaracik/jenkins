@@ -1515,6 +1515,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     } else {
                         jsonObject.put("wiki", plugin.wiki);
                     }
+                    jsonObject.put("suggested", true);
                     jsonObject.put("categories", plugin.getCategoriesStream()
                         .filter(PluginManager::isNonMetaLabel)
                         .map(UpdateCenter::getCategoryDisplayName)

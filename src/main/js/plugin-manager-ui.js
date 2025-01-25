@@ -3,11 +3,7 @@ import debounce from "lodash/debounce";
 import pluginManagerAvailable from "./templates/plugin-manager/available.hbs";
 import pluginManager from "./api/pluginManager";
 
-let recommendedPlugins = [];
-
 function applyFilter(searchQuery) {
-  console.log(recommendedPlugins)
-
   // debounce reduces number of server side calls while typing
   pluginManager.availablePluginsSearch(
     searchQuery.toLowerCase().trim(),
@@ -41,19 +37,6 @@ function applyFilter(searchQuery) {
         }
       }
 
-      // console.log(plugins)
-
-      recommendedPlugins.forEach((pluuuugin) => {
-
-        const todo = plugins.find(e => e.name === pluuuugin);
-
-        if (todo) {
-          todo.suggested = true;
-        }
-        // console.log(todo)
-
-      })
-
       clearOldResults();
       var rows = pluginManagerAvailable({
         plugins: plugins.filter(
@@ -82,10 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     filterInput.parentElement.classList.add("jenkins-search--loading");
   });
 
-  pluginManager.init(() => {
-    recommendedPlugins = pluginManager.recommendedPluginNames();
-    applyFilter(filterInput.value);
-  })
+  applyFilter(filterInput.value);
 
   setTimeout(function () {
     layoutUpdateCallback.call();
