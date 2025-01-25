@@ -628,7 +628,10 @@ public class UpdateSite {
             }
 
             for (Map.Entry<String, JSONObject> e : (Set<Map.Entry<String, JSONObject>>) o.getJSONObject("plugins").entrySet()) {
+                var plug = e.getValue();
+                plug.put("suggested", SuggestedPlugins.isSuggested(plug.getString("name")));
                 Plugin p = new Plugin(sourceId, e.getValue());
+
                 // JENKINS-33308 - include implied dependencies for older plugins that may need them
                 List<PluginWrapper.Dependency> implicitDeps = DetachedPluginsUtil.getImpliedDependencies(p.name, p.requiredCore);
                 if (!implicitDeps.isEmpty()) {
@@ -1248,7 +1251,7 @@ public class UpdateSite {
             this.excerpt = get(o, "excerpt");
             this.compatibleSinceVersion = Util.intern(get(o, "compatibleSinceVersion"));
             this.requiredCore = Util.intern(get(o, "requiredCore"));
-            this.suggested = SuggestedPlugins.isSuggested(name);
+            this.suggested = o.getBoolean("suggested");
             final String releaseTimestamp = get(o, "releaseTimestamp");
 
             Date date = null;
