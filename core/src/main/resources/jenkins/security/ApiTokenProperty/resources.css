@@ -22,12 +22,8 @@
  * THE SOFTWARE.
  */
 .token-list {
-  /* reset to get rid of browser default */
-  margin: 0;
-  padding: 0;
-
   max-width: 700px;
-  border: 1.5px solid var(--input-border);
+  border: var(--jenkins-border);
   border-radius: var(--form-input-border-radius);
 }
 
@@ -59,13 +55,13 @@
   font-size: 0.75rem;
 }
 .token-list .token-list-item .token-creation.age-ok {
-  color: #6d7680;
+  color: var(--text-color-secondary);
 }
 .token-list .token-list-item .token-creation.age-mmmh {
-  color: #e09307;
+  color: var(--warning-color);
 }
 .token-list .token-list-item .token-creation.age-argh {
-  color: #de6868;
+  color: var(--error-color);
 }
 .token-list .token-list-item .token-hide {
   display: none;
@@ -75,11 +71,11 @@
 }
 .token-list .token-list-item .token-use-counter {
   font-size: 0.75rem;
-  color: #6d7680;
+  color: var(--text-color-secondary);
 }
 .token-list .token-list-item .no-statistics {
   font-size: 0.75rem;
-  color: #6d7680;
+  color: var(--text-color-secondary);
 }
 .token-list
   .token-list-new-item
@@ -135,5 +131,5 @@
   margin: 0;
 }
 .token-list .repeatable-add {
-  margin: 6px 6px 3px 6px;
+  margin: 0.625rem;
 }
