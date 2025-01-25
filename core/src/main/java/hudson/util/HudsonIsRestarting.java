@@ -24,13 +24,13 @@
 
 package hudson.util;
 
-import static javax.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 
 /**
  * Model object used to display "Hudson is restarting".
@@ -44,7 +44,7 @@ public class HudsonIsRestarting {
     private boolean safeRestart;
 
     /**
-     * @since TODO
+     * @since 2.414
      */
     public HudsonIsRestarting(boolean safeRestart) {
         this.safeRestart = safeRestart;
@@ -55,13 +55,13 @@ public class HudsonIsRestarting {
         this.safeRestart = false;
     }
 
-    public void doDynamic(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException, InterruptedException {
+    public void doDynamic(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException, InterruptedException {
         rsp.setStatus(SC_SERVICE_UNAVAILABLE);
         req.getView(this, "index.jelly").forward(req, rsp);
     }
 
     /**
-     * @since TODO
+     * @since 2.414
      */
     public boolean isSafeRestart() {
         return safeRestart;

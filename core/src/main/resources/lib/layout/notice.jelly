@@ -25,8 +25,8 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:d="jelly:define">
   <st:documentation>
-    <st:attribute name="text" use="required">
-      Sets the text for the notice. HTML isn't supported.
+    <st:attribute name="title" use="required">
+      Sets the title for the notice. HTML isn't supported.
     </st:attribute>
     <st:attribute name="icon" use="required">
       Sets the icon for the notice. Supports Jenkins Symbols and regular images.
@@ -34,14 +34,10 @@ THE SOFTWARE.
   </st:documentation>
 
   <div class="jenkins-notice">
-    <div>
-      <div class="banaa">
-        <l:icon src="${attrs.icon}" />
-        <div>${attrs.text}</div>
-      </div>
-      <div class="banan2">
-        <d:invokeBody />
-      </div>
+    <l:icon src="${attrs.icon}" />
+    <div>${attrs.title}</div>
+    <div class="jenkins-notice__description">
+      <d:invokeBody />
     </div>
   </div>
 </j:jelly>
