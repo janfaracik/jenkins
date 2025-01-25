@@ -461,11 +461,8 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
 })();
 
 window.addEventListener("load", function () {
-  const compatibleCheckbox = document.querySelector(
-    "[data-select='compatible']",
-  );
-  if (compatibleCheckbox) {
-    compatibleCheckbox.addEventListener("click", () => {
+  Behaviour.specify("[data-select='compatible']", "data-select-compatible", 0, (moreOptionsCompatibleButton) => {
+    moreOptionsCompatibleButton.addEventListener("click", () => {
       const inputs = document.getElementsByTagName("input");
       for (let i = 0; i < inputs.length; i++) {
         const candidate = inputs[i];
@@ -475,7 +472,7 @@ window.addEventListener("load", function () {
       }
       window.updateTableHeaderCheckbox();
     });
-  }
+  });
 
   const uninstallButtons = document.querySelectorAll(
     "[data-action='uninstall']",

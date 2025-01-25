@@ -71,8 +71,8 @@ THE SOFTWARE.
                     <th data-sort-disable="true">
                       <l:rowSelectionController class="app-checkbox-install-plugin">
                         <j:if test="${app.updateCenter.hasIncompatibleUpdates(cache)}">
-                          <button tooltip="${%CompatibleTooltip}" type="button" data-select="compatible" class="jenkins-button jenkins-button--tertiary">
-                            <div class="jenkins-table__checkbox-dropdown__icon">
+                          <button tooltip="${%CompatibleTooltip}" type="button" data-select="compatible" class="jenkins-dropdown__item">
+                            <div class="jenkins-dropdown__item__icon jenkins-table__checkbox-dropdown__icon">
                               <l:icon src="symbol-compatible" />
                             </div>
                             ${%Compatible}

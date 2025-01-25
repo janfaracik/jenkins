@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns">
   <st:documentation>
     Controls checkbox selections in tables
     <st:attribute name="class" use="required">
@@ -43,26 +43,24 @@ THE SOFTWARE.
     </j:set>
 
     <j:if test="${contents.length() != 0}">
-      <button type="button" class="jenkins-button jenkins-button--tertiary jenkins-table__checkbox-options">
-        <l:icon src="symbol-chevron-down" />
-      </button>
-
-      <div class="jenkins-table__checkbox-dropdown">
-        <span>${%Select}</span>
-        <button type="button" data-select="all" class="jenkins-button jenkins-button--tertiary">
-          <div class="jenkins-table__checkbox-dropdown__icon">
-            <l:icon src="symbol-check" />
-          </div>
-          ${%All}
-        </button>
-        <j:out value="${contents}" />
-        <button type="button" data-select="none" class="jenkins-button jenkins-button--tertiary">
-          <div class="jenkins-table__checkbox-dropdown__icon">
-            <l:icon src="symbol-close" />
-          </div>
-          ${%None}
-        </button>
-      </div>
+      <l:overflowButton clazz="jenkins-button--tertiary jenkins-table__checkbox-options" icon="symbol-chevron-down" tooltip="${null}">
+        <dd:header text="${%Select}" />
+        <dd:custom>
+          <button type="button" data-select="all" class="jenkins-dropdown__item">
+            <div class="jenkins-dropdown__item__icon jenkins-table__checkbox-dropdown__icon">
+              <l:icon src="symbol-check" />
+            </div>
+            ${%All}
+          </button>
+          <j:out value="${contents}" />
+          <button type="button" data-select="none" class="jenkins-dropdown__item">
+            <div class="jenkins-dropdown__item__icon jenkins-table__checkbox-dropdown__icon">
+              <l:icon src="symbol-close" />
+            </div>
+            ${%None}
+          </button>
+        </dd:custom>
+      </l:overflowButton>
     </j:if>
   </div>
 </j:jelly>
