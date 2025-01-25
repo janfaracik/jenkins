@@ -1486,27 +1486,22 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                             .anyMatch(category -> category != null && category.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
                         plugin.hasWarnings() && query.equalsIgnoreCase("warning:");
                 })
-                .limit(Math.max(limit - plugins.size(), 1))
-                .sorted((o1, o2) -> {
-                    String o1DisplayName = o1.getDisplayName();
-                    if (o1.name.equalsIgnoreCase(query) ||
-                        o1DisplayName.equalsIgnoreCase(query)) {
-                        return -1;
+                .sorted((p1, p2) -> {
+                    // Suggested plugins come first
+                    if (p1.suggested != p2.suggested) {
+                        return Boolean.compare(p2.suggested, p1.suggested); // `true` (suggested) comes first
                     }
-                    String o2DisplayName = o2.getDisplayName();
-                    if (o2.name.equalsIgnoreCase(query) || o2DisplayName.equalsIgnoreCase(query)) {
-                        return 1;
+
+                    // Within the same suggested group or non-suggested group, sort by popularity
+                    int popularityComparison = Double.compare(p2.popularity, p1.popularity);
+                    if (popularityComparison != 0) {
+                        return popularityComparison; // Higher popularity comes first
                     }
-                    if (o1.name.equals(o2.name)) {
-                        return 0;
-                    }
-                    final int pop = Double.compare(o2.popularity, o1.popularity);
-                    if (pop != 0) {
-                        return pop; // highest popularity first
-                    }
-                    return o1DisplayName.compareTo(o2DisplayName);
+
+                    // If popularity is the same, sort by display name
+                    return p1.getDisplayName().compareToIgnoreCase(p2.getDisplayName());
                 })
-                .sorted((p1, p2) -> Boolean.compare(p2.suggested, p1.suggested))
+                .limit(Math.max(limit - plugins.size(), 1))
                 .map(plugin -> {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("name", plugin.name);
