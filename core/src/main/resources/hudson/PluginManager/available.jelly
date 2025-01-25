@@ -80,7 +80,7 @@ THE SOFTWARE.
                   ${%Install}
                 </th>
               </l:isAdmin>
-              <th initialSortDir="down">${%Name}</th>
+              <th>${%Name}</th>
               <th>${%Released}</th>
             </tr>
           </thead>
