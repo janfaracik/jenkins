@@ -53,8 +53,13 @@
   }
 
   .app-plugin-manager__categories {
-    a {
-      margin: 0 1.25rem 0 0 !important;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin: 0.5rem 0;
+
+    .jenkins-badge {
+      padding: 0.1875rem 0.75rem;
       font-size: 0.75rem;
     }
 
