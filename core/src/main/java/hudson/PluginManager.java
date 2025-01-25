@@ -1506,6 +1506,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     }
                     return o1DisplayName.compareTo(o2DisplayName);
                 })
+                .sorted((p1, p2) -> Boolean.compare(p2.suggested, p1.suggested))
                 .map(plugin -> {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("name", plugin.name);

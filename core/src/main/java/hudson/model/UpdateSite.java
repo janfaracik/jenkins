@@ -1248,7 +1248,7 @@ public class UpdateSite {
             this.excerpt = get(o, "excerpt");
             this.compatibleSinceVersion = Util.intern(get(o, "compatibleSinceVersion"));
             this.requiredCore = Util.intern(get(o, "requiredCore"));
-            this.suggested = SuggestedPlugins.isSuggested(sourceId);
+            this.suggested = SuggestedPlugins.isSuggested(name);
             final String releaseTimestamp = get(o, "releaseTimestamp");
 
             Date date = null;

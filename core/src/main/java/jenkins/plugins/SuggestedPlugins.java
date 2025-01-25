@@ -49,8 +49,6 @@ public class SuggestedPlugins {
      */
     public static boolean isSuggested(String pluginName) {
         loadSuggestedPlugins();
-        System.out.println("Called with pluginName: " + pluginName);
-        System.out.println(suggestedPlugins);
         return suggestedPlugins.contains(pluginName);
     }
 }
