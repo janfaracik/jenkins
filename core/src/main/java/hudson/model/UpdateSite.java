@@ -75,6 +75,7 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 import jenkins.model.Jenkins;
 import jenkins.plugins.DetachedPluginsUtil;
+import jenkins.plugins.SuggestedPlugins;
 import jenkins.security.UpdateSiteWarningsConfiguration;
 import jenkins.security.UpdateSiteWarningsMonitor;
 import jenkins.util.JSONSignatureValidator;
@@ -1233,6 +1234,12 @@ public class UpdateSite {
         @Restricted(NoExternalUse.class)
         public IssueTracker[] issueTrackers;
 
+        /**
+         * If this plugin has been suggested by its update site
+         */
+        @Exported
+        public final boolean suggested;
+
         @DataBoundConstructor
         public Plugin(String sourceId, JSONObject o) {
             super(sourceId, o, UpdateSite.this.url);
@@ -1242,6 +1249,12 @@ public class UpdateSite {
             this.compatibleSinceVersion = Util.intern(get(o, "compatibleSinceVersion"));
             this.requiredCore = Util.intern(get(o, "requiredCore"));
             final String releaseTimestamp = get(o, "releaseTimestamp");
+
+            // Source from SetupWizard#getPlatformPluginList
+            System.out.println(sourceId);
+//            System.out.println(o);
+            this.suggested = SuggestedPlugins.isSuggested(this.title);
+
             Date date = null;
             if (releaseTimestamp != null) {
                 try {

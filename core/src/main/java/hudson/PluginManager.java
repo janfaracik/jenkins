@@ -1480,7 +1480,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                         (plugin.title != null && plugin.title.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
                         (plugin.excerpt != null && plugin.excerpt.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
                         plugin.hasCategory(query) ||
-                            (isSuggested && query.toLowerCase(Locale.ROOT).equals("suggested")) ||
+                            (plugin.suggested && query.toLowerCase(Locale.ROOT).contains("suggested")) ||
                         plugin.getCategoriesStream()
                             .map(UpdateCenter::getCategoryDisplayName)
                             .anyMatch(category -> category != null && category.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
@@ -1517,7 +1517,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     } else {
                         jsonObject.put("wiki", plugin.wiki);
                     }
-                    jsonObject.put("suggested", isSuggested);
+                    jsonObject.put("suggested", plugin.suggested);
                     jsonObject.put("categories", plugin.getCategoriesStream()
                         .filter(PluginManager::isNonMetaLabel)
                         .map(UpdateCenter::getCategoryDisplayName)
