@@ -47,19 +47,29 @@ rowSelectionControllers.forEach((headerCheckbox) => {
     updateIcon();
   });
 
-  BehaviorShim.specify("[data-select='all']", "data-select-all", 0, (moreOptionsAllButton) => {
-    moreOptionsAllButton.addEventListener("click", () => {
-      tableCheckboxes.forEach((e) => (e.checked = true));
-      updateIcon();
-    });
-  })
+  BehaviorShim.specify(
+    "[data-select='all']",
+    "data-select-all",
+    0,
+    (moreOptionsAllButton) => {
+      moreOptionsAllButton.addEventListener("click", () => {
+        tableCheckboxes.forEach((e) => (e.checked = true));
+        updateIcon();
+      });
+    },
+  );
 
-  BehaviorShim.specify("[data-select='none']", "data-select-all", 0, (moreOptionsNoneButton) => {
-    moreOptionsNoneButton.addEventListener("click", () => {
-      tableCheckboxes.forEach((e) => (e.checked = false));
-      updateIcon();
-    });
-  });
+  BehaviorShim.specify(
+    "[data-select='none']",
+    "data-select-all",
+    0,
+    (moreOptionsNoneButton) => {
+      moreOptionsNoneButton.addEventListener("click", () => {
+        tableCheckboxes.forEach((e) => (e.checked = false));
+        updateIcon();
+      });
+    },
+  );
 
   function updateIcon() {
     headerCheckbox.classList.remove("jenkins-table__checkbox--all");
