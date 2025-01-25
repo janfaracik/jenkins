@@ -1469,6 +1469,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
     @Restricted(NoExternalUse.class)
     public HttpResponse doPluginsSearch(@QueryParameter String query, @QueryParameter Integer limit) {
         List<JSONObject> plugins = new ArrayList<>();
+
         for (UpdateSite site : Jenkins.get().getUpdateCenter().getSiteList()) {
             List<JSONObject> sitePlugins = site.getAvailables().stream()
                 .filter(plugin -> {
@@ -1479,6 +1480,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                         (plugin.title != null && plugin.title.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
                         (plugin.excerpt != null && plugin.excerpt.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
                         plugin.hasCategory(query) ||
+                            (isSuggested && query.toLowerCase(Locale.ROOT).equals("suggested")) ||
                         plugin.getCategoriesStream()
                             .map(UpdateCenter::getCategoryDisplayName)
                             .anyMatch(category -> category != null && category.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
@@ -1515,7 +1517,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     } else {
                         jsonObject.put("wiki", plugin.wiki);
                     }
-                    jsonObject.put("suggested", true);
+                    jsonObject.put("suggested", isSuggested);
                     jsonObject.put("categories", plugin.getCategoriesStream()
                         .filter(PluginManager::isNonMetaLabel)
                         .map(UpdateCenter::getCategoryDisplayName)

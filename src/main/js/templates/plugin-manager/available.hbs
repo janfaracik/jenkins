@@ -16,21 +16,19 @@
                     <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">{{ this.version }}</span>
                 </a>
             </div>
-            {{#if this.categories }}
-                <div class="app-plugin-manager__categories">
-                    {{# if this.suggested }}
-                      <a href="?filter=recommended" class="jenkins-badge jenkins-!-color-pink">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
-                        Recommended
-                      </a>
-                    {{/if}}
-                    {{#each this.categories }}
-                        <a href="?filter={{ this }}" class="jenkins-badge jenkins-!-accent-color">
-                        {{ this }}
-                        </a>
-                    {{/each}}
-                </div>
-            {{/if}}
+            <div class="app-plugin-manager__categories">
+                {{# if this.suggested }}
+                  <a href="?filter=suggested" class="jenkins-badge jenkins-!-color-pink">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                    Suggested
+                  </a>
+                {{/if}}
+                {{#each this.categories }}
+                    <a href="?filter={{ this }}" class="jenkins-badge jenkins-!-accent-color">
+                    {{ this }}
+                    </a>
+                {{/each}}
+            </div>
             {{#if this.excerpt }}
                 <div class="except">
                     {{{ this.excerpt }}}
