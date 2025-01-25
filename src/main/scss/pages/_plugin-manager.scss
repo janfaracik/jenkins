@@ -30,7 +30,7 @@
 .TODOINSTALL {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4375rem;
 }
 
 #plugins {
@@ -54,9 +54,8 @@
 
   .app-plugin-manager__categories {
     display: flex;
-    gap: 0.5rem;
+    gap: 0.4375rem;
     flex-wrap: wrap;
-    margin: 0.5rem 0;
 
     .jenkins-badge {
       padding: 0.1875rem 0.75rem;
