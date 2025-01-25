@@ -9,56 +9,58 @@
             </td>
         {{/if}}
         <td>
-            <div>
+            <div class="TODOINSTALL">
+              <div>
                 <a href="{{ this.wiki }}" class="jenkins-table__link" target="_blank" rel="noopener noreferrer">
-                    {{ this.displayName }}
-                    <span class="jenkins-visually-hidden">Version</span>
-                    <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">{{ this.version }}</span>
+                  {{ this.displayName }}
+                  <span class="jenkins-visually-hidden">Version</span>
+                  <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">{{ this.version }}</span>
                 </a>
-            </div>
-            {{#if this.categories }}
+              </div>
+              {{#if this.categories }}
                 <div class="app-plugin-manager__categories">
-                    {{#each this.categories }}
-                        <a href="?filter={{ this }}" class="jenkins-table__link jenkins-table__badge">
-                        {{ this }}
-                        </a>
-                    {{/each}}
+                  {{#each this.categories }}
+                    <a href="?filter={{ this }}" class="jenkins-table__link jenkins-table__badge">
+                    {{ this }}
+                    </a>
+                  {{/each}}
                 </div>
-            {{/if}}
-            {{#if this.excerpt }}
+              {{/if}}
+              {{#if this.excerpt }}
                 <div class="except">
-                    {{{ this.excerpt }}}
+                  {{{ this.excerpt }}}
                 </div>
-            {{/if}}
-            {{#if this.newerCoreRequired }}
+              {{/if}}
+              {{#if this.newerCoreRequired }}
                 <div class="jenkins-alert jenkins-alert-danger">
-                    {{{ this.newerCoreRequired }}}
+                  {{{ this.newerCoreRequired }}}
                 </div>
-            {{/if}}
-            {{#if this.unresolvedSecurityWarnings }}
+              {{/if}}
+              {{#if this.unresolvedSecurityWarnings }}
                 <div class="jenkins-alert jenkins-alert-danger">
-                    {{ this.unresolvedSecurityWarnings.text }}
-                    <ul>
-                        {{#each this.unresolvedSecurityWarnings.warnings}}
-                            <li>
-                                <a href="{{ this.url }}" target="_blank" rel="noopener noreferrer">
-                                    {{ this.message }}
-                                </a>
-                            </li>
-                        {{/each}}
-                    </ul>
+                  {{ this.unresolvedSecurityWarnings.text }}
+                  <ul>
+                    {{#each this.unresolvedSecurityWarnings.warnings}}
+                      <li>
+                        <a href="{{ this.url }}" target="_blank" rel="noopener noreferrer">
+                          {{ this.message }}
+                        </a>
+                      </li>
+                    {{/each}}
+                  </ul>
                 </div>
-            {{/if}}
-            {{#if this.deprecated }}
+              {{/if}}
+              {{#if this.deprecated }}
                 <div class="jenkins-alert jenkins-alert-warning">
-                    {{{ this.deprecated }}}
+                  {{{ this.deprecated }}}
                 </div>
-            {{/if}}
-            {{#if this.adoptMe }}
+              {{/if}}
+              {{#if this.adoptMe }}
                 <div class="jenkins-alert jenkins-alert-warning">
-                    {{{ this.adoptMe }}}
+                  {{{ this.adoptMe }}}
                 </div>
-            {{/if}}
+              {{/if}}
+            </div>
         </td>
         {{#if this.releaseTimestamp }}
             <td class="jenkins-table__cell--no-wrap" data="{{ this.releaseTimestamp.iso8601 }}">
