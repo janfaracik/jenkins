@@ -6,6 +6,7 @@ pluginManager.init(() => {
 
   setTimeout(() => {
     permanentpiece.innerHTML = "";
+    console.log(pluginManager.recommendedPluginNames())
     pluginManager.recommendedPluginNames().slice(0, 3).forEach((plugin) => {
       permanentpiece.innerHTML +=
         `<a href="./available?filter=${plugin}" class="jenkins-button">
@@ -13,5 +14,5 @@ pluginManager.init(() => {
         <span>Appearance</span>
       </a>`;
     });
-  }, 1000)
+  }, 500)
 })
