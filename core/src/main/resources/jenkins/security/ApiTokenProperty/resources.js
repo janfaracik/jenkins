@@ -50,11 +50,13 @@ document.querySelector("#create-token").addEventListener("click", (e) => {
             rsp.json().then((json) => {
               dialog.form(
                 createElementFromHtml(
-                  `<div><div class="jenkins-quote jenkins-quote--monospace">${json.data.tokenValue}<button>Copy</button></div></div>`,
+                  `<div><div class="jenkins-quote jenkins-quote--monospace">${json.data.tokenValue}<button class="jenkins-button jenkins-copy-button">      <span class="jenkins-copy-button__icon">
+        <l:icon src="symbol-check" />
+      </span></button></div></div>`,
                 ),
                 {
-                  title: "Copyyy!!",
-                  message: "Your wont be able to copy this later!",
+                  title: "Copy your token",
+                  message: "You won't be able to copy this once this dialog is closed.",
                   cancelText: "Close",
                   submitButton: false,
                 },
