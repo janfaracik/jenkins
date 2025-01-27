@@ -27,7 +27,8 @@ public class EditRunAction extends TransientActionFactory<Run> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return target.hasPermission(Run.UPDATE) ? "Edit Run information" : "View Run information";
+                // TODO - Clarify run vs build, what's the preferred terminology
+                return target.hasPermission(Run.UPDATE) ? "Edit build information" : "View build information";
             }
 
             @Override
