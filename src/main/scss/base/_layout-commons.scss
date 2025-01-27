@@ -99,14 +99,9 @@
 
     #opencloseting {
       display: flex;
-      aspect-ratio: 1;
-      padding: 0;
-      margin: 0 10px 0 -5px;
-      flex-grow: 0; // might not need
-      align-self: start;
+      margin: -0.5rem 0 0 -0.9rem;
 
       svg {
-        pointer-events: none;
         width: 1.5rem;
         height: 1.5rem;
       }
