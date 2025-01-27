@@ -43,7 +43,7 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.Ancestor;
 import org.kohsuke.stapler.Stapler;
-import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerRequest2;
 
 /**
  * Show notifications and popups for active administrative monitors on all pages.
@@ -139,11 +139,11 @@ public class AdministrativeMonitorsDecorator extends PageDecorator {
      * @return the list of active monitors if we should display them, otherwise null.
      */
     public Collection<AdministrativeMonitor> getMonitorsToDisplay() {
-        if (!Jenkins.get().hasPermission(Jenkins.SYSTEM_READ)) {
+        if (!(AdministrativeMonitor.hasPermissionToDisplay())) {
             return null;
         }
 
-        StaplerRequest req = Stapler.getCurrentRequest();
+        StaplerRequest2 req = Stapler.getCurrentRequest2();
 
         if (req == null) {
             return null;
