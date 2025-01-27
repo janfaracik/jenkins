@@ -2,6 +2,24 @@
 
 $background-outset: 0.7rem;
 
+.app-page-body__side-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-bottom: var(--section-padding);
+
+  .jenkins-app-bar {
+    margin-bottom: calc(var(--section-padding) / 2);
+  }
+
+  .jenkins-side-panel__heading {
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+    font-weight: var(--font-bold-weight);
+    margin: calc(var(--section-padding) / 2) 0 calc(var(--section-padding) / 4) 0;
+  }
+}
+
 #tasks,
 .subtasks {
   display: flex;
