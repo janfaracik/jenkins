@@ -21,6 +21,7 @@ const sidepanel = document.querySelector("#side-panel")
 const thing = document.querySelector("#main-panel #opencloseting");
 
 if (!sidepanel) {
+  closer.remove();
   thing.remove();
 } else {
   thing.addEventListener("click", () => {
