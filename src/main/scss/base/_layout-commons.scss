@@ -109,31 +109,26 @@
 
     &__side-panel {
       position: fixed;
-      background: color-mix(in srgb, var(--card-background) 80%, transparent);
-      backdrop-filter: saturate(2) blur(30px);
+
+      box-shadow: var(--dropdown-box-shadow);
+      background: color-mix(in sRGB, var(--background) 85%, transparent);
+      backdrop-filter: var(--dropdown-backdrop-filter);
       z-index: 1000;
       top: 5rem;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
+      left: 0.5rem;
+      right: 0.5rem;
+      bottom: 0.5rem;
+      border-radius: 1rem;
       overflow-y: auto;
-      padding: calc(var(--section-padding) * 1.25);
+      padding: calc(var(--section-padding)) calc(var(--section-padding) * 1.4);
       width: unset;
-      box-shadow: 0 0 3rem rgba(0, 0, 0, 0.2), 0 0 0 1.5px rgba(0, 0, 0, 0.05);
       transition: var(--standard-transition);
-      transition-behavior: allow-discrete;
       translate: 0 100%;
       display: none;
 
       &.opennn {
         translate: 0;
         display: block;
-      }
-
-      .app-sidepanel__jenkins-logo {
-        display: none;
       }
 
       .jenkins-app-bar {
