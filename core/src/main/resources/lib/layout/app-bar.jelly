@@ -38,9 +38,6 @@ THE SOFTWARE.
   </st:documentation>
 
   <div class="jenkins-app-bar">
-    <button id="opencloseting" class="jenkins-button jenkins-button--tertiary">
-      <l:icon src="symbol-sidebar" />
-    </button>
     <div class="jenkins-app-bar__content">
       <x:element name="${headingLevel ?: 'h1'}">
         ${title}

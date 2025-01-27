@@ -95,19 +95,15 @@
   /* stylelint-disable-next-line media-query-no-invalid */
   @media (max-width: breakpoints.$tablet-breakpoint) {
     flex-direction: column;
-    padding-top: 0;
     gap: 0;
-
-    // TODO - might not need
-    #main-panel {
-      margin-top: 0 !important;
-    }
 
     #opencloseting {
       display: flex;
       aspect-ratio: 1;
       padding: 0;
       margin: 0 10px 0 -5px;
+      flex-grow: 0; // might not need
+      align-self: start;
 
       svg {
         pointer-events: none;

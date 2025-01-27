@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
+<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
   <st:documentation>
     Generates the body as the main content part of a Jenkins page.
   </st:documentation>
@@ -59,6 +59,10 @@ THE SOFTWARE.
         </j:choose>
       </j:if>
       <a id="skip2content" />
+      <button id="opencloseting" class="jenkins-button jenkins-button--tertiary">
+        <l:icon src="symbol-sidebar" />
+        ${%Menu}
+      </button>
       <x:comment>&#10;start of main content ⇒&#10;</x:comment>
       <d:invokeBody />
       <x:comment>&#10;⇐ end of main content&#10;</x:comment>
