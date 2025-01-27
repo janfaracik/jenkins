@@ -20,13 +20,16 @@ const closer = document.querySelector("#closer")
 const sidepanel = document.querySelector("#side-panel")
 const thing = document.querySelector("#main-panel #opencloseting");
 
-console.log(sidepanel, thing)
-thing.addEventListener("click", () => {
-  closer.classList.toggle("opennn");
-  sidepanel.classList.toggle("opennn");
-})
+if (!sidepanel) {
+  thing.remove();
+} else {
+  thing.addEventListener("click", () => {
+    closer.classList.toggle("opennn");
+    sidepanel.classList.toggle("opennn");
+  })
 
-closer.addEventListener("click", () => {
-  closer.classList.toggle("opennn");
-  sidepanel.classList.toggle("opennn");
-})
+  closer.addEventListener("click", () => {
+    closer.classList.toggle("opennn");
+    sidepanel.classList.toggle("opennn");
+  })
+}
