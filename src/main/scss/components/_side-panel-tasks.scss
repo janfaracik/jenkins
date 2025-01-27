@@ -6,10 +6,24 @@ $background-outset: 0.7rem;
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  margin-bottom: var(--section-padding);
 
   .jenkins-app-bar {
     margin-bottom: calc(var(--section-padding) / 2);
+  }
+
+  .jenkins-search-container {
+    margin-left: -$background-outset;
+    margin-right: -$background-outset;
+    margin-bottom: calc(var(--section-padding) / 2);
+
+    .jenkins-search__icon {
+      width: 2.8rem;
+      aspect-ratio: unset;
+    }
+
+    .jenkins-search__input {
+      padding-left: 2.6rem;
+    }
   }
 
   .jenkins-side-panel__heading {
@@ -35,27 +49,6 @@ $background-outset: 0.7rem;
   &:empty {
     display: none;
   }
-}
-
-#side-panel {
-  & > #tasks > .jenkins-search-container {
-    margin-left: -$background-outset;
-    margin-right: -$background-outset;
-    margin-bottom: calc(var(--section-padding) / 2);
-
-    .jenkins-search__icon {
-      width: 2.8rem;
-      aspect-ratio: unset;
-    }
-
-    .jenkins-search__input {
-      padding-left: 2.6rem;
-    }
-  }
-}
-
-#side-panel .jenkins-search__results-container--visible .task-link {
-  opacity: 0.3;
 }
 
 #tasks .task {
