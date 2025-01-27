@@ -1,7 +1,7 @@
 @use "../abstracts/mixins";
 
 .jenkins-section {
-  border-top: 2px solid var(--panel-border-color);
+  border-top: var(--jenkins-border);
   padding: var(--section-padding) 0 0 0;
 
   &:last-child {
@@ -54,7 +54,7 @@
 }
 
 .jenkins-section__item a {
-  @include mixins.item;
+  @include mixins.item($border: false);
 
   display: flex;
   text-decoration: none;
@@ -89,6 +89,7 @@
       border-radius: 100%;
       pointer-events: none;
       background: var(--item-background--active);
+      border: var(--jenkins-border--subtle);
     }
 
     img,
