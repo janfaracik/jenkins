@@ -69,18 +69,16 @@ td.no-wrap {
   text-align: center;
   margin-bottom: var(--section-padding);
   padding: 0.5em;
-  -moz-border-radius: 0.5em;
   border-radius: var(--form-input-border-radius);
 }
 
 #shutdown-msg {
   font-weight: bold;
   color: white;
-  background-color: #ef2929;
+  background-color: var(--destructive-color);
   text-align: center;
   margin-bottom: var(--section-padding);
   padding: 0.5em;
-  -moz-border-radius: 0.5em;
   border-radius: var(--form-input-border-radius);
 }
 

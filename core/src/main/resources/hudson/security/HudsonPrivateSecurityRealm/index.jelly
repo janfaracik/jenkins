@@ -24,9 +24,11 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <l:layout permission="${app.ADMINISTER}" title="${%Users}" type="one-column">
+  <j:new var="managementLink" className="hudson.security.HudsonPrivateSecurityRealm$ManageUserLinks" />
+
+  <l:layout permission="${app.ADMINISTER}" title="${managementLink.displayName}" type="one-column">
     <l:main-panel>
-      <l:app-bar title="${%Users}" subtitle="${it.allUsers.size()}">
+      <l:app-bar title="${managementLink.displayName}" subtitle="${it.allUsers.size()}">
         <l:isAdmin>
           <a href="addUser" class="jenkins-button jenkins-button--primary">
             <l:icon src="symbol-add" />
@@ -35,7 +37,7 @@ THE SOFTWARE.
         </l:isAdmin>
       </l:app-bar>
 
-      <p class="jenkins-page-description">${%blurb}</p>
+      <p class="jenkins-page-description">${managementLink.description}</p>
 
       <table class="jenkins-table sortable" id="people">
         <thead>
@@ -63,7 +65,7 @@ THE SOFTWARE.
               </td>
               <td>
                 <div class="jenkins-table__cell__button-wrapper">
-                  <a href="${user.url}/" class="jenkins-button jenkins-button--tertiary">
+                  <a href="${user.url}/account" class="jenkins-button jenkins-button--tertiary">
                     <l:icon src="symbol-settings" />
                   </a>
                 </div>

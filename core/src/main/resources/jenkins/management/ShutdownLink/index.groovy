@@ -6,13 +6,23 @@ def f = namespace(lib.FormTagLib)
 def l = namespace(lib.LayoutTagLib)
 def st = namespace("jelly:stapler")
 
-l.layout(norefresh: true, permission: app.MANAGE, title: my.displayName) {
+l.layout(permission: app.MANAGE, title: my.displayName, type: "one-column") {
     l.main_panel {
-        h1 {
-            text(Messages.ShutdownLink_DisplayName_prepare())
+        if (app.isQuietingDown()) {
+            f.form(method: "post", name: "cancelShutdown", action: "cancel") {
+                f.bottomButtonBar {
+                    f.submit(value: _(Messages.ShutdownLink_DisplayName_cancel()))
+                }
+            }
+
+            hr {}
         }
 
-        p {
+        h1 {
+            text(my.displayName)
+        }
+
+        p(class: "jenkins-page-description") {
             text(my.description)
         }
 
@@ -27,14 +37,6 @@ l.layout(norefresh: true, permission: app.MANAGE, title: my.displayName) {
                         ? Messages.ShutdownLink_ShutDownReason_update()
                         : Messages.ShutdownLink_DisplayName_prepare()),
                         clazz: "jenkins-!-destructive-color")
-            }
-        }
-
-        if (app.isQuietingDown()) {
-            f.form(method: "post", name: "cancelShutdown", action: "cancel") {
-                f.bottomButtonBar {
-                    f.submit(value: _(Messages.ShutdownLink_DisplayName_cancel()))
-                }
             }
         }
     }
