@@ -1,7 +1,7 @@
 @use "../abstracts/mixins";
 
 #buildHistoryPage {
-  margin: 10px 0 10px 10px;
+  margin: 10px 0 10px -10px;
 
   .jenkins-search {
     margin-inline: -0.25rem;
@@ -94,7 +94,7 @@
 }
 
 .app-builds-container__item {
-  @include mixins.item;
+  @include mixins.item($border: false);
 
   display: grid;
   grid-template-columns: auto 1fr auto;

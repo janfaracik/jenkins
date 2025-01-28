@@ -1,37 +1,17 @@
 @use "../abstracts/mixins";
-@use "../base/breakpoints";
 
 $background-outset: 0.7rem;
 
-#tasks,
-.subtasks {
+.app-page-body__side-panel {
   display: flex;
   flex-direction: column;
-  margin: var(--section-padding);
   gap: 0.125rem;
 
-  @media (min-width: breakpoints.$tablet-breakpoint) {
-    margin-right: calc($background-outset);
-  }
-}
-
-.subtasks {
-  margin-top: 5px;
-  margin-bottom: 0;
-
-  &:empty {
-    display: none;
-  }
-}
-
-#side-panel {
   .jenkins-app-bar {
-    margin-top: var(--section-padding);
-    margin-left: var(--section-padding);
-    margin-right: var(--section-padding);
+    margin-bottom: calc(var(--section-padding) / 2);
   }
 
-  & > #tasks > .jenkins-search-container {
+  .jenkins-search-container {
     margin-left: -$background-outset;
     margin-right: -$background-outset;
     margin-bottom: calc(var(--section-padding) / 2);
@@ -45,10 +25,30 @@ $background-outset: 0.7rem;
       padding-left: 2.6rem;
     }
   }
+
+  .jenkins-side-panel__heading {
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+    font-weight: var(--font-bold-weight);
+    margin: calc(var(--section-padding) / 2) 0 calc(var(--section-padding) / 4) 0;
+  }
 }
 
-#side-panel .jenkins-search__results-container--visible .task-link {
-  opacity: 0.3;
+#tasks,
+.subtasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-bottom: var(--section-padding);
+}
+
+.subtasks {
+  margin-top: 5px;
+  margin-bottom: 0;
+
+  &:empty {
+    display: none;
+  }
 }
 
 #tasks .task {
@@ -61,17 +61,11 @@ $background-outset: 0.7rem;
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.55rem $background-outset;
+  padding: 0.5rem $background-outset;
   gap: 0.65rem;
   width: 100%;
-  cursor: pointer;
-  font-weight: normal !important;
   font-size: var(--font-size-sm);
-  color: var(--text-color) !important;
-  background: transparent;
-  outline: none;
-  border: none;
-  text-decoration: none;
+  color: var(--text-color);
   margin: 0;
   transition: opacity var(--standard-transition);
 
@@ -100,7 +94,7 @@ $background-outset: 0.7rem;
   }
 
   &--active {
-    font-weight: 500 !important;
+    font-weight: 450;
     cursor: default;
 
     svg * {
@@ -113,6 +107,12 @@ $background-outset: 0.7rem;
 
     &::after {
       box-shadow: none !important;
+    }
+  }
+
+  &:not(:hover, &:active, &:focus, &--active) {
+    &::before {
+      border-color: transparent;
     }
   }
 }

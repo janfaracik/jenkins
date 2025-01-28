@@ -15,3 +15,22 @@ Tooltips.init();
 StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
+
+const closer = document.querySelector("#closer")
+const sidepanel = document.querySelector("#side-panel")
+const thing = document.querySelector("#main-panel #opencloseting");
+
+if (!sidepanel) {
+  closer.remove();
+  thing.remove();
+} else {
+  thing.addEventListener("click", () => {
+    closer.classList.toggle("opennn");
+    sidepanel.classList.toggle("opennn");
+  })
+
+  closer.addEventListener("click", () => {
+    closer.classList.toggle("opennn");
+    sidepanel.classList.toggle("opennn");
+  })
+}
