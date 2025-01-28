@@ -10,9 +10,7 @@ l.layout(permission: app.MANAGE, title: my.displayName, type: "one-column") {
     l.main_panel {
         if (app.isQuietingDown()) {
             f.form(method: "post", name: "cancelShutdown", action: "cancel") {
-                f.bottomButtonBar {
-                    f.submit(value: _(Messages.ShutdownLink_DisplayName_cancel()))
-                }
+                f.submit(value: _(Messages.ShutdownLink_DisplayName_cancel()))
             }
 
             hr {}

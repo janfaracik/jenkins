@@ -23,13 +23,13 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
+<j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:f="/lib/form">
   <st:documentation>
     Generates the body as the main content part of a Jenkins page.
   </st:documentation>
 
   <j:if test="${mode=='main-panel'}">
-    <j:if test="${app.isQuietingDown()}">
+<!--    <j:if test="${app.isQuietingDown()}">-->
       <j:choose>
         <j:when test="${app.isPreparingSafeRestart()}">
           <div id='safe-restart-msg'>
@@ -44,7 +44,7 @@ THE SOFTWARE.
           </div>
         </j:when>
         <j:otherwise>
-          <div id='shutdown-msg'>
+          <div id='shutdown-msg' class="jenkins-alert jenkins-alert-danger">
             <j:choose>
               <j:when test="${app.getQuietDownReason() != null}">
                 ${app.getQuietDownReason()}
@@ -53,10 +53,14 @@ THE SOFTWARE.
                 ${%shutdown}
               </j:otherwise>
             </j:choose>
+
+            <form method="post" name="cancelShutdown" action="cancel">
+              <f:submit value="${%Cancel shutdown}" clazz="jenkins-!-white-color" />
+            </form>
           </div>
         </j:otherwise>
       </j:choose>
-    </j:if>
+<!--    </j:if>-->
     <a id="skip2content" />
     <x:comment>&#10;start of main content ⇒&#10;</x:comment>
     <d:invokeBody />

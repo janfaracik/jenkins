@@ -63,23 +63,31 @@ td.no-wrap {
 }
 
 #safe-restart-msg {
-  font-weight: bold;
-  color: white;
-  background-color: var(--warning);
-  text-align: center;
-  margin-bottom: var(--section-padding);
-  padding: 0.5em;
-  border-radius: var(--form-input-border-radius);
+  //font-weight: bold;
+  //color: white;
+  //background-color: var(--warning);
+  //text-align: center;
+  //margin-bottom: var(--section-padding);
+  //padding: 0.5em;
+  //border-radius: var(--form-input-border-radius);
 }
 
 #shutdown-msg {
-  font-weight: bold;
-  color: white;
-  background-color: var(--destructive-color);
-  text-align: center;
-  margin-bottom: var(--section-padding);
-  padding: 0.5em;
-  border-radius: var(--form-input-border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .jenkins-button {
+    margin: -0.5rem;
+  }
+
+  //font-weight: bold;
+  //color: white;
+  //background-color: var(--destructive-color);
+  //text-align: center;
+  //margin-bottom: var(--section-padding);
+  //padding: 0.5em;
+  //border-radius: var(--form-input-border-radius);
 }
 
 a.lowkey:link {
