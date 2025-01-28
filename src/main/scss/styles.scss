@@ -3,3 +3,83 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.app-script-console__code {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  gap: 4px;
+
+  & > div {
+    position: relative;
+    background: var(--input-color);
+    border-radius: var(--form-input-border-radius);
+    border: var(--jenkins-border-width) solid var(--input-border);
+
+    &:first-of-type {
+      box-shadow: var(--form-input-glow);
+      border-top-right-radius: calc(var(--form-input-border-radius) / 2);
+      border-bottom-right-radius: calc(var(--form-input-border-radius) / 2);
+      // Set height transition to 0s as vertical resizing has a delay/lag otherwise
+      transition:
+              all var(--standard-transition),
+              height 0s,
+              padding 0s;
+      overflow: hidden;
+
+      .CodeMirror {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        border-radius: 0;
+        margin: 0;
+      }
+
+      .CodeMirror-gutter {
+        background: transparent;
+        border-right: none;
+        width: 2.2em;
+        opacity: 0.5;
+      }
+
+      &:hover {
+        border-color: var(--input-border-hover);
+      }
+
+      &:focus-within {
+        border-color: var(--focus-input-border);
+        box-shadow: var(--form-input-glow--focus);
+      }
+    }
+
+    &:last-of-type {
+      border-top-left-radius: calc(var(--form-input-border-radius) / 2);
+      border-bottom-left-radius: calc(var(--form-input-border-radius) / 2);
+
+      pre {
+        background: transparent;
+        border: none;
+      }
+    }
+
+    h2 {
+      padding: 0.8rem 0 0 1rem;
+      font-family: var(--font-family-mono) !important;
+      font-weight: 500 !important;
+      line-height: 1.66 !important;
+      font-size: var(--font-size-monospace);
+      color: var(--text-color-secondary);
+      margin: 0;
+    }
+
+    button {
+      position: absolute;
+      top: 0.3125rem;
+      right: 0.3125rem;
+    }
+
+    .jenkins-copy-button {
+      padding: 0.5rem;
+      min-width: 2.375rem;
+    }
+  }
+}

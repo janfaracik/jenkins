@@ -28,6 +28,10 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <t:scriptConsole>
-    <pre>println(Jenkins.instance.pluginManager.plugins)</pre>
+    <j:set var="content">println(Jenkins.instance.pluginManager.plugins)</j:set>
+    <div class="jenkins-quote jenkins-quote--monospace">
+      ${content}
+      <l:copyButton text="${content}" iconOnly="true" />
+    </div>
   </t:scriptConsole>
 </j:jelly>
