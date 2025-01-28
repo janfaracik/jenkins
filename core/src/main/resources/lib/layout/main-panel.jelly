@@ -55,7 +55,7 @@ THE SOFTWARE.
             </j:choose>
 
             <form method="post" name="cancelShutdown" action="cancel">
-              <f:submit value="${%Cancel shutdown}" clazz="jenkins-!-white-color" />
+              <f:submit value="${%Cancel shutdown}" clazz="jenkins-!-destructive-color" />
             </form>
           </div>
         </j:otherwise>

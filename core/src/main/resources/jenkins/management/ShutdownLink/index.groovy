@@ -8,14 +8,6 @@ def st = namespace("jelly:stapler")
 
 l.layout(permission: app.MANAGE, title: my.displayName, type: "one-column") {
     l.main_panel {
-        if (app.isQuietingDown()) {
-            f.form(method: "post", name: "cancelShutdown", action: "cancel") {
-                f.submit(value: _(Messages.ShutdownLink_DisplayName_cancel()))
-            }
-
-            hr {}
-        }
-
         h1 {
             text(my.displayName)
         }
