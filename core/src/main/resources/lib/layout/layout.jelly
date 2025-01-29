@@ -206,6 +206,9 @@ THE SOFTWARE.
                          href="${rootURL}/manage/about" />
                 <dd:separator />
               </l:hasPermission>
+              <dd:item icon="symbol-information-circle"
+                       text="${%whatsNew}"
+                       href="https://www.jenkins.io/changelog/${app.VERSION}" />
               <dd:item icon="symbol-heart"
                        text="${%Get involved}"
                        href="https://www.jenkins.io/participate/" />
