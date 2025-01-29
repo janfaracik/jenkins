@@ -3,7 +3,7 @@
   <ellipse cx="256" cy="256" rx="210" ry="210" fill="none" stroke="currentColor" stroke-width="32" />
 
   <!-- Vertical line of the 'i' -->
-  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 210v116"/>
+  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M256 210v136"/>
 
   <!-- Horizontal line at the top of the 'i', right-aligned -->
   <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M226 210h30"/>
