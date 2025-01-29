@@ -118,7 +118,14 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
         return Collections.unmodifiableList(_actions);
     }
 
+    /**
+     * TODO
+     */
     public List<Action> getMagic() {
+        // How does this differ from getActions?
+        // How does this differ from getAllActions?
+        // TODO - Think of an appropriate name for this and see if we can combine the functions
+
         return getAllActions().stream()
                 .filter(e -> {
                     String icon = e.getIconFileName();

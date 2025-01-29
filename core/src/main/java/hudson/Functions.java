@@ -2587,9 +2587,11 @@ public class Functions {
         return String.valueOf(Math.floor(Math.random() * 3000));
     }
 
-    // TODO - no external
+    /**
+     * Converts the given actions to a JSON object
+     */
     @Restricted(NoExternalUse.class)
-    public static String toJson(List<Action> actions) {
+    public static String convertActionsToJson(List<Action> actions) {
         ModelObjectWithContextMenu.ContextMenu contextMenu = new ModelObjectWithContextMenu.ContextMenu();
         contextMenu.addAll(actions);
         return JSONObject.fromObject(contextMenu).toString();

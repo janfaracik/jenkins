@@ -24,7 +24,8 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core">
-  <j:if test="${it.magic != null}">
+  <j:set var="actions" value="${it.magic}" />
+  <j:if test="${actions != null}">
     <div class="jenkins-app-bar__controls">
       <button id="auto-overflow" class="jenkins-button"
               tooltip="${%More actions}"
@@ -36,7 +37,7 @@ THE SOFTWARE.
         </div>
       </button>
       <template>
-        ${h.toJson(it.magic)}
+        ${h.convertActionsToJson(actions)}
       </template>
     </div>
   </j:if>

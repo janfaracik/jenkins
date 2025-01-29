@@ -353,7 +353,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         public String displayName;
 
         /**
-         * Optional URL to the icon image
+         * Optional URL to the icon image. Rendered as 24x24.
          */
         @Exported
         @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
