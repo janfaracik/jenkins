@@ -34,7 +34,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public String getIconFileName() {
-                    return "symbol-lock-closed";
+                    return "symbol-lock-open";
                 }
 
                 @Override
@@ -44,7 +44,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public Event getEvent() {
-                    return LinkEvent.of("");
+                    return LinkEvent.of("toggleLogKeep", "post");
                 }
             });
         }
@@ -68,7 +68,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public Event getEvent() {
-                    return LinkEvent.of("");
+                    return LinkEvent.of("toggleLogKeep", "post");
                 }
             });
         }

@@ -99,55 +99,6 @@ function mapChildrenItemsToDropdownItems(items) {
 
     response.push(item);
     return response;
-// =======
-//     return {
-//       icon: item.icon,
-//       iconXml: item.iconXml,
-//       label: item.displayName,
-//       url: item.url,
-//       type: item.post || item.requiresConfirmation ? "button" : "link",
-//       badge: item.badge,
-//       onClick: () => {
-//         if (item.post || item.requiresConfirmation) {
-//           if (item.requiresConfirmation) {
-//             dialog
-//               .confirm(item.displayName, { message: item.message })
-//               .then(() => {
-//                 const form = document.createElement("form");
-//                 form.setAttribute("method", item.post ? "POST" : "GET");
-//                 form.setAttribute("action", item.url);
-//                 if (item.post) {
-//                   crumb.appendToForm(form);
-//                 }
-//                 document.body.appendChild(form);
-//                 form.submit();
-//               });
-//           } else {
-//             fetch(item.url, {
-//               method: "post",
-//               headers: crumb.wrap({}),
-//             }).then((rsp) => {
-//               if (rsp.ok) {
-//                 notificationBar.show(
-//                   item.displayName + ": Done.",
-//                   notificationBar.SUCCESS,
-//                 );
-//               } else {
-//                 notificationBar.show(
-//                   item.displayName + ": Failed.",
-//                   notificationBar.ERROR,
-//                 );
-//               }
-//             });
-//           }
-//         }
-//       },
-//       subMenu: item.subMenu
-//         ? () => {
-//             return mapChildrenItemsToDropdownItems(item.subMenu.items);
-//           }
-//         : null,
-//     };
   });
 }
 
