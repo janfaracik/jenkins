@@ -58,7 +58,7 @@ function loadScriptIfNotLoaded(url, item) {
  * @param {string}  context
  * @return {Element} TODO
  */
-function menuItem(menuItem, type = "jenkins-dropdown__item", context= "") {
+function menuItem(menuItem, type = "jenkins-dropdown__item", context = "") {
   /**
    * @type {DropdownItem}
    */
@@ -155,7 +155,10 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", context= "") {
           () => {
             const form = document.createElement("form");
             form.setAttribute("method", "POST");
-            form.setAttribute("action", context + xmlEscape(itemOptions.event.postTo));
+            form.setAttribute(
+              "action",
+              context + xmlEscape(itemOptions.event.postTo),
+            );
             crumb.appendToForm(form);
             document.body.appendChild(form);
             form.submit();

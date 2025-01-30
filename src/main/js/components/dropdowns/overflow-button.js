@@ -26,10 +26,7 @@ function init() {
  * @return {DropdownItem[]}
  */
 function convertHtmlToItems(children) {
-  /** @type {DropdownItem[]} */
-  const items = [];
-
-  Array.from(children).forEach((child) => {
+  return [...children].map((child) => {
     const attributes = child.dataset;
 
     /** @type {DropdownItemType} */
@@ -37,7 +34,9 @@ function convertHtmlToItems(children) {
 
     switch (type) {
       case "ITEM": {
+        /** @type {MenuItemDropdownItem} */
         const item = {
+          type: "ITEM",
           displayName: attributes.dropdownText,
           id: attributes.dropdownId,
           icon: attributes.dropdownIcon,
@@ -57,15 +56,15 @@ function convertHtmlToItems(children) {
         if (attributes.dropdownHref) {
           item.event = {
             url: attributes.dropdownHref,
-            type: "GET"
+            type: "GET",
           };
         }
 
-        items.push(item);
-        break;
+        return item;
       }
       case "SUBMENU":
-        items.push({
+        /** @type {MenuItemDropdownItem} */
+        return {
           type: "ITEM",
           displayName: attributes.dropdownText,
           icon: attributes.dropdownIcon,
@@ -73,21 +72,15 @@ function convertHtmlToItems(children) {
           event: {
             actions: convertHtmlToItems(child.content.children),
           },
-        });
-        break;
+        };
       case "SEPARATOR":
-        items.push({ type: type });
-        break;
+        return { type: type };
       case "HEADER":
-        items.push({ type: type, displayName: attributes.dropdownText });
-        break;
+        return { type: type, displayName: attributes.dropdownText };
       case "CUSTOM":
-        items.push({ type: type, contents: child.content.cloneNode(true) });
-        break;
+        return { type: type, contents: child.content.cloneNode(true) };
     }
   });
-
-  return items;
 }
 
 export default { init };

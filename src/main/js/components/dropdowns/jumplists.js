@@ -51,7 +51,9 @@ function generateDropdowns() {
           .then((json) =>
             instance.setContent(
               Utils.generateDropdownItems(
-                Utils.mapChildrenItemsToDropdownItems(json.items), false, href
+                Utils.mapChildrenItemsToDropdownItems(json.items),
+                false,
+                href,
               ),
             ),
           )
