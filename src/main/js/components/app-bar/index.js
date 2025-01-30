@@ -3,7 +3,7 @@ import Utils from "@/components/dropdowns/utils";
 import Templates from "@/components/dropdowns/templates";
 
 function init() {
-  behaviorShim.specify("#auto-overflow", "-dropdosswn-", 1000, (element) => {
+  behaviorShim.specify("#auto-overflow", "-dropdowns-", 1000, (element) => {
     const template = JSON.parse(element.nextSibling.content.textContent);
     const appBarItems = mapChildrenItemsToDropdownItems(
       template.items.filter((e) => e.group.order <= 2),
@@ -14,6 +14,7 @@ function init() {
 
     // Append top level items to the app bar
     appBarItems.forEach((item, index) => {
+      // Only the first button in an app bar should have an icon
       if (index > 0) {
         item.icon = null;
         item.iconXml = null;
