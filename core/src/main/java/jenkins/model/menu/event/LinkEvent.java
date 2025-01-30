@@ -8,19 +8,18 @@ public final class LinkEvent implements Event {
 
     private final String url;
 
-    // TODO enumify
-    private final String type;
+    private final LinkEventType type;
 
-    private LinkEvent(String url, String type) {
+    private LinkEvent(String url, LinkEventType type) {
         this.url = url;
         this.type = type;
     }
 
     public static LinkEvent of(String url) {
-        return new LinkEvent(url, "get");
+        return new LinkEvent(url, LinkEventType.GET);
     }
 
-    public static LinkEvent of(String url, String type) {
+    public static LinkEvent of(String url, LinkEventType type) {
         return new LinkEvent(url, type);
     }
 
@@ -30,7 +29,12 @@ public final class LinkEvent implements Event {
     }
 
     @Exported
-    public String getType() {
+    public LinkEventType getType() {
         return type;
+    }
+
+    public enum LinkEventType {
+        GET,
+        POST
     }
 }

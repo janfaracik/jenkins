@@ -44,7 +44,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public Event getEvent() {
-                    return LinkEvent.of("toggleLogKeep", "post");
+                    return LinkEvent.of("toggleLogKeep", LinkEvent.LinkEventType.POST);
                 }
             });
         }
@@ -68,7 +68,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public Event getEvent() {
-                    return LinkEvent.of("toggleLogKeep", "post");
+                    return LinkEvent.of("toggleLogKeep", LinkEvent.LinkEventType.POST);
                 }
             });
         }

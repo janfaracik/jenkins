@@ -87,7 +87,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item") {
 
   // TODO - make this better
   const tag =
-    itemOptions.event && itemOptions.event.type === "get" ? "a" : "button";
+    itemOptions.event && itemOptions.event.type === "GET" ? "a" : "button";
   const url = tag === "a" ? xmlEscape(itemOptions.event.url) : "";
 
   const item = createElementFromHtml(`
@@ -131,7 +131,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item") {
   }
 
   // If its a link
-  if (menuItem.event && menuItem.event.url && menuItem.event.type === "post") {
+  if (menuItem.event && menuItem.event.url && menuItem.event.type === "POST") {
     item.addEventListener("click", () => {
       const form = document.createElement("form");
       form.setAttribute("method", "POST");
