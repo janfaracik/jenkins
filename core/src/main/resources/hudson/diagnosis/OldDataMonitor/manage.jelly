@@ -24,102 +24,116 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<l:layout title="${%Manage Old Data}">
-  <st:include page="sidepanel.jelly" it="${app}"/>
+<j:new var="managementLink" className="hudson.diagnosis.OldDataMonitor$ManagementLinkImpl" />
+<l:layout title="${managementLink.displayName}">
+<!--  <st:include page="sidepanel.jelly" it="${app}"/>-->
   <!-- no need for additional breadcrumb here as we're on an "index" page already including breadcrumb -->
   <l:main-panel>
-    <h1>${%Manage Old Data}</h1>
-    <p>${%blurb.1}</p>
-    <p>${%blurb.2}</p>
-    <table class="jenkins-table sortable">
-      <thead>
-        <tr>
-          <th initialSortDir="down">${%Type}</th>
-          <th>${%Name}</th>
-          <th>${%Version}</th>
-          <th>${%Error}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <j:forEach var="item" items="${it.data.entrySet()}">
-          <j:set var="obj" value="${item.key}"/>
-          <j:choose>
-            <j:when test="${item.value!=''}">
-              <tr>
-                <td>${obj.class.name}</td>
-                <!-- fullName is first to avoid calling User.get(String) for User object -->
-                <td>${obj.fullName?:obj.fullDisplayName?:obj.displayName?:obj.name}</td>
-                <td>
-                  <j:choose>
-                    <j:when test="${item.value.isOld(150)}">
-                      <b title="${%Very old version}">${item.value}</b>
-                    </j:when>
-                    <j:otherwise>
-                      ${item.value}
-                    </j:otherwise>
-                  </j:choose>
-                </td>
-                <td style="white-space:normal">${item.value.extra}</td>
-              </tr>
-            </j:when>
-            <j:otherwise>
-              <j:if test="${item.value.extra!=null}"><j:set var="hasExtra" value="${true}"/></j:if>
-            </j:otherwise>
-          </j:choose>
-        </j:forEach>
-      </tbody>
-    </table>
-    <j:set var="vers" value="${it.versionList}"/>
-    <j:choose>
-      <j:when test="${vers.hasNext()}">
-        <h2>${%Old Data Format}</h2>
-        <p>${%blurb.3}</p>
-        <p>${%blurb.4}</p>
-        <form action="upgrade" method="POST" name="oldDataUpgrade">
-          ${%Resave data files with structure changes no newer than Jenkins}
-          <select name="thruVer">
-            <j:forEach var="ver" items="${vers}">
-              <f:option>${ver}</f:option>
-            </j:forEach>
-          </select>
-          ${%blurb.5}
-          <br/>
-          <f:submit value="${%Upgrade}"/>
-        </form>
-      </j:when>
-      <j:otherwise>
-        ${%No old data was found.}
-      </j:otherwise>
-    </j:choose>
-    <j:if test="${hasExtra}">
-      <br/>
-      <h2>${%Unreadable Data}</h2>
-      <p>${%blurb.6}</p>
-      <table class="jenkins-table sortable">
-        <thead>
-          <tr>
-            <th initialSortDir="down">${%Type}</th>
-            <th>${%Name}</th>
-            <th>${%Error}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <j:forEach var="item" items="${it.data.entrySet()}">
-            <j:if test="${item.value.extra!=null and item.value==''}">
+    <l:app-bar title="${managementLink.displayName}">
+      <!-- TODO - might not be the best help link -->
+      <t:help href="https://www.jenkins.io/doc/book/managing/plugins/" />
+    </l:app-bar>
+
+    <div class="jenkins-page-description">${managementLink.description}</div>
+
+    <f:section>
+      <p>${%blurb.1}</p>
+      <p>${%blurb.2}</p>
+
+      <!-- TODO - Validate this works -->
+      <j:if test="${it.data.entrySet()}">
+        <table class="jenkins-table sortable">
+          <thead>
+            <tr>
+              <th initialSortDir="down">${%Type}</th>
+              <th>${%Name}</th>
+              <th>${%Version}</th>
+              <th>${%Error}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <j:forEach var="item" items="${it.data.entrySet()}">
               <j:set var="obj" value="${item.key}"/>
-              <tr>
-                <td>${obj.class.name}</td>
-                <td>${obj.fullName?:obj.fullDisplayName?:obj.displayName?:obj.name}</td>
-                <td style="white-space:normal">${item.value.extra}</td>
-              </tr>
-            </j:if>
-          </j:forEach>
-        </tbody>
-      </table>
-      <br/>
-      <form action="discard" method="POST" name="discardUnreadable">
-        <f:submit value="${%Discard Unreadable Data}"/>
-      </form>
+              <j:choose>
+                <j:when test="${item.value!=''}">
+                  <tr>
+                    <td>${obj.class.name}</td>
+                    <!-- fullName is first to avoid calling User.get(String) for User object -->
+                    <td>${obj.fullName?:obj.fullDisplayName?:obj.displayName?:obj.name}</td>
+                    <td>
+                      <j:choose>
+                        <j:when test="${item.value.isOld(150)}">
+                          <b title="${%Very old version}">${item.value}</b>
+                        </j:when>
+                        <j:otherwise>
+                          ${item.value}
+                        </j:otherwise>
+                      </j:choose>
+                    </td>
+                    <td style="white-space:normal">${item.value.extra}</td>
+                  </tr>
+                </j:when>
+                <j:otherwise>
+                  <j:if test="${item.value.extra!=null}"><j:set var="hasExtra" value="${true}"/></j:if>
+                </j:otherwise>
+              </j:choose>
+            </j:forEach>
+          </tbody>
+        </table>
+      </j:if>
+    </f:section>
+
+<!--    <j:set var="vers" value="${it.versionList}"/>-->
+<!--    <j:choose>-->
+<!--      <j:when test="${vers.hasNext()}">-->
+<!--        <h2>${%Old Data Format}</h2>-->
+<!--        <p>${%blurb.3}</p>-->
+<!--        <p>${%blurb.4}</p>-->
+<!--        <form action="upgrade" method="POST" name="oldDataUpgrade">-->
+<!--          ${%Resave data files with structure changes no newer than Jenkins}-->
+<!--          <select name="thruVer">-->
+<!--            <j:forEach var="ver" items="${vers}">-->
+<!--              <f:option>${ver}</f:option>-->
+<!--            </j:forEach>-->
+<!--          </select>-->
+<!--          ${%blurb.5}-->
+<!--          <br/>-->
+<!--          <f:submit value="${%Upgrade}"/>-->
+<!--        </form>-->
+<!--      </j:when>-->
+<!--      <j:otherwise>-->
+<!--        ${%No old data was found.}-->
+<!--      </j:otherwise>-->
+<!--    </j:choose>-->
+
+    <j:if test="${hasExtra}">
+      <f:section title="${%Unreadable Data}" description="${%blurb.6}">
+        <table class="jenkins-table sortable">
+          <thead>
+            <tr>
+              <th initialSortDir="down">${%Type}</th>
+              <th>${%Name}</th>
+              <th>${%Error}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <j:forEach var="item" items="${it.data.entrySet()}">
+              <j:if test="${item.value.extra!=null and item.value==''}">
+                <j:set var="obj" value="${item.key}"/>
+                <tr>
+                  <td>${obj.class.name}</td>
+                  <td>${obj.fullName?:obj.fullDisplayName?:obj.displayName?:obj.name}</td>
+                  <td style="white-space:normal">${item.value.extra}</td>
+                </tr>
+              </j:if>
+            </j:forEach>
+          </tbody>
+        </table>
+        <br/>
+        <form action="discard" method="POST" name="discardUnreadable">
+          <f:submit value="${%Discard Unreadable Data}" clazz="jenkins-!-destructive-color" />
+        </form>
+      </f:section>
     </j:if>
   </l:main-panel>
 </l:layout>
