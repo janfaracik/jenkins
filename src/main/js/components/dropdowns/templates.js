@@ -13,6 +13,7 @@ function dropdown() {
     appendTo: document.body,
     offset: [0, 0],
     animation: "dropdown",
+    duration: 200,
     onShow: (instance) => {
       const referenceParent = instance.reference.parentNode;
 

@@ -68,6 +68,7 @@
 
 .tippy-box[data-animation="tooltip"][data-state="hidden"] {
   opacity: 0;
+  filter: blur(1px);
   transform: scale(0.995);
 
   &[data-placement^="top"] {
