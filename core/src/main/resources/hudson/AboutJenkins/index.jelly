@@ -44,7 +44,7 @@ THE SOFTWARE.
           </p>
         </div>
         <div class="jenkins-app-bar__controls">
-          <a href="https://www.jenkins.io/changelog/${app.VERSION}" class="jenkins-button" target="_blank">
+          <a href="${app.CHANGELOG_URL + '/' + app.VERSION}" class="jenkins-button" target="_blank">
             <l:icon src="symbol-information-circle" />
             ${%whatsNew}
           </a>
