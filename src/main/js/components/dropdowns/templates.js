@@ -85,7 +85,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
       : "");
 
   // TODO - make this better
-  const tag = itemOptions.event && itemOptions.event.url ? "a" : "button";
+  const tag = itemOptions.event && itemOptions.event.type === "get" ? "a" : "button";
   const url = tag === "a" ? xmlEscape(itemOptions.event.url) : "";
 
   const item = createElementFromHtml(`
@@ -113,6 +113,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
       </${tag}>
     `);
 
+  // Load script if needed
   if (menuItem.event && menuItem.event.attributes) {
     for (const key in menuItem.event.attributes) {
       item.dataset[kebabToCamelCase(key)] =
@@ -122,10 +123,24 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
     loadScriptIfNotLoaded(menuItem.event.javascriptUrl, item);
   }
 
+  // If generic onClick event
   if (menuItem.onClick) {
     item.addEventListener('click', menuItem.onClick);
   }
 
+  // If its a link
+  if (menuItem.event && menuItem.event.url && menuItem.event.type === "post") {
+    item.addEventListener("click", () => {
+      const form = document.createElement("form");
+      form.setAttribute("method", "POST");
+      form.setAttribute("action", menuItem.event.url);
+      crumb.appendToForm(form);
+      document.body.appendChild(form);
+      form.submit();
+    });
+  }
+
+  // If its a confirmation dialog
   if (menuItem.event && menuItem.event.postTo) {
     item.addEventListener("click", () => {
       dialog
