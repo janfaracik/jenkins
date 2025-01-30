@@ -27,46 +27,45 @@ package jenkins.model;
 import hudson.Extension;
 import hudson.model.AbstractItem;
 import hudson.model.Action;
-import hudson.model.Hudson;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
-@Extension
-public class RenameActionTransientFactory extends TransientActionFactory<AbstractItem> {
+@Restricted(NoExternalUse.class)
+public class RenameAction implements Action {
 
     @Override
-    public Class<AbstractItem> type() {
-        return AbstractItem.class;
+    public String getIconFileName() {
+        return "notepad.png";
     }
 
     @Override
-    public Collection<? extends Action> createFor(AbstractItem target) {
-        boolean hasPermission = target.hasPermission(target.CONFIGURE) ||
-                (target.hasPermission(target.DELETE) &&
-                        ((Hudson)target.getParent()).hasPermission(target.CREATE));
+    public String getDisplayName() {
+        return "Rename";
+    }
 
-        if (hasPermission && target.isNameEditable()) {
-            return Set.of(
-                    new Action() {
-                @Override
-                public String getIconFileName() {
-                    return "symbol-edit";
-                }
+    @Override
+    public String getUrlName() {
+        return "confirm-rename";
+    }
 
-                @Override
-                public String getDisplayName() {
-                    return "Rename";
-                }
+    @Extension
+    public static class TransientActionFactoryImpl extends TransientActionFactory<AbstractItem> {
 
-                @Override
-                public String getUrlName() {
-                    return target.getAbsoluteUrl() + "confirm-rename";
-                }
+        @Override
+        public Class<AbstractItem> type() {
+            return AbstractItem.class;
+        }
+
+        @Override
+        public Collection<? extends Action> createFor(AbstractItem target) {
+            if (target.isNameEditable()) {
+                return Set.of(new RenameAction());
+            } else {
+                return Collections.emptyList();
             }
-            );
-        } else {
-            return Collections.emptyList();
         }
     }
 }
