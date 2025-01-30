@@ -102,4 +102,4 @@ function mapChildrenItemsToDropdownItems(items) {
   });
 }
 
-export default { init, mapChildrenItemsToDropdownItems };
+export default { init };
