@@ -246,6 +246,47 @@ function debounce(callback) {
   };
 }
 
+/**
+ * Generates the contents for the dropdown
+ * @param {DropdownItem[]}  items
+ * @return {DropdownItem[]}
+ */
+function mapChildrenItemsToDropdownItems(items) {
+  /** @type {number | null} */
+  let initialGroup = null;
+
+  return items.flatMap((item) => {
+    if (item.type === "HEADER") {
+      return {
+        type: "HEADER",
+        label: item.displayName,
+      };
+    }
+
+    if (item.type === "SEPARATOR") {
+      return {
+        type: "SEPARATOR",
+      };
+    }
+
+    const response = [];
+
+    if (
+      initialGroup != null &&
+      item.group?.order !== initialGroup &&
+      item.group.order > 2
+    ) {
+      response.push({
+        type: "SEPARATOR",
+      });
+    }
+    initialGroup = item.group?.order;
+
+    response.push(item);
+    return response;
+  });
+}
+
 export default {
   convertHtmlToItems,
   generateDropdown,
@@ -253,4 +294,5 @@ export default {
   validateDropdown,
   getMaxSuggestionCount,
   debounce,
+  mapChildrenItemsToDropdownItems,
 };

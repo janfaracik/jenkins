@@ -5,10 +5,10 @@ import Templates from "@/components/dropdowns/templates";
 function init() {
   behaviorShim.specify("#auto-overflow", "-dropdowns-", 1000, (element) => {
     const template = JSON.parse(element.nextSibling.content.textContent);
-    const appBarItems = mapChildrenItemsToDropdownItems(
+    const appBarItems = Utils.mapChildrenItemsToDropdownItems(
       template.items.filter((e) => e.group.order <= 2),
     );
-    const overflowItems = mapChildrenItemsToDropdownItems(
+    const overflowItems = Utils.mapChildrenItemsToDropdownItems(
       template.items.filter((e) => e.group.order > 2),
     );
 
@@ -31,47 +31,6 @@ function init() {
         instance.setContent(Utils.generateDropdownItems(overflowItems));
       });
     }
-  });
-}
-
-/**
- * Generates the contents for the dropdown
- * @param {DropdownItem[]}  items
- * @return {DropdownItem[]}
- */
-function mapChildrenItemsToDropdownItems(items) {
-  /** @type {number | null} */
-  let initialGroup = null;
-
-  return items.flatMap((item) => {
-    if (item.type === "HEADER") {
-      return {
-        type: "HEADER",
-        label: item.displayName,
-      };
-    }
-
-    if (item.type === "SEPARATOR") {
-      return {
-        type: "SEPARATOR",
-      };
-    }
-
-    const response = [];
-
-    if (
-      initialGroup != null &&
-      item.group?.order !== initialGroup &&
-      item.group.order > 2
-    ) {
-      response.push({
-        type: "SEPARATOR",
-      });
-    }
-    initialGroup = item.group?.order;
-
-    response.push(item);
-    return response;
   });
 }
 
