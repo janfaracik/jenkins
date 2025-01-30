@@ -54,9 +54,10 @@ function loadScriptIfNotLoaded(url, item) {
 /**
  * Generates the contents for the dropdown
  * @param {DropdownItem}  menuItem
- * @return {Element}
+ * @param {'jenkins-dropdown__item' | 'jenkins-button'}  type
+ * @return {Element} TODO
  */
-function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
+function menuItem(menuItem, type = "jenkins-dropdown__item") {
   /**
    * @type {DropdownItem}
    */
@@ -85,7 +86,8 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
       : "");
 
   // TODO - make this better
-  const tag = itemOptions.event && itemOptions.event.type === "get" ? "a" : "button";
+  const tag =
+    itemOptions.event && itemOptions.event.type === "get" ? "a" : "button";
   const url = tag === "a" ? xmlEscape(itemOptions.event.url) : "";
 
   const item = createElementFromHtml(`
@@ -125,7 +127,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
 
   // If generic onClick event
   if (menuItem.onClick) {
-    item.addEventListener('click', menuItem.onClick);
+    item.addEventListener("click", menuItem.onClick);
   }
 
   // If its a link
@@ -133,7 +135,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
     item.addEventListener("click", () => {
       const form = document.createElement("form");
       form.setAttribute("method", "POST");
-      form.setAttribute("action", menuItem.event.url);
+      form.setAttribute("action", xmlEscape(itemOptions.event.url));
       crumb.appendToForm(form);
       document.body.appendChild(form);
       form.submit();
@@ -152,7 +154,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", options) {
           () => {
             const form = document.createElement("form");
             form.setAttribute("method", "POST");
-            form.setAttribute("action", menuItem.event.postTo);
+            form.setAttribute("action", xmlEscape(itemOptions.event.postTo));
             crumb.appendToForm(form);
             document.body.appendChild(form);
             form.submit();
