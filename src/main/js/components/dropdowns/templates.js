@@ -55,9 +55,10 @@ function loadScriptIfNotLoaded(url, item) {
  * Generates the contents for the dropdown
  * @param {DropdownItem}  menuItem
  * @param {'jenkins-dropdown__item' | 'jenkins-button'}  type
+ * @param {string}  context
  * @return {Element} TODO
  */
-function menuItem(menuItem, type = "jenkins-dropdown__item") {
+function menuItem(menuItem, type = "jenkins-dropdown__item", context= "") {
   /**
    * @type {DropdownItem}
    */
@@ -88,7 +89,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item") {
   // TODO - make this better
   const tag =
     itemOptions.event && itemOptions.event.type === "GET" ? "a" : "button";
-  const url = tag === "a" ? xmlEscape(itemOptions.event.url) : "";
+  const url = tag === "a" ? context + xmlEscape(itemOptions.event.url) : "";
 
   const item = createElementFromHtml(`
       <${tag} class="${type} ${clazz ? clazz : ""}" ${url ? `href="${url}"` : ""} ${itemOptions.id ? `id="${xmlEscape(itemOptions.id)}"` : ""}>
@@ -135,7 +136,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item") {
     item.addEventListener("click", () => {
       const form = document.createElement("form");
       form.setAttribute("method", "POST");
-      form.setAttribute("action", xmlEscape(itemOptions.event.url));
+      form.setAttribute("action", context + xmlEscape(itemOptions.event.url));
       crumb.appendToForm(form);
       document.body.appendChild(form);
       form.submit();
@@ -154,7 +155,7 @@ function menuItem(menuItem, type = "jenkins-dropdown__item") {
           () => {
             const form = document.createElement("form");
             form.setAttribute("method", "POST");
-            form.setAttribute("action", xmlEscape(itemOptions.event.postTo));
+            form.setAttribute("action", context + xmlEscape(itemOptions.event.postTo));
             crumb.appendToForm(form);
             document.body.appendChild(form);
             form.submit();
