@@ -1,7 +1,7 @@
 /**
  * @typedef DropdownItem
  * @type {object}
- * @property {'DISABLED' | 'SEPARATOR' | 'HEADER' | 'CUSTOM'} type
+ * @property {DropdownItemType} type
  * @property {string} id?
  * @property {string} displayName
  * @property {{order: number}} group
@@ -13,4 +13,8 @@
  * @property {string} contents - TODO
  * @property {string} clazz - TODO ??? not sure if this is staying
  * @property {() => {}} onClick - TODO ??? not sure if this is staying
+ * */
+
+/**
+ * @typedef {"ITEM" | "SUBMENU" | "DISABLED" | "SEPARATOR" | "HEADER" | "CUSTOM"} DropdownItemType
  * */
