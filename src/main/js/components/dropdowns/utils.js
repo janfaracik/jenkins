@@ -48,7 +48,7 @@ function generateDropdown(element, callback, immediate) {
  * @param {boolean}  compact
  * @param {string}  context
  */
-function generateDropdownItems(items, compact = false, context) {
+function generateDropdownItems(items, compact = false, context = "") {
   const menuItems = document.createElement("div");
   menuItems.classList.add("jenkins-dropdown");
   if (compact === true) {
@@ -160,7 +160,12 @@ function generateDropdownItems(items, compact = false, context) {
   return menuItems;
 }
 
+/**
+ * @param {HTMLElement[]} children
+ * @return {DropdownItem[]}
+ */
 function convertHtmlToItems(children) {
+  /** @type {DropdownItem[]} */
   const items = [];
   Array.from(children).forEach((child) => {
     const attributes = child.dataset;
@@ -188,6 +193,7 @@ function convertHtmlToItems(children) {
         if (attributes.dropdownHref) {
           item.event = {
             url: attributes.dropdownHref,
+            type: "GET"
           };
         }
 
@@ -209,7 +215,7 @@ function convertHtmlToItems(children) {
         items.push({ type: type });
         break;
       case "HEADER":
-        items.push({ type: type, label: attributes.dropdownText });
+        items.push({ type: type, displayName: attributes.dropdownText });
         break;
       case "CUSTOM":
         items.push({ type: type, contents: child.content.cloneNode(true) });

@@ -2,7 +2,7 @@
  * @typedef DropdownItem
  * @type {object}
  * @property {'DISABLED' | 'SEPARATOR' | 'HEADER' | 'CUSTOM'} type
- * @property {string} id
+ * @property {string} id?
  * @property {string} displayName
  * @property {{order: number}} group
  * @property {string} icon?
