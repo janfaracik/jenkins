@@ -34,7 +34,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public String getIconFileName() {
-                    return "symbol-lock-open";
+                    return "symbol-lock-closed";
                 }
 
                 @Override
@@ -58,7 +58,7 @@ public class KeepRunAction extends TransientActionFactory<Run> {
 
                 @Override
                 public String getIconFileName() {
-                    return "symbol-lock-closed";
+                    return "symbol-lock-open";
                 }
 
                 @Override
