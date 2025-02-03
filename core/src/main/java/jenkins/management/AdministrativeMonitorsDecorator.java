@@ -56,9 +56,6 @@ public class AdministrativeMonitorsDecorator extends PageDecorator {
     public AdministrativeMonitorsDecorator() {
         // otherwise this would be added to every internal context menu building request
         ignoredJenkinsRestOfUrls.add("contextMenu");
-
-        // don't show here to allow admins to disable malfunctioning monitors via AdministrativeMonitorsDecorator
-        ignoredJenkinsRestOfUrls.add("configure");
     }
 
     @NonNull
@@ -160,11 +157,6 @@ public class AdministrativeMonitorsDecorator extends PageDecorator {
 
         // don't show while Jenkins is loading
         if (o instanceof HudsonIsLoading || o instanceof HudsonIsRestarting) {
-            return null;
-        }
-
-        // Don't show on Manage Jenkins
-        if (o instanceof ManageJenkinsAction) {
             return null;
         }
 

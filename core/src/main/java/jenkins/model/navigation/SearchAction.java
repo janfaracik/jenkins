@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
+ * Copyright (c) 2025, Jan Faracik
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,29 @@
  * THE SOFTWARE.
  */
 
-package hudson.model;
+package jenkins.model.navigation;
 
-import edu.umd.cs.findbugs.annotations.CheckForNull;
 import hudson.Extension;
-import hudson.ExtensionPoint;
-import jenkins.management.Badge;
+import hudson.model.RootAction;
 
 /**
- * Marker interface for actions that are added to {@link jenkins.model.Jenkins}.
- *
- * <p>
- * Extend from this interface and put {@link Extension} on your subtype
- * to have them auto-registered to {@link jenkins.model.Jenkins}.
- *
- * @author Kohsuke Kawaguchi
- * @since 1.311
+ * TODO
  */
-public interface RootAction extends Action, ExtensionPoint {
+@Extension(ordinal = 999)
+public class SearchAction implements RootAction {
 
-    /**
-     * A {@link Badge} shown on the button for the action.
-     *
-     * @return badge or {@code null} if no badge should be shown.
-     * @since TODO
-     */
-    default @CheckForNull Badge getBadge() {
+    @Override
+    public String getIconFileName() {
+        return "symbol-search";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Search";
+    }
+
+    @Override
+    public String getUrlName() {
         return null;
     }
 }
