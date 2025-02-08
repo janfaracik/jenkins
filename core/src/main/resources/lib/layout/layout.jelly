@@ -59,7 +59,7 @@ THE SOFTWARE.
       (The permissions will be checked against the "it" object.)
     </st:attribute>
     <st:attribute name="type" use="optional">
-      Set to 'full-screen' to hide the navigation bar, breadcrumb bar and footer
+      Set to 'full-screen' to hide the navigation bar and footer.
     </st:attribute>
     <st:attribute name="nogrid" use="optional">
       Do not include Bootstrap 3 grid. When a plugin wants to use a more recent version of Bootstrap then
