@@ -24,7 +24,6 @@ const thing2 = document.querySelector("#main-panel #opencloseting");
 
 if (!sidepanel) {
   thing2.remove();
-  thing2.remove();
 }
 
 Utils.generateDropdown(thing2, (instance) => {
