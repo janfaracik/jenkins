@@ -6,6 +6,9 @@ import Tooltips from "@/components/tooltips";
 import StopButtonLink from "@/components/stop-button-link";
 import ConfirmationLink from "@/components/confirmation-link";
 import Dialogs from "@/components/dialogs";
+import Utils from "@/components/dropdowns/utils";
+import Path from "@/util/path";
+import { createElementFromHtml } from "@/util/dom";
 
 Dropdowns.init();
 CommandPalette.init();
@@ -16,21 +19,16 @@ StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
 
-const closer = document.querySelector("#closer")
-const sidepanel = document.querySelector("#side-panel")
-const thing = document.querySelector("#main-panel #opencloseting");
+const sidepanel = document.querySelector("#side-panel #tasks")
+const thing2 = document.querySelector("#main-panel #opencloseting");
 
 if (!sidepanel) {
-  closer.remove();
-  thing.remove();
-} else {
-  thing.addEventListener("click", () => {
-    closer.classList.toggle("opennn");
-    sidepanel.classList.toggle("opennn");
-  })
-
-  closer.addEventListener("click", () => {
-    closer.classList.toggle("opennn");
-    sidepanel.classList.toggle("opennn");
-  })
+  thing2.remove();
+  thing2.remove();
 }
+
+Utils.generateDropdown(thing2, (instance) => {
+  const parent = createElementFromHtml(`<div class="jenkins-dropdown testtest"></div>`)
+  parent.append(sidepanel.cloneNode(true))
+  instance.setContent(parent);
+})

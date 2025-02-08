@@ -97,16 +97,6 @@
     flex-direction: column;
     gap: 0;
 
-    #opencloseting {
-      display: flex;
-      margin: -0.5rem 0 0 -0.9rem;
-
-      svg {
-        width: 1.5rem;
-        height: 1.5rem;
-      }
-    }
-
     &__side-panel {
       position: fixed;
 
@@ -133,12 +123,6 @@
 
       .jenkins-app-bar {
         display: none;
-      }
-    }
-
-    @starting-style { /* <-- and this line */
-      .app-page-body__side-panel.opennn {
-        translate: 0 100%;
       }
     }
   }
