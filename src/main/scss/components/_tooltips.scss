@@ -100,9 +100,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    border-radius: 0.375rem;
-    border: var(--jenkins-border-width) solid var(--text-color-secondary);
-    opacity: 0.2;
+    border-radius: 0.3rem;
+    border: var(--jenkins-border-width) solid var(--input-border);
   }
 
   svg {
