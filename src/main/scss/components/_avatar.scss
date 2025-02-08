@@ -7,7 +7,7 @@
     object-fit: cover;
 
     @media (prefers-contrast: more) {
-      outline: var(--jenkins-border-width) solid var(--text-color);
+      outline-color: var(--text-color);
     }
   }
 }
