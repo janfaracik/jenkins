@@ -21,23 +21,6 @@
   margin-left: 0.25rem;
 }
 
-#closer {
-  position: fixed;
-  inset: 0;
-  background: oklch(from var(--background) l c h / 0.6);
-  backdrop-filter: saturate(2) blur(5px);
-  display: none;
-  opacity: 0;
-  transition: var(--standard-transition);
-  transition-behavior: allow-discrete;
-  z-index: 999;
-
-  &.opennn {
-    display: block;
-    opacity: 1;
-  }
-}
-
 //#opencloseting {
 //  display: none;
 // }
@@ -79,6 +62,39 @@
     .app-page-body__main-panel {
       max-width: unset !important;
     }
+  }
+
+  #opencloseting {
+    margin-left: -1rem;
+    margin-top: -0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+
+    .app-page-body__side-panel {
+      width: 100%;
+
+      #buildHistoryPage {
+        margin: 0;
+      }
+
+      #tasks {
+        display: none;
+      }
+    }
+  }
+}
+
+.testtest {
+  min-width: 250px;
+
+  #tasks, .task {
+    display: contents;
+  }
+
+  .jenkins-search-container {
+    display: none;
   }
 }
 

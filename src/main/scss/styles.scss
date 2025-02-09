@@ -3,15 +3,3 @@
 @use "components";
 @use "form";
 @use "pages";
-
-.testtest {
-  min-width: 240px;
-
-  #tasks, .task {
-    display: contents;
-  }
-
-  .jenkins-search-container {
-    display: none;
-  }
-}
