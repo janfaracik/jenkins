@@ -1,7 +1,7 @@
 import Utils from "@/components/dropdowns/utils";
 import { createElementFromHtml } from "@/util/dom";
 
-export default function init() {
+function init() {
   const tasks = document.querySelector("#side-panel #tasks")
   const sidepanelMenu = document.querySelector("#side-panel-menu");
 
@@ -15,3 +15,5 @@ export default function init() {
     instance.setContent(parent);
   })
 }
+
+export default { init };
