@@ -31,7 +31,7 @@ $background-outset: 0.7rem;
   font-size: var(--font-size-sm);
   color: var(--text-color-secondary);
   font-weight: var(--font-bold-weight);
-  margin: calc(var(--section-padding) / 2) 0 calc(var(--section-padding) / 4) 0;
+  margin: calc(var(--section-padding) / 2) 0 calc(var(--section-padding) / 4);
 }
 
 #tasks,
