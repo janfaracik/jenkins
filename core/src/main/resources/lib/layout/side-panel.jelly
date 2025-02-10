@@ -36,7 +36,7 @@ THE SOFTWARE.
   <!-- ModelObjectWithContextMenu.ContextMenu#from uses the 'side-panel' mode to only render this
        component when building context menus, e.g. for breadcrumbs or model-links -->
   <j:if test="${mode == 'main' or mode == 'side-panel'}">
-    <button id="opencloseting" class="jenkins-button jenkins-button--tertiary">
+    <button id="side-panel-menu" class="jenkins-button jenkins-button--tertiary jenkins-mobile-show">
       <l:icon src="symbol-sidebar" />
       ${%Menu}
     </button>

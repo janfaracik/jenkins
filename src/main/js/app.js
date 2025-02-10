@@ -7,7 +7,6 @@ import StopButtonLink from "@/components/stop-button-link";
 import ConfirmationLink from "@/components/confirmation-link";
 import Dialogs from "@/components/dialogs";
 import Utils from "@/components/dropdowns/utils";
-import Path from "@/util/path";
 import { createElementFromHtml } from "@/util/dom";
 
 Dropdowns.init();
@@ -22,17 +21,17 @@ Dialogs.init();
 const sidepanel = document.querySelector("#side-panel")
 const tasks = document.querySelector("#side-panel #tasks")
 const widgets = document.querySelector("#side-panel .pane-frame, #side-panel .jenkins-card");
-const thing2 = document.querySelector("#opencloseting");
+const sidepanelMenu = document.querySelector("#side-panel-menu");
 
 if (!tasks) {
-  thing2.remove();
+  sidepanelMenu.remove();
 }
 
 if (!widgets && tasks) {
   sidepanel.style.display = "none";
 }
 
-Utils.generateDropdown(thing2, (instance) => {
+Utils.generateDropdown(sidepanelMenu, (instance) => {
   const parent = createElementFromHtml(`<div class="jenkins-dropdown testtest"></div>`)
   parent.appendChild(tasks);
   instance.setContent(parent);
