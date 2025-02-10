@@ -82,8 +82,12 @@
   }
 }
 
-.testtest {
+.app-side-panel-menu__dropdown {
   min-width: 250px;
+
+  .jenkins-side-panel__heading {
+    margin-left: 0.7rem;
+  }
 
   #tasks, .task {
     display: contents;

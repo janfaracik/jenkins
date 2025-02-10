@@ -25,13 +25,13 @@ $background-outset: 0.7rem;
       padding-left: 2.6rem;
     }
   }
+}
 
-  .jenkins-side-panel__heading {
-    font-size: var(--font-size-sm);
-    color: var(--text-color-secondary);
-    font-weight: var(--font-bold-weight);
-    margin: calc(var(--section-padding) / 2) 0 calc(var(--section-padding) / 4) 0;
-  }
+.jenkins-side-panel__heading {
+  font-size: var(--font-size-sm);
+  color: var(--text-color-secondary);
+  font-weight: var(--font-bold-weight);
+  margin: calc(var(--section-padding) / 2) 0 calc(var(--section-padding) / 4) 0;
 }
 
 #tasks,

@@ -10,7 +10,7 @@ function init() {
   }
 
   Utils.generateDropdown(sidepanelMenu, (instance) => {
-    const parent = createElementFromHtml(`<div class="jenkins-dropdown testtest"></div>`)
+    const parent = createElementFromHtml(`<div class="jenkins-dropdown app-side-panel-menu__dropdown"></div>`)
     parent.appendChild(tasks);
     instance.setContent(parent);
   })
