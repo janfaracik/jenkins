@@ -974,6 +974,9 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
             ClassFilterImpl.register();
             LOGGER.info("Starting version " + getVersion());
 
+            // Sanity check that we can load the confidential store. Fail fast if we can't.
+            ConfidentialStore.get();
+
             // initialization consists of ...
             executeReactor(is,
                     pluginManager.initTasks(is),    // loading and preparing plugins
@@ -2347,7 +2350,7 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
     public SearchIndexBuilder makeSearchIndex() {
         SearchIndexBuilder builder = super.makeSearchIndex();
 
-        this.actions.stream().filter(e -> e.getIconFileName() != null).forEach(action -> builder.add(new SearchItem() {
+        this.actions.stream().filter(e -> !(e.getIconFileName() == null || e.getUrlName() == null)).forEach(action -> builder.add(new SearchItem() {
             @Override
             public String getSearchName() {
                 return action.getDisplayName();
