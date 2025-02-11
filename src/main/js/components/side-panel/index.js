@@ -4,6 +4,7 @@ import { createElementFromHtml } from "@/util/dom";
 const BREAKPOINT = "768";
 const SIDEPANEL = document.querySelector("#side-panel");
 const TASKS = SIDEPANEL.querySelector("#tasks");
+const TASK_ITEMS = Array.from(TASKS.children);
 const SIDEPANEL_MENU_BUTTON = document.querySelector("#side-panel-menu");
 
 let isAboveBreakpoint = window.innerWidth > BREAKPOINT;
@@ -15,8 +16,10 @@ function init() {
 
 function evaluate() {
   // Reset state if need be
-  if (!TASKS.closest("#side-panel")) {
-    SIDEPANEL.appendChild(TASKS);
+  if (!TASK_ITEMS[0].closest("#side-panel")) {
+    TASK_ITEMS.forEach(item => {
+      TASKS.appendChild(item);
+    });
   }
 
   // Generate the dropdown if we're below the breakpoint
@@ -25,7 +28,9 @@ function evaluate() {
       const parent = createElementFromHtml(
         `<div class="jenkins-dropdown app-side-panel-menu__dropdown"></div>`,
       );
-      parent.appendChild(TASKS);
+      TASK_ITEMS.forEach(item => {
+        parent.appendChild(item);
+      });
       instance.setContent(parent);
     });
   }

@@ -51,11 +51,11 @@ $background-outset: 0.7rem;
   }
 }
 
-#tasks .task {
+.task {
   margin: 0 calc($background-outset * -1);
 }
 
-#tasks .task .task-link {
+.task .task-link {
   @include mixins.item;
 
   display: flex;
