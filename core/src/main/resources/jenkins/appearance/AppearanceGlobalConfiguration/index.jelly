@@ -27,7 +27,12 @@ THE SOFTWARE.
   <l:layout title="${it.displayName}" permissions="${app.MANAGE_AND_SYSTEM_READ}" type="one-column">
     <j:set var="readOnlyMode" value="${!app.hasPermission(app.MANAGE)}"/>
     <l:main-panel>
-      <l:app-bar title="${it.displayName}"/>
+      <l:app-bar title="${it.displayName}">
+        <a class="jenkins-button" href="../pluginManager/available?filter=UI Themes">
+          <l:icon src="symbol-plugins" />
+          Get plugins
+        </a>
+      </l:app-bar>
 
       <div class="jenkins-page-description">
         ${it.description}
