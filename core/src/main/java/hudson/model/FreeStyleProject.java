@@ -76,7 +76,7 @@ public class FreeStyleProject extends Project<FreeStyleProject, FreeStyleBuild> 
     @SuppressFBWarnings(value = "MS_PKGPROTECT", justification = "for backward compatibility")
     public static /*almost final*/ DescriptorImpl DESCRIPTOR;
 
-    @Extension(ordinal = 1000) @Symbol({"freeStyle", "freeStyleJob"})
+    @Extension(ordinal = -1) @Symbol({"freeStyle", "freeStyleJob"})
     public static class DescriptorImpl extends AbstractProjectDescriptor {
         @SuppressFBWarnings(value = "ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD", justification = "for backward compatibility")
         public DescriptorImpl() {

@@ -93,7 +93,6 @@ import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.item_category.Categories;
 import jenkins.model.item_category.Category;
-import jenkins.model.item_category.ItemCategory;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.xml.XMLUtils;
 import jenkins.widgets.HasWidgets;
@@ -880,7 +879,6 @@ public abstract class View extends AbstractModelObject implements AccessControll
             resUrl = null;
         }
         for (TopLevelItemDescriptor descriptor : DescriptorVisibilityFilter.apply(getOwner().getItemGroup(), Items.all2(Jenkins.getAuthentication2(), getOwner().getItemGroup()))) {
-            ItemCategory ic = ItemCategory.getCategory(descriptor);
             Map<String, Serializable> metadata = new HashMap<>();
 
             // Information about Item.
@@ -910,15 +908,16 @@ public abstract class View extends AbstractModelObject implements AccessControll
                 }
             }
 
-            Category category = categories.getItem(ic.getId());
-            if (category != null) {
-                category.getItems().add(metadata);
-            } else {
+//            ItemCategory ic = ItemCategory.getCategory(descriptor);
+            Category category;
+//            if (category != null) {
+//                category.getItems().add(metadata);
+//            } else {
                 List<Map<String, Serializable>> temp = new ArrayList<>();
                 temp.add(metadata);
-                category = new Category(ic.getId(), ic.getDisplayName(), ic.getDescription(), ic.getOrder(), ic.getMinToShow(), temp);
+                category = new Category("", "", "", 0, 0, temp);
                 categories.getItems().add(category);
-            }
+//            }
         }
         return categories;
     }
