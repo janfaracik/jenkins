@@ -27,7 +27,7 @@ THE SOFTWARE.
     <j:when test="${it.userId != null}">
       <div class="jenkins-card__details__item">
         <div class="jenkins-card__details__item__icon">
-          <l:icon src="${it.userAvatar}"/>
+          <l:icon src="${it.userAvatar}" class="jenkins-avatar" />
         </div>
         <span>
           ${%started_by_user(it.userUrl, it.userName, rootURL)}
