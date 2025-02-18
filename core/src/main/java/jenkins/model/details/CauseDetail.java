@@ -4,7 +4,6 @@ import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Run;
 import java.util.Map;
-import jenkins.model.Detail;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
