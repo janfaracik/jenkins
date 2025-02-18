@@ -132,7 +132,7 @@ $icon-size: 1.375rem;
     width: $icon-size;
     height: 1lh;
 
-    svg {
+    svg, img {
       width: $icon-size;
       height: $icon-size;
       color: var(--text-color);
