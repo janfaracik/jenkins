@@ -4440,7 +4440,7 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         WebApp.get(getServletContext()).setApp(this);
     }
 
-    public void doManifest(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+    public void doManifest(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         rsp.serveExposedBean(req, new Manifest(), new ExportConfig().withFlavor(Flavor.JSON));
     }
 
