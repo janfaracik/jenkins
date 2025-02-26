@@ -3,15 +3,19 @@ import { createElementFromHtml } from "@/util/dom";
 
 const BREAKPOINT = "768";
 const SIDEPANEL = document.querySelector("#side-panel");
-const TASKS = SIDEPANEL.querySelector("#tasks");
-const TASK_ITEMS = Array.from(TASKS.children);
+let TASKS;
+let TASK_ITEMS;
 const SIDEPANEL_MENU_BUTTON = document.querySelector("#side-panel-menu");
 
 let isAboveBreakpoint = window.innerWidth > BREAKPOINT;
 
 function init() {
-  window.addEventListener("resize", () => onWidthChange(evaluate));
-  evaluate();
+  if (SIDEPANEL) {
+    TASKS = SIDEPANEL.querySelector("#tasks");
+    TASK_ITEMS = Array.from(TASKS.children);
+    window.addEventListener("resize", () => onWidthChange(evaluate));
+    evaluate();
+  }
 }
 
 function evaluate() {
