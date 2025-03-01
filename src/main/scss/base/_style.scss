@@ -62,28 +62,6 @@ td.no-wrap {
   border-collapse: collapse;
 }
 
-#safe-restart-msg {
-  font-weight: bold;
-  color: white;
-  background-color: var(--warning);
-  text-align: center;
-  margin-bottom: var(--section-padding);
-  padding: 0.5em;
-  -moz-border-radius: 0.5em;
-  border-radius: var(--form-input-border-radius);
-}
-
-#shutdown-msg {
-  font-weight: bold;
-  color: white;
-  background-color: #ef2929;
-  text-align: center;
-  margin-bottom: var(--section-padding);
-  padding: 0.5em;
-  -moz-border-radius: 0.5em;
-  border-radius: var(--form-input-border-radius);
-}
-
 a.lowkey:link {
   text-decoration: none;
   color: inherit;
