@@ -168,12 +168,6 @@ THE SOFTWARE.
         <d:invokeBody/>
       </l:breadcrumbBar>
 
-      <div id="view-message" class="jenkins-alert jenkins-alert-info app-system-alert">
-        <div id="systemmessage">
-          <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />
-        </div>
-      </div>
-
       <j:if test="${app.isQuietingDown()}">
         <j:choose>
           <j:when test="${app.isPreparingSafeRestart()}">
@@ -202,6 +196,12 @@ THE SOFTWARE.
           </j:otherwise>
         </j:choose>
       </j:if>
+
+      <div id="view-message" class="jenkins-alert jenkins-alert-info app-system-alert">
+        <div id="systemmessage">
+          <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />
+        </div>
+      </div>
     </j:if>
 
     <div id="page-body" class="app-page-body app-page-body--${layoutType} clear">
