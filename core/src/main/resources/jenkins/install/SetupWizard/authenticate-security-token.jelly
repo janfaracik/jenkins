@@ -6,7 +6,7 @@
       <st:include page="client-scripts" />
       <form action="${app.instance.securityRealm.authenticationGatewayUrl}" method="POST">
         <input type="hidden" name="from" value="${request2.getParameter('from')}" />
-        <div class="plugin-setup-wizard bootstrap-3">
+        <div class="plugin-setup-wizard bootstrap-3a app-bootstrap-fallback">
           <div class="modal fade in" style="display: block;">
             <div class="modal-dialog">
               <div class="modal-content">
@@ -23,15 +23,17 @@
                           <strong>${%authenticate-security-token.error}</strong> ${%authenticate-security-token.password.incorrect}
                         </div>
                     </j:if>
-                    <div class="form-group ${error ? 'has-error' : ''}">
-                      <label class="control-label" for="security-token">${%authenticate-security-token.password.administrator}</label>
+                    <div class="jenkins-form-group ${error ? 'has-error' : ''}">
+                      <label class="jenkins-label" for="security-token">${%authenticate-security-token.password.administrator}</label>
                       <input name="j_username" value="${app.setupWizard.initialSetupAdminUserName}" type="hidden"/>
                       <input id="security-token" class="jenkins-input ${error ? 'danger' : ''}" type="password" name="j_password"/>
                     </div>
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <input type="submit" class="btn btn-primary set-security-key" value="${%authenticate-security-token.continue}"/>
+                  <button class="jenkins-button jenkins-button--primary set-security-key">
+                    ${%authenticate-security-token.continue}
+                  </button>
                 </div>
               </div>
             </div>
