@@ -100,7 +100,6 @@
     overflow-y: auto;
     height: 100%;
     padding: 0;
-    border-bottom: 1px solid #ccc;
 
     .water-mark {
       font-size: 392px;
@@ -984,4 +983,49 @@ $fb-loader-color: #e6e6e6;
 
 .setup-wizard-heading {
   margin-top: -24px;
+}
+
+.app-bootstrap-fallback {
+  .modal-header {
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .modal-title {
+    margin: 0;
+    line-height: 1.42857143;
+    font-size: 18px;
+  }
+
+  .modal-content {
+    background-color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+  }
+
+  code {
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 4px;
+  }
+
+  .jumbotron {
+    p {
+      margin-bottom: 15px;
+      font-size: 21px;
+      font-weight: 200;
+    }
+  }
+
+  .welcome-panel {
+    margin-bottom: 30px;
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: end;
+    border-top: 1px solid #e5e5e5;
+  }
 }
