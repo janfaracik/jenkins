@@ -196,6 +196,7 @@ public class Search implements StaplerProxy {
                         .reversed()
                         .thenComparing(item -> item.name)
         );
+        r.suggestions = r.suggestions.subList(0, 5);
 
         rsp.serveExposedBean(req, r, new ExportConfig());
     }

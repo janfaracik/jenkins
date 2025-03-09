@@ -85,6 +85,7 @@ import hudson.logging.LogRecorderManager;
 import hudson.markup.EscapedMarkupFormatter;
 import hudson.markup.MarkupFormatter;
 import hudson.model.AbstractCIBase;
+import hudson.model.AbstractModelObject;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.AdministrativeMonitor;
@@ -2350,6 +2351,7 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
     public SearchIndexBuilder makeSearchIndex() {
         SearchIndexBuilder builder = super.makeSearchIndex();
 
+        // Add root level actions to the search index
         this.actions.stream().filter(e -> e.getIconFileName() != null).forEach(action -> builder.add(new SearchItem() {
             @Override
             public String getSearchName() {
@@ -2372,6 +2374,10 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
             }
         }));
 
+        // Allow root level actions to contribute to the search index
+        this.actions.stream().filter(e -> e.getIconFileName() != null).filter(e -> e instanceof AbstractModelObject).forEach(action -> builder.add(((AbstractModelObject) action).getSearchIndex()));
+
+        // Add default search indexes
         builder.add(new CollectionSearchIndex<TopLevelItem>() {
                     @Override
                     protected SearchItem get(String key) { return getItemByFullName(key, TopLevelItem.class); }
