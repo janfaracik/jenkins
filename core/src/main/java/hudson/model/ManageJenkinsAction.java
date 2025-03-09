@@ -26,10 +26,14 @@ package hudson.model;
 
 import hudson.Extension;
 import hudson.Util;
+import hudson.search.SearchIndex;
+import hudson.search.SearchIndexBuilder;
+import hudson.search.SearchItem;
 import java.io.IOException;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
+import jenkins.search.SearchGroup;
 import org.apache.commons.jelly.JellyException;
 import org.jenkinsci.Symbol;
 import org.kohsuke.accmod.Restricted;
@@ -45,7 +49,7 @@ import org.kohsuke.stapler.StaplerResponse2;
  * @author Kohsuke Kawaguchi
  */
 @Extension(ordinal = 100) @Symbol("manageJenkins")
-public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
+public class ManageJenkinsAction extends AbstractModelObject implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
     @Override
     public String getIconFileName() {
         if (Jenkins.get().hasAnyPermission(Jenkins.MANAGE, Jenkins.SYSTEM_READ))
@@ -87,5 +91,50 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
         }
         // If neither is the case, rewrite the relative URL to point to inside the /manage/ URL space
         menu.add("manage/" + url, icon, iconXml, text, post, requiresConfirmation, badge, message);
+    }
+
+    @Override
+    public String getSearchUrl() {
+        return "";
+    }
+
+    @Override
+    protected SearchIndexBuilder makeSearchIndex() {
+        SearchIndexBuilder searchIndexBuilder = new SearchIndexBuilder();
+
+        for (ManagementLink ui : ManagementLink.all()) {
+            if (ui.getIconFileName() == null) {
+                continue;
+            }
+
+            searchIndexBuilder.add(new SearchItem() {
+                @Override
+                public String getSearchName() {
+                    return ui.getDisplayName();
+                }
+
+                @Override
+                public String getSearchUrl() {
+                    return getUrlName() + "/" + ui.getUrlName();
+                }
+
+                @Override
+                public String getSearchIcon() {
+                    return ui.getIconFileName();
+                }
+
+                @Override
+                public SearchGroup getSearchGroup() {
+                    return SearchGroup.get(SearchGroup.SettingsSearchGroup.class);
+                }
+
+                @Override
+                public SearchIndex getSearchIndex() {
+                    return null;
+                }
+            });
+        }
+
+        return searchIndexBuilder;
     }
 }

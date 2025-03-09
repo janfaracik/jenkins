@@ -45,6 +45,15 @@ public interface SearchGroup extends ExtensionPoint, ModelObject {
     }
 
     @Extension
+    class SettingsSearchGroup implements SearchGroup {
+
+        @Override
+        public String getDisplayName() {
+            return "Settings";
+        }
+    }
+
+    @Extension
     class ComputerSearchGroup implements SearchGroup {
 
         @Override
