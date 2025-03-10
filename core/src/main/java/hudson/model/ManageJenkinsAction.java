@@ -103,7 +103,7 @@ public class ManageJenkinsAction extends AbstractModelObject implements RootActi
         SearchIndexBuilder searchIndexBuilder = new SearchIndexBuilder();
 
         for (ManagementLink ui : ManagementLink.all()) {
-            if (ui.getIconFileName() == null) {
+            if (ui.getIconFileName() == null || ui.getRequiresConfirmation()) {
                 continue;
             }
 
