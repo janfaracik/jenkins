@@ -53,7 +53,9 @@ function menuItem(options) {
               ? `<div class="jenkins-dropdown__item__icon">${
                   itemOptions.iconXml
                     ? itemOptions.iconXml
-                    : `<img alt="${label}" src="${itemOptions.icon}" />`
+                    : itemOptions.icon
+                      ? `<img alt="${label}" src="${itemOptions.icon}" />`
+                      : ``
                 }</div>`
               : ``
           }
