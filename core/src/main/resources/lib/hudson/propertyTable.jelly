@@ -40,12 +40,12 @@ THE SOFTWARE.
   <j:set var="tableId" value="${h.generateId()}"/>
   <j:if test="${attrs.sensitive}">
     <div class="jenkins-!-margin-bottom-2">
-      <button class="app-all-hidden-reveal-all jenkins-button jenkins-button--transparent jenkins-!-color-blue" data-table-id="${tableId}">
+      <button class="app-all-hidden-reveal-all jenkins-button jenkins-!-accent-color" data-table-id="${tableId}">
         <l:icon src="symbol-view"/>
         ${%revealAll}
       </button>
-      <button class="app-all-hidden-hide-all jenkins-hidden jenkins-button jenkins-button--transparent jenkins-!-color-blue" data-table-id="${tableId}">
-        <l:icon src="symbol-view"/>
+      <button class="app-all-hidden-hide-all jenkins-hidden jenkins-button jenkins-!-accent-color" data-table-id="${tableId}">
+        <l:icon src="symbol-eye-off-outline"/>
         ${%hideAll}
       </button>
     </div>
@@ -66,16 +66,14 @@ THE SOFTWARE.
           <td style="white-space: normal" class="property-table__value">
             <j:choose>
               <j:when test="${attrs.sensitive}">
-                <div class="app-hidden-info-reveal">
-                  <button class="jenkins-button jenkins-button--transparent jenkins-!-color-blue">
+                <div class="app-hidden-info-reveal" style="display: flex">
+                  <button class="jenkins-button jenkins-!-accent-color">
                     <l:icon src="symbol-view"/> ${%reveal}
                   </button>
                 </div>
-                <div class="app-hidden-info-hide jenkins-hidden">
-                  <button class="jenkins-button jenkins-button--transparent">
-                    <span class="jenkins-!-color-blue">
-                      <l:icon src="symbol-eye-off-outline"/><j:out value=" "/><l:breakable value="${e.value}"/>
-                    </span>
+                <div class="app-hidden-info-hide jenkins-hidden" style="display: flex">
+                  <button class="jenkins-button">
+                    <l:icon src="symbol-eye-off-outline"/> <l:breakable value="${e.value}"/>
                   </button>
                 </div>
               </j:when>
