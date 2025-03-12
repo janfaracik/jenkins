@@ -13,8 +13,8 @@ $colors: (
   "red": oklch(60% 0.2671 30),
   "yellow": oklch(80% 0.17 76),
   "teal": oklch(60% 0.1122 216.72),
-  "white": #fff,
-  "black": oklch(from var(--accent-color) 5% 0.075 h),
+  "white": rgb(253 253 254),
+  "black": oklch(from var(--accent-color) 10% 0.075 h),
 );
 $semantics: (
   "accent": var(--blue),
