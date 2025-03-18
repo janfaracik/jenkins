@@ -48,7 +48,7 @@ THE SOFTWARE.
 
     <template data-dropdown-type="ITEM"
               data-dropdown-id="${attrs.id}"
-              data-dropdown-icon="${icon}"
+              data-dropdown-icon="${attrs.icon != null ? icon : null}"
               data-dropdown-text="${attrs.text}"
               data-dropdown-href="${attrs.href}"
               data-dropdown-clazz="${attrs.clazz}"
