@@ -49,7 +49,7 @@ THE SOFTWARE.
           </p>
 
           <form action="script" method="post">
-            <textarea id="script" name="script" class="script">${request.getParameter('script')}</textarea>
+            <textarea id="script" name="script" class="script">${request2.getParameter('script')}</textarea>
             <f:submit  value="${%Run}"/>
           </form>
           <st:adjunct includes="org.kohsuke.stapler.codemirror.mode.groovy.groovy"/>
