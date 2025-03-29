@@ -162,15 +162,15 @@ import java.util.stream.Collectors;
 import jenkins.console.ConsoleUrlProvider;
 import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.console.WithConsoleUrl;
-import jenkins.model.Detail;
-import jenkins.model.DetailFactory;
-import jenkins.model.DetailGroup;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.SimplePageDecorator;
+import jenkins.model.details.Detail;
+import jenkins.model.details.DetailFactory;
+import jenkins.model.details.DetailGroup;
 import jenkins.util.SystemProperties;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyTagException;
@@ -1810,6 +1810,7 @@ public class Functions {
         return s.toString();
     }
 
+    @SuppressFBWarnings(value = "INFORMATION_EXPOSURE_THROUGH_AN_ERROR_MESSAGE", justification = "Jenkins handles this issue differently or doesn't care about it")
     private static void doPrintStackTrace(@NonNull StringBuilder s, @NonNull Throwable t, @CheckForNull Throwable higher, @NonNull String prefix, @NonNull Set<Throwable> encountered) {
         if (!encountered.add(t)) {
             s.append("<cycle to ").append(t).append(">\n");
@@ -1863,6 +1864,7 @@ public class Functions {
      * @param pw the log
      * @since 2.43
      */
+    @SuppressFBWarnings(value = "XSS_SERVLET", justification = "TODO needs triage")
     public static void printStackTrace(@CheckForNull Throwable t, @NonNull PrintWriter pw) {
         pw.println(printThrowable(t).trim());
     }
@@ -1993,7 +1995,7 @@ public class Functions {
      */
     public static @CheckForNull String getConsoleUrl(WithConsoleUrl withConsoleUrl) {
         String consoleUrl = withConsoleUrl.getConsoleUrl();
-        return consoleUrl != null ? Stapler.getCurrentRequest().getContextPath() + '/' + consoleUrl : null;
+        return consoleUrl != null ? Stapler.getCurrentRequest2().getContextPath() + '/' + consoleUrl : null;
     }
 
     /**
@@ -2595,26 +2597,26 @@ public class Functions {
      */
     @Restricted(NoExternalUse.class)
     public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object) {
-        List<Detail> details = new ArrayList<>();
+        ExtensionList<DetailGroup> groupsExtensionList = ExtensionList.lookup(DetailGroup.class);
+        List<ExtensionComponent<DetailGroup>> components = groupsExtensionList.getComponents();
+        Map<String, Double> detailGroupOrdinal = components.stream()
+                .collect(Collectors.toMap(
+                        (k) -> k.getInstance().getClass().getName(),
+                        ExtensionComponent::ordinal
+                ));
 
+        Map<DetailGroup, List<Detail>> result = new TreeMap<>(Comparator.comparingDouble(d -> detailGroupOrdinal.get(d.getClass().getName())));
         for (DetailFactory taf : DetailFactory.factoriesFor(object.getClass())) {
-            details.addAll(taf.createFor(object));
+            List<Detail> details = taf.createFor(object);
+            details.forEach(e -> result.computeIfAbsent(e.getGroup(), k -> new ArrayList<>()).add(e));
         }
 
-        Map<DetailGroup, List<Detail>> orderedMap = new TreeMap<>(Comparator.comparingInt(DetailGroup::getOrder));
-
-        for (Detail detail : details) {
-            if (detail.isApplicable()) {
-                orderedMap.computeIfAbsent(detail.getGroup(), k -> new ArrayList<>()).add(detail);
-            }
-        }
-
-        for (Map.Entry<DetailGroup, List<Detail>> entry : orderedMap.entrySet()) {
+        for (Map.Entry<DetailGroup, List<Detail>> entry : result.entrySet()) {
             List<Detail> detailList = entry.getValue();
             detailList.sort(Comparator.comparingInt(Detail::getOrder));
         }
 
-        return orderedMap;
+        return result;
     }
 
     @Restricted(NoExternalUse.class)
@@ -2631,11 +2633,13 @@ public class Functions {
         StaplerRequest2 currentRequest = Stapler.getCurrentRequest2();
         currentRequest.getWebApp().getDispatchValidator().allowDispatch(currentRequest, Stapler.getCurrentResponse2());
         String userAgent = currentRequest.getHeader("User-Agent");
-
-        List<String> platformsThatUseCommand = List.of("MAC", "IPHONE", "IPAD");
-        boolean useCmdKey = platformsThatUseCommand.stream().anyMatch(e -> userAgent.toUpperCase().contains(e));
-
-        return keyboardShortcut.replace("CMD", useCmdKey ? "⌘" : "CTRL");
+        if (userAgent != null) {
+          List<String> platformsThatUseCommand = List.of("MAC", "IPHONE", "IPAD");
+          boolean useCmdKey = platformsThatUseCommand.stream().anyMatch(e -> userAgent.toUpperCase().contains(e));
+          return keyboardShortcut.replace("CMD", useCmdKey ? "⌘" : "CTRL");
+        } else {
+          return keyboardShortcut;
+        }
     }
 
     @Restricted(NoExternalUse.class)
