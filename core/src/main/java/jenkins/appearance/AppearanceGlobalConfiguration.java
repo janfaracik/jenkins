@@ -54,7 +54,7 @@ public class AppearanceGlobalConfiguration extends ManagementLink {
         if (input.getCategory() instanceof AppearanceCategory) {
             // Special case because ConsoleUrlProviderGlobalConfiguration is (currently) the only type in core that uses
             // AppearanceCategory, and it hides its configuration if there are no custom providers, so we want to
-            // show an empty state interface in that case.
+            // hide the whole "Appearance" link in that case.
             if (input instanceof ConsoleUrlProviderGlobalConfiguration) {
                 return ((ConsoleUrlProviderGlobalConfiguration) input).isEnabled();
             }
@@ -65,15 +65,11 @@ public class AppearanceGlobalConfiguration extends ManagementLink {
 
     @Override
     public String getIconFileName() {
-        return "symbol-brush-outline";
-    }
+        if (Functions.getSortedDescriptorsForGlobalConfigByDescriptor(FILTER).isEmpty()) {
+            return null;
+        }
 
-    /**
-     * @return true if there are plugins installed for this configuration page, false if not.
-     */
-    @Restricted(NoExternalUse.class)
-    public boolean hasPlugins() {
-        return !Functions.getSortedDescriptorsForGlobalConfigByDescriptor(FILTER).isEmpty();
+        return "symbol-brush-outline";
     }
 
     @Override
