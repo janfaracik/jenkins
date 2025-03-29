@@ -54,8 +54,6 @@ import hudson.console.ConsoleNote;
 import hudson.console.ModelHyperlinkNote;
 import hudson.console.PlainTextConsoleOutputStream;
 import hudson.model.Descriptor.FormException;
-import hudson.model.details.DurationDetail;
-import hudson.model.details.TimestampDetail;
 import hudson.model.listeners.RunListener;
 import hudson.model.listeners.SaveableListener;
 import hudson.model.queue.SubTask;
