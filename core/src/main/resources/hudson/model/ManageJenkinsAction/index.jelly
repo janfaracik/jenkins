@@ -47,6 +47,66 @@ THE SOFTWARE.
         <st:include page="downgrade.jelly" it="${app}" />
       </section>
 
+      <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem">
+        <div class="jenkins-select">
+          <select id="level" name="level" class="jenkins-select__input">
+            <option>inherit</option>
+            <option>off</option>
+            <option>severe</option>
+            <option>warning</option>
+            <option>info</option>
+            <option>config</option>
+            <option>fine</option>
+            <option>finer</option>
+            <option>finest</option>
+            <option>all</option>
+          </select>
+        </div>
+
+        <div class="jenkins-select">
+          <select id="level" name="level" class="jenkins-select__input">
+            <button>
+              <selectedcontent></selectedcontent>
+            </button>
+            <option>
+              <div>Standard_D2s_v3</div>
+              <div class="jenkins-select__item__description">2 vcpus, 8 GiB memory</div>
+            </option>
+            <option>off</option>
+            <option>severe</option>
+            <option>warning</option>
+            <option>info</option>
+            <option>config</option>
+            <option>fine</option>
+            <option>finer</option>
+            <option>finest</option>
+            <option>all</option>
+          </select>
+        </div>
+
+        <div class="jenkins-select">
+          <select id="level" name="level" class="jenkins-select__input">
+            <button>
+              <selectedcontent></selectedcontent>
+            </button>
+            <option>
+              <l:icon src="symbol-jenkins" />
+              <div>hello</div>
+              <div class="jenkins-select__item__description">hello i am description</div>
+            </option>
+            <option>off</option>
+            <option>severe</option>
+            <option>warning</option>
+            <option>info</option>
+            <option>config</option>
+            <option>fine</option>
+            <option>finer</option>
+            <option>finest</option>
+            <option>all</option>
+          </select>
+        </div>
+      </div>
+
       <j:forEach var="category" items="${app.categorizedManagementLinks.entrySet()}">
         <section class="jenkins-section jenkins-section--bottom-padding">
           <h2 class="jenkins-section__title">${category.key.label}</h2>

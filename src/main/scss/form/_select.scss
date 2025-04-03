@@ -85,6 +85,17 @@ $dropdown-padding: 0.375rem;
       appearance: base-select;
     }
 
+    /* nice layout for the selected state */
+    selectedcontent {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+
+      .jenkins-select__item__description {
+        display: none;
+      }
+    }
+
     &::picker(select) {
       border-radius: 1rem;
       box-shadow: var(--dropdown-box-shadow);
@@ -98,6 +109,11 @@ $dropdown-padding: 0.375rem;
         opacity 0.25s,
         transform 0.25s,
         overlay 0.25s allow-discrete;
+    }
+
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
     }
 
     &::picker-icon {
@@ -119,6 +135,10 @@ $dropdown-padding: 0.375rem;
       }
     }
 
+    .jenkins-select__item__description {
+      color: var(--text-color-secondary);
+    }
+
     option {
       --item-background--hover: var(--button-background--hover);
       --item-background--active: var(--button-background--active);
@@ -127,13 +147,15 @@ $dropdown-padding: 0.375rem;
       @include mixins.item($border: false);
 
       appearance: none;
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
+      display: grid;
+      grid-template-columns: [icon] auto [content] 1fr [mark] auto;
+      grid-template-rows: [top] auto [bottom] auto;
+      column-gap: 0.5rem;
+      row-gap: 0;
       border: none;
       outline: none;
       margin: 0;
-      padding: $dropdown-padding 1.75rem $dropdown-padding 0.6rem;
+      padding: $dropdown-padding 0.6rem;
       font-size: 0.8125rem;
       font-weight: normal;
       text-decoration: none !important;
@@ -142,9 +164,28 @@ $dropdown-padding: 0.375rem;
       border-radius: calc($dropdown-border-radius - $dropdown-padding);
       cursor: pointer;
       white-space: nowrap;
-      gap: 1.2ch;
       min-width: 180px;
       user-select: none;
+
+      div, p {
+        grid-column: content;
+        grid-row: top;
+      }
+
+      .jenkins-select__item__description {
+        grid-column: content;
+        grid-row: bottom;
+      }
+
+      svg {
+        grid-column: icon;
+        grid-row: top;
+      }
+
+      &::checkmark {
+        grid-column: mark;
+        grid-row: top;
+      }
     }
   }
 }
