@@ -1,3 +1,8 @@
+@use "../abstracts/mixins";
+
+$dropdown-border-radius: 1rem;
+$dropdown-padding: 0.375rem;
+
 .jenkins-select {
   position: relative;
   width: 100%;
@@ -70,5 +75,76 @@
 
   &:disabled {
     pointer-events: none;
+  }
+}
+
+@supports (appearance: base-select) {
+  .jenkins-select__input {
+    /*
+      new customizable appearance assignment.
+      this changes what can go inside <select> and
+      exposes parts you can target and style
+    */
+    &, &::picker(select) {
+      appearance: base-select;
+    }
+
+    &::picker(select) {
+      border-radius: 1rem;
+      box-shadow: var(--dropdown-box-shadow);
+      background: color-mix(in sRGB, var(--card-background) 85%, transparent);
+      backdrop-filter: var(--dropdown-backdrop-filter);
+      border: none;
+      padding: 0.375rem;
+      margin-top: 0.25rem;
+    }
+
+    /* nice layout for the selected state */
+    selectedcontent {
+      display: flex;
+      align-items: center;
+      gap: .5ch;
+
+      /* hide anything not an svg */
+      > :not(svg) {
+        display: none;
+      }
+    }
+
+    /* icon at the end with grid */
+    option {
+      --item-background--hover: var(--button-background--hover);
+      --item-background--active: var(--button-background--active);
+      --item-box-shadow--focus: var(--button-box-shadow--focus);
+
+      @include mixins.item($border: false);
+
+      appearance: none;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      border: none;
+      outline: none;
+      margin: 0;
+      padding: $dropdown-padding 1.75rem $dropdown-padding 0.6rem;
+      font-size: 0.8125rem;
+      font-weight: normal;
+      text-decoration: none !important;
+      background: transparent;
+      color: var(--text-color) !important;
+      border-radius: calc($dropdown-border-radius - $dropdown-padding);
+      cursor: pointer;
+      white-space: nowrap;
+      gap: 1.2ch;
+      min-width: 180px;
+      user-select: none;
+
+      //display: grid;
+      //grid-template-columns: [icon] auto [content] 1fr [mark] auto;
+      //
+      //&::checkmark {
+      //  grid-area: 1 / mark;
+      //}
+    }
   }
 }
