@@ -1,7 +1,7 @@
 @use "../abstracts/mixins";
 
 #buildHistoryPage {
-  margin: 10px 0 10px 10px;
+  margin: 10px 0 10px -10px;
 
   .jenkins-search {
     margin-inline: -0.25rem;
