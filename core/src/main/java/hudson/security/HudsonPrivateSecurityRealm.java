@@ -26,13 +26,11 @@ package hudson.security;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.Util;
-import hudson.diagnosis.OldDataMonitor;
 import hudson.model.Descriptor;
 import hudson.model.ManagementLink;
 import hudson.model.ModelObject;
@@ -45,8 +43,6 @@ import hudson.security.captcha.CaptchaSupport;
 import hudson.util.FormValidation;
 import hudson.util.PluginServletFilter;
 import hudson.util.Protector;
-import hudson.util.Scrambler;
-import hudson.util.XStream2;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -805,18 +801,6 @@ public class HudsonPrivateSecurityRealm extends AbstractPasswordBasedSecurityRea
             }
         }
 
-        public static class ConverterImpl extends XStream2.PassthruConverter<Details> {
-            public ConverterImpl(XStream2 xstream) { super(xstream); }
-
-            @Override protected void callback(Details d, UnmarshallingContext context) {
-                // Convert to hashed password and report to monitor if we load old data
-                if (d.password != null && d.passwordHash == null) {
-                    d.passwordHash = PASSWORD_ENCODER.encode(Scrambler.descramble(d.password));
-                    OldDataMonitor.report(context, "1.283");
-                }
-            }
-        }
-
         @Extension @Symbol("password")
         public static final class DescriptorImpl extends UserPropertyDescriptor {
             @NonNull
@@ -940,7 +924,6 @@ public class HudsonPrivateSecurityRealm extends AbstractPasswordBasedSecurityRea
     static class JBCryptEncoder implements PasswordHashEncoder {
         // in jBCrypt the maximum is 30, which takes ~22h with laptop late-2017
         // and for 18, it's "only" 20s
-        @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "Accessible via System Groovy Scripts")
         @Restricted(NoExternalUse.class)
         private static int MAXIMUM_BCRYPT_LOG_ROUND = SystemProperties.getInteger(HudsonPrivateSecurityRealm.class.getName() + ".maximumBCryptLogRound", 18);
 
@@ -1135,7 +1118,7 @@ public class HudsonPrivateSecurityRealm extends AbstractPasswordBasedSecurityRea
      */
     private static final String ENCODED_INVALID_USER_PASSWORD = PASSWORD_ENCODER.encode(generatePassword());
 
-    @SuppressFBWarnings(value = {"DMI_RANDOM_USED_ONLY_ONCE", "PREDICTABLE_RANDOM"}, justification = "https://github.com/spotbugs/spotbugs/issues/1539 and doesn't need to be secure, we're just not hardcoding a 'wrong' password")
+    @SuppressFBWarnings(value = "PREDICTABLE_RANDOM", justification = "Doesn't need to be secure, we're just not hardcoding a 'wrong' password")
     private static String generatePassword() {
         String password = new Random().ints(20, 33, 127).mapToObj(i -> (char) i)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append).toString();

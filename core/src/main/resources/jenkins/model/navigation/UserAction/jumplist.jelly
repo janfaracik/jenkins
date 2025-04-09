@@ -1,26 +1,25 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
-  <div style="display: flex; flex-direction: column; margin: 0 -0.4rem">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns">
+  <dd:custom>
     <a class="jenkins-dropdown__item" href="${rootURL}/${it.user.url}">
       <div class="jenkins-dropdown__item__icon">
-        <l:icon src="${it.iconFileName}" />
+        <l:icon src="${it.iconFileName}" class="jenkins-avatar" />
       </div>
       ${it.user.fullName}
     </a>
-    <a class="jenkins-dropdown__item" href="${rootURL}/${it.user.url}/account">
-      <div class="jenkins-dropdown__item__icon">
-        <l:icon src="symbol-settings" />
-      </div>
-      ${%Configure}
-    </a>
-    <div class="jenkins-dropdown__separator" />
-    <a class="jenkins-dropdown__item" href="${rootURL}/logout">
-      <div class="jenkins-dropdown__item__icon">
-        <div class="jenkins-dropdown__item__icon">
-          <l:icon src="symbol-log-out" />
-        </div>
-      </div>
-      ${%Sign out}
-    </a>
-  </div>
+  </dd:custom>
+
+  <dd:separator />
+
+  <j:forEach var="action" items="${it.actions}">
+    <dd:item icon="${action.iconFileName}"
+             text="${action.displayName}"
+             href="${rootURL}/${it.user.url}/${action.urlName}" />
+  </j:forEach>
+
+  <dd:separator />
+
+  <dd:item icon="symbol-log-out"
+           text="${%Sign out}"
+           href="${rootURL}/logout" />
 </j:jelly>

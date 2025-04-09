@@ -13,9 +13,8 @@
   @media (min-width: breakpoints.$tablet-breakpoint) {
     &--sticky {
       position: sticky;
-      top: 70px;
+      top: var(--header-height);
       align-self: flex-start;
-      z-index: 21; // todo - reset this
     }
   }
 }

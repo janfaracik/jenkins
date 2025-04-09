@@ -27,48 +27,70 @@ package jenkins.model.navigation;
 import static hudson.Functions.getAvatar;
 
 import hudson.Extension;
+import hudson.model.Action;
 import hudson.model.RootAction;
 import hudson.model.User;
-import jenkins.model.experimentalflags.UserExperimentalFlag;
+import java.util.ArrayList;
+import java.util.List;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 /**
- * TODO
+ * Display the user avatar in the navigation bar.
+ * Provides a handy jumplist for common user actions.
  */
 @Extension(ordinal = -1)
 public class UserAction implements RootAction {
 
     @Override
     public String getIconFileName() {
-        boolean flagEnabled = UserExperimentalFlag.getFlagValueForCurrentUser("jenkins.model.experimentalflags.NewHeaderUserExperimentalFlag");
-        if (User.current() == null || !flagEnabled) {
+        User current = User.current();
+
+        if (current == null) {
             return null;
         }
 
-        return getAvatar(User.current(), "96x96");
+        return getAvatar(current, "96x96");
     }
 
     @Override
     public String getDisplayName() {
-        if (User.current() == null) {
+        User current = User.current();
+
+        if (current == null) {
             return null;
         }
 
-        return User.current().getFullName();
+        return current.getFullName();
     }
 
     @Override
     public String getUrlName() {
-        if (User.current() == null) {
+        User current = User.current();
+
+        if (current == null) {
             return null;
         }
 
-        return User.current().getUrl();
+        return current.getUrl();
     }
 
     @Restricted(NoExternalUse.class)
     public User getUser() {
         return User.current();
+    }
+
+    @Restricted(NoExternalUse.class)
+    public List<Action> getActions() {
+        User current = User.current();
+
+        if (User.current() == null) {
+            return null;
+        }
+
+        List<Action> actions = new ArrayList<>();
+        actions.addAll(current.getPropertyActions());
+        actions.addAll(current.getTransientActions());
+        return actions.stream().filter(e -> e.getIconFileName() != null).toList();
     }
 }
