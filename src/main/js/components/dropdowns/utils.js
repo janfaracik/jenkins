@@ -51,10 +51,13 @@ function generateDropdown(element, callback, immediate) {
   );
 }
 
-/*
+/**
  * Generates the contents for the dropdown
+ * @param {DropdownItem[]}  items
+ * @param {boolean}  compact
+ * @param {string}  context
  */
-function generateDropdownItems(items, compact) {
+function generateDropdownItems(items, compact = false, context = "") {
   const menuItems = document.createElement("div");
   menuItems.classList.add("jenkins-dropdown");
   if (compact === true) {
@@ -68,7 +71,7 @@ function generateDropdownItems(items, compact) {
       }
 
       if (item.type === "HEADER") {
-        return Templates.heading(item.label);
+        return Templates.heading(item.displayName);
       }
 
       if (item.type === "SEPARATOR") {
@@ -76,16 +79,20 @@ function generateDropdownItems(items, compact) {
       }
 
       if (item.type === "DISABLED") {
-        return Templates.disabled(item.label);
+        return Templates.disabled(item.displayName);
       }
 
-      const menuItem = Templates.menuItem(item);
+      const menuItem = Templates.menuItem(
+        item,
+        "jenkins-dropdown__item",
+        context,
+      );
 
-      if (item.subMenu != null) {
+      if (item.event && item.event.actions != null) {
         tippy(
           menuItem,
           Object.assign({}, Templates.dropdown(), {
-            content: generateDropdownItems(item.subMenu()),
+            content: generateDropdownItems(item.event.actions),
             trigger: "mouseenter",
             placement: "right-start",
             offset: [-8, 0],
@@ -166,55 +173,6 @@ function generateDropdownItems(items, compact) {
   return menuItems;
 }
 
-function convertHtmlToItems(children) {
-  const items = [];
-  Array.from(children).forEach((child) => {
-    const attributes = child.dataset;
-    const type = child.dataset.dropdownType;
-
-    switch (type) {
-      case "ITEM": {
-        const item = {
-          label: attributes.dropdownText,
-          id: attributes.dropdownId,
-          icon: attributes.dropdownIcon,
-          iconXml: attributes.dropdownIcon,
-          clazz: attributes.dropdownClazz,
-        };
-
-        if (attributes.dropdownHref) {
-          item.url = attributes.dropdownHref;
-          item.type = "link";
-        } else {
-          item.type = "button";
-        }
-
-        items.push(item);
-        break;
-      }
-      case "SUBMENU":
-        items.push({
-          type: "ITEM",
-          label: attributes.dropdownText,
-          icon: attributes.dropdownIcon,
-          iconXml: attributes.dropdownIcon,
-          subMenu: () => convertHtmlToItems(child.content.children),
-        });
-        break;
-      case "SEPARATOR":
-        items.push({ type: type });
-        break;
-      case "HEADER":
-        items.push({ type: type, label: attributes.dropdownText });
-        break;
-      case "CUSTOM":
-        items.push({ type: type, contents: child.content.cloneNode(true) });
-        break;
-    }
-  });
-  return items;
-}
-
 function validateDropdown(e) {
   if (e.targetUrl) {
     const method = e.getAttribute("checkMethod") || "post";
@@ -243,11 +201,52 @@ function debounce(callback) {
   };
 }
 
+/**
+ * Generates the contents for the dropdown
+ * @param {DropdownItem[]}  items
+ * @return {DropdownItem[]}
+ */
+function mapChildrenItemsToDropdownItems(items) {
+  /** @type {number | null} */
+  let initialGroup = null;
+
+  return items.flatMap((item) => {
+    if (item.type === "HEADER") {
+      return {
+        type: "HEADER",
+        label: item.displayName,
+      };
+    }
+
+    if (item.type === "SEPARATOR") {
+      return {
+        type: "SEPARATOR",
+      };
+    }
+
+    const response = [];
+
+    if (
+      initialGroup != null &&
+      item.group?.order !== initialGroup &&
+      item.group.order > 2
+    ) {
+      response.push({
+        type: "SEPARATOR",
+      });
+    }
+    initialGroup = item.group?.order;
+
+    response.push(item);
+    return response;
+  });
+}
+
 export default {
-  convertHtmlToItems,
   generateDropdown,
   generateDropdownItems,
   validateDropdown,
   getMaxSuggestionCount,
   debounce,
+  mapChildrenItemsToDropdownItems,
 };
