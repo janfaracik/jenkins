@@ -51,14 +51,13 @@
 
 .behavior-loading {
   position: fixed;
-  //display: flex !important;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   inset: 0;
   z-index: 999;
   backdrop-filter: blur(15px);
   transition: var(--standard-transition);
-  display: none;
 
   &::before {
     content: "";

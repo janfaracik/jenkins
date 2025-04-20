@@ -22,10 +22,7 @@ const TOOLTIP_BASE = {
       },
     ],
   },
-<<<<<<< HEAD
-=======
   duration: 250,
->>>>>>> master
 };
 
 /**

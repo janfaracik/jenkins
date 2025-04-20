@@ -8,8 +8,8 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  display: grid;
-  grid-template-columns: 1fr auto;
+  display: flex;
+  align-items: center;
   gap: var(--section-padding);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
@@ -79,11 +79,7 @@
     }
 
     #jenkins-head-icon {
-<<<<<<< HEAD
-      height: 2rem;
-=======
       height: 2.125rem;
->>>>>>> master
       margin-left: 0.15rem;
     }
   }
@@ -102,17 +98,8 @@
     }
 
     img {
-<<<<<<< HEAD
-      border-radius: 100px;
       width: 1.625rem;
       height: 1.625rem;
-      outline: 1px solid color-mix(in sRGB, var(--text-color) 10%, transparent);
-      background: color-mix(in sRGB, var(--text-color) 5%, transparent);
-      outline-offset: -1px;
-=======
-      width: 1.625rem;
-      height: 1.625rem;
->>>>>>> master
     }
 
     .jenkins-badge {
@@ -125,8 +112,6 @@
     }
   }
 
-<<<<<<< HEAD
-=======
   &__main {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -134,15 +119,10 @@
     width: 100%;
   }
 
->>>>>>> master
   &__navigation {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: stretch;
-<<<<<<< HEAD
-    padding-left: var(--section-padding);
-=======
->>>>>>> master
   }
 
   &__actions {

@@ -27,10 +27,7 @@
       </j:if>
 
       <j:set var="interactive" value="${jumplist.length() gt 0}" />
-<<<<<<< HEAD
-=======
       <j:set var="icon" value="${action.iconClassName != null ? action.iconClassName : action.iconFileName}"/>
->>>>>>> master
       <x:element name="${action.urlName == null ? 'button' : 'a'}">
         <x:attribute name="data-dropdown">${interactive}</x:attribute>
         <x:attribute name="id">root-action-${action.class.simpleName}</x:attribute>
@@ -49,13 +46,8 @@
         <x:attribute name="data-type">header-action</x:attribute>
         <x:attribute name="draggable">false</x:attribute>
         <x:attribute name="class">jenkins-button ${isCurrent ? '' : 'jenkins-button--tertiary'}</x:attribute>
-<<<<<<< HEAD
-        <l:icon src="${action.iconFileName}" />
-        <span class="jenkins-visually-hidden">${action.displayName}</span>
-=======
         <l:icon src="${icon}" class="jenkins-avatar" />
         <span class="jenkins-visually-hidden" data-type="action-label">${action.displayName}</span>
->>>>>>> master
         <j:if test="${badge != null}">
           <span class="jenkins-badge jenkins-!-${badge.severity}-color" />
         </j:if>

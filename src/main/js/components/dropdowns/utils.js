@@ -22,22 +22,14 @@ function generateDropdown(element, callback, immediate, options = {}) {
       {},
       Templates.dropdown(),
       {
-<<<<<<< HEAD
-        hideOnClick: element.dataset["hideOnClick"] !== "false",
-=======
         hideOnClick:
           element.dataset["hideOnClick"] !== "false" ? "toggle" : false,
->>>>>>> master
         onCreate(instance) {
           const onload = () => {
             if (instance.loaded) {
               return;
             }
 
-<<<<<<< HEAD
-            instance.popper.addEventListener("click", () => {
-              instance.hide();
-=======
             document.addEventListener("click", (event) => {
               const isClickInAnyDropdown =
                 !!event.target.closest("[data-tippy-root]");
@@ -48,7 +40,6 @@ function generateDropdown(element, callback, immediate, options = {}) {
               if (!isClickInAnyDropdown && !isClickOnReference) {
                 instance.hide();
               }
->>>>>>> master
             });
 
             callback(instance);
