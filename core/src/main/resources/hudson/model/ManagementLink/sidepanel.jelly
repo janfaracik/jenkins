@@ -1,11 +1,7 @@
 <!--
 The MIT License
 
-<<<<<<<< HEAD:core/src/main/resources/hudson/model/ManagementLink/sidepanel.jelly
-Copyright (c) 2023 Jan Faracik
-========
-Copyright (c) 2025, Stefan Spieker
->>>>>>>> master:core/src/main/resources/jenkins/model/GlobalQuietPeriodConfiguration/config.jelly
+Copyright (c) 2025 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +23,6 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<<<<<<<< HEAD:core/src/main/resources/hudson/model/ManagementLink/sidepanel.jelly
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <l:side-panel>
     <l:app-bar title="${%Manage Jenkins}" />
@@ -52,10 +47,4 @@ THE SOFTWARE.
       </j:forEach>
     </l:tasks>
   </l:side-panel>
-========
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-    <f:entry title="${%Quiet period}" field="quietPeriod">
-        <f:number min="0" clazz="number"/>
-    </f:entry>
->>>>>>>> master:core/src/main/resources/jenkins/model/GlobalQuietPeriodConfiguration/config.jelly
 </j:jelly>
