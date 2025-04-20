@@ -4,6 +4,7 @@
   display: flex;
   align-items: start;
   padding: var(--section-padding);
+  padding-top: 0;
   gap: var(--section-padding);
   min-height: calc(100vh - 110px);
 
