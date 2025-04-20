@@ -51,11 +51,24 @@ export default function computeActions() {
           iconXml = iconXml.outerHTML;
         }
 
+<<<<<<< HEAD
+=======
+        const span = e.querySelector("[data-type='action-label']");
+        let label = e.textContent;
+        if (span !== null) {
+          label = span.textContent;
+        }
+
+>>>>>>> master
         return {
           type: "link",
           icon: icon,
           iconXml: iconXml,
+<<<<<<< HEAD
           label: e.textContent,
+=======
+          label: label,
+>>>>>>> master
           url: e.href,
         };
       });

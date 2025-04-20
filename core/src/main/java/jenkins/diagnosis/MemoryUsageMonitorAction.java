@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2011, CloudBees, Inc.
+ * Copyright (c) 2025, CloudBees, Inc.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,11 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package hudson.tasks.Shell
-f=namespace(lib.FormTagLib)
 
-f.section(title:_("Shell")) {
-    f.entry(field: 'shell', title:_("Shell executable")) {
-        f.textbox()
+package jenkins.diagnosis;
+
+import hudson.Extension;
+import hudson.ExtensionList;
+import hudson.diagnosis.MemoryUsageMonitor;
+import hudson.model.InvisibleAction;
+import hudson.model.RootAction;
+import jenkins.model.Jenkins;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
+
+/**
+ * Expose {@link hudson.diagnosis.MemoryUsageMonitor#heap} at the {@code /hudson.diagnosis.MemoryUsageMonitor/heap} URL.
+ *
+ * @since 2.505
+ */
+@Extension
+@Restricted(NoExternalUse.class)
+public class MemoryUsageMonitorAction extends InvisibleAction implements RootAction {
+    @Override
+    public String getUrlName() {
+        return MemoryUsageMonitorAction.class.getName();
+    }
+
+    public MemoryUsageMonitor.MemoryGroup getHeap() {
+        Jenkins.get().checkAnyPermission(Jenkins.SYSTEM_READ, Jenkins.MANAGE);
+        return ExtensionList.lookupSingleton(MemoryUsageMonitor.class).heap;
     }
 }
