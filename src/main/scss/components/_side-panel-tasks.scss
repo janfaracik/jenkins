@@ -36,14 +36,10 @@ $background-outset: 0.7rem;
   .jenkins-app-bar {
     margin-left: var(--section-padding);
     margin-right: var(--section-padding);
-
-    //& + #tasks > .jenkins-search-container {
-    //  margin-block: -0.5rem;
-    //}
   }
 
   & > #tasks > .jenkins-search-container {
-    margin: 0 #{-$background-outset} 1rem;
+    margin: 0 #{-$background-outset};
 
     .jenkins-search__icon {
       width: 2.8rem;
