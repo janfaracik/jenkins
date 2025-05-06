@@ -26,10 +26,16 @@ package jenkins.management;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.model.AdministrativeMonitor;
 import hudson.model.ManagementLink;
+import hudson.model.PageDecorator;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
@@ -67,5 +73,30 @@ public class ConfigureLink extends ManagementLink {
     @Override
     public Category getCategory() {
         return Category.CONFIGURATION;
+    }
+
+    @Override
+    public Badge getBadge() {
+        Jenkins jenkins = Jenkins.get();
+        AdministrativeMonitorsDecorator decorator = jenkins.getExtensionList(PageDecorator.class)
+                .get(AdministrativeMonitorsDecorator.class);
+
+        if (decorator == null) {
+            return null;
+        }
+
+        Collection<AdministrativeMonitor> activeAdministrativeMonitors = Optional.ofNullable(decorator.getMonitorsToDisplay()).orElse(Collections.emptyList());
+        boolean anySecurity = activeAdministrativeMonitors.stream().anyMatch(AdministrativeMonitor::isSecurity);
+
+        if (activeAdministrativeMonitors.isEmpty()) {
+            return null;
+        }
+
+        int size = activeAdministrativeMonitors.size();
+        String tooltip = size > 1 ? hudson.model.Messages.ManageJenkinsAction_notifications(size) : hudson.model.Messages.ManageJenkinsAction_notification(size);
+
+        return new Badge(String.valueOf(size),
+                tooltip,
+                anySecurity ? Badge.Severity.DANGER : Badge.Severity.WARNING);
     }
 }
