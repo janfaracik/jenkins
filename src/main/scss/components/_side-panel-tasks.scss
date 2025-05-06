@@ -39,7 +39,7 @@ $background-outset: 0.7rem;
   }
 
   & > #tasks > .jenkins-search-container {
-    margin: 0 #{-$background-outset};
+    margin: 0 #{-$background-outset} 1rem;
 
     .jenkins-search__icon {
       width: 2.8rem;
@@ -78,6 +78,10 @@ $background-outset: 0.7rem;
       width: 1.375rem !important;
       height: 1.375rem !important;
       color: var(--text-color);
+
+      * {
+        transition: stroke-width var(--standard-transition);
+      }
     }
   }
 
@@ -93,7 +97,11 @@ $background-outset: 0.7rem;
   &--active {
     font-weight: 450;
     cursor: default;
-    
+
+    svg * {
+      stroke-width: 35px;
+    }
+
     &::before {
       background-color: var(--item-background--active) !important;
     }
@@ -107,16 +115,5 @@ $background-outset: 0.7rem;
     &::before {
       border-color: transparent;
     }
-  }
-}
-
-.nodeswidgetview {
-  display: flex;
-  gap: var(--section-padding);
-  overflow: hidden;
-
-  .sidebars {
-    min-width: 300px;
-    flex-shrink: 0;
   }
 }
