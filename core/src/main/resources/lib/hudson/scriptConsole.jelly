@@ -31,7 +31,7 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
 
     <l:breadcrumb title="${%scriptConsole}"/>
-    <l:main-panel>
+    <l:main-panel width="form">
       <h1>${%scriptConsole}</h1>
 
       <j:choose>

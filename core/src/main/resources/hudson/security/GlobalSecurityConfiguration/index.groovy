@@ -13,7 +13,7 @@ def st=namespace("jelly:stapler")
 l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request2.getParameter('decorate')) {
     st.include(page: "sidepanel.jelly", class: 'hudson.model.ManagementLink')
 
-    l.main_panel {
+    l.main_panel(width: "form") {
         l.app_bar(title: my.displayName)
 
         set("readOnlyMode", !app.hasPermission(app.ADMINISTER))

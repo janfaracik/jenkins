@@ -12,7 +12,7 @@ l.layout(permission:app.SYSTEM_READ, title:my.displayName) {
 
     st.include(page: "sidepanel.jelly", class: 'hudson.model.ManagementLink')
 
-    l.main_panel {
+    l.main_panel(width: "form") {
         l.app_bar(title: my.displayName)
 
         div(class:"behavior-loading") {

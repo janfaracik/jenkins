@@ -9,7 +9,7 @@ def st = namespace("jelly:stapler")
 l.layout(norefresh: true, permission: app.MANAGE, title: my.displayName) {
     st.include(page: "sidepanel.jelly", class: 'hudson.model.ManagementLink')
 
-    l.main_panel {
+    l.main_panel(width: "form") {
         h1 {
             text(Messages.ShutdownLink_DisplayName_prepare())
         }

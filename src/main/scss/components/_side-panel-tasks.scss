@@ -49,6 +49,10 @@ $background-outset: 0.7rem;
     .jenkins-search__input {
       padding-left: 2.6rem;
     }
+
+    & + * + .jenkins-side-nav__heading {
+      margin-top: 0.5rem;
+    }
   }
 }
 

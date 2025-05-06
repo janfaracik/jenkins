@@ -31,8 +31,8 @@ THE SOFTWARE.
     <l:header>
       <script src="${resURL}/jsbundles/section-to-tabs.js" type="text/javascript" defer="true" />
     </l:header>
-    
-    <l:main-panel>
+
+    <l:main-panel width="form">
       <div class="app-about-branding">
         <div class="app-about-branding__aurora"></div>
         <img src="${imagesURL}/svgs/logo.svg" alt="${%logo}" />

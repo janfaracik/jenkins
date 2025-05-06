@@ -27,7 +27,7 @@ THE SOFTWARE.
   <l:layout permission="${app.ADMINISTER}" title="${%Users}">
     <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
 
-    <l:main-panel>
+    <l:main-panel width="form">
       <l:app-bar title="${%Users}" subtitle="${it.allUsers.size()}">
         <l:isAdmin>
           <a href="addUser" class="jenkins-button jenkins-button--primary">
@@ -37,7 +37,7 @@ THE SOFTWARE.
         </l:isAdmin>
       </l:app-bar>
 
-      <p class="jenkins-description">${%blurb}</p>
+      <p class="jenkins-page-description">${%blurb}</p>
 
       <table class="jenkins-table sortable" id="people">
         <thead>
