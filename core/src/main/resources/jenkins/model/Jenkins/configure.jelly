@@ -36,7 +36,7 @@ THE SOFTWARE.
     <j:set var="readOnlyMode" value="${!h.hasPermission(app.MANAGE)}"/>
     <l:app-bar title="${%System}" />
 
-    <div class="behavior-loading"><l:spinner text="${%LOADING}"/></div>
+    <l:skeleton />
 
     <f:form method="post" name="config" action="configSubmit">
       <section class="manage-messages">
