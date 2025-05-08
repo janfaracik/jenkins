@@ -33,7 +33,7 @@ THE SOFTWARE.
   </st:documentation>
 
   <j:if test="${mode=='main-panel'}">
-    <div id="main-panel" class="${attrs.width == 'form' ? 'fooooorm' : ''}">
+    <div id="main-panel" class="${attrs.width == 'form' ? 'fooooorm' : ''} ${attrs.width == 'plugins' ? 'pluginssss' : ''}">
       <j:if test="${app.isQuietingDown()}">
         <j:choose>
           <j:when test="${app.isPreparingSafeRestart()}">
