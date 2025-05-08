@@ -44,7 +44,8 @@ THE SOFTWARE.
                         id="filter-box"
                         autofocus="true"
                         value="${request2.getParameter('filter')}"
-                        enabled="${!noPlugins}" />
+                        enabled="${!noPlugins}"
+                        hasKeyboardShortcut="false" />
         </div>
       </div>
 

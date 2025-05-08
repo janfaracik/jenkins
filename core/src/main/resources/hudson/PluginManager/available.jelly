@@ -38,7 +38,8 @@ THE SOFTWARE.
                         placeholder="${%Search available plugins}"
                         id="filter-box"
                         autofocus="true"
-                        value="${request2.getParameter('filter')}" />
+                        value="${request2.getParameter('filter')}"
+                        hasKeyboardShortcut="false" />
         </div>
         <div class="jenkins-app-bar__controls">
           <l:isAdmin>
