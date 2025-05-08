@@ -27,7 +27,6 @@ package jenkins.management;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.ManagementLink;
-import hudson.model.UpdateCenter;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
@@ -35,17 +34,17 @@ import org.jenkinsci.Symbol;
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  */
-@Extension(ordinal = 3) @Symbol("plugins")
-public class PluginsLink extends ManagementLink {
+@Extension(ordinal = 1) @Symbol("plugins")
+public class InstalledPluginsLink extends ManagementLink {
 
     @Override
     public String getIconFileName() {
-        return "symbol-download";
+        return "symbol-plugins";
     }
 
     @Override
     public String getDisplayName() {
-        return "Updates";
+        return "Installed plugins";
     }
 
     @Override
@@ -55,7 +54,7 @@ public class PluginsLink extends ManagementLink {
 
     @Override
     public String getUrlName() {
-        return "pluginManager";
+        return "pluginManager/installed";
     }
 
     @NonNull
@@ -68,11 +67,5 @@ public class PluginsLink extends ManagementLink {
     @Override
     public Category getCategory() {
         return Category.PLUGINS;
-    }
-
-    @Override
-    public Badge getBadge() {
-        final UpdateCenter updateCenter = Jenkins.get().getUpdateCenter();
-        return updateCenter.getBadge();
     }
 }

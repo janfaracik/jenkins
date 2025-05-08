@@ -37,16 +37,23 @@ THE SOFTWARE.
 
         <j:invokeStatic var="j" className="jenkins.model.Jenkins" method="get" />
         <j:forEach var="category" items="${j.categorizedManagementLinks.entrySet()}">
-          <h2 class="jenkins-side-nav__heading">${category.key.label}</h2>
-          <j:forEach var="item" items="${category.value}">
-            <l:task title="${item.displayName}"
-                href="${rootURL}/manage/${item.urlName}"
-                icon="${item.iconFileName}"
-                badge="${item.badge}"
-                requiresConfirmation="${item.requiresConfirmation}"
-                post="${item.requiresPOST}"
-                confirmationMessage="${%sure}" />
-          </j:forEach>
+
+          <details class="jenkins-side-nav__group" open="true">
+            <summary class="jenkins-side-nav__group-heading">
+              ${category.key.label}
+            </summary>
+            <div class="jenkins-side-nav__group-children">
+              <j:forEach var="item" items="${category.value}">
+                <l:task title="${item.displayName}"
+                        href="${rootURL}/manage/${item.urlName}"
+                        icon="${item.iconFileName}"
+                        badge="${item.badge}"
+                        requiresConfirmation="${item.requiresConfirmation}"
+                        post="${item.requiresPOST}"
+                        confirmationMessage="${%sure}" />
+              </j:forEach>
+            </div>
+          </details>
         </j:forEach>
       </l:tasks>
     </l:side-panel>

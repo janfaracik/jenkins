@@ -24,13 +24,13 @@ $background-outset: 0.7rem;
   }
 }
 
-.jenkins-side-nav__heading {
-  margin: var(--section-padding) var(--section-padding)
-    calc(var(--section-padding) / 3) 0;
-  color: var(--text-color-secondary);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-bold-weight);
-}
+//.jenkins-side-nav__heading {
+//  margin: var(--section-padding) var(--section-padding)
+//    calc(var(--section-padding) / 3) 0;
+//  color: var(--text-color-secondary);
+//  font-size: var(--font-size-sm);
+//  font-weight: var(--font-bold-weight);
+//}
 
 #side-panel {
   .jenkins-app-bar {
@@ -50,9 +50,9 @@ $background-outset: 0.7rem;
       padding-left: 2.6rem;
     }
 
-    & + * + .jenkins-side-nav__heading {
-      margin-top: 0.5rem;
-    }
+    //& + * + .jenkins-side-nav__heading {
+    //  margin-top: 0.5rem;
+    //}
   }
 }
 
