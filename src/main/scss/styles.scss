@@ -17,7 +17,7 @@
 .jenkins-side-nav__group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
 
   &-heading {
     display: flex;
@@ -50,8 +50,12 @@
     }
   }
 
-  &[open] &-heading::after {
-    rotate: 90deg;
+  &[open] {
+    margin-bottom: 0.75rem;
+
+    .jenkins-side-nav__group-heading::after {
+      rotate: 90deg;
+    }
   }
 
   &-children {
