@@ -1,8 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Erik Ramfelt,
-id:cactusman, Romain Seguy
+Copyright (c) 2025, Jenkins contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,27 +23,36 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+  <st:documentation>
+    Placeholder skeleton element, hiding the rest of its parent container until the page has loaded
+  </st:documentation>
 
-  <p:makeDisabled/>
+  <div class="jenkins-form-skeleton">
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+    <span />
+    <div />
+  </div>
 
-  <p:projectActionFloatingBox />
-
-  <table style="margin-top: 1em; margin-left:1em;">
-    <j:forEach var="act" items="${it.prominentActions}">
-      <j:set var="icon" value="${act.iconClassName != null ? act.iconClassName : act.iconFileName}"/>
-      <t:summary icon="${icon}" href="${act.urlName}">
-        ${act.displayName}
-      </t:summary>
-    </j:forEach>
-
-    <t:artifactList build="${it.lastSuccessfulBuild}" caption="${%Last Successful Artifacts}"/>
-  </table>
-
-  <!-- merge fragments from the actions -->
-  <j:forEach var="a" items="${it.allActions}">
-    <st:include page="jobMain.jelly" it="${a}" optional="true" />
-  </j:forEach>
-
-  <p:upstream-downstream />
+  <!-- :has isn't supported in HTMLUnit, so don't load the CSS in that case -->
+  <j:if test="${!h.isUnitTest}">
+    <st:adjunct includes="lib.layout.skeleton.skeleton" />
+  </j:if>
 </j:jelly>

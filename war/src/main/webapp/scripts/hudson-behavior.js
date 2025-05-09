@@ -1731,12 +1731,52 @@ function rowvgStartEachRow(recursive, f) {
   });
 
   Behaviour.specify(
+    "DIV.jenkins-form-skeleton",
+    "div-jenkins-form-skeleton",
+    ++p,
+    function (e) {
+      e.remove();
+    },
+  );
+
+  Behaviour.specify(
     "DIV.behavior-loading",
     "div-behavior-loading",
     ++p,
     function (e) {
+      console.warn(
+        ".behavior-loading is deprecated, use <l:skeleton /> instead - since TODO",
+        e,
+      );
       e.classList.add("behavior-loading--hidden");
     },
+  );
+
+  Behaviour.specify(
+    "[data-side-nav-key]",
+    "data-side-nav-key",
+    ++p,
+    function (el) {
+      const key = el.dataset.sideNavKey + "." + el.dataset.sideNavValue;
+
+      // Restore state from localStorage
+      const savedState = localStorage.getItem(key);
+      if (savedState === "open") {
+        el.open = true;
+      } else if (savedState === "closed") {
+        el.open = false;
+      }
+
+      if (el.querySelector(".task-link--active")) {
+        el.open = true;
+      }
+
+      // Save state on toggle
+      el.addEventListener("toggle", function () {
+        const value = el.open ? "open" : "closed";
+        localStorage.setItem(key, value);
+      });
+    }
   );
 
   window.addEventListener("load", function () {
