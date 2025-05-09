@@ -28,6 +28,7 @@
     font-size: var(--font-size-sm);
     font-weight: var(--font-bold-weight);
     cursor: pointer;
+    user-select: none;
     transition: opacity var(--standard-transition);
 
     &::after {
