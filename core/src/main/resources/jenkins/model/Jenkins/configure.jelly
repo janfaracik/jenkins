@@ -39,12 +39,16 @@ THE SOFTWARE.
     <l:skeleton />
 
     <f:form method="post" name="config" action="configSubmit">
-      <section class="manage-messages">
-        <j:forEach var="am" items="${app.activeAdministrativeMonitors}">
-          <st:include page="message.jelly" it="${am}" />
-        </j:forEach>
-        <st:include page="downgrade.jelly" />
-      </section>
+      <l:userExperimentalFlag var="manageJenkinsSidebar" flagClassName="jenkins.model.experimentalflags.ManageJenkinsSidebarUserExperimentalFlag" />
+
+      <j:if test="${manageJenkinsSidebar}">
+        <section class="manage-messages manage-messages--border">
+          <j:forEach var="am" items="${app.activeAdministrativeMonitors}">
+            <st:include page="message.jelly" it="${am}" />
+          </j:forEach>
+          <st:include page="downgrade.jelly" />
+        </section>
+      </j:if>
 
       <j:set var="instance" value="${it}" />
       <j:set var="descriptor" value="${instance.descriptor}" />
