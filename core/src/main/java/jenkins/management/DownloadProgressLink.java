@@ -34,17 +34,23 @@ import org.jenkinsci.Symbol;
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  */
-@Extension(ordinal = 3) @Symbol("plugins")
-public class AvailablePluginsLink extends ManagementLink {
+@Extension @Symbol("plugins")
+public class DownloadProgressLink extends ManagementLink {
 
     @Override
     public String getIconFileName() {
-        return "symbol-shopping-bag";
+        // Hide the 'Download progress' link if there are
+        // no active downloads or restarts pending
+        if (Jenkins.get().getUpdateCenter().getJobs().isEmpty()) {
+            return null;
+        }
+
+        return "symbol-list";
     }
 
     @Override
     public String getDisplayName() {
-        return "Available plugins";
+        return "Download progress";
     }
 
     @Override
@@ -54,7 +60,7 @@ public class AvailablePluginsLink extends ManagementLink {
 
     @Override
     public String getUrlName() {
-        return "pluginManager/available";
+        return "pluginManager/updates/";
     }
 
     @NonNull

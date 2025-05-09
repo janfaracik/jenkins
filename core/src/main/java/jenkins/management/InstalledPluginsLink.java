@@ -34,7 +34,7 @@ import org.jenkinsci.Symbol;
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  */
-@Extension(ordinal = 1) @Symbol("plugins")
+@Extension(ordinal = 2) @Symbol("plugins")
 public class InstalledPluginsLink extends ManagementLink {
 
     @Override
