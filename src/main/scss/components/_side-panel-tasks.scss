@@ -46,6 +46,10 @@ $background-outset: 0.7rem;
 
 #tasks .task {
   margin: 0 calc($background-outset * -1);
+
+  & + .jenkins-side-nav__group {
+    margin-top: 0.5rem;
+  }
 }
 
 #tasks .task .task-link {
