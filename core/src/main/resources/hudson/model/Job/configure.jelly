@@ -38,7 +38,9 @@ THE SOFTWARE.
 
     <l:side-panel sticky="true">
       <l:app-bar title="${%Configure}" />
-      <div id="tasks" />
+      <div id="tasks">
+        <l:skeleton type="side-panel" />
+      </div>
     </l:side-panel>
 
     <l:main-panel width="form">
@@ -51,6 +53,8 @@ THE SOFTWARE.
 
         <j:set var="descriptor" value="${it.descriptor}" />
         <j:set var="instance" value="${it}" />
+
+        <l:skeleton />
 
         <div class="jenkins-section jenkins-section--no-border jenkins-!-margin-top-3">
           <f:entry title="${%Description}" help="${app.markupFormatter.helpUrl}">
