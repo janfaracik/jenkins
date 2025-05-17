@@ -21,8 +21,6 @@ div(class:"ownerthing") {
             if (canSetUpDistributedBuilds || hasItemCreatePermission) {
                 h1(class:"jenkinsintro", _("Welcome to Jenkins"))
 
-                p(class:"jenkinsdesc", _("noJobDescription"))
-
                 section(class: "empty-state-section") {
                     h2(_("startBuilding"), class: "h4")
 
