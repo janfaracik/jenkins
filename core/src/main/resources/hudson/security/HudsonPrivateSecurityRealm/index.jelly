@@ -24,8 +24,10 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <l:layout permission="${app.ADMINISTER}" title="${%Users}" type="one-column">
-    <l:main-panel>
+  <l:layout permission="${app.ADMINISTER}" title="${%Users}">
+    <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
+
+    <l:main-panel width="form">
       <l:app-bar title="${%Users}" subtitle="${it.allUsers.size()}">
         <l:isAdmin>
           <a href="addUser" class="jenkins-button jenkins-button--primary">
@@ -35,7 +37,7 @@ THE SOFTWARE.
         </l:isAdmin>
       </l:app-bar>
 
-      <p class="jenkins-description">${%blurb}</p>
+      <p class="jenkins-page-description">${%blurb}</p>
 
       <table class="jenkins-table sortable" id="people">
         <thead>

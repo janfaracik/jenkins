@@ -174,10 +174,8 @@ THE SOFTWARE.
         <j:set var="mode" value="side-panel" />
         <d:invokeBody />
       </j:if>
-      <div id="main-panel">
-        <j:set var="mode" value="main-panel" />
-        <d:invokeBody/>
-      </div>
+      <j:set var="mode" value="main-panel" />
+      <d:invokeBody/>
     </div>
 
     <j:if test="${layoutType!='full-screen'}">
