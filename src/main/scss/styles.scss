@@ -10,7 +10,7 @@
 
 @keyframes fade-in-jenkins-booting {
   from {
-    scale: 97.5%;
+    scale: 98.5%;
     opacity: 0;
     filter: blur(1px);
   }
@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: center;
   margin-top: -4rem;
-  animation: fade-in-jenkins-booting 0.5s both 0.2s;
+  padding: var(--section-padding);
 
   * {
     margin: 0;
@@ -37,6 +37,12 @@
     display: flex;
     flex-direction: column;
     gap: calc(var(--section-padding) * 1.5);
+
+    @media (prefers-reduced-motion: no-preference) {
+      & > * {
+        animation: fade-in-jenkins-booting 0.5s both 0.2s;
+      }
+    }
   }
 
   h2 {
@@ -47,12 +53,30 @@
 
 .jenkinsintro {
   font-family: "Georgia", serif;
+  text-box: trim-both;
 }
 
 .jenkinsdesc {
   font-size: 1rem;
   color: var(--text-color-secondary);
-  text-wrap: balance;
   line-height: 1.66;
-  margin-top: -1rem;
+  text-box: trim-both;
+  max-width: 85%;
+}
+
+.signinthing {
+  display: flex;
+  justify-content: stretch;
+  gap: var(--section-padding);
+  list-style-type: none;
+  padding: 0;
+
+  li {
+    display: contents;
+  }
+
+  a {
+    width: 100%;
+    min-height: 2.75rem;
+  }
 }

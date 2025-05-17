@@ -108,31 +108,18 @@ div(class:"ownerthing") {
                 p(class:"jenkinsdesc", _("anonymousDescription"))
             }
 
-            section(class: "empty-state-section") {
-                ul(class: "empty-state-section-list") {
-                    li(class: "content-block") {
-                        a(href: "${rootURL}/${app.securityRealm.loginUrl}?from=${request2.requestURI}",
-                                class: "content-block__link") {
-                            span(_("Log in to Jenkins"))
-                            span(class: "trailing-icon") {
-                                l.icon(
-                                        class: "icon-md",
-                                        src: "symbol-arrow-right")
-                            }
-                        }
+            ul(class: "signinthing") {
+                li {
+                    a(href: "${rootURL}/${app.securityRealm.loginUrl}?from=${request2.requestURI}",
+                            class: "jenkins-button") {
+                        span(_("Sign in"))
                     }
+                }
 
-                    if (canSignUp) {
-                        li(class: "content-block") {
-                            a(href: "signup", class: "content-block__link") {
-                                span(_("Sign up for Jenkins"))
-                                span(class: "trailing-icon") {
-                                    l.icon(
-                                            class: "icon-md",
-                                            src: "symbol-arrow-right")
-                                }
-
-                            }
+                if (canSignUp) {
+                    li {
+                        a(href: "signup", class: "jenkins-button") {
+                            span(_("Register"))
                         }
                     }
                 }
