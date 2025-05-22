@@ -13,33 +13,33 @@ function init() {
   });
 
   // Fade in the page header on scroll, increasing opacity and intensity of the backdrop blur
-  window.addEventListener("scroll", () => {
-    const navigation = document.querySelector("#page-header");
-    const scrollY = Math.max(0, window.scrollY);
-    navigation.style.setProperty(
-      "--background-opacity",
-      Math.min(70, scrollY) + "%",
-    );
-    navigation.style.setProperty(
-      "--background-blur",
-      Math.min(40, scrollY) + "px",
-    );
-    if (
-      !document.querySelector(".jenkins-search--app-bar") &&
-      !document.querySelector(".app-page-body__sidebar--sticky")
-    ) {
-      const prefersContrast = window.matchMedia(
-        "(prefers-contrast: more)",
-      ).matches;
-      navigation.style.setProperty(
-        "--border-opacity",
-        Math.min(
-          prefersContrast ? 100 : 15,
-          prefersContrast ? scrollY * 3 : scrollY,
-        ) + "%",
-      );
-    }
-  });
+  // window.addEventListener("scroll", () => {
+  //   const navigation = document.querySelector("#page-header");
+  //   const scrollY = Math.max(0, window.scrollY);
+  //   // navigation.style.setProperty(
+  //   //   "--background-opacity",
+  //   //   Math.min(70, scrollY) + "%",
+  //   // );
+  //   // navigation.style.setProperty(
+  //   //   "--background-blur",
+  //   //   Math.min(40, scrollY) + "px",
+  //   // );
+  //   if (
+  //     !document.querySelector(".jenkins-search--app-bar") &&
+  //     !document.querySelector(".app-page-body__sidebar--sticky")
+  //   ) {
+  //     const prefersContrast = window.matchMedia(
+  //       "(prefers-contrast: more)",
+  //     ).matches;
+  //     navigation.style.setProperty(
+  //       "--border-opacity",
+  //       Math.min(
+  //         prefersContrast ? 100 : 15,
+  //         prefersContrast ? scrollY * 3 : scrollY,
+  //       ) + "%",
+  //     );
+  //   }
+  // });
 
   window.addEventListener("load", () => {
     // We can't use :has due to HtmlUnit CSS Parser not supporting it, so

@@ -1,5 +1,23 @@
 @use "../abstracts/mixins";
 
+@property --background-opacity {
+  syntax: "<percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+
+@property --background-blur {
+  syntax: "<length>";
+  initial-value: 0;
+  inherits: false;
+}
+
+@property --border-opacity {
+  syntax: "<percentage>";
+  initial-value: 0%;
+  inherits: false;
+}
+
 .jenkins-header {
   --background-opacity: 0%;
   --background-blur: 0;
@@ -34,6 +52,18 @@
       );
     background-clip: padding-box;
     z-index: -1;
+
+    animation: animate-scroll-to-bottom-offset linear forwards;
+    animation-timeline: scroll();
+    animation-range-end: 70px;
+
+    @keyframes animate-scroll-to-bottom-offset {
+      to {
+        --background-opacity: 70%;
+        --background-blur: 40px;
+        --border-opacity: 15%;
+      }
+    }
   }
 
   .app-jenkins-logo {
