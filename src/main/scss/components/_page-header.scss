@@ -58,7 +58,14 @@
     animation-range-end: 70px;
 
     @keyframes animate-scroll-to-bottom-offset {
-      to {
+      10.5% {
+        --border-opacity: 15%;
+      }
+      28% {
+        --background-blur: 40px;
+        --border-opacity: 15%;
+      }
+      100% {
         --background-opacity: 70%;
         --background-blur: 40px;
         --border-opacity: 15%;
