@@ -12,16 +12,9 @@
   inherits: false;
 }
 
-@property --border-opacity {
-  syntax: "<percentage>";
-  initial-value: 0%;
-  inherits: false;
-}
-
 .jenkins-header {
   --background-opacity: 0%;
   --background-blur: 0;
-  --border-opacity: 0%;
 
   position: sticky;
   top: 0;
@@ -44,31 +37,26 @@
       var(--header-background) var(--background-opacity),
       transparent
     );
-    border-bottom: var(--jenkins-border-width) solid
-      color-mix(
-        in sRGB,
-        var(--header-border) var(--border-opacity),
-        transparent
-      );
+    border-bottom: var(--jenkins-border-width) solid transparent;
     background-clip: padding-box;
     z-index: -1;
 
-    animation: animate-scroll-to-bottom-offset linear forwards;
+    animation: animate-scroll-to-bottom-offset linear both;
     animation-timeline: scroll();
     animation-range-end: 70px;
 
     @keyframes animate-scroll-to-bottom-offset {
       10.5% {
-        --border-opacity: 15%;
+        border-bottom-color: var(--header-border);
       }
       28% {
         --background-blur: 40px;
-        --border-opacity: 15%;
+        border-bottom-color: var(--header-border);
       }
       100% {
         --background-opacity: 70%;
         --background-blur: 40px;
-        --border-opacity: 15%;
+        border-bottom-color: var(--header-border);
       }
     }
   }

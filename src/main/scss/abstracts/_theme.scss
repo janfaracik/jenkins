@@ -72,7 +72,7 @@ $semantics: (
 
   // Header
   --header-background: var(--background);
-  --header-border: var(--text-color-secondary);
+  --header-border: color-mix(in srgb, var(--text-color-secondary) 15%, transparent);
   --header-color: var(--text-color);
   --header-height: 4.125rem;
 
