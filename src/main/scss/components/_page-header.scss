@@ -6,12 +6,6 @@
   inherits: false;
 }
 
-@property --background-blur {
-  syntax: "<length>";
-  initial-value: 0;
-  inherits: false;
-}
-
 .jenkins-header {
   --background-opacity: 0%;
   --background-blur: 0;
@@ -31,7 +25,6 @@
     content: "";
     position: absolute;
     inset: 0;
-    backdrop-filter: blur(var(--background-blur));
     background: color-mix(
       in sRGB,
       var(--header-background) var(--background-opacity),
@@ -50,12 +43,12 @@
         border-bottom-color: var(--header-border);
       }
       28% {
-        --background-blur: 40px;
+        backdrop-filter: blur(40px);
         border-bottom-color: var(--header-border);
       }
       100% {
         --background-opacity: 70%;
-        --background-blur: 40px;
+        backdrop-filter: blur(40px);
         border-bottom-color: var(--header-border);
       }
     }
