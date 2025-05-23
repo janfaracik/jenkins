@@ -36,9 +36,7 @@ THE SOFTWARE.
           </a>
         </l:isAdmin>
       </l:app-bar>
-
-      <p class="jenkins-page-description">${%blurb}</p>
-
+      
       <table class="jenkins-table sortable" id="people">
         <thead>
           <tr>
