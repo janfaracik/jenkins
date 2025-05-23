@@ -34,7 +34,7 @@ THE SOFTWARE.
       <script src="${resURL}/jsbundles/components/row-selection-controller.js" type="text/javascript" defer="true" />
     </l:header>
 
-    <l:main-panel>
+    <l:main-panel width="plugins">
       <div class="jenkins-app-bar jenkins-app-bar--sticky">
         <div class="jenkins-app-bar__content">
           <l:search-bar clazz="jenkins-search--app-bar"
@@ -42,7 +42,8 @@ THE SOFTWARE.
                         id="filter-box"
                         autofocus="true"
                         value="${request2.getParameter('filter')}"
-                        enabled="${!empty(list)}" />
+                        enabled="${!empty(list)}"
+                        hasKeyboardShortcut="false" />
         </div>
         <div class="jenkins-app-bar__controls">
           <l:isAdmin>
