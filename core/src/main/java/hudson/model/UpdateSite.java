@@ -612,6 +612,9 @@ public class UpdateSite {
          */
         public final String connectionCheckUrl;
 
+        @Restricted(NoExternalUse.class)
+        public final boolean healthScoresAvailable;
+
         Data(JSONObject o) {
             this.sourceId = Util.intern((String) o.get("id"));
             JSONObject c = o.optJSONObject("core");
@@ -650,6 +653,8 @@ public class UpdateSite {
                 }
             }
 
+            boolean healthScoresAvailable = false;
+
             for (Map.Entry<String, JSONObject> e : (Set<Map.Entry<String, JSONObject>>) o.getJSONObject("plugins").entrySet()) {
                 var plug = e.getValue();
                 plug.put("suggested", SuggestedPlugins.isSuggested(plug.getString("name")));
@@ -666,6 +671,10 @@ public class UpdateSite {
                 }
                 plugins.put(Util.intern(e.getKey()), p);
 
+                if (p.healthScore != null) {
+                    healthScoresAvailable = true;
+                }
+
                 // compatibility with update sites that have no separate 'deprecated' top-level entry.
                 // Also do this even if there are deprecations to potentially allow limiting the top-level entry to overridden URLs.
                 if (p.hasCategory("deprecated")) {
@@ -674,6 +683,8 @@ public class UpdateSite {
                     }
                 }
             }
+
+            this.healthScoresAvailable = healthScoresAvailable;
 
             connectionCheckUrl = (String) o.get("connectionCheckUrl");
         }
@@ -1266,6 +1277,12 @@ public class UpdateSite {
         @Exported
         public final boolean suggested;
 
+        @Restricted(NoExternalUse.class)
+        public final Integer healthScore;
+
+        @Restricted(NoExternalUse.class)
+        public final String healthScoreClass;
+
         @DataBoundConstructor
         public Plugin(String sourceId, JSONObject o) {
             super(sourceId, o, UpdateSite.this.url);
@@ -1304,6 +1321,12 @@ public class UpdateSite {
             int optionalDepCount = (int) ja.stream().filter(IS_DEP_PREDICATE.and(IS_NOT_OPTIONAL.negate())).count();
             dependencies = getPresizedMutableMap(depCount);
             optionalDependencies = getPresizedMutableMap(optionalDepCount);
+            this.healthScore = o.has("health") ? o.getInt("health") : null;
+            if (healthScore != null) {
+                this.healthScoreClass = PluginWrapper.getHealthScoreClassForScore(healthScore);
+            } else {
+                this.healthScoreClass = null;
+            }
 
             for (Object jo : o.getJSONArray("dependencies")) {
                 JSONObject depObj = (JSONObject) jo;
