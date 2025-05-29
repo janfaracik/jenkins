@@ -35,9 +35,23 @@ THE SOFTWARE.
     <st:attribute name="selected" type="boolean">
       If true, the option value appears as selected.
     </st:attribute>
+    <st:attribute name="icon">
+      Optional icon to be used for the option.
+    </st:attribute>
+    <st:attribute name="description">
+      Optional description to be used for the option.
+    </st:attribute>
   </st:documentation>
   <!-- No escape/encode to avoid double-encoding if used in value attribute below -->
   <j:set var="optionBody" encode="false"><d:invokeBody escapeText="false"/></j:set>
   <option value="${attrs.value!=null?attrs.value:h.xmlUnescape(optionBody)}"
-          selected="${attrs.selected?'true':null}">${h.xmlUnescape(optionBody)}</option>
+          selected="${attrs.selected?'true':null}">
+    <j:if test="${attrs.icon != null}">
+      <div class="jenkins-select__item__icon">${attrs.icon}</div>
+    </j:if>
+    <div class="jenkins-select__item__title">${h.xmlUnescape(optionBody)}</div>
+    <j:if test="${attrs.description != null}">
+      <div class="jenkins-select__item__description">${attrs.description}</div>
+    </j:if>
+  </option>
 </j:jelly>

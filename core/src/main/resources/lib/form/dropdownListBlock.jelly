@@ -33,6 +33,12 @@ THE SOFTWARE.
     <st:attribute name="title" use="required">
       human readable text displayed for this list item.
     </st:attribute>
+    <st:attribute name="icon">
+      Optional icon to be used for the option.
+    </st:attribute>
+    <st:attribute name="description">
+      Optional description to be used for the option.
+    </st:attribute>
     <st:attribute name="selected" type="boolean">
       is this value initially selected?
     </st:attribute>
@@ -48,7 +54,7 @@ THE SOFTWARE.
   </st:documentation>
   <j:choose>
     <j:when test="${dropdownListMode=='createSelectField'}">
-      <f:option selected="${attrs.selected}" value="${value}">${title}</f:option>
+      <f:option selected="${attrs.selected}" value="${value}" description="${attrs.description}">${title}</f:option>
     </j:when>
     <j:when test="${dropdownListMode=='generateEntries'}">
       <!-- sandwich them by markers so that we know what to show/hide -->

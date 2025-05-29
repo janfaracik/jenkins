@@ -53,13 +53,17 @@ THE SOFTWARE.
   <j:set target="${attrs}" property="descriptors" value="${attrs.descriptors ?: descriptor.getPropertyType(instance,attrs.field).getApplicableDescriptors()}" />
 
   <f:dropdownList name="${attrs.field}" title="${attrs.title}" help="${descriptor.getHelpFile(attrs.field)}">
+    <button>
+      <selectedcontent></selectedcontent>
+    </button>
+
     <d:invokeBody />
 
     <j:set var="current" value="${instance[attrs.field]}"/>
     <j:set var="current" value="${current!=null ? current : (default.descriptor!=null ? default : null)}"/>
     <j:set var="capture" value="${attrs.capture?:''}" />
     <j:forEach var="descriptor" items="${attrs.descriptors}" varStatus="loop">
-      <f:dropdownListBlock value="${loop.index}" title="${descriptor.displayName}"
+      <f:dropdownListBlock value="${loop.index}" title="${descriptor.displayName}" description="day dreaming"
         selected="${current.descriptor==descriptor || (current==null and descriptor==attrs.default)}" staplerClass="${descriptor.clazz.name}"
         lazy="descriptor,it,${capture}">
         <l:ajax>
