@@ -26,9 +26,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:layout title="${it.fileName}" type="one-column">
     <l:main-panel>
-      <h1>
-        ${it.fileName}
-      </h1>
+      <l:app-bar title="${it.fileName}" />
       <div class="md5sum">
         MD5: ${it.hashString}
       </div>

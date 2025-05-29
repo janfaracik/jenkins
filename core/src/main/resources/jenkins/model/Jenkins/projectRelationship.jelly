@@ -34,21 +34,29 @@ THE SOFTWARE.
 
     <l:main-panel>
       <l:app-bar title="${%Project Relationship}">
-        <t:help href="projectRelationship-help"/>
+        <t:help href="https://www.jenkins.io/redirect/fingerprint"/>
       </l:app-bar>
 
       <p class="jenkins-page-description">
         ${%body}
       </p>
 
+      <p class="jenkins-page-description">
+        ${%For this feature to work, the following conditions need to be met:}
+      </p>
+      <ol class="jenkins-page-description">
+        <li>${%The upstream project records the fingerprints of its build artifacts.}</li>
+        <li>${%The downstream project records the fingerprints of the upstream files it uses.}</li>
+      </ol>
+
       <form action="projectRelationship" method="get">
         <div class="jenkins-form-item">
-          <label class="jenkins-form-label" for="lhs">${%upstream project}:</label>
+          <label class="jenkins-form-label" for="lhs">${%upstream project}</label>
           <f:combobox id="lhs" fillUrl="fillJobNameItems" name="lhs" value="${request2.getParameter('lhs')}"/>
         </div>
 
         <div class="jenkins-form-item">
-          <label class="jenkins-form-label" for="rhs">${%downstream project}:</label>
+          <label class="jenkins-form-label" for="rhs">${%downstream project}</label>
           <f:combobox id="rhs" fillUrl="fillJobNameItems" name="rhs" value="${request2.getParameter('rhs')}"/>
         </div>
 
