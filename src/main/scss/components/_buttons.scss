@@ -247,11 +247,11 @@
   }
 }
 
-$jenkins-split-button-border-radius: 0.2rem;
+$jenkins-split-button-border-radius: 0.1875rem;
 
 .jenkins-split-button {
   display: flex;
-  gap: 1px;
+  gap: 0.0625rem;
 
   & > :first-child {
     border-top-right-radius: $jenkins-split-button-border-radius;
@@ -259,13 +259,20 @@ $jenkins-split-button-border-radius: 0.2rem;
   }
 
   & > .jenkins-button:last-of-type {
-    padding: 0 5px;
+    padding: 0 0.3125rem;
     border-top-left-radius: $jenkins-split-button-border-radius;
     border-bottom-left-radius: $jenkins-split-button-border-radius;
 
     svg {
-      width: 0.8rem;
-      height: 0.8rem;
+      width: 0.8125rem;
+      height: 0.8125rem;
+      transition: translate var(--elastic-transition);
+    }
+
+    &:hover {
+      svg {
+        translate: 0 1px;
+      }
     }
   }
 }
