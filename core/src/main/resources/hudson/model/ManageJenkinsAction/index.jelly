@@ -33,10 +33,11 @@ THE SOFTWARE.
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
 
-      <!-- TODO - Add permission check-->
-      <div class="jenkins-alert jenkins-alert-info">
-        This is a read-only view of Settings.
-      </div>
+      <j:if test="${!app.hasPermission(app.ADMINISTER)}">
+        <div class="jenkins-alert jenkins-alert-info">
+          This is a read-only view of Settings.
+        </div>
+      </j:if>
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 
