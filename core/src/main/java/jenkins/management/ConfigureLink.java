@@ -31,6 +31,8 @@ import hudson.security.Permission;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
 
+import java.util.Set;
+
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  */
@@ -54,8 +56,8 @@ public class ConfigureLink extends ManagementLink {
 
     @NonNull
     @Override
-    public Permission getRequiredPermission() {
-        return Jenkins.READ;
+    public Set<Permission> getRequiredPermissions() {
+        return Set.of(Jenkins.MANAGE, Jenkins.SYSTEM_READ);
     }
 
     @Override

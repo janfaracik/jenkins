@@ -4,6 +4,8 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.model.ManagementLink;
 import hudson.security.Permission;
 import java.net.URL;
+import java.util.Set;
+
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
 import org.kohsuke.accmod.Restricted;
@@ -43,8 +45,8 @@ public class AboutJenkins extends ManagementLink {
 
     @NonNull
     @Override
-    public Permission getRequiredPermission() {
-        return Jenkins.READ;
+    public Set<Permission> getRequiredPermissions() {
+        return Set.of(Jenkins.MANAGE, Jenkins.SYSTEM_READ);
     }
 
     @NonNull

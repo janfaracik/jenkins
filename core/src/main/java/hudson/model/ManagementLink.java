@@ -32,6 +32,7 @@ import hudson.ExtensionListView;
 import hudson.ExtensionPoint;
 import hudson.security.Permission;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.management.Badge;
@@ -125,6 +126,17 @@ public abstract class ManagementLink implements ExtensionPoint, Action {
      */
     public @NonNull Permission getRequiredPermission() {
         return Jenkins.ADMINISTER;
+    }
+
+    /**
+     * Returns the set of possible permissions required for user to see this management link on the "Manage Jenkins" page ({@link ManageJenkinsAction}).
+     * The user only needs one of the permissions to see the link.
+     *
+     * @since TODO
+     * @return the set of permission(s) required for the link to be shown on "Manage Jenkins".
+     */
+    public @NonNull Set<Permission> getRequiredPermissions() {
+        return Set.of(getRequiredPermission());
     }
 
     /**
