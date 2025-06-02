@@ -30,7 +30,7 @@ THE SOFTWARE.
   <l:layout title="${%New log recorder}" type="one-column">
     <l:breadcrumb title="${%New log recorder}" />
 
-    <l:main-panel>
+    <l:main-panel width="form">
       <l:app-bar title="${%New log recorder}"/>
       <f:form name="configSubmit" method="post" action="newLogRecorder">
         <f:entry title="${%Name}">

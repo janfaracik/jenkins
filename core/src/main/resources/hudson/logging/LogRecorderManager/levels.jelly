@@ -30,7 +30,7 @@ THE SOFTWARE.
   <l:layout title="${%Logger Configuration}" type="one-column">
     <l:breadcrumb title="${%Log Levels}" />
 
-    <l:main-panel>
+    <l:main-panel width="form">
       <l:app-bar title="${%Logger Configuration}">
         <t:help tooltip="${%Additional information on log levels}" href="${%url}"/>
       </l:app-bar>

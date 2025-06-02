@@ -24,12 +24,12 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
-  <l:layout title="${%Appearance}" permissions="${app.MANAGE_AND_SYSTEM_READ}" type="one-column">
+  <l:layout title="${%Appearance}" permissions="${app.MANAGE_AND_SYSTEM_READ}">
     <j:set var="readOnlyMode" value="${!app.hasPermission(app.MANAGE)}"/>
     <j:set var="pluginsUrl" value="${rootURL}/manage/pluginManager/available?filter=UI Themes" />
     <j:set var="hasPlugins" value="${it.hasPlugins()}" />
 
-    <l:main-panel>
+    <l:main-panel width="form">
       <l:app-bar title="${%Appearance}">
         <j:if test="${hasPlugins}">
           <a href="${pluginsUrl}" class="jenkins-button">
@@ -48,9 +48,7 @@ THE SOFTWARE.
           </l:notice>
         </j:when>
         <j:otherwise>
-          <div class="behavior-loading">
-            <l:spinner text="${%Loading}"/>
-          </div>
+          <l:skeleton />
 
           <f:form method="post" name="config" action="configure">
             <j:set var="instance" value="${it}" />

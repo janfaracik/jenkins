@@ -33,7 +33,7 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly"/>
     <!-- no need for additional breadcrumb here as the side panel offers enough functionality to browse between different pages -->
 
-    <l:main-panel>
+    <l:main-panel width="plugins">
       <j:set var="noPlugins"
              value="${empty(app.pluginManager.plugins) and empty(app.pluginManager.failedPlugins)}" />
 
