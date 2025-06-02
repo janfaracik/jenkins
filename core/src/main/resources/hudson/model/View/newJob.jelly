@@ -34,7 +34,7 @@ THE SOFTWARE.
 
     <l:breadcrumb title="${%NewJob(it.newPronoun)}" />
 
-    <l:main-panel>
+    <l:main-panel width="form">
     <div id="add-item-panel" style="display: none;">
       <h1>${%NewJob(it.newPronoun)}</h1>
           <form method="post" action="createItem" name="createItem" id="createItem">
