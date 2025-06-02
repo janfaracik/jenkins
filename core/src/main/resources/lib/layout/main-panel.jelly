@@ -26,7 +26,8 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
   <st:documentation>
     <st:attribute name="width">
-      full-width, form
+      Internal property to set width of the main-panel
+      Available properties are: full-width, form
     </st:attribute>
 
     Generates the body as the main content part of a Jenkins page.
