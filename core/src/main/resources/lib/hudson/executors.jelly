@@ -167,7 +167,7 @@ THE SOFTWARE.
   <div class="pane-frame ${paneIsCollapsed ? 'collapsed' : 'expanded'}" id="executors">
     <div class="pane-header">
       <span class="pane-header-title">
-        <a href="${rootURL}/computer/">${%Build Executor Status}</a>
+        <a href="${rootURL}/manage/computer/">${%Build Executor Status}</a>
       </span>
       <j:if test="${origComputersSize == 1 and !paneIsCollapsed}">
         <span class="pane-header-details" tooltip="${singleToolTip}" data-tooltip-append-to-parent="true">
