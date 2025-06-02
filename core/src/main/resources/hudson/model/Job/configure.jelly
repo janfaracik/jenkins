@@ -41,10 +41,10 @@ THE SOFTWARE.
       <div id="tasks" />
     </l:side-panel>
 
-    <l:main-panel width="form">
+    <l:main-panel width="plugins">
       <div class="behavior-loading"><l:spinner text="${%LOADING}"/></div>
 
-      <f:form method="post" class="jenkins-form" action="configSubmit" name="config" tableClass="config-table">
+      <f:form method="post" action="configSubmit" name="config" tableClass="config-table">
         <l:app-bar title="${%General}" headingLevel="h2">
           <p:config-disableBuild />
         </l:app-bar>
