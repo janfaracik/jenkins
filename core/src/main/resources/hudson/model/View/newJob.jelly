@@ -36,7 +36,8 @@ THE SOFTWARE.
 
     <l:main-panel width="form">
     <div id="add-item-panel" style="display: none;">
-      <h1>${%NewJob(it.newPronoun)}</h1>
+      <l:app-bar title="${%NewJob(it.newPronoun)}" />
+
           <form method="post" action="createItem" name="createItem" id="createItem">
             <div class="header">
               <div class="add-item-name">

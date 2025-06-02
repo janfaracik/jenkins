@@ -8,9 +8,7 @@ def st = namespace("jelly:stapler")
 
 l.layout(permission: app.MANAGE, title: my.displayName) {
     l.main_panel(width: "form") {
-        h1 {
-            text(Messages.ShutdownLink_DisplayName_prepare())
-        }
+        l.app_bar(title: Messages.ShutdownLink_DisplayName_prepare())
 
         p {
             text(my.description)

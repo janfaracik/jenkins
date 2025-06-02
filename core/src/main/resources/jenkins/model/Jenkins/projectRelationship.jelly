@@ -32,7 +32,7 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly"/>
     <l:breadcrumb title="${%Project Relationship}"/>
 
-    <l:main-panel>
+    <l:main-panel width="form">
       <l:app-bar title="${%Project Relationship}">
         <t:help href="projectRelationship-help"/>
       </l:app-bar>

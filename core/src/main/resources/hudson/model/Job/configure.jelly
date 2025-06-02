@@ -41,7 +41,7 @@ THE SOFTWARE.
       <div id="tasks" />
     </l:side-panel>
 
-    <l:main-panel>
+    <l:main-panel width="form">
       <div class="behavior-loading"><l:spinner text="${%LOADING}"/></div>
 
       <f:form method="post" class="jenkins-form" action="configSubmit" name="config" tableClass="config-table">
