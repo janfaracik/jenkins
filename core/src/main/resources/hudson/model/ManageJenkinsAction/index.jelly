@@ -27,11 +27,16 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  <l:layout title="${%Manage Jenkins}">
+  <l:layout title="${it.displayName}">
     <l:main-panel>
-      <l:app-bar title="${%Manage Jenkins}">
+      <l:app-bar title="${it.displayName}">
         <l:search-bar placeholder="${%Search settings}" id="settings-search-bar" />
       </l:app-bar>
+
+      <!-- TODO - Add permission check-->
+      <div class="jenkins-alert jenkins-alert-info">
+        This is a read-only view of Settings.
+      </div>
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 

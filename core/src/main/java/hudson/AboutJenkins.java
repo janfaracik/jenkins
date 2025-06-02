@@ -5,7 +5,6 @@ import hudson.model.ManagementLink;
 import hudson.security.Permission;
 import java.net.URL;
 import java.util.Set;
-
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
 import org.kohsuke.accmod.Restricted;

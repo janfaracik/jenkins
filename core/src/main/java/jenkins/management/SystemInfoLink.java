@@ -28,10 +28,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.ManagementLink;
 import hudson.security.Permission;
+import java.util.Set;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
-
-import java.util.Set;
 
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
