@@ -10,8 +10,8 @@ def f=namespace(lib.FormTagLib)
 def l=namespace(lib.LayoutTagLib)
 def st=namespace("jelly:stapler")
 
-l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request2.getParameter('decorate')) {
-    l.main_panel(width: "form") {
+l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request2.getParameter('decorate'), type:"one-column") {
+    l.main_panel {
         l.app_bar(title: my.displayName)
 
         set("readOnlyMode", !app.hasPermission(app.ADMINISTER))

@@ -26,8 +26,10 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <l:layout title="${command.name}" permission="${app.READ}" type="one-column">
     <l:breadcrumb title="${command.name}" />
-    <l:main-panel width="form">
-      <l:app-bar title="Command ${command.name}" />
+    <l:main-panel>
+      <h1>
+        Command ${command.name}
+      </h1>
       <j:set var="commandArgs" value="${command.name}${command.singleLineSummary}"/>
       <st:include page="example.jelly"/>
       <pre class="jenkins-!-margin-top-3">

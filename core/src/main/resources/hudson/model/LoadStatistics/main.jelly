@@ -24,9 +24,11 @@ THE SOFTWARE.
 
 <!-- renders an HTML fragment that shows trend graph -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
   <st:adjunct includes="hudson.model.LoadStatistics.resources"/>
-  <l:app-bar title="${%title(it.displayName)}" />
+  <h1>
+    ${%title(it.displayName)}
+  </h1>
 
   <f:entry title="${%Timespan}" class="jenkins-form-item--small">
     <div class="jenkins-select">

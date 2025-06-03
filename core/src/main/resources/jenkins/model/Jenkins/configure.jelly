@@ -27,27 +27,16 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<l:layout permissions="${app.MANAGE_AND_SYSTEM_READ}" title="${%System}">
+<l:layout permissions="${app.MANAGE_AND_SYSTEM_READ}" title="${%System}" type="one-column">
+  <st:include page="sidepanel.jelly" />
   <l:breadcrumb title="${%System}" />
 
-  <l:main-panel width="form">
+  <l:main-panel>
     <j:set var="readOnlyMode" value="${!h.hasPermission(app.MANAGE)}"/>
     <l:app-bar title="${%System}" />
 
-    <l:skeleton />
-
-    <f:form method="post" name="config" action="configSubmit">
-      <l:userExperimentalFlag var="manageJenkinsSidebar" flagClassName="jenkins.model.experimentalflags.ManageJenkinsSidebarUserExperimentalFlag" />
-
-      <j:if test="${manageJenkinsSidebar}">
-        <section class="manage-messages manage-messages--border">
-          <j:forEach var="am" items="${app.activeAdministrativeMonitors}">
-            <st:include page="message.jelly" it="${am}" />
-          </j:forEach>
-          <st:include page="downgrade.jelly" />
-        </section>
-      </j:if>
-
+    <div class="behavior-loading"><l:spinner text="${%LOADING}"/></div>
+    <f:form method="post" name="config" action="configSubmit" class="jenkins-form">
       <j:set var="instance" value="${it}" />
       <j:set var="descriptor" value="${instance.descriptor}" />
 
