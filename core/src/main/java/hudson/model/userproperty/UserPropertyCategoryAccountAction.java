@@ -40,8 +40,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import jenkins.model.Jenkins;
-import jenkins.security.UserDetailsCache;
-import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
@@ -96,17 +94,17 @@ public class UserPropertyCategoryAccountAction extends UserPropertyCategoryActio
         User targetUser = this.getTargetUser();
         targetUser.checkPermission(Jenkins.ADMINISTER);
 
-        JSONObject json = req.getSubmittedForm();
-
-        String oldFullName = targetUser.getFullName();
-        targetUser.setFullName(json.getString("fullName"));
-        targetUser.setDescription(json.getString("description"));
+//        JSONObject json = req.getSubmittedForm();
+//
+//        String oldFullName = targetUser.getFullName();
+//        targetUser.setFullName(json.getString("fullName"));
+//        targetUser.setDescription(json.getString("description"));
 
         super.doConfigSubmit(req, rsp);
 
-        if (!oldFullName.equals(targetUser.getFullName())) {
-            UserDetailsCache.get().invalidate(oldFullName);
-        }
+//        if (!oldFullName.equals(targetUser.getFullName())) {
+//            UserDetailsCache.get().invalidate(oldFullName);
+//        }
     }
 
     /**

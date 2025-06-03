@@ -29,29 +29,18 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
     <l:layout permission="${app.ADMINISTER}" title="${%title}">
         <st:include page="sidepanel.jelly" it="${it.targetUser}" />
-        <l:main-panel>
-            <f:form method="post" action="configSubmit" name="config" class="jenkins-form">
-                <h1>
-                    ${%title}
-                </h1>
+        <l:main-panel width="form">
+            <l:app-bar title="${%title}" />
 
+            <f:form method="post" action="configSubmit" name="config">
                 <j:set var="thisAction" value="${it}" />
                 <j:set var="it" value="${thisAction.targetUser}" />
                 <j:set var="instance" value="${it}"/>
-
-                <f:section>
-                    <f:entry title="${%Full name}" description="${%Full name.Description}">
-                        <f:textbox field="fullName" />
-                    </f:entry>
-                    <f:entry title="${%Description}" description="${%Description.Description}">
-                        <f:textarea field="description" codemirror-mode="${app.markupFormatter.codeMirrorMode}" codemirror-config="${app.markupFormatter.codeMirrorConfig}" previewEndpoint="/markupFormatter/previewDescription" />
-                    </f:entry>
-                </f:section>
-
                 <j:set var="descriptors" value="${thisAction.myCategoryDescriptors}" />
                 <j:set var="instances" value="${it.properties}" />
+
                 <j:forEach var="d" items="${descriptors}" varStatus="loop">
-                    <j:if test="${d.enabled}">
+                    <j:if test="${d.enabled and d.userPropertySubcategory == null}">
                         <f:section title="${d.displayName}" description="${d.description}">
                             <j:set var="descriptor" value="${d}" />
                             <j:set var="instance" value="${instances[d]}" />
