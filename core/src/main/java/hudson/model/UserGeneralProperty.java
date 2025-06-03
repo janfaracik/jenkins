@@ -5,9 +5,14 @@ import hudson.Extension;
 import hudson.model.userproperty.UserPropertyCategory;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
+import org.kohsuke.stapler.DataBoundConstructor;
 
 @Restricted(NoExternalUse.class)
 public class UserGeneralProperty extends UserProperty {
+
+    @DataBoundConstructor
+    public UserGeneralProperty() {
+    }
 
     @Extension(ordinal = Integer.MAX_VALUE)
     public static class DescriptorImpl extends UserPropertyDescriptor {

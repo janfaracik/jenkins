@@ -7,7 +7,7 @@ import hudson.model.userproperty.UserPropertyCategory;
 // TODO - terrible name
 public class UserGeneralPropertiesProperty extends UserProperty {
 
-    @Extension
+    @Extension(ordinal = Integer.MAX_VALUE - 1)
     public static class DescriptorImpl extends UserPropertyDescriptor {
 
         @NonNull
