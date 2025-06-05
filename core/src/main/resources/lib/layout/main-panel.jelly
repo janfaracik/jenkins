@@ -25,16 +25,17 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:x="jelly:xml" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
   <st:documentation>
-    <st:attribute name="width">
-      Internal property to set width of the main-panel
-      Available properties are: full-width, form
+    <st:attribute name="type">
+      Internal attribute for setting main panel width.
+      Allowed values: medium, wide, full.
+      Defaults to full.
     </st:attribute>
 
     Generates the body as the main content part of a Jenkins page.
   </st:documentation>
 
   <j:if test="${mode=='main-panel'}">
-    <div id="main-panel" class="${attrs.width == 'form' ? 'fooooorm' : ''} ${attrs.width == 'plugins' ? 'pluginssss' : ''}">
+    <div id="main-panel" class="jenkins-main-panel--${attrs.type}">
       <j:if test="${app.isQuietingDown()}">
         <j:choose>
           <j:when test="${app.isPreparingSafeRestart()}">

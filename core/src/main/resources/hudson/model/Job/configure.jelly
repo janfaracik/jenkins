@@ -41,7 +41,7 @@ THE SOFTWARE.
       <div id="tasks" />
     </l:side-panel>
 
-    <l:main-panel width="plugins">
+    <l:main-panel type="wide">
       <div class="behavior-loading"><l:spinner text="${%LOADING}"/></div>
 
       <f:form method="post" action="configSubmit" name="config" tableClass="config-table">
