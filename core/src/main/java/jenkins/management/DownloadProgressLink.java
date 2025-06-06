@@ -27,7 +27,6 @@ package jenkins.management;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.model.ManagementLink;
-import hudson.model.UpdateCenter;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
@@ -35,17 +34,23 @@ import org.jenkinsci.Symbol;
 /**
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
  */
-@Extension(ordinal = 4) @Symbol("plugins")
-public class PluginsLink extends ManagementLink {
+@Extension @Symbol("plugins")
+public class DownloadProgressLink extends ManagementLink {
 
     @Override
     public String getIconFileName() {
-        return "symbol-download";
+        // Hide the 'Download progress' link if there are
+        // no active downloads or restarts pending
+        if (Jenkins.get().getUpdateCenter().getJobs().isEmpty()) {
+            return null;
+        }
+
+        return "symbol-list";
     }
 
     @Override
     public String getDisplayName() {
-        return "Updates";
+        return "Download progress";
     }
 
     @Override
@@ -55,7 +60,7 @@ public class PluginsLink extends ManagementLink {
 
     @Override
     public String getUrlName() {
-        return "pluginManager";
+        return "pluginManager/updates/";
     }
 
     @NonNull
@@ -68,11 +73,5 @@ public class PluginsLink extends ManagementLink {
     @Override
     public Category getCategory() {
         return Category.PLUGINS;
-    }
-
-    @Override
-    public Badge getBadge() {
-        final UpdateCenter updateCenter = Jenkins.get().getUpdateCenter();
-        return updateCenter.getBadge();
     }
 }

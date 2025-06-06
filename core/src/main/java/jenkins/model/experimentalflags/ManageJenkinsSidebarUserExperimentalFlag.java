@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2012, CloudBees, Intl., Nicolas De loof
+ * Copyright (c) 2025, Jan Faracik
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,57 +22,28 @@
  * THE SOFTWARE.
  */
 
-package jenkins.management;
+package jenkins.model.experimentalflags;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.Extension;
-import hudson.model.ManagementLink;
-import hudson.model.UpdateCenter;
-import hudson.security.Permission;
-import jenkins.model.Jenkins;
-import org.jenkinsci.Symbol;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
-/**
- * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
- */
-@Extension(ordinal = 4) @Symbol("plugins")
-public class PluginsLink extends ManagementLink {
-
-    @Override
-    public String getIconFileName() {
-        return "symbol-download";
+@Extension
+@Restricted(NoExternalUse.class)
+public class ManageJenkinsSidebarUserExperimentalFlag extends BooleanUserExperimentalFlag {
+    public ManageJenkinsSidebarUserExperimentalFlag() {
+        super("manage-jenkins-sidebar.flag");
     }
 
     @Override
     public String getDisplayName() {
-        return "Updates";
+        return "Manage Jenkins sidebar";
     }
 
+    @Nullable
     @Override
-    public String getDescription() {
-        return Messages.PluginsLink_Description();
-    }
-
-    @Override
-    public String getUrlName() {
-        return "pluginManager";
-    }
-
-    @NonNull
-    @Override
-    public Permission getRequiredPermission() {
-        return Jenkins.SYSTEM_READ;
-    }
-
-    @NonNull
-    @Override
-    public Category getCategory() {
-        return Category.PLUGINS;
-    }
-
-    @Override
-    public Badge getBadge() {
-        final UpdateCenter updateCenter = Jenkins.get().getUpdateCenter();
-        return updateCenter.getBadge();
+    public String getShortDescription() {
+        return "Enables a sidebar for the Manage Jenkins pages for easier navigation.";
     }
 }
