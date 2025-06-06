@@ -96,17 +96,18 @@
   justify-content: start !important;
   gap: 1rem;
   max-width: 1200px;
-  overflow: hidden;
   text-overflow: ellipsis;
 
   svg {
     width: 2rem !important;
     height: 2rem !important;
+    margin-left: -0.0625rem;
   }
 
   img {
     width: 2.375rem;
     height: 2.375rem;
+    margin-left: -0.25rem;
   }
 }
 

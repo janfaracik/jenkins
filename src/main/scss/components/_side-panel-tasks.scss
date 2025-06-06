@@ -1,6 +1,8 @@
 @use "../abstracts/mixins";
 @use "../base/breakpoints";
 
+$background-outset: 0.5rem;
+
 #tasks,
 .subtasks {
   display: flex;
@@ -8,9 +10,9 @@
   margin: 0 var(--section-padding) var(--section-padding) var(--section-padding);
   gap: 0.125rem;
 
-  //@media (min-width: breakpoints.$tablet-breakpoint) {
-  //  margin-right: calc($background-outset);
-  //}
+  @media (min-width: breakpoints.$tablet-breakpoint) {
+    margin-right: calc($background-outset);
+  }
 }
 
 .subtasks {
@@ -29,7 +31,7 @@
   }
 
   & > #tasks > .jenkins-search-container {
-    //margin: 0 #{-$background-outset} 1rem;
+    margin: 0 #{-$background-outset} 1rem;
 
     .jenkins-search__icon {
       width: 2.8rem;
@@ -43,7 +45,7 @@
 }
 
 #tasks .task {
-  //margin: 0 calc($background-outset * -1);
+  margin: 0 0 0 calc($background-outset * -1);
 }
 
 #tasks .task .task-link {
@@ -52,17 +54,13 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding: 0.5rem;
-  gap: 0.65rem;
+  padding: 0.5rem 0.8125rem;
+  gap: 0.625rem;
   width: 100%;
   font-size: var(--font-size-sm);
   color: var(--text-color);
   margin: 0;
   transition: opacity var(--standard-transition);
-
-  &::before, &::after {
-    inset: 0 -5px;
-  }
 
   .task-icon-link {
     display: inline-flex;
