@@ -31,15 +31,15 @@ $background-outset: 0.5rem;
   }
 
   & > #tasks > .jenkins-search-container {
-    margin: 0 #{-$background-outset} 1rem;
+    margin: 0 0 1rem #{-$background-outset};
 
     .jenkins-search__icon {
-      width: 2.8rem;
+      width: 2.625rem;
       aspect-ratio: unset;
     }
 
     .jenkins-search__input {
-      padding-left: 2.6rem;
+      padding-left: 2.5rem;
     }
   }
 }
