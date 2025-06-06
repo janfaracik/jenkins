@@ -61,6 +61,7 @@ $background-outset: 0.5rem;
   color: var(--text-color);
   margin: 0;
   transition: opacity var(--standard-transition);
+  min-height: 2.375rem;
 
   .task-icon-link {
     display: inline-flex;
