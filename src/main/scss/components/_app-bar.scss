@@ -114,39 +114,40 @@
 .bottom-sticker,
 #bottom-sticker {
   position: sticky;
-
-  // This has to be set to -1px so that IntersectionObserver can add the
-  // &--stuck class when the element is stuck to the bottom of the screen
-  // https://css-tricks.com/how-to-detect-when-a-sticky-element-gets-pinned/
-  bottom: -1px;
-  z-index: 998; /* behind top-sticker */
+  bottom: calc((var(--section-padding) - 1rem) * -1);
+  z-index: 998;
 }
 
 .bottom-sticker-inner {
   position: relative;
   padding: var(--section-padding) 0;
-  z-index: 0;
-  --semi-translucent: color-mix(in srgb, var(--background) 75%, transparent);
-  backdrop-filter: blur(20px);
-  background: linear-gradient(
-                  to right,
-                  var(--background),
-                  var(--semi-translucent) 3rem,
-                  var(--semi-translucent) calc(100% - 3rem),
-                  var(--background)
-  );
-  border-top: var(--jenkins-border-width) solid var(--jenkins-border-color);
 
-  &::after {
+  &::before, &::after {
     content: "";
     position: absolute;
-    top: -2rem;
+    top: 0;
     left: 0;
     right: 0;
-    max-width: 100%;
-    height: calc(2rem - var(--jenkins-border-width));
-    opacity: 0;
     transition: var(--standard-transition);
+  }
+
+  &::before {
+    --semi-translucent: color-mix(in srgb, var(--background) 75%, transparent);
+    bottom: 0;
+    backdrop-filter: blur(20px);
+    background: linear-gradient(
+                    to right,
+                    var(--background),
+                    var(--semi-translucent) 3rem,
+                    var(--semi-translucent) calc(100% - 3rem),
+                    var(--background)
+    );
+    border-top: var(--jenkins-border-width) solid var(--jenkins-border-color);
+  }
+
+  &::after {
+    top: calc(var(--section-padding) - 1rem - 2rem);
+    height: 2rem;
     pointer-events: none;
     background: linear-gradient(transparent, var(--bottom-app-bar-shadow));
     mask-image: linear-gradient(
@@ -156,11 +157,14 @@
       white calc(100% - var(--section-padding)),
       transparent
     );
+    opacity: 0;
   }
 
   &--stuck {
     .bottom-sticker-inner {
-      padding: 1rem 0;
+      &::before {
+        top: calc(var(--section-padding) - 1rem);
+      }
 
       &::after {
         opacity: 1 !important;
