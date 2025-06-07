@@ -111,10 +111,12 @@
   }
 }
 
+$bottom-app-bar-padding: 0.875rem;
+
 .bottom-sticker,
 #bottom-sticker {
   position: sticky;
-  bottom: calc((var(--section-padding) - 1rem) * -1);
+  bottom: calc((var(--section-padding) - $bottom-app-bar-padding) * -1);
   z-index: 998;
 }
 
@@ -146,7 +148,7 @@
   }
 
   &::after {
-    top: calc(var(--section-padding) - 1rem - 2rem);
+    top: calc(var(--section-padding) - $bottom-app-bar-padding - 2rem);
     height: 2rem;
     pointer-events: none;
     background: linear-gradient(transparent, var(--bottom-app-bar-shadow));
@@ -163,7 +165,7 @@
   &--stuck {
     .bottom-sticker-inner {
       &::before {
-        top: calc(var(--section-padding) - 1rem);
+        top: calc(var(--section-padding) - $bottom-app-bar-padding);
       }
 
       &::after {
