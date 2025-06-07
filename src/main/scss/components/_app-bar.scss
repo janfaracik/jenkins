@@ -122,7 +122,7 @@ $bottom-app-bar-padding: 0.875rem;
   );
   bottom: -1px;
   margin-bottom: calc(
-    (2.375rem + $bottom-app-bar-padding + $bottom-app-bar-padding) * -1
+    (2.375rem + $bottom-app-bar-padding) * -1
   );
   backdrop-filter: blur(20px);
   background: linear-gradient(
@@ -164,11 +164,11 @@ $bottom-app-bar-padding: 0.875rem;
 .bottom-sticker,
 #bottom-sticker {
   position: sticky;
-  bottom: calc((var(--section-padding) - $bottom-app-bar-padding) * -1);
+  bottom: 0;
   z-index: 998;
 }
 
 .bottom-sticker-inner {
   position: relative;
-  padding: var(--section-padding) 0;
+  padding: $bottom-app-bar-padding 0;
 }
