@@ -113,42 +113,34 @@
 
 $bottom-app-bar-padding: 0.875rem;
 
-.bottom-sticker,
-#bottom-sticker {
+.jenkins-bottom-app-bar__shadow {
+  --semi-translucent: color-mix(in sRGB, var(--background) 75%, transparent);
+
   position: sticky;
-  bottom: calc((var(--section-padding) - $bottom-app-bar-padding) * -1);
-  z-index: 998;
-}
-
-.bottom-sticker-inner {
-  position: relative;
-  padding: var(--section-padding) 0;
-
-  &::before, &::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    transition: var(--standard-transition);
-  }
-
-  &::before {
-    --semi-translucent: color-mix(in srgb, var(--background) 75%, transparent);
-    bottom: 0;
-    backdrop-filter: blur(20px);
-    background: linear-gradient(
-                    to right,
-                    var(--background),
-                    var(--semi-translucent) 3rem,
-                    var(--semi-translucent) calc(100% - 3rem),
-                    var(--background)
-    );
-    border-top: var(--jenkins-border-width) solid var(--jenkins-border-color);
-  }
+  height: calc(
+    2.375rem + $bottom-app-bar-padding + $bottom-app-bar-padding + 1px
+  );
+  bottom: -1px;
+  margin-bottom: calc(
+    (2.375rem + $bottom-app-bar-padding + $bottom-app-bar-padding) * -1
+  );
+  backdrop-filter: blur(20px);
+  background: linear-gradient(
+    to right,
+    var(--background),
+    var(--semi-translucent) 3rem,
+    var(--semi-translucent) calc(100% - 3rem),
+    var(--background)
+  );
+  border-top: var(--jenkins-border-width) solid var(--jenkins-border-color);
 
   &::after {
-    top: calc(var(--section-padding) - $bottom-app-bar-padding - 2rem);
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    transition: opacity var(--standard-transition);
+    top: -2rem;
     height: 2rem;
     pointer-events: none;
     background: linear-gradient(transparent, var(--bottom-app-bar-shadow));
@@ -163,14 +155,20 @@ $bottom-app-bar-padding: 0.875rem;
   }
 
   &--stuck {
-    .bottom-sticker-inner {
-      &::before {
-        top: calc(var(--section-padding) - $bottom-app-bar-padding);
-      }
-
-      &::after {
-        opacity: 1 !important;
-      }
+    &::after {
+      opacity: 1 !important;
     }
   }
+}
+
+.bottom-sticker,
+#bottom-sticker {
+  position: sticky;
+  bottom: calc((var(--section-padding) - $bottom-app-bar-padding) * -1);
+  z-index: 998;
+}
+
+.bottom-sticker-inner {
+  position: relative;
+  padding: var(--section-padding) 0;
 }

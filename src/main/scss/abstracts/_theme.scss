@@ -281,15 +281,17 @@ $semantics: (
     var(--text-color-secondary) 50%,
     transparent
   );
-  //--form-item-max-width: min(65vw, 1600px);
-  //--form-item-max-width--medium: min(50vw, 1400px);
-  //--form-item-max-width--small: min(35vw, 1200px);
+
+  // --form-item-max-width: min(65vw, 1600px);
+  // --form-item-max-width--medium: min(50vw, 1400px);
+  // --form-item-max-width--small: min(35vw, 1200px);
 
   @media screen and (max-width: breakpoints.$tablet-breakpoint) {
     --section-padding: 1.25rem;
-    //--form-item-max-width: 100%;
-    //--form-item-max-width--medium: 100%;
-    //--form-item-max-width--small: 100%;
+
+    // --form-item-max-width: 100%;
+    // --form-item-max-width--medium: 100%;
+    // --form-item-max-width--small: 100%;
   }
 
   --form-label-font-weight: var(--font-bold-weight);
