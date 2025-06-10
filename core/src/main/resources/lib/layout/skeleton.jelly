@@ -30,12 +30,21 @@ THE SOFTWARE.
 
       Defaults to 'form'.
     </st:attribute>
+    <st:attribute name="id" use="optional">
+      If set, id will be the identifier for the component
+    </st:attribute>
+
     Placeholder skeleton element, hiding the rest of its parent container until the page has loaded
   </st:documentation>
 
   <j:switch on="${attrs.type}">
+    <j:case value="table">
+      <div class="jenkins-table-skeleton" id="${attrs.id}">
+        <div />
+      </div>
+    </j:case>
     <j:case value="side-panel">
-      <div class="jenkins-side-panel-skeleton">
+      <div class="jenkins-side-panel-skeleton" id="${attrs.id}">
         <div />
         <div />
         <div />
@@ -44,7 +53,7 @@ THE SOFTWARE.
       </div>
     </j:case>
     <j:default>
-      <div class="jenkins-form-skeleton">
+      <div class="jenkins-form-skeleton" id="${attrs.id}">
         <span />
         <div />
         <span />

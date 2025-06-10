@@ -27,7 +27,7 @@ function progressivelyRender(handler, callback, statusId) {
     var r = response.responseObject();
     if (r.status == "done") {
       callback(r.data);
-      document.getElementById(statusId).style.display = "none";
+      document.getElementById(statusId).remove();
     } else if (r.status == "canceled") {
       // TODO ugly; replace with single tr of class=unknown?
       document.querySelector("#" + statusId + " span").innerHTML = "Aborted.";
@@ -39,8 +39,8 @@ function progressivelyRender(handler, callback, statusId) {
         .classList.remove("app-progress-bar--animate");
     } else {
       callback(r.data);
-      document.querySelector("#" + statusId + " span").style.width =
-        100 * r.status + "%";
+      // document.querySelector("#" + statusId + " span").style.width =
+      //   100 * r.status + "%";
       checkNewsLater(500);
     }
   }

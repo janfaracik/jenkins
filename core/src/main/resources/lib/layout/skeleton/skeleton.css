@@ -1,3 +1,4 @@
+.jenkins-table-skeleton,
 .jenkins-side-panel-skeleton,
 .jenkins-form-skeleton {
   position: relative;
@@ -62,6 +63,16 @@
   & > div {
     height: 2.375rem;
     margin-bottom: 1rem;
+  }
+}
+
+.jenkins-table-skeleton {
+  & > div {
+    height: 50vh;
+  }
+
+  & + *, & + * + *, & + * + * + *, & + * + * + * + * {
+    display: none;
   }
 }
 
