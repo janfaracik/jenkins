@@ -2,6 +2,7 @@
 
 .jenkins-table {
   --table-padding: 0.55rem;
+  --sortheader-transition: 0s;
 
   position: relative;
   width: 100%;
@@ -59,12 +60,64 @@
           padding-right: var(--table-padding);
         }
 
-        a {
+        .sortheader {
+          @include mixins.item;
+
+          padding: 7px 0;
+          margin-block: -7px;
           color: var(--table-header-foreground);
-          font-weight: 700;
+          font-weight: inherit;
+          font-size: inherit;
+          line-height: 1 !important;
+
+          &::before,
+          &::after {
+            inset: 0 -10px;
+            pointer-events: all;
+          }
+
+          &--up,
+          &--down {
+            &::before,
+            &::after {
+              right: -27px;
+            }
+
+            .sortarrow {
+              opacity: 1 !important;
+              scale: 1 !important;
+              translate: 5px 0 !important;
+            }
+          }
+
+          &--up {
+            .sortarrow {
+              rotate: 180deg;
+            }
+          }
 
           span.sortarrow {
-            width: 24px;
+            position: absolute;
+            display: inline-flex;
+            width: 0.875rem;
+            height: 0.875rem;
+            transition: var(--sortheader-transition);
+            opacity: 0;
+            scale: 0.5;
+            translate: -5px 0;
+
+            svg {
+              width: 0.875rem;
+              height: 0.875rem;
+              transition: var(--sortheader-transition);
+              opacity: 0.65;
+            }
+          }
+
+          &:hover {
+            svg {
+              opacity: 1 !important;
+            }
           }
         }
 
@@ -139,9 +192,9 @@
 
   &__cell--tight {
     padding-left: 0 !important;
-    text-align: right !important;
+    text-align: center !important;
     white-space: nowrap;
-    width: 4rem;
+    width: 3.5rem;
   }
 
   &__cell--checkbox {
@@ -158,8 +211,7 @@
     display: inline-flex;
   }
 
-  &__link,
-  .sortheader {
+  &__link {
     display: inline-flex;
   }
 
@@ -257,7 +309,6 @@
   }
 
   &__button,
-  .sortheader,
   &__link {
     @include mixins.item($border: false);
 
@@ -280,7 +331,6 @@
     &::before,
     &::after {
       inset: -7px -10px;
-      border-radius: 6px;
     }
   }
 
