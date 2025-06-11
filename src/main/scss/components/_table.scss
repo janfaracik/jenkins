@@ -61,7 +61,7 @@
         }
 
         .sortheader {
-          @include mixins.item;
+          @include mixins.item($border: false);
 
           padding: 7px 0;
           margin-block: -7px;
