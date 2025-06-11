@@ -153,7 +153,8 @@ $semantics: (
   // Table
   --table-background: color-mix(in oklch, var(--text-color-secondary) 7.5%, var(--background));
   --table-header-foreground: var(--text-color);
-  --table-body-background: #fff;
+  //--table-body-background: #fff;
+  --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
   --table-border-radius: 0.75rem;
   --table-row-border-radius: 0.3125rem;
