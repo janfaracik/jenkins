@@ -81,7 +81,7 @@
     & > tr {
       color: var(--table-body-foreground);
 
-      & > td {
+      & > td, & > th {
         background: var(--table-body-background);
         vertical-align: middle;
         padding: var(--table-padding) 0 var(--table-padding) 1.6rem;
@@ -97,36 +97,41 @@
       }
 
       // Style the rows so that the first and last have a larger border radius
-      & > td:first-of-type {
+      & > *:first-of-type {
         border-top-left-radius: var(--table-row-border-radius);
         border-bottom-left-radius: var(--table-row-border-radius);
       }
 
-      & > td:last-of-type {
+      & > *:last-of-type {
         border-top-right-radius: var(--table-row-border-radius);
         border-bottom-right-radius: var(--table-row-border-radius);
       }
 
       // First row
       &:first-of-type {
-        & > td:first-of-type {
+        & > *:first-of-type {
           border-top-left-radius: var(--table-border-radius);
         }
 
-        & > td:last-of-type {
+        & > *:last-of-type {
           border-top-right-radius: var(--table-border-radius);
         }
       }
 
       // Last row
       &:last-of-type {
-        & > td:first-of-type {
+        & > *:first-of-type {
           border-bottom-left-radius: var(--table-border-radius);
         }
 
-        & > td:last-of-type {
+        & > *:last-of-type {
           border-bottom-right-radius: var(--table-border-radius);
         }
+      }
+
+      & > th {
+        color: var(--text-color-secondary);
+          font-weight: var(--font-bold-weight);
       }
     }
   }
