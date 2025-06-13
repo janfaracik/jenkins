@@ -58,10 +58,15 @@
 
 @mixin item($border: true) {
   position: relative;
+  appearance: none;
   z-index: 0;
   text-decoration: none !important;
   font-weight: normal;
-  border-radius: 0.66rem;
+  border-radius: var(--form-input-border-radius);
+  cursor: pointer;
+  background: transparent;
+  outline: none;
+  border: none;
 
   &::before,
   &::after {
@@ -75,8 +80,8 @@
   }
 
   &::before {
-    background-color: transparent;
-    border: var(--jenkins-border);
+    background-color: var(--item-background);
+    border: var(--jenkins-border--subtle);
   }
 
   &::after {
@@ -89,7 +94,9 @@
 
   &:not(:disabled) {
     &:hover,
-    &:focus-visible {
+    &:focus-visible,
+    &[aria-describedby],
+    &[aria-expanded="true"] {
       &::before {
         background-color: var(--item-background--hover);
       }
@@ -117,7 +124,7 @@
   }
 
   @if $border == false {
-    &:not(:hover, &:active, &:focus) {
+    &:not(:hover, &:active, &:focus, &[aria-expanded="true"]) {
       &::before {
         border-color: transparent;
       }

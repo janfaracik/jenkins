@@ -538,7 +538,7 @@ function findNext(src, filter) {
 function findFormItem(src, name, directionF) {
   const name2 = "_." + name; // handles <textbox field="..." /> notation silently
   return directionF(src, function (e) {
-    if (e.tagName === "INPUT" && e.type === "radio" ) {
+    if (e.tagName === "INPUT" && e.type === "radio") {
       if (e.checked === true) {
         let r = 0;
         while (e.name.substring(r, r + 8) === "removeme") {
@@ -547,7 +547,7 @@ function findFormItem(src, name, directionF) {
         }
         return name === e.name.substring(r);
       }
-      return false
+      return false;
     }
     return (
       (e.tagName === "INPUT" ||
@@ -734,11 +734,12 @@ function registerValidator(e) {
           return;
         }
 
-        if (c.tagName === 'INPUT' && c.type === "radio") {
-          document.querySelectorAll(`input[name='${c.name}'][type='radio']`)
-            .forEach(element => {
+        if (c.tagName === "INPUT" && c.type === "radio") {
+          document
+            .querySelectorAll(`input[name='${c.name}'][type='radio']`)
+            .forEach((element) => {
               element.addEventListener("change", checker.bind(e));
-            })
+            });
         } else {
           c.addEventListener("change", checker.bind(e));
         }
@@ -1873,12 +1874,10 @@ function xor(a, b) {
 // used by editableDescription.jelly to replace the description field with a form
 // eslint-disable-next-line no-unused-vars
 function replaceDescription(initialDescription, submissionUrl) {
-  var d = document.getElementById("description");
-  let button = d.firstElementChild.nextElementSibling;
-  if (button !== null) {
-    d.firstElementChild.nextElementSibling.innerHTML =
-      "<div class='jenkins-spinner'></div>";
-  }
+  const descriptionContent = document.getElementById("description-content");
+  const descriptionEditForm = document.getElementById("description-edit-form");
+  descriptionEditForm.innerHTML = "<div class='jenkins-spinner'></div>";
+  descriptionContent.classList.add("jenkins-hidden");
   let parameters = {};
   if (initialDescription !== null && initialDescription !== "") {
     parameters["description"] = initialDescription;
@@ -1894,10 +1893,11 @@ function replaceDescription(initialDescription, submissionUrl) {
     body: objectToUrlFormEncoded(parameters),
   }).then((rsp) => {
     rsp.text().then((responseText) => {
-      d.innerHTML = responseText;
+      descriptionEditForm.innerHTML = responseText;
+      descriptionEditForm.classList.remove("jenkins-hidden");
       evalInnerHtmlScripts(responseText, function () {
-        Behaviour.applySubtree(d);
-        d.getElementsByTagName("TEXTAREA")[0].focus();
+        Behaviour.applySubtree(descriptionEditForm);
+        descriptionEditForm.getElementsByTagName("TEXTAREA")[0].focus();
       });
       layoutUpdateCallback.call();
       return false;
@@ -2029,10 +2029,14 @@ function AutoScroller(scrollContainer) {
     scrollToBottom: function () {
       var scrollDiv = this.scrollContainer;
       var currentHeight = this.getCurrentHeight();
-      if (document.documentElement) {
-        document.documentElement.scrollTop = currentHeight;
+
+      if (scrollDiv === document.body) {
+        window.scrollTo({
+          top: currentHeight,
+        });
+      } else {
+        scrollDiv.scrollTop = currentHeight;
       }
-      scrollDiv.scrollTop = currentHeight;
     },
   };
 }
