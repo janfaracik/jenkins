@@ -9,7 +9,7 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
 
   position: relative;
   width: 100%;
-  background: linear-gradient(var(--table-background), var(--table-background) 3rem, var(--card-border-color) 3rem);
+  background: linear-gradient(var(--table-background), var(--table-background) 4rem, var(--card-border-color) 4rem);
   border-radius: $table-border-radius;
   border-spacing: 0;
   background-clip: padding-box;
