@@ -41,7 +41,7 @@ THE SOFTWARE.
       </j:if>
       <j:set var="hasPermission" value="${h.hasAnyPermission(it, app.MANAGE_AND_SYSTEM_READ)}" />
       <j:if test="${hasPermission}">
-        <a class="jenkins-button" href="configure" tooltip="${%Configure Node Monitors}">
+        <a class="jenkins-button" href="configure">
           ${%Configure Monitors}
         </a>
       </j:if>
@@ -55,7 +55,6 @@ THE SOFTWARE.
     </l:app-bar>
 
     <j:set var="monitors" value="${it._monitors}"/>
-    <j:set var="tableWidth" value="${3}"/>
     <t:setIconSize/>
     <table id="computers" class="jenkins-table ${iconSize == '16x16' ? 'jenkins-table--small' : iconSize == '24x24' ? 'jenkins-table--medium' : ''} sortable">
       <thead>
@@ -64,8 +63,7 @@ THE SOFTWARE.
           <th initialSortDir="down">${%Name}</th>
           <j:forEach var="m" items="${monitors}">
             <j:if test="${m.columnCaption!=null}">
-              <j:set var="tableWidth" value="${tableWidth+1}"/>
-              <th align="right" tooltip="${m.descriptor.timestampString}">${m.columnCaption}</th>
+              <th align="right">${m.columnCaption}</th>
             </j:if>
           </j:forEach>
           <th class="jenkins-table__cell--tight" data-sort-disable="true" />
@@ -82,7 +80,7 @@ THE SOFTWARE.
           </td>
 
           <td>
-            <a href="../${c.url}" class="jenkins-table__link model-link inside">${c.displayName}</a>
+            <a href="../${c.url}" class="jenkins-table__link">${c.displayName}</a>
           </td>
 
           <j:forEach var="m" items="${monitors}">
@@ -95,9 +93,10 @@ THE SOFTWARE.
           <td class="jenkins-table__cell--tight">
             <j:if test="${c.hasPermission(extendedReadPermission)}">
               <div class="jenkins-table__cell__button-wrapper">
-                <a href="../${c.url}configure" class="jenkins-button jenkins-button--tertiary">
-                  <l:icon src="symbol-settings" />
-                </a>
+                <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
+                        data-href="../${c.url}">
+                  <l:icon src="symbol-menu" />
+                </button>
               </div>
             </j:if>
           </td>
@@ -111,7 +110,7 @@ THE SOFTWARE.
 
       <tr class="sortbottom">
         <th />
-        <th>${%Data obtained}</th>
+        <th align="left">${%Data obtained}</th>
         <j:forEach var="m" items="${monitors}">
           <j:if test="${m.columnCaption!=null}">
             <th align="right">

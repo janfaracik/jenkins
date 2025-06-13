@@ -1,31 +1,20 @@
 @use "../abstracts/mixins";
 
+$table-border-radius: 1rem;
+$table-border-radius-inset: calc(1rem - var(--jenkins-border-width));
+$table-border: var(--jenkins-border-width) solid var(--card-border-color);
+
 .jenkins-table {
   --table-padding: 0.55rem;
 
   position: relative;
   width: 100%;
-  background: var(--table-background);
-  border-radius: calc(
-    var(--table-border-radius) + (var(--card-border-width) * 2)
-  );
-  border: calc(var(--card-border-width) * 2) solid var(--table-background);
-  border-bottom-width: var(--card-border-width);
-  border-spacing: 0 var(--card-border-width);
+  background: linear-gradient(var(--table-background), var(--table-background) 3rem, var(--card-border-color) 3rem);
+  border-radius: $table-border-radius;
+  border-spacing: 0;
   background-clip: padding-box;
   margin-bottom: var(--section-padding);
-
-  // The '::before' pseudo-element is causing overflow issues in Firefox, so disable it for that browser
-  @supports (not (-moz-appearance: none)) {
-    &::before {
-      content: "";
-      position: absolute;
-      inset: -3px -3px -2px;
-      border: var(--jenkins-border--subtle);
-      border-radius: inherit;
-      pointer-events: none;
-    }
-  }
+  border: $table-border;
 
   * {
     -webkit-border-horizontal-spacing: 0;
@@ -37,8 +26,8 @@
       & > th {
         color: var(--table-header-foreground);
         text-align: left;
-        padding-top: calc(var(--table-padding) * 0.9);
-        padding-bottom: calc((var(--table-padding) * 0.9) + 2px);
+        padding-top: var(--table-padding);
+        padding-bottom: var(--table-padding);
         padding-left: 1.6rem;
         font-size: var(--font-size-sm);
         font-weight: var(--font-bold-weight);
@@ -80,53 +69,57 @@
   & > tbody {
     & > tr {
       color: var(--table-body-foreground);
+      background-color: var(--table-background);
 
-      & > td {
+      &:first-of-type > * {
+        border-top: $table-border;
+
+        &:first-of-type {
+          border-top-left-radius: $table-border-radius-inset;
+        }
+
+        &:last-of-type {
+          border-top-right-radius: $table-border-radius-inset;
+        }
+      }
+
+      &:last-of-type > * {
+        &:first-of-type {
+          border-bottom-left-radius: $table-border-radius-inset;
+        }
+
+        &:last-of-type {
+          border-bottom-right-radius: $table-border-radius-inset;
+        }
+      }
+
+      & > * {
+        border-bottom: $table-border;
         background: var(--table-body-background);
         vertical-align: middle;
         padding: var(--table-padding) 0 var(--table-padding) 1.6rem;
         height: 3rem;
 
+        // Style the rows so that the first and last have a larger border radius
         &:first-of-type {
+          border-top-left-radius: var(--table-row-border-radius);
+          border-bottom-left-radius: var(--table-row-border-radius);
+          border-left: $table-border;
           padding-left: calc(var(--table-padding) * 2);
         }
 
         &:last-of-type {
+          border-top-right-radius: var(--table-row-border-radius);
+          border-bottom-right-radius: var(--table-row-border-radius);
+          border-right: $table-border;
           padding-right: var(--table-padding);
         }
       }
 
-      // Style the rows so that the first and last have a larger border radius
-      & > td:first-of-type {
-        border-top-left-radius: var(--table-row-border-radius);
-        border-bottom-left-radius: var(--table-row-border-radius);
-      }
-
-      & > td:last-of-type {
-        border-top-right-radius: var(--table-row-border-radius);
-        border-bottom-right-radius: var(--table-row-border-radius);
-      }
-
-      // First row
-      &:first-of-type {
-        & > td:first-of-type {
-          border-top-left-radius: var(--table-border-radius);
-        }
-
-        & > td:last-of-type {
-          border-top-right-radius: var(--table-border-radius);
-        }
-      }
-
-      // Last row
-      &:last-of-type {
-        & > td:first-of-type {
-          border-bottom-left-radius: var(--table-border-radius);
-        }
-
-        & > td:last-of-type {
-          border-bottom-right-radius: var(--table-border-radius);
-        }
+      & > th {
+        background: color-mix(in srgb, var(--table-background) 40%, var(--table-body-background));
+        color: var(--text-color-secondary);
+        font-weight: var(--font-bold-weight);
       }
     }
   }
