@@ -36,9 +36,9 @@ THE SOFTWARE.
 
     <l:main-panel>
     <div id="add-item-panel" style="display: none;">
-      <h1>${%NewJob(it.newPronoun)}</h1>
+      <l:app-bar title="${%NewJob(it.newPronoun)}" />
 
-      <div class="jenkins-description">Description for new job here!</div>
+      <div class="jenkins-page-description">Description for new job here!</div>
 
           <form method="post" action="createItem" name="createItem" id="createItem">
             <div class="header">
