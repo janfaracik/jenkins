@@ -44,7 +44,7 @@ THE SOFTWARE.
             <div class="header">
               <div class="add-item-name">
                 <label for="name" class="jenkins-form-label">${%ItemName.label}</label>
-                <input name="name" class="jenkins-input" style="width: 100%" id="name" data-valid="false" type="text" tabindex="0" />
+                <input name="name" class="jenkins-input" style="width: 100%" id="name" data-valid="false" type="text" tabindex="0" autofocus="true" />
                 <div id="itemname-required" class="input-validation-message input-message-disabled">&#187; ${%ItemName.validation.required}</div>
                 <div id="itemname-invalid" class="input-validation-message input-message-disabled"></div>
                 <div id="itemtype-required" class="input-validation-message input-message-disabled">&#187; ${%ItemType.validation.required}</div>

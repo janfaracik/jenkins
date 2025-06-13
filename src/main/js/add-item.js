@@ -154,7 +154,7 @@ $.when(getItems()).done(function (data) {
 
         setFieldValidationStatus("items", true);
         if (!getFieldValidationStatus("name")) {
-          $('input[name="name"][type="text"]', "#createItem").focus();
+          // $('input[name="name"][type="text"]', "#createItem").focus();
         } else {
           if (getFormValidationStatus()) {
             enableSubmit(true);
@@ -244,7 +244,7 @@ $.when(getItems()).done(function (data) {
     $categories.children()[0].classList.remove("jenkins-button--tertiary");
 
     // Focus
-    $("#add-item-panel").find("#name").focus();
+    // $("#add-item-panel").find("#name").focus();
 
     // Init NameField
     $('input[name="name"]', "#createItem").on("blur input", function () {
@@ -294,7 +294,7 @@ $.when(getItems()).done(function (data) {
               function (data) {
                 if (data.name === parentName) {
                   //if "name" is invalid, but "from" is a valid job, then switch focus to "name"
-                  $('input[name="name"][type="text"]', "#createItem").focus();
+                  // $('input[name="name"][type="text"]', "#createItem").focus();
                 }
               },
             );
@@ -313,14 +313,14 @@ $.when(getItems()).done(function (data) {
         event.preventDefault();
         if (!getFieldValidationStatus("name")) {
           activateValidationMessage("#itemname-required", ".add-item-name");
-          $('input[name="name"][type="text"]', "#createItem").focus();
+          // $('input[name="name"][type="text"]', "#createItem").focus();
         } else {
           if (
             !getFieldValidationStatus("items") &&
             !getFieldValidationStatus("from")
           ) {
             activateValidationMessage("#itemtype-required", ".add-item-name");
-            $('input[name="name"][type="text"]', "#createItem").focus();
+            // $('input[name="name"][type="text"]', "#createItem").focus();
           }
         }
       }
