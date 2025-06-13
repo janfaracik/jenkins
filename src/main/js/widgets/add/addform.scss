@@ -1,6 +1,9 @@
 @use "../../../scss/abstracts/mixins";
 
 #add-item-panel {
+  max-width: 800px;
+  margin-inline: auto;
+
   form {
     display: flex;
     flex-direction: column;
