@@ -20,8 +20,8 @@
     &::before {
       content: "";
       position: absolute;
-      inset: -3px -3px -2px;
-      border: var(--jenkins-border--subtle);
+      inset: calc(var(--card-border-width) * -2) calc(var(--card-border-width) * -2) calc(var(--card-border-width) * -1);
+      border: var(--jenkins-border-width) solid var(--card-border-color);
       border-radius: inherit;
       pointer-events: none;
     }
@@ -94,6 +94,10 @@
         &:last-of-type {
           padding-right: var(--table-padding);
         }
+      }
+
+      & > th {
+        background: color-mix(in srgb, var(--table-background) 40%, var(--table-body-background));
       }
 
       // Style the rows so that the first and last have a larger border radius
