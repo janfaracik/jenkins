@@ -36,12 +36,15 @@ THE SOFTWARE.
 
     <l:main-panel>
     <div id="add-item-panel" style="display: none;">
-      <h1>${%NewJob(it.newPronoun)}</h1>
+      <l:app-bar title="${%NewJob(it.newPronoun)}">
+        <t:help href="https://www.jenkins.io/redirect/cli" />
+      </l:app-bar>
+
           <form method="post" action="createItem" name="createItem" id="createItem">
             <div class="header">
               <div class="add-item-name">
                 <label for="name" class="jenkins-form-label">${%ItemName.label}</label>
-                <input name="name" class="jenkins-input" id="name" data-valid="false" type="text" tabindex="0" />
+                <input name="name" class="jenkins-input" style="width: 100%" id="name" data-valid="false" type="text" tabindex="0" autofocus="true" />
                 <div id="itemname-required" class="input-validation-message input-message-disabled">&#187; ${%ItemName.validation.required}</div>
                 <div id="itemname-invalid" class="input-validation-message input-message-disabled"></div>
                 <div id="itemtype-required" class="input-validation-message input-message-disabled">&#187; ${%ItemType.validation.required}</div>
@@ -50,20 +53,20 @@ THE SOFTWARE.
 
             <div>
               <div class="jenkins-form-label">${%ItemType.label}</div>
-              <div id="items" class="categories flat" role="radiogroup" aria-labelledby="Items" data-valid="false" />
+              <ul id="items" class="categories" role="radiogroup" aria-labelledby="Items" data-valid="false" />
             </div>
 
-            <j:if test="${!empty(app.items)}">
-              <div class="item-copy">
-                <p class="jenkins-form-label">${%CopyOption.description}</p>
-                <div class="add-item-copy">
-                  <input type="radio" name="mode" value="copy" />
-                  <label>${%CopyOption.label}</label>
-                  <j:set var="descriptor" value="${it.descriptor}" />
-                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
-                </div>
-              </div>
-            </j:if>
+<!--            <j:if test="${!empty(app.items)}">-->
+<!--              <div class="item-copy">-->
+<!--                <p class="jenkins-form-label">${%CopyOption.description}</p>-->
+<!--                <div class="add-item-copy">-->
+<!--                  <input type="radio" name="mode" value="copy" />-->
+<!--                  <label>${%CopyOption.label}</label>-->
+<!--                  <j:set var="descriptor" value="${it.descriptor}" />-->
+<!--                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </j:if>-->
 
             <s:bottomButtonBar>
               <st:include page="newJobButtonBar.jelly"/>
