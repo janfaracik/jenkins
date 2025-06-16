@@ -80,7 +80,7 @@
   h1,
   h2 {
     margin: 0;
-    font-size: 1.375rem;
+    font-size: 1.5rem;
   }
 
   &__subtitle {
@@ -110,40 +110,64 @@
   }
 }
 
+$bottom-app-bar-padding: 0.875rem;
+
+.jenkins-bottom-app-bar__shadow {
+  --semi-translucent: color-mix(in sRGB, var(--background) 75%, transparent);
+
+  position: sticky;
+  height: calc(
+    2.375rem + $bottom-app-bar-padding + $bottom-app-bar-padding + 1px + var(--jenkins-border-width)
+  );
+  bottom: -1px;
+  margin-bottom: calc(
+    (2.375rem + $bottom-app-bar-padding) * -1
+  );
+  backdrop-filter: blur(20px);
+  background: linear-gradient(
+    to right,
+    var(--background),
+    var(--semi-translucent) 3rem,
+    var(--semi-translucent) calc(100% - 3rem),
+    var(--background)
+  );
+  border-top: var(--jenkins-border-width) solid var(--jenkins-border-color);
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    transition: opacity var(--standard-transition);
+    top: -2rem;
+    height: 2rem;
+    pointer-events: none;
+    background: linear-gradient(transparent, var(--bottom-app-bar-shadow));
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      white var(--section-padding),
+      white calc(100% - var(--section-padding)),
+      transparent
+    );
+    opacity: 0;
+  }
+
+  &--stuck {
+    &::after {
+      opacity: 1 !important;
+    }
+  }
+}
+
 .bottom-sticker,
 #bottom-sticker {
   position: sticky;
-
-  // This has to be set to -1px so that IntersectionObserver can add the
-  // &--stuck class when the element is stuck to the bottom of the screen
-  // https://css-tricks.com/how-to-detect-when-a-sticky-element-gets-pinned/
-  bottom: -1px;
-  z-index: 998; /* behind top-sticker */
+  bottom: 0;
+  z-index: 998;
 }
 
 .bottom-sticker-inner {
   position: relative;
-  min-height: 4.625rem;
-  z-index: 0;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--background), transparent 3rem, transparent calc(100% - 3rem), var(--background)) color-mix(in srgb, var(--background) 75%, transparent);
-    backdrop-filter: blur(40px);
-    border-top: var(--jenkins-border-width) solid transparent;
-    background-clip: padding-box;
-    z-index: -1;
-    transition: border-top-color var(--standard-transition);
-  }
-
-  &--stuck {
-    .bottom-sticker-inner {
-
-      &::before {
-        border-top: var(--jenkins-border);
-      }
-    }
-  }
+  padding: $bottom-app-bar-padding 0;
 }
