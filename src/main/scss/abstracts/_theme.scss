@@ -13,8 +13,8 @@ $colors: (
   "red": oklch(60% 0.2671 30),
   "yellow": oklch(80% 0.17 76),
   "teal": oklch(60% 0.1122 216.72),
-  "white": #fff,
-  "black": oklch(from var(--accent-color) 5% 0.075 h),
+  "white": rgb(254 254 254),
+  "black": oklch(from var(--accent-color) 15% 0.075 h),
 );
 $semantics: (
   "accent": var(--blue),
@@ -116,7 +116,7 @@ $semantics: (
   --jenkins-border-width: 1.5px;
   --jenkins-border-color: color-mix(
     in sRGB,
-    var(--text-color-secondary) 15%,
+    var(--text-color-secondary) 17.5%,
     var(--card-background)
   );
   --jenkins-border-color--subtle: color-mix(
@@ -151,12 +151,12 @@ $semantics: (
   }
 
   // Table
-  --table-background: oklch(from var(--text-color-secondary) l c h / 0.075);
+  --table-background: oklch(from var(--text-color-secondary) l c h / 0.065);
   --table-header-foreground: var(--text-color);
   --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
-  --table-border-radius: 0.75rem;
-  --table-row-border-radius: 0.3125rem;
+  --table-border-radius: 1rem;
+  --table-row-border-radius: 0.4rem;
 
   // Deprecated
   --even-row-color: var(--very-light-grey);
@@ -234,7 +234,7 @@ $semantics: (
   --card-background: var(--background);
   --card-background--hover: transparent;
   --card-background--active: transparent;
-  --card-border-color: oklch(from var(--text-color-secondary) l c h / 0.15);
+  --card-border-color: color-mix(in srgb, var(--text-color-secondary) 12.5%, var(--card-background));
   --card-border-color--hover: oklch(
     from var(--text-color-secondary) l c h / 0.3
   );

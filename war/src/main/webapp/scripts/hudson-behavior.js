@@ -1233,10 +1233,6 @@ function rowvgStartEachRow(recursive, f) {
   });
 
   var p = 20;
-  Behaviour.specify("TABLE.sortable", "table-sortable", ++p, function (e) {
-    // sortable table
-    e.sortable = new Sortable.Sortable(e);
-  });
 
   Behaviour.specify(
     "TABLE.progress-bar, div.app-progress-bar",
@@ -1752,14 +1748,41 @@ function rowvgStartEachRow(recursive, f) {
     },
   );
 
+  Behaviour.specify(
+    "[data-side-nav-key]",
+    "data-side-nav-key",
+    ++p,
+    function (el) {
+      const key = el.dataset.sideNavKey + "." + el.dataset.sideNavValue;
+
+      // Restore state from localStorage
+      const savedState = localStorage.getItem(key);
+      if (savedState === "open") {
+        el.open = true;
+      } else if (savedState === "closed") {
+        el.open = false;
+      }
+
+      if (el.querySelector(".task-link--active")) {
+        el.open = true;
+      }
+
+      // Save state on toggle
+      el.addEventListener("toggle", function () {
+        const value = el.open ? "open" : "closed";
+        localStorage.setItem(key, value);
+      });
+    }
+  );
+
   window.addEventListener("load", function () {
     // Add a class to the bottom bar when it's stuck to the bottom of the screen
-    const el = document.querySelector("#bottom-sticker");
+    const el = document.querySelector(".jenkins-bottom-app-bar__shadow");
     if (el) {
       const observer = new IntersectionObserver(
         ([e]) =>
           e.target.classList.toggle(
-            "bottom-sticker-inner--stuck",
+            "jenkins-bottom-app-bar__shadow--stuck",
             e.intersectionRatio < 1,
           ),
         { threshold: [1] },
