@@ -1,7 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 The MIT License
-
-Copyright (c) 2016, CloudBees
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +22,16 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-    <button class="jenkins-button jenkins-button--primary jenkins-buttons-row--equal-width" type="submit" id="ok-button">${%Create}</button>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler">
+  <j:set var="ogDescriptor" value="${d}" />
+  <j:forEach var="d" items="${descriptors}" varStatus="loop">
+    <j:if test="${d.enabled and d.userPropertySubcategory == ogDescriptor}">
+      <j:set var="descriptor" value="${d}" />
+      <j:set var="instance" value="${instances[d]}" />
+
+      <f:rowSet name="userProperty${loop.index}">
+        <st:include from="${d}" page="${d.configPage}"/>
+      </f:rowSet>
+    </j:if>
+  </j:forEach>
 </j:jelly>

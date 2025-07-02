@@ -13,6 +13,7 @@ Behaviour.specify(
       target.setAttribute("name", id);
       target.style.height = "100%";
       target.style.width = "100%";
+      target.classList.add("jenkins-hidden");
       document.querySelector("body").appendChild(target);
 
       f.target = target.id;

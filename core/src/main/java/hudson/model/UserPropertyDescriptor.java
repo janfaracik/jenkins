@@ -27,6 +27,7 @@ package hudson.model;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
+import hudson.ExtensionList;
 import hudson.model.userproperty.UserPropertyCategory;
 import java.util.Optional;
 import org.jenkinsci.Symbol;
@@ -49,6 +50,18 @@ public abstract class UserPropertyDescriptor extends Descriptor<UserProperty> {
      * @since 1.278
      */
     protected UserPropertyDescriptor() {
+    }
+
+    public static ExtensionList<UserPropertyDescriptor> all() {
+        return ExtensionList.lookup(UserPropertyDescriptor.class);
+    }
+
+    public static @NonNull <T extends UserPropertyDescriptor> T get(Class<T> type) {
+        T category = all().get(type);
+        if (category == null) {
+            throw new AssertionError("Category not found. It seems the " + type + " is not annotated with @Extension and so not registered");
+        }
+        return category;
     }
 
     /**
@@ -111,6 +124,10 @@ public abstract class UserPropertyDescriptor extends Descriptor<UserProperty> {
             }
         }
         return UserPropertyCategory.get(UserPropertyCategory.Unclassified.class);
+    }
+
+    public UserPropertyDescriptor getUserPropertySubcategory() {
+        return null;
     }
 
     /**

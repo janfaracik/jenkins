@@ -1,7 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 The MIT License
-
-Copyright (c) 2016, CloudBees
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +22,11 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-    <button class="jenkins-button jenkins-button--primary jenkins-buttons-row--equal-width" type="submit" id="ok-button">${%Create}</button>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <f:entry title="${%Full name}" description="${%Full name.Description}">
+    <f:textbox field="fullName" value="${it.fullName}" />
+  </f:entry>
+  <f:entry title="${%Description}" description="${%Description.Description}">
+    <f:textarea field="description" value="${it.description}" codemirror-mode="${app.markupFormatter.codeMirrorMode}" codemirror-config="${app.markupFormatter.codeMirrorConfig}" previewEndpoint="/markupFormatter/previewDescription" />
+  </f:entry>
 </j:jelly>
