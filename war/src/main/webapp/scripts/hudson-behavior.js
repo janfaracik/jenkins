@@ -1103,7 +1103,6 @@ function labelAttachPreviousOnClick() {
 function helpButtonOnClick() {
   var tr =
     findFollowingTR(this, "help-area", "help-sibling") ||
-    findFollowingTR(this, "help-area", "setting-help") ||
     findFollowingTR(this, "help-area");
   var div = tr.firstElementChild;
   if (!div.classList.contains("help")) {
@@ -1809,15 +1808,11 @@ function rowvgStartEachRow(recursive, f) {
         return;
       }
       var jenkinsHelpButton = settingName.querySelector(".jenkins-help-button");
-      var helpLink =
-        jenkinsHelpButton !== null
-          ? jenkinsHelpButton
-          : settingName.querySelector(".setting-help");
 
-      if (helpLink) {
+      if (jenkinsHelpButton) {
         labelParent.classList.add("help-sibling");
         labelParent.classList.add("jenkins-checkbox-help-wrapper");
-        labelParent.appendChild(helpLink);
+        labelParent.appendChild(jenkinsHelpButton);
       }
 
       labelParent.parentNode.removeChild(settingName);
