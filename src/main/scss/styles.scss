@@ -18,3 +18,14 @@
   max-width: 1250px;
   margin: 0 auto;
 }
+
+.test {
+  flex-direction: row !important;
+  justify-content: start !important;
+  align-items: center !important;
+  gap: 1.5rem;
+
+  .tabBar {
+    margin: 0;
+  }
+}

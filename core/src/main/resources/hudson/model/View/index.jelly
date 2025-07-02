@@ -23,102 +23,152 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:dd="/lib/layout/dropdowns">
-    <l:layout title="${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app) ? '%Dashboard' : it.displayName}${not empty it.ownerItemGroup.fullDisplayName?' ['+it.ownerItemGroup.fullDisplayName+']':''}">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:dd="/lib/layout/dropdowns">
+  <l:layout
+      title="${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app) ? '%Dashboard' : it.displayName}${not empty it.ownerItemGroup.fullDisplayName?' ['+it.ownerItemGroup.fullDisplayName+']':''}">
+    <j:set var="items" value="${it.items}" />
 
-      <l:main-panel>
-        <l:app-bar title="${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app) ? '%Dashboard' : it.displayName}${not empty it.ownerItemGroup.fullDisplayName?' ['+it.ownerItemGroup.fullDisplayName+']':''}">
-          <div class="jenkins-split-button">
-            <button class="jenkins-button">
-              <l:icon src="symbol-add" />
-              New Job
-            </button>
-            <l:overflowButton id="button-install-after-restart"
-                              icon="symbol-chevron-down"
-                              tooltip="${null}">
-              <dd:custom>
-                <button form="form" type="submit" class="jenkins-dropdown__item">
-                  <div class="jenkins-dropdown__item__icon">
-                    <l:icon src="symbol-folder" />
-                  </div>
-                  Folder
-                </button>
-              </dd:custom>
-            </l:overflowButton>
-          </div>
-        </l:app-bar>
+    <l:side-panel>
+      <l:app-bar
+          title="${(it.class.name=='hudson.model.AllView' and it.ownerItemGroup == app) ? '%Dashboard' : it.owner == app ? it.displayName : it.owner.displayName}" />
+      <div id="tasks">
 
-        <div style="display: grid; grid-template-columns: 300px 1fr; gap: 1rem">
-          <div>
-            <j:forEach var="w" items="${it.widgets}">
-              <j:set var="view" value="${it}" /><!-- expose the view that's rendering this sidepanel to the widget -->
-              <st:include it="${w}" page="index.jelly" />
-            </j:forEach>
-          </div>
-          <div>
-            <j:set var="items" value="${it.items}"/>
-            <j:forEach var="job" items="${items}">
-              <j:set var="relativeLinkToJob" value="${h.getRelativeLinkTo(job)}"/>
-              <j:set var="jobBaseUrl" value="${relativeLinkToJob.substring(0, relativeLinkToJob.length() - job.shortUrl.length())}"/>
-              <div class="jenkins-jobs-list__item">
-                <a class="jenkins-jobs-list__item__details" href="${jobBaseUrl}${job.shortUrl}">
-                  <div class="jenkins-jobs-list__item__icons">
-                    <j:choose>
-                      <j:when test="${job.iconColor.iconName != null}">
-                        <l:icon src="symbol-status-${job.iconColor.iconName}" tooltip="${job.iconColor.description}" />
-                      </j:when>
-                      <j:otherwise>
-                        <!-- This is for special conditions, such as folders -->
-                        <l:icon src="${job.iconColor.iconClassName}" />
-                      </j:otherwise>
-                    </j:choose>
-                  </div>
-                  <div class="jenkins-jobs-list__item__details__text">
-                    <p class="jenkins-jobs-list__item__label">${job.displayName}</p>
-                    <div class="jenkins-jobs-list__item__description">
-                      <j:set var="lastBuild" value="${job.lastBuild}"/>
-                      <j:if test="${lastBuild != null}">
-                        <span>
-                          ${%Description(lastBuild.timestampString, lastBuild.durationString)}
-                        </span>
-                      </j:if>
+      <j:if test="${it.owner.views.size() gt 1}">
+        <div>
+          <j:forEach var="v" items="${it.owner.viewsTabBar.sort(it.owner.views)}">
+            <div class="task ">
+              <span class="task-link-wrapper ">
 
-                      <j:forEach var="col" items="${columnExtensions}">
-                        <st:include page="compactColumn.jelly" it="${col}" optional="true" />
-                      </j:forEach>
-                    </div>
-                  </div>
+
+                <a href="${rootURL}/${v.url}" class="task-link task-link-no-confirm ${v == it ? 'task-link--active' : ''}">
+                  <span class="task-icon-link">
+                    <l:icon src="${v.iconClassName}" />
+                  </span>
+                  <span class="task-link-text">${v.displayName}</span>
                 </a>
-                <div class="jenkins-jobs-list__item__actions">
-                  <st:include page="column.jelly" it="${buildButtonColumn}" optional="true"/>
-                </div>
-              </div>
-            </j:forEach>
-          </div>
+              </span>
+            </div>
+          </j:forEach>
         </div>
+      </j:if>
 
-      </l:main-panel>
-<!--      <j:set var="view" value="${it}"/> &lt;!&ndash; expose view to the scripts we include from owner &ndash;&gt;-->
-<!--        <st:include page="sidepanel.jelly" />-->
-<!--        &lt;!&ndash; no need for additional breadcrumb here as we're on an index page already including breadcrumb &ndash;&gt;-->
-<!--        <l:main-panel>-->
-<!--          <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">-->
-<!--            &lt;!&ndash; allow the owner to take over the top section, but we also need the default to be backward compatible &ndash;&gt;-->
-<!--            <div id="view-message">-->
-<!--                <div id="systemmessage">-->
-<!--                  <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />-->
-<!--                </div>-->
-<!--              <t:editableDescription permission="${it.CONFIGURE}"/>-->
-<!--            </div>-->
-<!--          </st:include>-->
+        <br/>
 
-<!--          <j:set var="items" value="${it.items}"/>-->
-<!--          <st:include page="main.jelly" />-->
-<!--        </l:main-panel>-->
-<!--        <l:header>-->
-<!--          &lt;!&ndash; for screen resolution detection &ndash;&gt;-->
-<!--          <script id="screenResolution-script" data-use-secure-cookie="${request2.secure}"/>-->
-<!--          <st:adjunct includes="hudson.model.View.screen-resolution"/>-->
-<!--        </l:header>-->
-    </l:layout>
+      <j:forEach var="w" items="${it.widgets}">
+        <j:set var="view" value="${it}" /><!-- expose the view that's rendering this sidepanel to the widget -->
+        <st:include it="${w}" page="index.jelly" />
+      </j:forEach>
+      </div>
+    </l:side-panel>
+
+    <l:main-panel>
+      <l:app-bar title="">
+        <div class="jenkins-split-button">
+          <button class="jenkins-button">
+            <l:icon src="symbol-add" />
+            New project
+          </button>
+          <l:overflowButton id="button-install-after-restart"
+                            icon="symbol-chevron-down"
+                            tooltip="${null}">
+
+            <dd:custom>
+              <j:if test="${it.hasPermission(it.CREATE)}">
+                <div class="task ">
+                  <span class="task-link-wrapper ">
+
+
+                    <a href="${rootURL}/${it.owner.url}newView" class="task-link">
+                      <span class="task-icon-link">
+                        <l:icon src="symbol-add" />
+                      </span>
+                      <span class="task-link-text">
+                        ${%New View}</span>
+                    </a>
+                  </span>
+                </div>
+              </j:if>
+            </dd:custom>
+
+            <dd:separator />
+
+            <dd:custom>
+              <button form="form" type="submit" class="jenkins-dropdown__item">
+                <div class="jenkins-dropdown__item__icon">
+                  <l:icon src="symbol-folder" />
+                </div>
+                Folder
+              </button>
+            </dd:custom>
+            <dd:separator />
+            <dd:item text="Duplicate a job" icon="symbol-duplicate" />
+          </l:overflowButton>
+        </div>
+        <l:overflowButton>
+        </l:overflowButton>
+      </l:app-bar>
+      <j:forEach var="job" items="${items}">
+            <j:set var="relativeLinkToJob" value="${h.getRelativeLinkTo(job)}" />
+            <j:set var="jobBaseUrl"
+                   value="${relativeLinkToJob.substring(0, relativeLinkToJob.length() - job.shortUrl.length())}" />
+            <div class="jenkins-jobs-list__item">
+              <a class="jenkins-jobs-list__item__details" href="${jobBaseUrl}${job.shortUrl}">
+                <div class="jenkins-jobs-list__item__icons">
+                  <j:choose>
+                    <j:when test="${job.iconColor.iconName != null}">
+                      <l:icon src="symbol-status-${job.iconColor.iconName}" tooltip="${job.iconColor.description}" />
+                    </j:when>
+                    <j:otherwise>
+                      <!-- This is for special conditions, such as folders -->
+                      <l:icon src="${job.iconColor.iconClassName}" />
+                    </j:otherwise>
+                  </j:choose>
+                </div>
+                <div class="jenkins-jobs-list__item__details__text">
+                  <p class="jenkins-jobs-list__item__label">${job.displayName}</p>
+                  <div class="jenkins-jobs-list__item__description">
+                    <j:set var="lastBuild" value="${job.lastBuild}" />
+                    <j:if test="${lastBuild != null}">
+                      <span>
+                        ${%Description(lastBuild.timestampString, lastBuild.durationString)}
+                      </span>
+                    </j:if>
+
+                    <j:forEach var="col" items="${columnExtensions}">
+                      <st:include page="compactColumn.jelly" it="${col}" optional="true" />
+                    </j:forEach>
+                  </div>
+                </div>
+              </a>
+              <div class="jenkins-jobs-list__item__actions">
+                <st:include page="column.jelly" it="${buildButtonColumn}" optional="true" />
+              </div>
+            </div>
+  </j:forEach>
+    </l:main-panel>
+
+    <!--      <j:set var="view" value="${it}"/> &lt;!&ndash; expose view to the scripts we include from owner &ndash;&gt;-->
+    <!--        <st:include page="sidepanel.jelly" />-->
+    <!--        &lt;!&ndash; no need for additional breadcrumb here as we're on an index page already including breadcrumb &ndash;&gt;-->
+    <!--        <l:main-panel>-->
+    <!--          <st:include page="view-index-top.jelly" it="${it.owner}" optional="true">-->
+    <!--            &lt;!&ndash; allow the owner to take over the top section, but we also need the default to be backward compatible &ndash;&gt;-->
+    <!--            <div id="view-message">-->
+    <!--                <div id="systemmessage">-->
+    <!--                  <j:out value="${app.systemMessage!=null ? app.markupFormatter.translate(app.systemMessage) : ''}" />-->
+    <!--                </div>-->
+    <!--              <t:editableDescription permission="${it.CONFIGURE}"/>-->
+    <!--            </div>-->
+    <!--          </st:include>-->
+
+    <!--          <j:set var="items" value="${it.items}"/>-->
+    <!--          <st:include page="main.jelly" />-->
+    <!--        </l:main-panel>-->
+    <!--        <l:header>-->
+    <!--          &lt;!&ndash; for screen resolution detection &ndash;&gt;-->
+    <!--          <script id="screenResolution-script" data-use-secure-cookie="${request2.secure}"/>-->
+    <!--          <st:adjunct includes="hudson.model.View.screen-resolution"/>-->
+    <!--        </l:header>-->
+  </l:layout>
 </j:jelly>

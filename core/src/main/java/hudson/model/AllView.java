@@ -192,6 +192,11 @@ public class AllView extends View {
         return primaryView;
     }
 
+    @Override
+    public String getIconClassName() {
+        return "symbol-build-steps";
+    }
+
     @Extension @Symbol("all")
     public static final class DescriptorImpl extends ViewDescriptor {
         @Override

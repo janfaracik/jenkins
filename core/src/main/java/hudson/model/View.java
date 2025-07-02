@@ -89,6 +89,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -103,6 +105,7 @@ import jenkins.widgets.HasWidgets;
 import net.sf.json.JSONObject;
 import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconSpec;
 import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
@@ -144,7 +147,7 @@ import org.xml.sax.SAXException;
  * @see ViewGroup
  */
 @ExportedBean
-public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets {
+public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets, IconSpec {
 
     /**
      * Container of this view. Set right after the construction
@@ -1260,6 +1263,19 @@ public abstract class View extends AbstractModelObject implements AccessControll
      * It might be useful to override this.
      */
     public static final Message<View> NEW_PRONOUN = new Message<>();
+
+    @Override
+    public String getIconClassName() {
+        return "symbol-list";
+    }
+
+    public boolean isExternal() {
+        return false;
+    }
+
+    public Badge getBadge() {
+        return null;
+    }
 
     private static final Logger LOGGER = Logger.getLogger(View.class.getName());
 }
