@@ -91,6 +91,11 @@ $min-button-size: 2.375rem;
     &__icons {
       pointer-events: none;
       color: var(--text-color);
+
+      svg {
+        width: 2rem;
+        height: 2rem;
+      }
     }
 
     &__details {
