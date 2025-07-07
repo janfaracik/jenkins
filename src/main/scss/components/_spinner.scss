@@ -58,7 +58,6 @@
   z-index: 999;
   backdrop-filter: blur(15px);
   transition: var(--standard-transition);
-  visibility: collapse;
 
   &::before {
     content: "";

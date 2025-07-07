@@ -83,34 +83,32 @@ THE SOFTWARE.
       </f:advanced>
 
       <j:if test="${it.node.assignedLabels.size() gt 1}">
-        <f:section title="${%Labels}">
-          <div class="jenkins-!-margin-bottom-3">
-            <j:forEach var="entry" items="${it.node.labelCloud}">
-              <!-- Skip the label for this node -->
-              <j:if test="${entry.item!=it.node.selfLabel}">
-                <a class="${entry.className} model-link" href="${rootURL}/label/${entry.item.name}">${entry.item.name}</a>
-                <wbr/>
-              </j:if>
-            </j:forEach>
-          </div>
-        </f:section>
+        <div class="jenkins-!-margin-bottom-3">
+          <h2>${%Labels}</h2>
+          <j:forEach var="entry" items="${it.node.labelCloud}">
+            <!-- Skip the label for this node -->
+            <j:if test="${entry.item!=it.node.selfLabel}">
+              <a class="${entry.className} model-link inside" href="${rootURL}/label/${entry.item.name}">${entry.item.name}</a>
+              <wbr/>
+            </j:if>
+          </j:forEach>
+        </div>
       </j:if>
 
       <st:include page="nodepropertysummaries.jelly" />
 
-      <f:section title="${%title.projects_tied_on(it.displayName)}">
-        <j:set var="jobs" value="${it.tiedJobs}" />
-        <j:choose>
-          <j:when test="${empty(jobs)}">
-            <p>
-              ${%None}
-            </p>
-          </j:when>
-          <j:otherwise>
-            <t:projectView jobs="${jobs}"/>
-          </j:otherwise>
-        </j:choose>
-      </f:section>
+      <h2>${%title.projects_tied_on(it.displayName)}</h2>
+      <j:set var="jobs" value="${it.tiedJobs}" />
+      <j:choose>
+        <j:when test="${empty(jobs)}">
+          <p>
+            ${%None}
+          </p>
+        </j:when>
+        <j:otherwise>
+          <t:projectView jobs="${jobs}"/>
+        </j:otherwise>
+      </j:choose>
 
       <st:include page="main.jelly" optional="true"/>
     </l:main-panel>
