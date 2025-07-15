@@ -3,3 +3,24 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.itsagame2 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.itsagame {
+  display: flex;
+  align-items: center;
+  gap: 1ch;
+
+  .jenkins-keyboard-shortcut {
+    margin-left: auto;
+  }
+
+  &:not(:last-of-type) {
+    border-bottom: var(--jenkins-border--subtle);
+    padding-bottom: 0.75rem;
+  }
+}

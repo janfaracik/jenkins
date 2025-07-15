@@ -27,7 +27,7 @@ $jenkins-dialog-font-size: 0.9375rem;
   &__title {
     font-size: 1.125rem;
     font-weight: var(--font-bold-weight);
-    padding: 0 $jenkins-dialog-padding;
+    padding: 0.3125rem $jenkins-dialog-padding;
     color: var(--text-color);
     overflow-wrap: anywhere;
     text-box: cap alphabetic;
@@ -82,7 +82,7 @@ $jenkins-dialog-font-size: 0.9375rem;
   &__close-button {
     position: absolute;
     top: $jenkins-dialog-padding - 0.5rem;
-    right: $jenkins-dialog-padding - 0.5rem;
+    right: $jenkins-dialog-padding;
     aspect-ratio: 1;
     padding: 0;
     border-radius: 100%;
