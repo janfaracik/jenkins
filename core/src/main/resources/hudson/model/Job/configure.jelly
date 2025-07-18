@@ -26,7 +26,7 @@ THE SOFTWARE.
   Config page. derived class specific entries should go to configure-entries.jsp
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:p="/lib/hudson/project">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:p="/lib/hudson/project" xmlns:d="jelly:define">
   <l:layout permission="${it.EXTENDED_READ}" title="${%Config(it.displayName)}">
     <j:set var="readOnlyMode" value="${!it.hasPermission(it.CONFIGURE)}" />
 
@@ -54,16 +54,9 @@ THE SOFTWARE.
 
         <j:set var="descriptor" value="${it.descriptor}" />
         <j:set var="instance" value="${it}" />
+        <j:set var="field" value="properties" />
 
         <l:skeleton />
-
-        <j:set var="field" value="properties" />
-        <j:set var="targetType" value="${it.class}" />
-        <j:set var="instances" value="${instance[field] ?: descriptor['default' + h.capitalize(field)]}" />
-
-<!--        <div>${descriptors}</div>-->
-
-
 
         <f:rowSet name="${field}">
           <div class="stapler-class-bag tr">
@@ -76,14 +69,8 @@ THE SOFTWARE.
             <f:section icon="${section.key.iconClassName}"
                        title="${section.key.displayName}"
                        description="${section.key.description}">
-              <j:forEach var="d" items="${section.value}">
-                <f:optionalBlock name="${d.jsonSafeClassName}" help="${d.helpFile}"
-                                 checked="${instances.get(d) != null}">
-                  <j:set var="descriptor" value="${d}" />
-                  <j:set var="instance" value="${instances.get(d)}" />
-                  <st:include from="${d}" page="${d.configPage}" optional="true" />
-                </f:optionalBlock>
-              </j:forEach>
+              <!-- I don't know why this is needed but it is -->
+              <f:descriptorList2 descriptors="${section.value}" field="properties" forceRowSet="true" />
             </f:section>
           </j:forEach>
         </f:rowSet>
