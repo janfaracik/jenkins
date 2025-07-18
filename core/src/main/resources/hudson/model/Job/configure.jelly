@@ -45,25 +45,32 @@ THE SOFTWARE.
 
     <l:main-panel>
       <f:form method="post" class="jenkins-form" action="configSubmit" name="config" tableClass="config-table">
-        <l:app-bar title="${%General}" headingLevel="h2">
-          <p:config-disableBuild />
-        </l:app-bar>
+        <div class="jenkins-app-bar">
+          <div class="jenkins-app-bar__content" />
+          <div class="jenkins-app-bar__controls">
+            <p:config-disableBuild />
+          </div>
+        </div>
 
         <j:set var="descriptor" value="${it.descriptor}" />
         <j:set var="instance" value="${it}" />
 
         <l:skeleton />
 
-        <div class="jenkins-section jenkins-section--no-border jenkins-!-margin-top-3">
-          <f:entry title="${%Description}" help="${app.markupFormatter.helpUrl}">
-            <f:textarea name="description" value="${it.description}" codemirror-mode="${app.markupFormatter.codeMirrorMode}" codemirror-config="${app.markupFormatter.codeMirrorConfig}" previewEndpoint="/markupFormatter/previewDescription"/>
-          </f:entry>
-        </div>
-
-        <f:descriptorList field="properties" descriptors="${h.getJobPropertyDescriptors(it)}" forceRowSet="true"/>
+        <f:section title="General">
+          <div class="jenkins-section jenkins-section--no-border jenkins-!-margin-top-3">
+            <f:entry title="${%Description}" help="${app.markupFormatter.helpUrl}">
+              <f:textarea name="description" value="${it.description}" codemirror-mode="${app.markupFormatter.codeMirrorMode}" codemirror-config="${app.markupFormatter.codeMirrorConfig}" previewEndpoint="/markupFormatter/previewDescription"/>
+            </f:entry>
+          </div>
+        </f:section>
 
         <!-- additional entries from derived classes -->
-        <st:include page="configure-entries.jelly" />
+<!--        <st:include page="configure-entries.jelly" />-->
+
+        ${h.getJobPropertyDescriptors(it)}
+
+        <f:descriptorList field="properties" descriptors="${h.getJobPropertyDescriptors(it)}" forceRowSet="true"/>
 
         <f:saveApplyBar/>
       </f:form>

@@ -48,6 +48,8 @@ import java.util.concurrent.TimeUnit;
 import jenkins.model.Jenkins;
 import jenkins.model.OptionalJobProperty;
 import jenkins.model.ParameterizedJobMixIn;
+import jenkins.model.sections.details.ParameterizedSectionGroup;
+import jenkins.model.sections.details.SectionGroup;
 import jenkins.util.TimeDuration;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -260,6 +262,10 @@ public class ParametersDefinitionProperty extends OptionalJobProperty<Job<?, ?>>
         @Override
         public String getDisplayName() {
             return Messages.ParametersDefinitionProperty_DisplayName();
+        }
+
+        public SectionGroup getGroup() {
+            return ParameterizedSectionGroup.get();
         }
     }
 

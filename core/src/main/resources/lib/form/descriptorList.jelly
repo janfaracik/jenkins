@@ -85,7 +85,10 @@ THE SOFTWARE.
       </j:if>
 
       <d:invokeBody />
+
       <j:forEach var="d" items="${descriptors}">
+        ${d.group}
+
         <f:optionalBlock name="${d.jsonSafeClassName}" help="${d.helpFile}"
           title="${attrs.forceRowSet!=null?null:d.displayName}" checked="${instances.get(d)!=null}">
 

@@ -32,6 +32,8 @@ import java.util.Collection;
 import java.util.List;
 import jenkins.model.Jenkins;
 import jenkins.model.OptionalJobProperty;
+import jenkins.model.sections.details.GeneralSectionGroup;
+import jenkins.model.sections.details.SectionGroup;
 import net.sf.json.JSONObject;
 import org.jvnet.tiger_types.Types;
 import org.kohsuke.stapler.StaplerRequest;
@@ -124,5 +126,13 @@ public abstract class JobPropertyDescriptor extends Descriptor<JobProperty<?>> {
 
     public static Collection<JobPropertyDescriptor> all() {
         return (Collection) Jenkins.get().getDescriptorList(JobProperty.class);
+    }
+
+    /**
+     * TODO!
+     * @since TODO
+     */
+    public SectionGroup getGroup() {
+        return GeneralSectionGroup.get();
     }
 }
