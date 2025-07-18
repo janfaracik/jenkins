@@ -3,7 +3,7 @@ package jenkins.model.sections.details;
 import hudson.Extension;
 import hudson.ExtensionList;
 
-@Extension
+@Extension(ordinal = Integer.MAX_VALUE)
 public class GeneralSectionGroup extends SectionGroup {
 
     @Override
