@@ -7,13 +7,18 @@ import hudson.ExtensionList;
 public class ParameterizedSectionGroup extends SectionGroup {
 
     @Override
-    public String getDisplayName() {
-        return "Parameterized group";
+    public String getIconClassName() {
+        return "symbol-parameters";
     }
 
     @Override
-    public String getIconClassName() {
-        return "symbol-parameter";
+    public String getDisplayName() {
+        return "Parameters";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Parameters allow you to prompt users for one or more inputs that will be passed into a build.";
     }
 
     public static ParameterizedSectionGroup get() {

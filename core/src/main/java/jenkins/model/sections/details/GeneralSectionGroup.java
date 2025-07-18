@@ -7,13 +7,13 @@ import hudson.ExtensionList;
 public class GeneralSectionGroup extends SectionGroup {
 
     @Override
-    public String getDisplayName() {
-        return "General";
+    public String getIconClassName() {
+        return "symbol-settings";
     }
 
     @Override
-    public String getIconClassName() {
-        return "symbol-general";
+    public String getDisplayName() {
+        return "General";
     }
 
     public static GeneralSectionGroup get() {

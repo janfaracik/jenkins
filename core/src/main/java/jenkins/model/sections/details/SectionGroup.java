@@ -8,4 +8,8 @@ import org.jenkins.ui.icon.IconSpec;
 public abstract class SectionGroup implements IconSpec {
 
     public abstract String getDisplayName();
+
+    public String getDescription() {
+        return null;
+    }
 }

@@ -172,6 +172,7 @@ import jenkins.model.SimplePageDecorator;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DetailGroup;
+import jenkins.model.sections.details.SectionGroup;
 import jenkins.util.SystemProperties;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyTagException;
@@ -2692,5 +2693,43 @@ public class Functions {
         }
 
         return MessageFormat.format(format, args);
+    }
+    /**
+     * Returns a grouped list of Detail objects for the given Actionable object
+     */
+    @Restricted(NoExternalUse.class)
+    public static Map<SectionGroup, List<JobPropertyDescriptor>> getSectionsFor(Job job) {
+//        ExtensionList<SectionGroup> groupsExtensionList = ExtensionList.lookup(SectionGroup.class);
+//        List<ExtensionComponent<SectionGroup>> components = groupsExtensionList.getComponents();
+//        Map<String, Double> detailGroupOrdinal = components.stream()
+//                .collect(Collectors.toMap(
+//                        (k) -> k.getInstance().getClass().getName(),
+//                        ExtensionComponent::ordinal
+//                ));
+//
+        Map<SectionGroup, List<JobPropertyDescriptor>> result = new HashMap<>();
+
+        for (var taf : DescriptorVisibilityFilter.apply(job, JobPropertyDescriptor.getPropertyDescriptors(job.getClass()))) {
+//            System.out.println("Adding " + taf + " to " + taf.getGroup());
+            if (!taf.isApplicable(job.getClass())) {
+                continue;
+            }
+
+            result.computeIfAbsent(taf.getGroup(), k -> new ArrayList<>()).add(taf);
+        }
+
+//        System.out.println("==========");
+//
+//        result.forEach((e, v) -> {
+//            System.out.println(e);
+//            System.out.println("---");
+//            System.out.println(v);
+//        });
+
+//        for (Map.Entry<SectionGroup, List<JobPropertyDescriptor>> entry : result.entrySet()) {
+//            List<JobPropertyDescriptor> detailList = entry.getValue();
+//        }
+
+        return result;
     }
 }
