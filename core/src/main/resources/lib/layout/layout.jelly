@@ -134,7 +134,8 @@ THE SOFTWARE.
       <link rel="search" type="application/opensearchdescription+xml" href="${rootURL}/opensearch.xml" title="Jenkins" />
     </l:hasPermission>
     <meta name="ROBOTS" content="INDEX,NOFOLLOW" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <j:set var="breadcrumbs">
       <j:set var="mode" value="breadcrumbs" />
       <d:invokeBody />

@@ -27,11 +27,13 @@
 
 #side-panel {
   flex-shrink: 0;
+  padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
 }
 
 #main-panel {
-  padding: 0 var(--section-padding) var(--section-padding)
-    var(--section-padding);
+  padding: 0 calc(var(--section-padding) + env(safe-area-inset-right))
+    calc(var(--section-padding) + env(safe-area-inset-bottom))
+    calc(var(--section-padding) + env(safe-area-inset-left));
   display: inline-block;
   width: 100%;
 }

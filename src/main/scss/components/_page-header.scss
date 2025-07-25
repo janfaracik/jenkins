@@ -15,6 +15,7 @@
   line-height: var(--line-height-base);
   min-height: var(--header-height);
   color: var(--header-color);
+  padding-top: env(safe-area-inset-top);
 
   &::before {
     content: "";
@@ -114,7 +115,7 @@
   &__main {
     display: grid;
     grid-template-columns: 1fr auto;
-    padding-left: var(--section-padding);
+    padding-left: calc(var(--section-padding) + env(safe-area-inset-left));
     width: 100%;
   }
 
@@ -129,7 +130,7 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding-right: var(--section-padding);
+    padding-right: calc(var(--section-padding) + env(safe-area-inset-left));
   }
 
   &--has-sticky-app-bar {

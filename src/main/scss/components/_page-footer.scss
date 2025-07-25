@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   padding: calc(var(--section-padding) / 2)
-    calc(var(--section-padding) - 0.85rem);
+    calc(var(--section-padding) - 0.85rem + env(safe-area-inset-right));
   gap: calc(var(--section-padding) / 2);
 }
 

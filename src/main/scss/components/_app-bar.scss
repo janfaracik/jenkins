@@ -112,16 +112,22 @@
 }
 
 $bottom-app-bar-padding: 0.875rem;
+$bottom-app-bar-bottom-padding: env(safe-area-inset-bottom);
 
 .jenkins-bottom-app-bar__shadow {
   --semi-translucent: color-mix(in sRGB, var(--background) 75%, transparent);
 
   position: sticky;
+  /* stylelint-disable scss/operator-no-newline-after */
   height: calc(
-    2.375rem + ($bottom-app-bar-padding * 2) + 1px + var(--jenkins-border-width)
+    2.375rem + ($bottom-app-bar-padding * 2) + 1px +
+      var(--jenkins-border-width) + $bottom-app-bar-bottom-padding
   );
+  /* stylelint-enable scss/operator-no-newline-after */
   bottom: -1px;
-  margin-bottom: calc((2.375rem + $bottom-app-bar-padding) * -1);
+  margin-bottom: calc(
+    (2.375rem + $bottom-app-bar-padding + $bottom-app-bar-bottom-padding) * -1
+  );
   backdrop-filter: blur(20px);
   background: linear-gradient(
     to right,
@@ -169,5 +175,6 @@ $bottom-app-bar-padding: 0.875rem;
 
 .bottom-sticker-inner {
   position: relative;
-  padding: $bottom-app-bar-padding 0;
+  padding: $bottom-app-bar-padding 0
+    calc($bottom-app-bar-padding + $bottom-app-bar-bottom-padding) 0;
 }

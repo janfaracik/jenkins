@@ -74,7 +74,7 @@ $semantics: (
   --header-background: var(--background);
   --header-border: var(--text-color-secondary);
   --header-color: var(--text-color);
-  --header-height: 4.125rem;
+  --header-height: calc(4.125rem + env(safe-area-inset-top));
 
   // App bar
   --bottom-app-bar-shadow: color-mix(
