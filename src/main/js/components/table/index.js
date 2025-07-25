@@ -1,3 +1,11 @@
+import behaviorShim from "@/util/behavior-shim";
+
+function init() {
+  behaviorShim.specify("TABLE.sortable", "table-sortable", 20, function (e) {
+    e.sortable = new Sortable.Sortable(e);
+  });
+}
+
 /*
 The MIT Licence, for code from kryogenix.org
 
@@ -26,6 +34,7 @@ AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
 /*
 Usage
 =====
@@ -42,8 +51,7 @@ The script guesses the table data, and try to use the right sorting algorithm.
 But you can override this behavior by having 'data="..."' attribute on each row,
 in which case the sort will be done on that field.
 */
-
-var Sortable = (function () {
+const Sortable = (function () {
   function Sortable(table) {
     this.table = table;
     this.arrows = [];
@@ -72,12 +80,19 @@ var Sortable = (function () {
          * Using the innerHTML will return the escaped content that could be reused directly within the wrapper.
          */
         cell.innerHTML =
-          '<a href="#" class="sortheader">' +
+          '<button class="sortheader">' +
           cell.innerHTML +
-          '<span class="sortarrow"></span></a>';
+          '<span class="sortarrow"></span></button>';
         this.arrows.push(cell.firstElementChild.lastElementChild);
 
         var self = this;
+        if (cell.hasAttribute("tooltip")) {
+          cell.firstElementChild.setAttribute(
+            "tooltip",
+            cell.getAttribute("tooltip"),
+          );
+          cell.removeAttribute("tooltip");
+        }
         cell.firstElementChild.onclick = function () {
           self.onClicked(this);
           return false;
@@ -99,6 +114,12 @@ var Sortable = (function () {
     }
 
     this.refresh();
+
+    // We only want the arrows to animate when interacted with,
+    // not on first load so defer applying the transition
+    setTimeout(() => {
+      this.table.style.setProperty("--sortheader-transition", "0.2s ease");
+    }, 0);
   }
 
   Sortable.prototype = {
@@ -256,7 +277,14 @@ var Sortable = (function () {
       this.arrows.forEach(function (e, i) {
         // to check the columns with sort disabled
         if (e) {
-          e.innerHTML = (i == column ? dir : arrowTable.none).text;
+          e.parentNode.classList.remove("sortheader--up");
+          e.parentNode.classList.remove("sortheader--down");
+
+          if (i === column) {
+            e.parentNode.classList.add("sortheader--" + dir.id);
+          }
+
+          e.innerHTML = dir.text;
         }
       });
     },
@@ -311,11 +339,11 @@ var Sortable = (function () {
   var arrowTable = {
     up: {
       id: "up",
-      text: "&nbsp;&nbsp;&uarr;",
+      text: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="52" d="M112 268l144 144 144-144M256 392V100"/></svg>`,
     },
     down: {
       id: "down",
-      text: "&nbsp;&nbsp;&darr;",
+      text: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="52" d="M112 268l144 144 144-144M256 392V100"/></svg>`,
     },
     none: {
       id: "none",
@@ -452,17 +480,14 @@ var Sortable = (function () {
   };
 })();
 
-// eslint-disable-next-line no-unused-vars
-function ts_makeSortable(table) {
-  // backward compatibility
-  return new Sortable.Sortable(table);
-}
-
-/** Calls table.sortable.refresh() in case the sortable has been initialized; otherwise does nothing. */
-// eslint-disable-next-line no-unused-vars
-function ts_refresh(table) {
-  var s = table.sortable;
+/**
+ * Calls table.sortable.refresh() in case the sortable has been initialized; otherwise does nothing
+ */
+window.ts_refresh = (table) => {
+  const s = table.sortable;
   if (s != null) {
     s.refresh();
   }
-}
+};
+
+export default { init };
