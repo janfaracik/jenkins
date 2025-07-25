@@ -10,6 +10,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
+import hudson.model.ManageJenkinsAction;
 import hudson.model.ModelObject;
 
 public interface SearchGroup extends ExtensionPoint, ModelObject {
@@ -45,11 +46,11 @@ public interface SearchGroup extends ExtensionPoint, ModelObject {
     }
 
     @Extension
-    class SettingsSearchGroup implements SearchGroup {
+    class ManageJenkinsSearchGroup implements SearchGroup {
 
         @Override
         public String getDisplayName() {
-            return "Settings";
+            return new ManageJenkinsAction().getDisplayName();
         }
     }
 

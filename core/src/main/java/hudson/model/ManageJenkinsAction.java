@@ -24,6 +24,7 @@
 
 package hudson.model;
 
+import hudson.AboutJenkins;
 import hudson.Extension;
 import hudson.Util;
 import hudson.search.SearchIndex;
@@ -134,12 +135,12 @@ public class ManageJenkinsAction extends AbstractModelObject implements RootActi
 
                 @Override
                 public SearchGroup getSearchGroup() {
-                    return SearchGroup.get(SearchGroup.SettingsSearchGroup.class);
+                    return SearchGroup.get(SearchGroup.ManageJenkinsSearchGroup.class);
                 }
 
                 @Override
                 public SearchIndex getSearchIndex() {
-                    return null;
+                    return SearchIndex.EMPTY;
                 }
             });
         }
