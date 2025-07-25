@@ -24,7 +24,6 @@
 
 package hudson.model;
 
-import hudson.AboutJenkins;
 import hudson.Extension;
 import hudson.Util;
 import hudson.search.SearchIndex;
