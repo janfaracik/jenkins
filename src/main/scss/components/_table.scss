@@ -1,6 +1,8 @@
 @use "../abstracts/mixins";
 
-$table-border-radius-inset: calc(var(--table-border-radius) - var(--jenkins-border-width));
+$table-border-radius-inset: calc(
+  var(--table-border-radius) - var(--jenkins-border-width)
+);
 $table-border: var(--jenkins-border-width) solid var(--card-border-color);
 
 .jenkins-table {
@@ -9,7 +11,11 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
 
   position: relative;
   width: 100%;
-  background: linear-gradient(var(--table-background), var(--table-background) 4rem, var(--card-border-color) 4rem);
+  background: linear-gradient(
+    var(--table-background),
+    var(--table-background) 4rem,
+    var(--card-border-color) 4rem
+  );
   border-radius: var(--table-border-radius);
   border-spacing: 0;
   background-clip: padding-box;
@@ -171,7 +177,11 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
       }
 
       & > th {
-        background: color-mix(in srgb, var(--table-background) 40%, var(--table-body-background));
+        background: color-mix(
+          in sRGB,
+          var(--table-background) 40%,
+          var(--table-body-background)
+        );
         color: var(--text-color-secondary);
         font-weight: var(--font-bold-weight);
         height: 2.5rem;

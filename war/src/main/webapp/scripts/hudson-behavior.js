@@ -1772,7 +1772,7 @@ function rowvgStartEachRow(recursive, f) {
         const value = el.open ? "open" : "closed";
         localStorage.setItem(key, value);
       });
-    }
+    },
   );
 
   window.addEventListener("load", function () {
