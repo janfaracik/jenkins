@@ -30,7 +30,7 @@ THE SOFTWARE.
 <l:layout permissions="${app.MANAGE_AND_SYSTEM_READ}" title="${%System}">
   <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
 
-  <l:breadcrumb title="${%System}" />
+  <f:breadcrumb-config-outline title="${%System}" />
 
   <l:main-panel width="form">
     <j:set var="readOnlyMode" value="${!h.hasPermission(app.MANAGE)}"/>
