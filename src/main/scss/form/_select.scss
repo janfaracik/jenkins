@@ -31,25 +31,36 @@
     min-height: 38px;
     cursor: pointer;
 
-    &:hover {
-      border-color: var(--input-border-hover);
-    }
+    &:not(:disabled) {
+      &:hover {
+        border-color: var(--input-border-hover);
+      }
 
-    &:active,
-    &:focus {
-      outline: none;
-      border-color: var(--focus-input-border);
-      box-shadow: var(--form-input-glow--focus);
+      &:active,
+      &:focus {
+        outline: none;
+        border-color: var(--focus-input-border);
+        box-shadow: var(--form-input-glow--focus);
+      }
     }
 
     &:disabled {
-      pointer-events: none;
+      cursor: not-allowed;
+      border-color: var(--input-border--disabled);
     }
   }
 
-  &:hover {
+  &:has(.jenkins-select__input:disabled) {
     &::after {
-      translate: 0 1px;
+      color: var(--text-color-secondary);
+    }
+  }
+
+  &:has(.jenkins-select__input:not(:disabled)) {
+    &:hover {
+      &::after {
+        translate: 0 1px;
+      }
     }
   }
 }

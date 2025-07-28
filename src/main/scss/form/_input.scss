@@ -33,6 +33,7 @@
 
   &:disabled {
     cursor: not-allowed;
+    border-color: var(--input-border--disabled);
   }
 }
 

@@ -95,10 +95,10 @@
       cursor: not-allowed;
 
       &::before {
-        opacity: 0.35 !important;
+        opacity: 0.5 !important;
         box-shadow:
           var(--form-input-glow),
-          inset 0 0 0 2px var(--input-border) !important;
+          inset 0 0 0 var(--jenkins-border-width) var(--input-border) !important;
       }
     }
 
