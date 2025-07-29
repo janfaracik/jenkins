@@ -97,6 +97,9 @@ import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.PeepholePermalink;
 import jenkins.model.ProjectNamingStrategy;
+import jenkins.model.details.Detail;
+import jenkins.model.details.DetailFactory;
+import jenkins.model.details.FullNameDetail;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.scm.RunWithSCM;
 import jenkins.security.HexStringConfidentialKey;
@@ -1686,4 +1689,17 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
     }
 
     private static final HexStringConfidentialKey SERVER_COOKIE = new HexStringConfidentialKey(Job.class, "serverCookie", 16);
+
+    @Extension
+    public static final class BasicJobDetailFactory extends DetailFactory<Job> {
+
+        @Override
+        public Class<Job> type() {
+            return Job.class;
+        }
+
+        @NonNull @Override public List<? extends Detail> createFor(@NonNull Job target) {
+            return List.of(new FullNameDetail(target));
+        }
+    }
 }
