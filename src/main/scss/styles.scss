@@ -5,7 +5,7 @@
 @use "pages";
 
 body:has(.ownerthing) {
-  #side-panel, #view-message, .rest-api, #root-action-SearchAction {
+  #side-panel, #view-message, .rest-api, #root-action-SearchAction, #login {
     display: none;
   }
 }
