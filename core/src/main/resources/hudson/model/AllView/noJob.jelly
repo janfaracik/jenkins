@@ -1,0 +1,116 @@
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <j:getStatic var="createPermission" className="hudson.model.Item" field="CREATE"/>
+  <j:set var="isTopLevelAllView" value="${it.owner == app}" />
+  <j:set var="canSetUpDistributedBuilds" value="${app.hasPermission(createPermission) and app.clouds.isEmpty() and app.nodes.isEmpty()}" />
+  <j:set var="hasAdministerJenkinsPermission" value="${app.hasPermission(app.ADMINISTER)}" />
+  <j:set var="hasItemCreatePermission" value="${it.owner.itemGroup.hasPermission(createPermission)}" />
+
+  <div class="ownerthing">
+    <div class="empty-state-block">
+      <j:choose>
+        <j:when test="${isTopLevelAllView}">
+          <j:if test="${canSetUpDistributedBuilds or hasItemCreatePermission}">
+            <h1 class="jenkinsintro">${%Welcome to Jenkins}</h1>
+
+            <section class="empty-state-section">
+              <h2 class="h4">${%startBuilding}</h2>
+              <ul class="empty-state-section-list">
+                <li class="content-block">
+                  <a href="newJob" class="content-block__link">
+                    <span>${%createJob}</span>
+                    <span class="trailing-icon">
+                      <l:icon src="symbol-add" />
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </section>
+
+            <j:if test="${canSetUpDistributedBuilds}">
+              <section class="empty-state-section">
+                <h2 class="h4">${%setUpDistributedBuilds}</h2>
+                <ul class="empty-state-section-list">
+                  <li class="content-block">
+                    <a href="computer/new" class="content-block__link">
+                      <span>${%setUpAgent}</span>
+                      <span class="trailing-icon">
+                        <l:icon src="symbol-computer" />
+                      </span>
+                    </a>
+                  </li>
+
+                  <j:if test="${hasAdministerJenkinsPermission}">
+                    <li class="content-block">
+                      <a href="cloud/" class="content-block__link">
+                        <span>${%setUpCloud}</span>
+                        <span class="trailing-icon">
+                          <l:icon src="symbol-cloud" />
+                        </span>
+                      </a>
+                    </li>
+                  </j:if>
+
+                  <li class="content-block">
+                    <a href="https://www.jenkins.io/redirect/distributed-builds" target="_blank" class="content-block__link">
+                      <span>${%learnMoreDistributedBuilds}</span>
+                      <span class="trailing-icon">
+                        <l:icon src="symbol-help-circle" />
+                      </span>
+                    </a>
+                  </li>
+                </ul>
+              </section>
+            </j:if>
+          </j:if>
+        </j:when>
+
+        <j:when test="${hasItemCreatePermission}">
+          <!-- we're in a folder -->
+          <section class="empty-state-section">
+            <h2 class="h4">${%thisFolderIsEmpty}</h2>
+            <ul class="empty-state-section-list">
+              <li class="content-block">
+                <a href="newJob" class="content-block__link">
+                  <span>${%createJob}</span>
+                  <span class="trailing-icon">
+                    <l:icon src="symbol-add" />
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </section>
+        </j:when>
+      </j:choose>
+
+      <!-- If the user is logged out -->
+      <j:if test="${h.isAnonymous() and not hasItemCreatePermission}">
+        <j:set var="canSignUp" value="${app.securityRealm.allowsSignup()}" />
+        <h1 class="jenkinsintro">${%Welcome to Jenkins}</h1>
+
+        <j:choose>
+          <j:when test="${canSignUp}">
+            <p class="jenkinsdesc">${%anonymousDescriptionSignUpEnabled}</p>
+          </j:when>
+          <j:otherwise>
+            <p class="jenkinsdesc">${%anonymousDescription}</p>
+          </j:otherwise>
+        </j:choose>
+
+        <ul class="signinthing">
+          <li>
+            <a href="${rootURL}/${app.securityRealm.loginUrl}?from=${request.requestURI}" class="jenkins-button">
+              <span>${%Sign in}</span>
+            </a>
+          </li>
+          <j:if test="${canSignUp}">
+            <li>
+              <a href="signup" class="jenkins-button">
+                <span>${%Register}</span>
+              </a>
+            </li>
+          </j:if>
+        </ul>
+      </j:if>
+    </div>
+  </div>
+</j:jelly>

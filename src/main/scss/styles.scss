@@ -4,8 +4,10 @@
 @use "form";
 @use "pages";
 
-#side-panel, #view-message, .rest-api, #root-action-SearchAction {
-  display: none;
+body:has(.ownerthing) {
+  #side-panel, #view-message, .rest-api, #root-action-SearchAction {
+    display: none;
+  }
 }
 
 @keyframes fade-in-jenkins-booting {
