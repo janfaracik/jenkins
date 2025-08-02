@@ -10,14 +10,17 @@ def f=namespace(lib.FormTagLib)
 def l=namespace(lib.LayoutTagLib)
 def st=namespace("jelly:stapler")
 
-l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request2.getParameter('decorate'), type:"one-column") {
-    l.main_panel {
+l.layout(permission:app.SYSTEM_READ, title:my.displayName, cssclass:request2.getParameter('decorate')) {
+    st.include(page: "sidepanel.jelly", class: 'hudson.model.ManagementLink')
+
+    l.main_panel(width: "form") {
         l.app_bar(title: my.displayName)
 
         set("readOnlyMode", !app.hasPermission(app.ADMINISTER))
 
         l.skeleton()
-        f.form(method:"post", name:"config", action:"configure", class: "jenkins-form") {
+
+        f.form(method:"post", name:"config", action:"configure") {
             set("instance", my)
             set("descriptor", my.descriptor)
 
