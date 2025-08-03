@@ -27,6 +27,7 @@ $tooltip-border-radius: 0.6875rem;
   .jenkins-table {
     --table-background: transparent;
     --table-border-radius: #{$tooltip-border-radius};
+    --card-border-color: transparent;
 
     margin: 0;
     border-color: transparent;

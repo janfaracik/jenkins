@@ -4,6 +4,12 @@ $table-border-radius-inset: calc(
   var(--table-border-radius) - var(--jenkins-border-width)
 );
 $table-border: var(--jenkins-border-width) solid var(--card-border-color);
+$table-cell-border-color: color-mix(
+  in sRGB,
+  var(--table-background),
+  var(--card-border-color)
+);
+$table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
 
 .jenkins-table {
   --table-padding: 0.5rem;
@@ -13,14 +19,15 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
   width: 100%;
   background: linear-gradient(
     var(--table-background),
-    var(--table-background) 4rem,
-    var(--card-border-color) 4rem
+    var(--table-background) 3.25rem,
+    $table-cell-border-color 3.25rem
   );
   border-radius: var(--table-border-radius);
   border-spacing: 0;
   background-clip: padding-box;
   margin-bottom: var(--section-padding);
   border: $table-border;
+  overflow: hidden;
 
   * {
     -webkit-border-horizontal-spacing: 0;
@@ -75,13 +82,13 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
           &--down {
             &::before,
             &::after {
-              right: -27px;
+              right: -26px;
             }
 
             .sortarrow {
               opacity: 1 !important;
               scale: 1 !important;
-              translate: 5px 0 !important;
+              translate: 0.25rem 0 !important;
             }
           }
 
@@ -99,13 +106,13 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
             transition: var(--sortheader-transition);
             opacity: 0;
             scale: 0.5;
-            translate: -5px 0;
+            translate: -0.25rem 0;
 
             svg {
               width: 0.875rem;
               height: 0.875rem;
               transition: var(--sortheader-transition);
-              opacity: 0.65;
+              opacity: 0.6;
             }
           }
 
@@ -131,9 +138,8 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
       background-color: var(--table-background);
 
       &:first-of-type > * {
-        border-top: $table-border;
+        border-top: $table-cell-border;
 
-        // Style the rows so that the first and last have a larger border radius
         &:first-of-type {
           border-top-left-radius: $table-border-radius-inset;
         }
@@ -154,7 +160,7 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
       }
 
       & > * {
-        border-bottom: $table-border;
+        border-bottom: $table-cell-border;
         background: var(--table-body-background);
         vertical-align: middle;
         padding: var(--table-padding) 0.5rem;
@@ -164,14 +170,14 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
         &:first-of-type {
           border-top-left-radius: var(--table-row-border-radius);
           border-bottom-left-radius: var(--table-row-border-radius);
-          border-left: $table-border;
+          border-left: $table-cell-border;
           padding-left: calc(var(--table-padding) * 2);
         }
 
         &:last-of-type {
           border-top-right-radius: var(--table-row-border-radius);
           border-bottom-right-radius: var(--table-row-border-radius);
-          border-right: $table-border;
+          border-right: $table-cell-border;
           padding-right: var(--table-padding);
         }
       }
@@ -184,7 +190,6 @@ $table-border: var(--jenkins-border-width) solid var(--card-border-color);
         );
         color: var(--text-color-secondary);
         font-weight: var(--font-bold-weight);
-        height: 2.5rem;
       }
     }
   }
