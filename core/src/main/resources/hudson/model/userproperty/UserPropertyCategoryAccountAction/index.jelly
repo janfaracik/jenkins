@@ -29,15 +29,15 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
     <l:layout permission="${app.ADMINISTER}" title="${%title}">
         <st:include page="sidepanel.jelly" it="${it.targetUser}" />
-        <l:main-panel width="form">
+        <l:main-panel>
             <l:app-bar title="${%title}" />
 
-            <f:form method="post" action="configSubmit" name="config">
+            <f:form method="post" action="configSubmit" name="config" class="jenkins-form">
                 <j:set var="thisAction" value="${it}" />
                 <j:set var="it" value="${thisAction.targetUser}" />
                 <j:set var="instance" value="${it}"/>
 
-                <f:section>
+                <f:section title="${%General}">
                     <f:entry title="${%Full name}" description="${%Full name.Description}">
                         <f:textbox field="fullName" />
                     </f:entry>
