@@ -57,7 +57,10 @@ THE SOFTWARE.
                         data-generate="${%GenerateNewToken}" data-success-title="${%successfully created}"
                         data-cancel="${%Cancel}"
                         data-button-done="${%Done}"
-                        data-message-name="${%Name}">${%AddNewToken}</button>
+                        data-message-name="${%Name}">
+                    <l:icon src="symbol-add" />
+                    ${%AddNewToken}
+                </button>
             </j:if>
         </d:tag>
     </d:taglib>

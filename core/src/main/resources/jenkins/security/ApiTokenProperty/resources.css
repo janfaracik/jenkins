@@ -26,6 +26,22 @@
   max-width: 700px;
 }
 
+.token-card {
+  border-radius: calc(var(--form-input-border-radius) / 2);
+  margin: 0 0 var(--card-border-width) 0;
+
+  &:first-of-type {
+    border-top-left-radius: var(--form-input-border-radius);
+    border-top-right-radius: var(--form-input-border-radius);
+  }
+
+  &:last-of-type {
+    border-bottom-left-radius: var(--form-input-border-radius);
+    border-bottom-right-radius: var(--form-input-border-radius);
+    margin-bottom: var(--section-padding);
+  }
+}
+
 .token-card__title,
 .token-stats,
 .token-never-used,
@@ -49,7 +65,7 @@
 .token-controls {
   margin-left: auto;
   padding-right: 1rem;
-  margin-right: -0.25rem;
+  margin-right: -0.5rem;
 }
 
 .token-controls button {
