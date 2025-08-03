@@ -1,31 +1,33 @@
 @use "../abstracts/mixins";
 
+$table-border-radius-inset: calc(
+  var(--table-border-radius) - var(--jenkins-border-width)
+);
+$table-border: var(--jenkins-border-width) solid var(--card-border-color);
+$table-cell-border-color: color-mix(
+  in sRGB,
+  var(--table-background),
+  var(--card-border-color)
+);
+$table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
+
 .jenkins-table {
-  --table-padding: 0.55rem;
+  --table-padding: 0.5rem;
+  --sortheader-transition: 0s;
 
   position: relative;
   width: 100%;
-  background: var(--table-background);
-  border-radius: calc(
-    var(--table-border-radius) + (var(--card-border-width) * 2)
+  background: linear-gradient(
+    var(--table-background),
+    var(--table-background) 3.25rem,
+    $table-cell-border-color 3.25rem
   );
-  border: calc(var(--card-border-width) * 2) solid var(--table-background);
-  border-bottom-width: var(--card-border-width);
-  border-spacing: 0 var(--card-border-width);
+  border-radius: var(--table-border-radius);
+  border-spacing: 0;
   background-clip: padding-box;
   margin-bottom: var(--section-padding);
-
-  // The '::before' pseudo-element is causing overflow issues in Firefox, so disable it for that browser
-  @supports (not (-moz-appearance: none)) {
-    &::before {
-      content: "";
-      position: absolute;
-      inset: -3px -3px -2px;
-      border: var(--jenkins-border-width) solid var(--card-border-color);
-      border-radius: inherit;
-      pointer-events: none;
-    }
-  }
+  border: $table-border;
+  overflow: hidden;
 
   * {
     -webkit-border-horizontal-spacing: 0;
@@ -37,11 +39,12 @@
       & > th {
         color: var(--table-header-foreground);
         text-align: left;
-        padding-top: calc(var(--table-padding) * 0.9);
-        padding-bottom: calc((var(--table-padding) * 0.9) + 2px);
-        padding-left: 1.6rem;
+        padding-top: var(--table-padding);
+        padding-bottom: var(--table-padding);
+        padding-inline: 0.5rem;
         font-size: var(--font-size-sm);
         font-weight: var(--font-bold-weight);
+        height: 2.5rem;
 
         &[align="center"] {
           text-align: center;
@@ -59,12 +62,64 @@
           padding-right: var(--table-padding);
         }
 
-        a {
+        .sortheader {
+          @include mixins.item($border: false);
+
+          padding: 7px 0;
+          margin-block: -7px;
           color: var(--table-header-foreground);
-          font-weight: 700;
+          font-weight: inherit;
+          font-size: inherit;
+          line-height: 1 !important;
+
+          &::before,
+          &::after {
+            inset: 0 -10px;
+            pointer-events: all;
+          }
+
+          &--up,
+          &--down {
+            &::before,
+            &::after {
+              right: -26px;
+            }
+
+            .sortarrow {
+              opacity: 1 !important;
+              scale: 1 !important;
+              translate: 0.25rem 0 !important;
+            }
+          }
+
+          &--up {
+            .sortarrow {
+              rotate: 180deg;
+            }
+          }
 
           span.sortarrow {
-            width: 24px;
+            position: absolute;
+            display: inline-flex;
+            width: 0.875rem;
+            height: 0.875rem;
+            transition: var(--sortheader-transition);
+            opacity: 0;
+            scale: 0.5;
+            translate: -0.25rem 0;
+
+            svg {
+              width: 0.875rem;
+              height: 0.875rem;
+              transition: var(--sortheader-transition);
+              opacity: 0.6;
+            }
+          }
+
+          &:hover {
+            svg {
+              opacity: 1 !important;
+            }
           }
         }
 
@@ -80,53 +135,61 @@
   & > tbody {
     & > tr {
       color: var(--table-body-foreground);
+      background-color: var(--table-background);
 
-      & > td {
-        background: var(--table-body-background);
-        vertical-align: middle;
-        padding: var(--table-padding) 0 var(--table-padding) 1.6rem;
-        height: 3rem;
+      &:first-of-type > * {
+        border-top: $table-cell-border;
 
         &:first-of-type {
+          border-top-left-radius: $table-border-radius-inset;
+        }
+
+        &:last-of-type {
+          border-top-right-radius: $table-border-radius-inset;
+        }
+      }
+
+      &:last-of-type > * {
+        &:first-of-type {
+          border-bottom-left-radius: $table-border-radius-inset;
+        }
+
+        &:last-of-type {
+          border-bottom-right-radius: $table-border-radius-inset;
+        }
+      }
+
+      & > * {
+        border-bottom: $table-cell-border;
+        background: var(--table-body-background);
+        vertical-align: middle;
+        padding: var(--table-padding) 0.5rem;
+        height: 3rem;
+
+        // Style the rows so that the first and last have a larger border radius
+        &:first-of-type {
+          border-top-left-radius: var(--table-row-border-radius);
+          border-bottom-left-radius: var(--table-row-border-radius);
+          border-left: $table-cell-border;
           padding-left: calc(var(--table-padding) * 2);
         }
 
         &:last-of-type {
+          border-top-right-radius: var(--table-row-border-radius);
+          border-bottom-right-radius: var(--table-row-border-radius);
+          border-right: $table-cell-border;
           padding-right: var(--table-padding);
         }
       }
 
-      // Style the rows so that the first and last have a larger border radius
-      & > td:first-of-type {
-        border-top-left-radius: var(--table-row-border-radius);
-        border-bottom-left-radius: var(--table-row-border-radius);
-      }
-
-      & > td:last-of-type {
-        border-top-right-radius: var(--table-row-border-radius);
-        border-bottom-right-radius: var(--table-row-border-radius);
-      }
-
-      // First row
-      &:first-of-type {
-        & > td:first-of-type {
-          border-top-left-radius: var(--table-border-radius);
-        }
-
-        & > td:last-of-type {
-          border-top-right-radius: var(--table-border-radius);
-        }
-      }
-
-      // Last row
-      &:last-of-type {
-        & > td:first-of-type {
-          border-bottom-left-radius: var(--table-border-radius);
-        }
-
-        & > td:last-of-type {
-          border-bottom-right-radius: var(--table-border-radius);
-        }
+      & > th {
+        background: color-mix(
+          in sRGB,
+          var(--table-background) 40%,
+          var(--table-body-background)
+        );
+        color: var(--text-color-secondary);
+        font-weight: var(--font-bold-weight);
       }
     }
   }
@@ -138,10 +201,9 @@
   }
 
   &__cell--tight {
-    padding-left: 0 !important;
-    text-align: right !important;
+    text-align: center !important;
     white-space: nowrap;
-    width: 4rem;
+    width: 3.25rem;
   }
 
   &__cell--checkbox {
@@ -158,8 +220,7 @@
     display: inline-flex;
   }
 
-  &__link,
-  .sortheader {
+  &__link {
     display: inline-flex;
   }
 
@@ -171,13 +232,13 @@
 
   .jenkins-button {
     margin: -10px 0;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem;
     min-height: 1.75rem;
 
     // Increase the size of symbols compared to regular buttons
     svg {
-      width: 1.5rem !important;
-      height: 1.5rem !important;
+      width: 1.375rem !important;
+      height: 1.375rem !important;
     }
   }
 
@@ -186,8 +247,8 @@
     svg,
     .build-status-icon__wrapper,
     img {
-      width: 1.5rem !important;
-      height: 1.5rem !important;
+      width: 1.375rem !important;
+      height: 1.375rem !important;
     }
   }
 
@@ -257,7 +318,6 @@
   }
 
   &__button,
-  .sortheader,
   &__link {
     @include mixins.item($border: false);
 
@@ -280,7 +340,6 @@
     &::before,
     &::after {
       inset: -7px -10px;
-      border-radius: 6px;
     }
   }
 
