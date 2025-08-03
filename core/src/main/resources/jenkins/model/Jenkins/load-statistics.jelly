@@ -27,7 +27,7 @@ THE SOFTWARE.
   <l:layout title="${it.displayName} ${%Load Statistics}">
     <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
     <l:breadcrumb title="${%Load Statistics}"/>
-    <l:main-panel width="form">
+    <l:main-panel>
       <j:set var="prefix" value="overallLoad" />
       <st:include page="main.jelly" from="${it.overallLoad}" />
     </l:main-panel>

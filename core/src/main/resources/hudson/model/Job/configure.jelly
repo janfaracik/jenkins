@@ -43,7 +43,7 @@ THE SOFTWARE.
       </div>
     </l:side-panel>
 
-    <l:main-panel width="form">
+    <l:main-panel>
       <l:skeleton />
 
       <f:form method="post" action="configSubmit" name="config" tableClass="config-table">

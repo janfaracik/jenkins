@@ -27,7 +27,7 @@ THE SOFTWARE.
   <l:layout permission="${app.ADMINISTER}" title="${%Users}">
     <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
 
-    <l:main-panel width="form">
+    <l:main-panel>
       <l:app-bar title="${%Users}" subtitle="${it.allUsers.size()}">
         <l:isAdmin>
           <a href="addUser" class="jenkins-button jenkins-button--primary">

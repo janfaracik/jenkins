@@ -31,7 +31,7 @@ THE SOFTWARE.
 
     <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
 
-    <l:main-panel width="form">
+    <l:main-panel>
       <l:app-bar title="${managementLink.displayName}">
         <t:help href="https://www.jenkins.io/redirect/cli" />
       </l:app-bar>

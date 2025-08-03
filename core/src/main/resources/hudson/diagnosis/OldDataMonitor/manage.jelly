@@ -27,7 +27,7 @@ THE SOFTWARE.
 <l:layout title="${%Manage Old Data}">
   <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
   <!-- no need for additional breadcrumb here as we're on an "index" page already including breadcrumb -->
-  <l:main-panel width="form">
+  <l:main-panel>
     <h1>${%Manage Old Data}</h1>
     <p>${%blurb.1}</p>
     <p>${%blurb.2}</p>

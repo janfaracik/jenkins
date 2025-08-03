@@ -31,7 +31,7 @@ THE SOFTWARE.
     <j:set var="pluginsUrl" value="${rootURL}/manage/pluginManager/available?filter=UI Themes" />
     <j:set var="hasPlugins" value="${it.hasPlugins()}" />
 
-    <l:main-panel width="form">
+    <l:main-panel>
       <l:app-bar title="${%Appearance}">
         <j:if test="${hasPlugins}">
           <a href="${pluginsUrl}" class="jenkins-button">

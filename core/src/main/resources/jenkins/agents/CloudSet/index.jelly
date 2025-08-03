@@ -36,7 +36,7 @@ THE SOFTWARE.
         <link rel="stylesheet" href="${resURL}/jsbundles/pages/cloud-set.css" type="text/css" />
       </l:header>
     </l:isAdmin>
-    <l:main-panel width="form">
+    <l:main-panel>
       <j:set var="readOnlyMode" value="${!app.hasPermission(app.ADMINISTER)}"/>
       <j:choose>
         <j:when test="${it.cloudAvailable and it.hasClouds()}">

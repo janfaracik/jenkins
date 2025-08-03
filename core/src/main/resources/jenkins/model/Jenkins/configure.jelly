@@ -32,7 +32,7 @@ THE SOFTWARE.
 
   <f:breadcrumb-config-outline title="${%System}" />
 
-  <l:main-panel width="form">
+  <l:main-panel>
     <j:set var="readOnlyMode" value="${!h.hasPermission(app.MANAGE)}"/>
     <l:app-bar title="${%System}" />
 

@@ -34,7 +34,7 @@ THE SOFTWARE.
         <st:include page="sidepanel.jelly"/>
         <!-- no need for additional breadcrumb here as the side panel offers enough functionality to browse between different pages -->
 
-        <l:main-panel width="form">
+        <l:main-panel>
           <l:app-bar title="${%Advanced settings}"/>
 
           <div class="jenkins-alert jenkins-alert-info">

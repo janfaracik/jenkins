@@ -34,7 +34,7 @@ THE SOFTWARE.
     </j:if>
 
     <l:breadcrumb title="${%scriptConsole}"/>
-    <l:main-panel width="form">
+    <l:main-panel>
       <h1>${%scriptConsole}</h1>
 
       <j:choose>

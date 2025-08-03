@@ -36,7 +36,7 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" class="hudson.model.ManagementLink" />
 
     <l:breadcrumb title="${%System Information}"/>
-    <l:main-panel width="form">
+    <l:main-panel>
       <l:app-bar title="${%System Information}" />
 
       <l:hasPermission permission="${app.SYSTEM_READ}">
