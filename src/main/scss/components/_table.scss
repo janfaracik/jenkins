@@ -224,12 +224,6 @@ $table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
     display: inline-flex;
   }
 
-  &__link {
-    .jenkins-menu-dropdown-chevron {
-      top: 0;
-    }
-  }
-
   .jenkins-button {
     margin: -10px 0;
     padding: 0.5rem;
@@ -317,8 +311,7 @@ $table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
     color: var(--link-color);
   }
 
-  &__button,
-  &__link {
+  &__button {
     @include mixins.item($border: false);
 
     align-items: center;
@@ -360,7 +353,11 @@ $table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
 
     &::before,
     &::after {
-      inset: -5px -8px;
+      inset: -1px -8px;
+    }
+    
+    &::before {
+      border: var(--jenkins-border--inherit-subtle);
     }
   }
 }
