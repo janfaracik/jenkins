@@ -24,17 +24,11 @@
       ]
     },
     {
-      "matchPackageNames": [
-        "node"
-      ],
-      "allowedVersions": "/20.[0-9]+.[0-9]+(.[0-9]+)?$/"
-    },
-    {
-      "description": "Should be upgraded in lockstep in order to keep their corresponding Jetty versions aligned, could be grouped but releases are likely separated by a bit of time",
+      "description": "Should be upgraded in lockstep in order to keep their corresponding Jetty versions aligned",
       "matchManagers": [
         "maven"
       ],
-      "enabled": false,
+      "groupName": "Winstone and Jetty",
       "matchPackageNames": [
         "org.eclipse.jetty.ee9:jetty-ee9-maven-plugin",
         "org.jenkins-ci:winstone"
@@ -69,16 +63,6 @@
       "enabled": false,
       "matchPackageNames": [
         "org.fusesource.jansi:jansi"
-      ]
-    },
-    {
-      "description": "Depends on commons-lang3 which is in progress for removal from core. See: https://issues.jenkins.io/browse/JENKINS-73355",
-      "matchManagers": [
-        "maven"
-      ],
-      "enabled": false,
-      "matchPackageNames": [
-        "org.apache.commons:commons-compress"
       ]
     },
     {
@@ -122,19 +106,29 @@
       ],
       "enabled": false,
       "description": "maven-metadata.xml is missing for this really old package which is required by renovate"
+    },
+    {
+      "description": "Jackson 2.19.0 causes issues with Kubernetes client. See https://github.com/jenkinsci/bom/pull/5114",
+      "matchManagers": [
+        "maven"
+      ],
+      "allowedVersions": "<2.19.0",
+      "matchPackageNames": [
+        "org.jenkins-ci.plugins:jackson2-api"
+      ]
     }
   ],
   "customManagers": [
     {
       "customType": "regex",
       "fileMatch": [
-        "war/pom.xml"
+        "pom.xml"
       ],
       "matchStrings": [
         "<node.version>(?<currentValue>.*?)</node.version>"
       ],
       "depNameTemplate": "node",
-      "datasourceTemplate": "npm"
+      "datasourceTemplate": "node-version"
     },
     {
       "customType": "regex",
