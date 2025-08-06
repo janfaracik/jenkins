@@ -20,15 +20,15 @@
     visibility: visible;
   }
 
-  tr.has-dependents input,
-  tr.has-disabled-dependency .enable input,
-  tr.has-disabled-dependency .enable .jenkins-toggle-switch label,
-  tr.has-dependents button,
-  tr.has-dependents .enable button,
-  tr.has-dependents .enable .jenkins-toggle-switch label {
-    pointer-events: none;
-    opacity: 0.25;
-  }
+  //tr.has-dependents input,
+  //tr.has-disabled-dependency .enable input,
+  //tr.has-disabled-dependency .enable .jenkins-toggle-switch label,
+  //tr.has-dependents button,
+  //tr.has-dependents .enable button,
+  //tr.has-dependents .enable .jenkins-toggle-switch label {
+  //  pointer-events: none;
+  //  opacity: 0.25;
+  //}
 
   tr.has-dependents-but-disabled .enable input,
   tr.has-dependents-but-disabled .enable button,

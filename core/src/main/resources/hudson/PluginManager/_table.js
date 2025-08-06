@@ -201,6 +201,27 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         }
         markAllDependentsDisabled(pluginTRs[i]);
         markHasDisabledDependencies(pluginTRs[i]);
+
+        //// do the thing
+        const row = pluginTRs[i];
+        const enableInput = pluginMetadata.enableInput;
+        const rollback = select("td.rollback button", pluginTRs[i]);
+        const uninstall = select("td.uninstall button", pluginTRs[i]);
+
+        if (row.classList.contains("all-dependents-disabled")) {
+          continue;
+        }
+
+        if (row.classList.contains("has-dependents") || row.classList.contains("has-disabled-dependency")) {
+          enableInput.disabled = true;
+          if (rollback) {
+            rollback.disabled = true;
+          }
+          uninstall.disabled = true;
+        }
+
+        console.log(row, enableInput, rollback, uninstall);
+
       }
     }
 

@@ -199,7 +199,7 @@ THE SOFTWARE.
                     </div>
                   </td>
                   <l:isAdmin>
-                    <td class="jenkins-table__cell--tight">
+                    <td class="jenkins-table__cell--tight rollback">
                       <div class="jenkins-table__cell__button-wrapper">
                           <j:if test="${p.downgradable}">
                             <form method="post"
