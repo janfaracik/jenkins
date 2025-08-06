@@ -11,43 +11,65 @@ const SELECTED_ITEM_CLASS = "jenkins-dropdown__item--selected";
  * @param element - the element to generate the dropdown for
  * @param callback - called to retrieve the list of dropdown items
  */
-function generateDropdown(element, callback, immediate) {
+function generateDropdown(element, callback, immediate, options = {}) {
   if (element._tippy && element._tippy.props.theme === "dropdown") {
     element._tippy.destroy();
   }
 
   tippy(
     element,
-    Object.assign({}, Templates.dropdown(), {
-      hideOnClick:
-        element.dataset["hideOnClick"] !== "false" ? "toggle" : false,
-      onCreate(instance) {
-        const onload = () => {
-          if (instance.loaded) {
-            return;
-          }
+    Object.assign(
+      {},
+      Templates.dropdown(),
+      {
+        onCreate(instance) {
+          const onload = () => {
+            if (instance.loaded) {
+              return;
+            }
 
-          document.addEventListener("click", (event) => {
-            const isClickInAnyDropdown =
-              !!event.target.closest("[data-tippy-root]");
-            const isClickOnReference = instance.reference.contains(
-              event.target,
+            document.addEventListener("click", (event) => {
+              const isClickOnReference = instance.reference.contains(
+                event.target,
+              );
+              // Don't close the dropdown if the user is interacting with a SELECT menu inside of it
+              const isSelect = event.target.tagName === "SELECT";
+
+              if (!isClickOnReference && !isSelect) {
+                instance.clickToHide = true;
+                instance.hide();
+              }
+            });
+
+            callback(instance);
+          };
+          if (immediate) {
+            onload();
+          } else {
+            ["mouseenter", "focus"].forEach((event) => {
+              instance.reference.addEventListener(event, onload);
+            });
+          }
+        },
+        onHide(instance) {
+          if (
+            instance.props.trigger === "mouseenter" &&
+            !instance.clickToHide
+          ) {
+            const dropdowns = document.querySelectorAll("[data-tippy-root]");
+            const isMouseOverAnyDropdown = Array.from(dropdowns).some(
+              (dropdown) => dropdown.matches(":hover"),
             );
 
-            if (!isClickInAnyDropdown && !isClickOnReference) {
-              instance.hide();
-            }
-          });
+            return !isMouseOverAnyDropdown;
+          }
 
-          callback(instance);
-        };
-        if (immediate) {
-          onload();
-        } else {
-          instance.reference.addEventListener("mouseenter", onload);
-        }
+          instance.clickToHide = false;
+          return true;
+        },
       },
-    }),
+      options,
+    ),
   );
 }
 
@@ -187,6 +209,13 @@ function convertHtmlToItems(children) {
           item.type = "link";
         } else {
           item.type = "button";
+        }
+        if (attributes.dropdownBadgeSeverity) {
+          item.badge = {
+            text: attributes.dropdownBadgeText,
+            tooltip: attributes.dropdownBadgeTooltip,
+            severity: attributes.dropdownBadgeSeverity,
+          };
         }
 
         items.push(item);
