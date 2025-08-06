@@ -212,7 +212,10 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
           continue;
         }
 
-        if (row.classList.contains("has-dependents") || row.classList.contains("has-disabled-dependency")) {
+        if (
+          row.classList.contains("has-dependents") ||
+          row.classList.contains("has-disabled-dependency")
+        ) {
           enableInput.disabled = true;
           if (rollback) {
             rollback.disabled = true;
@@ -221,7 +224,6 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         }
 
         console.log(row, enableInput, rollback, uninstall);
-
       }
     }
 
