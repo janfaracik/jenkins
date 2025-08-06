@@ -83,7 +83,6 @@ THE SOFTWARE.
                   </l:isAdmin>
                   <th initialSortDir="down">${%Name}</th>
                   <th>${%Released}</th>
-                  <th>${%Installed}</th>
                   <j:if test="${app.updateCenter.healthScoresAvailable}">
                     <th>
                       <j:set var="healthTooltip">${%healthTooltip}</j:set>
@@ -234,18 +233,6 @@ THE SOFTWARE.
                             ${%ago(h.getTimeSpanString(p.releaseTimestamp))}
                           </time>
                         </j:if>
-                      </td>
-                      <td>
-                        <j:choose>
-                          <j:when test="${p.installed.active}">
-                            <st:out value="${p.installed.version}"/>
-                          </j:when>
-                          <j:otherwise>
-                            <span title="${%Inactive}">
-                              (<st:out value="${p.installed.version}"/>)
-                            </span>
-                          </j:otherwise>
-                        </j:choose>
                       </td>
                       <j:if test="${app.updateCenter.healthScoresAvailable}">
                         <td>

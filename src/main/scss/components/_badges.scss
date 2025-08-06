@@ -20,6 +20,10 @@
   padding: 0 0.4rem;
   gap: 0.35rem;
 
+  &::before {
+    border: var(--jenkins-border--inherit-subtle);
+  }
+
   &--filled {
     --item-background: color-mix(in sRGB, var(--color) 85%, transparent);
     --item-background--hover: color-mix(in sRGB, var(--color) 85%, transparent);
