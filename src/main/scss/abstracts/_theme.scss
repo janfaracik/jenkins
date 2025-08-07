@@ -58,6 +58,7 @@ $semantics: (
   --secondary: oklch(from var(--black) 60% c h);
   --focus-input-border: var(--accent-color);
   --focus-input-glow: color-mix(in sRGB, var(--accent-color) 15%, transparent);
+  --focus-active-ring: 0 0 0 0.1875rem var(--text-color);
 
   // State colors
   --primary-hover: var(--accent-color);

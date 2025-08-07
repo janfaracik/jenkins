@@ -27,12 +27,10 @@
         right: 25px;
       }
 
-      input:not(:disabled) + & {
-        &:active,
-        &:focus {
-          &::after {
-            right: 20px !important;
-          }
+      &:active,
+      &:focus {
+        &::after {
+          right: 20px !important;
         }
       }
 
@@ -58,8 +56,30 @@
   clip: rect(0 0 0 0);
   clip-path: inset(50%);
 
+  &:not(:disabled) + label {
+    &:hover::before {
+      background-color: var(--input-border-hover);
+    }
+
+    &:active,
+    &:focus {
+      &::before {
+        box-shadow:
+                inset 0 0 0 var(--jenkins-border-width)
+                color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
+                0 0 0 4px
+                color-mix(in sRGB, var(--text-color-secondary) 25%, transparent);
+      }
+
+      &::after {
+        left: 5px;
+        width: 25px;
+      }
+    }
+  }
+
   &:checked + label::before {
-    background-color: var(--focus-input-border);
+    background-color: var(--focus-input-border) !important;
   }
 
   &:checked {
@@ -67,23 +87,6 @@
       &::after {
         left: 25px;
         mask-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='66px' height='66px' viewBox='0 0 66 66' version='1.1' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cpath d='M66,0 L66,66 L0,66 L0,0 L66,0 Z M37.7154094,29.2061836 C37.3690459,28.9031155 36.8425777,28.9382134 36.5395097,29.2845769 L36.5395097,29.2845769 L31.2924962,35.2799905 L29.4225874,33.410737 L29.3440813,33.3414133 C29.0171724,33.0872262 28.5444804,33.1103341 28.2440774,33.410737 C27.9186409,33.7361736 27.9186409,34.2638104 28.2440774,34.589247 L28.2440774,34.589247 L30.7440745,37.0892441 L30.8202748,37.15679 C31.1634387,37.4256962 31.6657159,37.3856111 31.9604761,37.0487424 L31.9604761,37.0487424 L37.7938027,30.3820833 L37.8577508,30.2991398 C38.0896293,29.9560466 38.0351295,29.4859387 37.7154094,29.2061836 Z' fill='%23000000'%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
-      }
-
-      input:not(:disabled) + & {
-        &:active,
-        &:focus {
-          &::before {
-            box-shadow:
-              inset 0 0 0 1.5px
-                color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
-              var(--form-input-glow--focus);
-          }
-
-          &::after {
-            left: 20px;
-            width: 25px;
-          }
-        }
       }
 
       .jenkins-toggle-switch__label__checked-title {
@@ -94,12 +97,36 @@
         opacity: 0;
       }
     }
+
+    &:not(:disabled) + label {
+      &:active,
+      &:focus {
+        &::before {
+          box-shadow:
+                  inset 0 0 0 var(--jenkins-border-width)
+                  color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
+                  var(--form-input-glow--focus);
+        }
+
+        &::after {
+          left: 20px;
+          width: 25px;
+        }
+      }
+    }
   }
 
-  &:disabled + label {
-    cursor: not-allowed;
-    opacity: 0.35;
-    filter: saturate(0.7);
+  &:focus-visible + label {
+    &::before {
+      box-shadow: var(--focus-active-ring) !important;
+    }
+  }
+
+  &:disabled {
+    & + label {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 }
 
@@ -125,9 +152,9 @@
     transition: var(--standard-transition);
     margin-right: 1rem;
     box-shadow:
-      inset 0 0 0 1.5px
-        color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
-      var(--form-input-glow);
+            inset 0 0 0 var(--jenkins-border-width)
+            color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
+            var(--form-input-glow);
   }
 
   &::after {
@@ -145,30 +172,8 @@
     mask-position: center;
     border-radius: 100px;
     transition: var(--standard-transition);
-    box-shadow: 0 0 0 1.5px
-      color-mix(in sRGB, var(--text-color-secondary) 9%, transparent);
-  }
-
-  input:not(:disabled) + & {
-    &:hover::before {
-      background-color: var(--input-border-hover);
-    }
-
-    &:active,
-    &:focus {
-      &::before {
-        box-shadow:
-          inset 0 0 0 1.5px
-            color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
-          0 0 0 4px
-            color-mix(in sRGB, var(--text-color-secondary) 25%, transparent);
-      }
-
-      &::after {
-        left: 5px;
-        width: 25px;
-      }
-    }
+    box-shadow: 0 0 0 var(--jenkins-border-width)
+    color-mix(in sRGB, var(--text-color-secondary) 9%, transparent);
   }
 
   .jenkins-toggle-switch__label__checked-title {
