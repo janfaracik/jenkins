@@ -25,8 +25,8 @@
   }
 
   &:disabled {
-    opacity: 0.5;
-    filter: saturate(0.6);
+    opacity: 0.35;
+    filter: saturate(0.8);
     cursor: not-allowed;
   }
 }
@@ -69,6 +69,7 @@
 .jenkins-button--tertiary {
   --button-background: transparent !important;
 
+  &:disabled,
   &:not(
     :hover,
     &:active,
@@ -77,7 +78,7 @@
     &[aria-expanded="true"]
   ) {
     &::before {
-      border-color: transparent;
+      border-color: transparent !important;
     }
   }
 }
