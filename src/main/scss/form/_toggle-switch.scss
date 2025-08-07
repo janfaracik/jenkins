@@ -127,8 +127,9 @@
 
   &:disabled {
     & + label {
-      cursor: not-allowed;
       opacity: 0.5;
+      filter: saturate(0.8);
+      cursor: not-allowed;
     }
   }
 }
