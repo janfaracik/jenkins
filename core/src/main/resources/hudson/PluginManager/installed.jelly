@@ -187,7 +187,7 @@ THE SOFTWARE.
                   </j:if>
                   <j:set var="state" value="${p.enabled?'true':null}"/>
                   <td class="jenkins-table__cell--tight enable" data="${state}">
-                    <span data-type="app-tooltip-wrapper">
+                    <span data-type="app-tooltip-wrapper" class="jenkins-table__cell__button-wrapper">
                       <div class="jenkins-table__cell__button-wrapper">
                         <span class="jenkins-toggle-switch">
                           <input type="checkbox" checked="${state}"
@@ -249,7 +249,7 @@ THE SOFTWARE.
                             </div>
                           </j:if>
                           <l:isAdmin>
-                            <span data-type="app-tooltip-wrapper">
+                            <span data-type="app-tooltip-wrapper" class="jenkins-table__cell__button-wrapper">
                               <button data-action="uninstall"
                                       type="button"
                                       class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color"
