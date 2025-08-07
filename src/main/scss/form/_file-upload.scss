@@ -1,8 +1,10 @@
+$file-upload-padding: 0.625rem;
+
 .jenkins-file-upload {
   position: relative;
   width: 100%;
-  margin: -10px 0 0 -10px;
-  padding: 10px 0 10px 10px;
+  margin: -$file-upload-padding -$file-upload-padding 0 -$file-upload-padding;
+  padding: $file-upload-padding 0 $file-upload-padding $file-upload-padding;
   outline: none;
   background: transparent;
 
@@ -10,7 +12,7 @@
     content: "";
     position: absolute;
     display: block;
-    left: calc(10px + 0.9rem);
+    left: calc($file-upload-padding + 0.9rem);
     width: 1rem;
     height: 36px;
     background: currentColor;
@@ -38,7 +40,7 @@
     color: var(--text-color);
     border-radius: var(--form-input-border-radius);
     cursor: pointer;
-    min-height: 36px;
+    min-height: 38px;
     white-space: nowrap;
     background: var(--button-background);
     transition: var(--standard-transition);
