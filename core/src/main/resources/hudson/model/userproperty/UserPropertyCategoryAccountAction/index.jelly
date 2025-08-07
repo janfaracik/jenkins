@@ -30,14 +30,14 @@ THE SOFTWARE.
     <l:layout permission="${app.ADMINISTER}" title="${%title}">
         <st:include page="sidepanel.jelly" it="${it.targetUser}" />
         <l:main-panel type="medium">
-            <f:form method="post" action="configSubmit" name="config">
-                <l:app-bar title="${%title}" />
+            <l:app-bar title="${%title}" />
 
+            <f:form method="post" action="configSubmit" name="config">
                 <j:set var="thisAction" value="${it}" />
                 <j:set var="it" value="${thisAction.targetUser}" />
                 <j:set var="instance" value="${it}"/>
 
-                <f:section>
+                <f:section title="${%General}">
                     <f:entry title="${%Full name}" description="${%Full name.Description}">
                         <f:textbox field="fullName" />
                     </f:entry>
