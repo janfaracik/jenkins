@@ -61,6 +61,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         instructionsTd.getAttribute("data-loaded-text");
     }
     applyFilter();
+    document.querySelector("#table-skeleton").remove();
   })();
 });
 

@@ -40,7 +40,9 @@ THE SOFTWARE.
   <j:switch on="${attrs.type}">
     <j:case value="table">
       <div class="jenkins-table-skeleton" id="${attrs.id}">
-        <div />
+        <div>
+          <div />
+        </div>
       </div>
     </j:case>
     <j:case value="side-panel">

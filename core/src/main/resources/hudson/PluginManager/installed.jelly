@@ -69,6 +69,8 @@ THE SOFTWARE.
                 data-detached-possible-dependents="${%detached-possible-dependents}"
                 data-uninstall-description="${%uninstall-description}" />
 
+      <l:skeleton type="table" id="table-skeleton" />
+
       <j:choose>
         <j:when test="${noPlugins}">
           <l:notice icon="symbol-plugins" title="${%No plugins installed}" />

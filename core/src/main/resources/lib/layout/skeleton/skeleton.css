@@ -68,7 +68,19 @@
 
 .jenkins-table-skeleton {
   & > div {
-    height: 50vh;
+    background: var(--table-background);
+    height: unset;
+    border-radius: calc(
+            var(--table-border-radius) + (var(--card-border-width) * 2)
+    ); /* Should be the same radius as the table */
+    animation-duration: 1s;
+    padding: 45px 1.5px 1.5px 1.5px;
+
+    & > div {
+        background: var(--background);
+        height: 100vh;
+        border-radius: var(--table-border-radius);
+    }
   }
 
   & + *, & + * + *, & + * + * + *, & + * + * + * + * {
