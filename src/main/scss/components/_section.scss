@@ -27,13 +27,15 @@
   margin: 0 0 var(--section-padding) 0;
   font-size: 1rem;
   font-weight: var(--font-bold-weight);
+  text-box: cap alphabetic;
 }
 
 .jenkins-section__description {
   // Tweaked margin so that it appears visually centred when placed next to `.jenkins-section__title`
-  margin: -0.8125rem 0 1rem;
+  margin: -0.25rem 0 1.25rem;
   color: var(--text-color-secondary);
   line-height: 1.66;
+  text-box: cap alphabetic;
 }
 
 .jenkins-section__items {
