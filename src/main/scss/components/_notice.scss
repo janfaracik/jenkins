@@ -14,7 +14,7 @@
   padding: calc(var(--section-padding) * 2);
   text-align: center;
 
-  svg {
+  & > svg {
     width: 2.5rem;
     height: 2.5rem;
   }

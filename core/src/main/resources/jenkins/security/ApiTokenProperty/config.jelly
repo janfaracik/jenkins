@@ -103,7 +103,7 @@ THE SOFTWARE.
         <!-- ignore the whole div to prevent the "Add new token" button to trigger the confirm -->
         <div class="token-list ignore-dirty-panel" xmlns:local="local">
             <j:set var="tokenList" value="${instance.tokenList}" />
-            <div class="token-list-empty-item ${tokenList.isEmpty() ? '' : 'jenkins-hidden'} jenkins-!-margin-bottom-2" >
+            <div class="token-list-empty-item ${tokenList.isEmpty() ? '' : 'jenkins-hidden'}">
                 <l:notice title="${%NoTokenYet}" icon="symbol-key">
                     <local:addButton/>
                 </l:notice>
