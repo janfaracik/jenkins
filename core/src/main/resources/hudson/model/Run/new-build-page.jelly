@@ -36,51 +36,60 @@ THE SOFTWARE.
 
       <t:buildCaption controls="${controls}">${it.displayName}</t:buildCaption>
 
+      <div class="app-tabs-thing">
+        <div>Console</div>
+        <div>Tests</div>
+        <div>Changes</div>
+        <div>Workspace</div>
+      </div>
+
       <div>
         <t:editableDescription permission="${it.UPDATE}" hideButton="true"/>
       </div>
 
-      <div class="app-build__grid">
-        <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
-        <l:card title="${%Details}">
-          <div class="jenkins-card__details">
-            <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
-              <j:if test="${index gt 0}">
-                <hr />
-              </j:if>
-              <j:forEach var="detail" items="${group.value}">
-                <st:include page="detail.jelly" it="${detail}" optional="true">
-                  <x:element name="${detail.link != null ? 'a' : 'div'}">
-                    <x:attribute name="class">jenkins-card__details__item</x:attribute>
-                    <x:attribute name="href">${detail.link}</x:attribute>
-                    <div class="jenkins-card__details__item__icon">
-                      <l:icon src="${detail.iconClassName}" />
-                    </div>
-                    ${detail.displayName}
-                  </x:element>
-                </st:include>
-              </j:forEach>
-            </j:forEach>
-          </div>
-        </l:card>
+      <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
 
-        <l:card title="Summary">
-          <div>
-            <table>
-              <t:artifactList build="${it}" caption="${%Build Artifacts}"/>
+<!--      <div class="app-build__grid">-->
+<!--        <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />-->
+<!--        <l:card title="${%Details}">-->
+<!--          <div class="jenkins-card__details">-->
+<!--            <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">-->
+<!--              <j:if test="${index gt 0}">-->
+<!--                <hr />-->
+<!--              </j:if>-->
+<!--              <j:forEach var="detail" items="${group.value}">-->
+<!--                <st:include page="detail.jelly" it="${detail}" optional="true">-->
+<!--                  <x:element name="${detail.link != null ? 'a' : 'div'}">-->
+<!--                    <x:attribute name="class">jenkins-card__details__item</x:attribute>-->
+<!--                    <x:attribute name="href">${detail.link}</x:attribute>-->
+<!--                    <div class="jenkins-card__details__item__icon">-->
+<!--                      <l:icon src="${detail.iconClassName}" />-->
+<!--                    </div>-->
+<!--                    ${detail.displayName}-->
+<!--                  </x:element>-->
+<!--                </st:include>-->
+<!--              </j:forEach>-->
+<!--            </j:forEach>-->
+<!--          </div>-->
+<!--        </l:card>-->
 
-              <!-- give actions a chance to contribute summary item -->
-              <j:forEach var="a" items="${it.allActions}">
-                <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />
-              </j:forEach>
+<!--        <l:card title="Summary">-->
+<!--          <div>-->
+<!--            <table>-->
+<!--              <t:artifactList build="${it}" caption="${%Build Artifacts}"/>-->
 
-              <st:include page="summary.jelly" optional="true" />
-            </table>
+<!--              &lt;!&ndash; give actions a chance to contribute summary item &ndash;&gt;-->
+<!--              <j:forEach var="a" items="${it.allActions}">-->
+<!--                <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />-->
+<!--              </j:forEach>-->
 
-            <st:include page="main.jelly" optional="true" />
-          </div>
-        </l:card>
-      </div>
+<!--              <st:include page="summary.jelly" optional="true" />-->
+<!--            </table>-->
+
+<!--            <st:include page="main.jelly" optional="true" />-->
+<!--          </div>-->
+<!--        </l:card>-->
+<!--      </div>-->
     </l:main-panel>
   </l:layout>
 </j:jelly>
