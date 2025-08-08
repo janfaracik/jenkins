@@ -128,10 +128,26 @@ function menuItem(menuItem, type = "jenkins-dropdown__item", context = "") {
     itemOptions.event && itemOptions.event.type === "GET" ? "a" : "button";
   const url = tag === "a" ? context + xmlEscape(itemOptions.event.url) : "";
 
+  function optionalVal(key, val) {
+    if (val) {
+      return `${key}="${val}"`
+    }
+
+    return "";
+  }
+
+  function optionalVals(keyVals) {
+    return Object.keys(keyVals).map(key => optionalVal(key, keyVals[key])).join(' ');
+  }
+
   const item = createElementFromHtml(`
-      <${tag} class="jenkins-dropdown__item ${itemOptions.clazz ? xmlEscape(itemOptions.clazz) : ""}"
-        ${itemOptions.url ? `href="${xmlEscape(itemOptions.url)}"` : ""} ${itemOptions.id ? `id="${xmlEscape(itemOptions.id)}"` : ""}
-        ${itemOptions.tooltip ? `data-html-tooltip="${xmlEscape(itemOptions.tooltip)}"` : ""}>
+      <${tag}
+        ${optionalVals({
+          "class": type + " " + clazz,
+          "href": url,
+          "id": xmlEscape(itemOptions.id),
+    "data-html-tooltip": xmlEscape(itemOptions.tooltip)
+        })}>
           ${
             itemOptions.icon
               ? `<div class="jenkins-dropdown__item__icon">${
