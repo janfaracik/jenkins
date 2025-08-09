@@ -21,7 +21,7 @@ $jenkins-radio-glow-size: 0.5rem;
     opacity: 0;
     margin-top: 0.625rem;
 
-    &:not(:checked) {
+    &:not(:checked):not(:disabled) {
       &:hover {
         & + label::before {
           box-shadow:
