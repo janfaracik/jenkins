@@ -134,9 +134,9 @@
     position: relative;
     min-width: 22px;
     min-height: 22px;
-    border-radius: 6px;
+    border-radius: 7px;
     transition: var(--standard-transition);
-    margin-right: 11px;
+    margin-right: 10px;
     box-shadow:
       var(--form-input-glow),
       inset 0 0 0 var(--jenkins-border-width) var(--input-border);
