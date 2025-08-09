@@ -27,9 +27,7 @@ THE SOFTWARE.
   <l:layout title="${command.name}" permission="${app.READ}" type="one-column">
     <l:breadcrumb title="${command.name}" />
     <l:main-panel>
-      <h1>
-        Command ${command.name}
-      </h1>
+      <l:app-bar title="Command ${command.name}" />
       <j:set var="commandArgs" value="${command.name}${command.singleLineSummary}"/>
       <st:include page="example.jelly"/>
       <pre class="jenkins-!-margin-top-3">

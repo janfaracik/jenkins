@@ -6,8 +6,10 @@ def f = namespace(lib.FormTagLib)
 def l = namespace(lib.LayoutTagLib)
 def st = namespace("jelly:stapler")
 
-l.layout(permission: app.MANAGE, title: my.displayName, type: "one-column") {
-    l.main_panel {
+l.layout(norefresh: true, permission: app.MANAGE, title: my.displayName) {
+    st.include(page: "sidepanel.jelly", class: 'hudson.model.ManagementLink')
+
+    l.main_panel(width: "form") {
         h1 {
             text(Messages.ShutdownLink_DisplayName_prepare())
         }
