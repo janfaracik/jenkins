@@ -35,6 +35,64 @@ THE SOFTWARE.
 
       <script src="${resURL}/jsbundles/pages/manage-jenkins.js" type="text/javascript" />
 
+      <div style="display: flex; gap: 1rem; margin-bottom: var(--section-padding)">
+        <button class="jenkins-button">Hello</button>
+
+        <button class="jenkins-button" disabled="true">Hello</button>
+
+        <button class="jenkins-button jenkins-button--primary">Hello</button>
+
+        <button class="jenkins-button jenkins-button--primary" disabled="true">Hello</button>
+
+        <button class="jenkins-button jenkins-button--tertiary" disabled="true">Hello</button>
+
+        <button class="jenkins-button jenkins-!-destructive-color" disabled="true">Hello</button>
+
+        <div class="jenkins-radio">
+          <input class="jenkins-radio__input" type="radio" name="mode" id="test" value="test"/>
+          <label for="test" class="jenkins-radio__label">
+            hello
+          </label>
+        </div>
+
+        <div class="jenkins-radio">
+          <input class="jenkins-radio__input" type="radio" name="mode" disabled="true" id="test2" value="test"/>
+          <label for="test2" class="jenkins-radio__label">
+            hello
+          </label>
+        </div>
+
+        <div class="jenkins-checkbox">
+          <input class="jenkins-checkbox__input" type="checkbox" name="mode" id="test3" value="test"/>
+          <label for="test3" class="jenkins-checkbox__label">
+            hello
+          </label>
+        </div>
+
+        <div class="jenkins-checkbox">
+          <input class="jenkins-checkbox__input" type="checkbox" name="mode" disabled="true" id="test4" value="test"/>
+          <label for="test4" class="jenkins-checkbox__label">
+            hello
+          </label>
+        </div>
+
+        <f:toggleSwitch />
+
+        <f:toggleSwitch checked="true" title="Hello" />
+
+        <f:toggleSwitch readOnlyMode="true" title="Hello" />
+
+        <f:toggleSwitch checked="true" readOnlyMode="true" title="Hello" />
+      </div>
+
+      <input class="jenkins-input" />
+
+      <br />
+
+      <input class="jenkins-input" disabled="true" />
+
+      <br />
+
       <section class="manage-messages">
         <j:forEach var="am" items="${app.activeAdministrativeMonitors}">
           <st:include page="message.jelly" it="${am}" />
