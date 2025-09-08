@@ -4,9 +4,54 @@
 @use "form";
 @use "pages";
 
-.jenkins-app-bar {
+.build-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.875rem;
   margin-top: -5px;
   margin-bottom: 10px;
+
+  .jenkins-app-bar__controls {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+}
+
+.buildicon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-left: -0.25rem;
+
+  div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    color: var(--success-color);
+    background: color-mix(in oklch, currentColor 12.5%, transparent);
+    border: var(--jenkins-border--inherit-subtle);
+    border-radius: 100px;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+
+      * {
+        stroke-width: 50px;
+      }
+    }
+  }
+
+  h1 {
+    margin-bottom: 0;
+    font-size: 1.25rem;
+  }
 }
 
 .plugin-content {
@@ -89,63 +134,56 @@
       border: var(--jenkins-border--subtle);
     }
 
-    &::after {
-      content: "";
-      position: absolute;
-      left: -0.5rem;
-      right: -0.5rem;
-      bottom: -15.5px;
-      border-radius: inherit;
-      opacity: 0;
-      height: 1.5px;
-      background:
-              linear-gradient(
-                              to right,
-                              transparent 0%,
-                              color-mix(in oklch, var(--color, var(--text-color-secondary)) 15%, transparent) 25%,
-                              color-mix(in oklch, var(--color, var(--text-color-secondary)) 15%, transparent) 75%,
-                              transparent 100%
-              ),
-              linear-gradient(
-                      to right,
-                      transparent 0%,
-                      var(--background),
-                      var(--background),
-                      transparent 100%
-      );
-    }
-
     &:hover {
       color: var(--text-color);
 
-      &::before, &::after {
+      &::before {
+        background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 3.75%, transparent);
         opacity: 1;
       }
     }
 
     &.active {
-      color: var(--color, var(--text-color-secondary));
+      color: var(--color, var(--text-color));
       font-weight: 450;
       cursor: default;
 
-      &::before, &::after {
-        opacity: 1;
-      }
-
       &::before {
+        opacity: 1;
         inset: 0;
       }
 
       svg {
         * {
-          stroke-width: 50px;
+          stroke-width: 40px;
         }
       }
     }
 
-    &.active.jenkins-\!-success-color {
+    .pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100px;
+      font-size: 12px;
+      min-width: 20px;
+      text-align: center;
+      color: var(--text-color-secondary);
+      padding-inline: 6px;
+      text-box: cap alphabetic;
+      height: 20px;
+      z-index: 0;
+      margin-right: -0.25rem;
+
       &::before {
-        border: var(--jenkins-border--inherit-subtle);
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 2%, var(--background));
+        border: var(--jenkins-border-width) solid color-mix(in oklch, var(--color, var(--text-color-secondary)) 10%, transparent);
+        z-index: -1;
       }
     }
   }
