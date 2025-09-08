@@ -26,6 +26,7 @@
   justify-content: center;
   gap: 0.75rem;
   margin-left: -0.25rem;
+  color: var(--text-color) !important;
 
   div {
     display: flex;
@@ -35,7 +36,7 @@
     height: 2rem;
     color: var(--success-color);
     background: color-mix(in oklch, currentColor 12.5%, transparent);
-    border: var(--jenkins-border--inherit-subtle);
+    border: var(--jenkins-border-width) solid oklch(from currentColor l c h / 0.15);
     border-radius: 100px;
 
     svg {
@@ -55,9 +56,22 @@
 }
 
 .plugin-content {
+  display: flex;
+  flex-direction: column;
+  padding: var(--section-padding);
   background: color-mix(in srgb, var(--text-color-secondary) 3%, transparent);
   border-top: var(--jenkins-border--subtle);
   margin-inline: calc(var(--section-padding) * -1);
+
+  .jenkins-app-bar {
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+
+  pre {
+    background: var(--card-background);
+    border: var(--jenkins-border);
+  }
 }
 
 .mylittletown {
@@ -129,17 +143,19 @@
       inset: 1.5px;
       border-radius: inherit;
       opacity: 0;
-      transition: opacity var(--standard-transition);
+      transition: var(--standard-transition);
       background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 7.5%, transparent);
       border: var(--jenkins-border--subtle);
     }
 
-    &:hover {
-      color: var(--text-color);
+    &:not(.active) {
+      &:hover {
+        color: var(--text-color);
 
-      &::before {
-        background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 3.75%, transparent);
-        opacity: 1;
+        &::before {
+          background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 3.75%, transparent);
+          opacity: 1;
+        }
       }
     }
 
@@ -169,7 +185,6 @@
       font-size: 12px;
       min-width: 20px;
       text-align: center;
-      color: var(--text-color-secondary);
       padding-inline: 6px;
       text-box: cap alphabetic;
       height: 20px;
@@ -181,31 +196,17 @@
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 2%, var(--background));
-        border: var(--jenkins-border-width) solid color-mix(in oklch, var(--color, var(--text-color-secondary)) 10%, transparent);
+        background: color-mix(in srgb, var(--color, var(--background)) 5%, var(--background));
+        border: var(--jenkins-border-width) solid color-mix(in srgb, var(--color, currentColor) 10%, transparent);
         z-index: -1;
       }
     }
   }
 }
 
-.plugin-app-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: var(--section-padding);
-  margin-bottom: calc(var(--section-padding) * -1);
-
-  h1 {
-    margin-bottom: 0;
-    font-size: 1.3125rem;
-  }
-}
-
 .cards {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  padding: var(--section-padding);
   gap: calc(var(--section-padding) / 2);
 
   & > div {

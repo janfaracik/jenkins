@@ -38,36 +38,27 @@ THE SOFTWARE.
       </j:set>
 
       <div class="build-bar">
-        <a class="buildicon">
+        <a class="buildicon" href="${rootURL}/${it.url}">
           <div>
             <l:icon src="symbol-check" />
           </div>
           <h1>${it.displayName}</h1>
         </a>
 
+        <j:set var="url" value="${h.getNearestAncestorUrl(request2, it)}"/>
+
         <div class="new-tabs">
-          <a class="active">
-            <l:icon src="symbol-grid-outline plugin-ionicons-api" />
-            Overview
-          </a>
-          <a>
-            <l:icon src="symbol-git-network-outline plugin-ionicons-api" />
-            Stages
-          </a>
-          <a>
-            <l:icon src="symbol-flask" />
-            Tests
-            <div class="pill jenkins-!-error-color">
-              17
-            </div>
-          </a>
-          <a>
-            <l:icon src="symbol-cube" />
-            Artifacts
-            <div class="pill">
-              4
-            </div>
-          </a>
+          <j:forEach var="tab" items="${it.runTabs}">
+            <a href="${rootURL}/${it.url}${tab.urlName}" class="${h.hyperlinkMatchesCurrentPage(tab.urlName ?: url) ? 'active' : ''}">
+              <l:icon src="${tab.iconFileName}" />
+              ${tab.displayName}
+              <j:if test="${tab.badge != null}">
+                <div class="pill jenkins-!-${tab.badge.severity}-color">
+                  ${tab.badge.text}
+                </div>
+              </j:if>
+            </a>
+          </j:forEach>
         </div>
 
         <div class="jenkins-app-bar__controls">
@@ -87,10 +78,7 @@ THE SOFTWARE.
       </div>
 
       <div class="plugin-content">
-
-        <div class="plugin-app-bar">
-          <h1>Overview</h1>
-
+        <l:app-bar title="Overview">
           <div class="mylittletown">
             <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
               <j:if test="${index gt 0}">
@@ -110,7 +98,7 @@ THE SOFTWARE.
               </j:forEach>
             </j:forEach>
           </div>
-        </div>
+        </l:app-bar>
 
         <div class="cards">
           <div></div>

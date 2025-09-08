@@ -126,6 +126,7 @@ import jenkins.model.details.DurationDetail;
 import jenkins.model.details.TimestampDetail;
 import jenkins.model.lazy.BuildReference;
 import jenkins.model.lazy.LazyBuildMixIn;
+import jenkins.run.RunTab;
 import jenkins.security.MasterToSlaveCallable;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.SystemProperties;
@@ -2708,5 +2709,9 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         @NonNull @Override public List<? extends Detail> createFor(@NonNull Run target) {
             return List.of(new TimestampDetail(target), new DurationDetail(target));
         }
+    }
+
+    public List<RunTab> getRunTabs() {
+        return getActions(RunTab.class);
     }
 }

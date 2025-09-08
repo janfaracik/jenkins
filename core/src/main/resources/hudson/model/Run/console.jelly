@@ -30,27 +30,59 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:layout title="${it.fullDisplayName} Console">
-    <st:include page="sidepanel.jelly" />
-
-    <l:breadcrumb title="${%Console Output}" />
-
     <l:main-panel>
-      <j:set var="controls">
-        <a class="jenkins-button" href="consoleText" download="${it.displayName}.txt">
-          <l:icon src="symbol-download" />
-          ${%Download}
+      <div class="build-bar">
+        <a class="buildicon" href="${rootURL}/${it.url}">
+          <div>
+            <l:icon src="symbol-check" />
+          </div>
+          <h1>${it.displayName}</h1>
         </a>
-        <l:copyButton ref="out" label="${%Copy}" />
-        <a class="jenkins-button" href="consoleText">
-          ${%View as plain text}
-        </a>
-      </j:set>
 
-      <t:buildCaption controls="${controls}">
-        ${%Console Output}
-      </t:buildCaption>
+        <div class="new-tabs">
+          <j:forEach var="tab" items="${it.runTabs}">
+            <a href="${rootURL}/${it.url}${tab.urlName}" class="${h.hyperlinkMatchesCurrentPage(tab.urlName) ? 'active' : ''}">
+              <l:icon src="${tab.iconFileName}" />
+              ${tab.displayName}
+              <j:if test="${tab.badge != null}">
+                <div class="pill jenkins-!-${tab.badge.severity}-color">
+                  ${tab.badge.text}
+                </div>
+              </j:if>
+            </a>
+          </j:forEach>
+        </div>
 
-      <st:include page="console-log.jelly" />
+        <div class="jenkins-app-bar__controls">
+          <div class="jenkins-split-button">
+            <button class="jenkins-button jenkins-!-build-color">
+              <l:icon src="symbol-refresh-outline plugin-ionicons-api" />
+              Rerun
+            </button>
+            <l:overflowButton id="button-install-after-restart"
+                              icon="symbol-chevron-down"
+                              tooltip="${null}"
+                              clazz="jenkins-!-build-color">
+            </l:overflowButton>
+          </div>
+          <l:overflowButton />
+        </div>
+      </div>
+
+      <div class="plugin-content">
+        <l:app-bar title="${%Console}">
+          <a class="jenkins-button" href="consoleText" download="${it.displayName}.txt">
+            <l:icon src="symbol-download" />
+            ${%Download}
+          </a>
+          <l:copyButton ref="out" label="${%Copy}" />
+          <a class="jenkins-button" href="consoleText">
+            ${%View as plain text}
+          </a>
+        </l:app-bar>
+
+        <st:include page="console-log.jelly" />
+      </div>
     </l:main-panel>
   </l:layout>
 </j:jelly>

@@ -1,8 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Matthew R. Harrah,
-Tom Huybrechts, id:cactusman, Romain Seguy
+Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Erik Ramfelt, Tom Huybrechts, id:cactusman
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,61 +23,45 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:x="jelly:xml">
-  <l:layout title="${it.fullDisplayName}">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+  <l:layout title="${it.displayName}${not empty it.parent.fullDisplayName?' ['+it.parent.fullDisplayName+']':''}">
+    <st:include page="sidepanel.jelly" />
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
       <div class="jenkins-app-bar">
-        <div class="jenkins-app-bar__content">
-          <div>
-            <div class="new-tabs">
-              <a class="jenkins-!-success-color active">
-                <l:icon src="symbol-check" />
-                ${it.displayName}
-              </a>
-            </div>
-          </div>
+        <div class="jenkins-app-bar__content jenkins-build-caption">
+          <j:set var="lastBuild" value="${it.lastBuild}" />
+          <j:if test="${lastBuild != null}">
+            <a href="${rootURL + '/' + lastBuild.url}" class="jenkins-!-display-contents" tabindex="-1">
+              <l:icon src="symbol-status-${lastBuild.iconColor.iconName}" tooltip="${lastBuild.iconColor.description}"/>
+            </a>
+          </j:if>
+          <h1 class="job-index-headline page-headline">
+            <l:breakable value="${it.displayName}"/>
+          </h1>
         </div>
         <div class="jenkins-app-bar__controls">
-          <button class="jenkins-button jenkins-!-build-color">
-            <l:icon src="symbol-play" />
-            Build
-          </button>
-          <button class="jenkins-button">
-            Configure
-          </button>
-          <l:overflowButton />
+          <t:editDescriptionButton permission="${it.CONFIGURE}"/>
         </div>
       </div>
 
-      <div class="plugin-content">
+      <j:if test="${(it.fullName!=it.fullDisplayName) and (it.class.name!='hudson.matrix.MatrixConfiguration')}"> <!-- TODO rather check for TopLevelItem (how to do this from Jelly?) -->
+        <j:choose>
+          <j:when test="${it.parent!=app}">
+            ${%Full project name}: ${it.fullName}
+          </j:when>
+          <j:otherwise>
+            ${%Project name}: ${it.fullName}
+          </j:otherwise>
+        </j:choose>
+      </j:if>
+      <t:editableDescription permission="${it.CONFIGURE}" hideButton="true"/>
 
-        <div class="plugin-app-bar">
-          <h1>Builds</h1>
+      <st:include page="jobpropertysummaries.jelly" />
+      <!-- inject main part here -->
+      <st:include page="main.jelly" />
 
-          <div>
-            <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
-              <j:if test="${index gt 0}">
-                <hr />
-              </j:if>
-              <j:forEach var="detail" items="${group.value}">
-                <st:include page="detail.jelly" it="${detail}" optional="true">
-                  <x:element name="${detail.link != null ? 'a' : 'div'}">
-                    <x:attribute name="class">jenkins-card__details__item</x:attribute>
-                    <x:attribute name="href">${detail.link}</x:attribute>
-                    <div class="jenkins-card__details__item__icon">
-                      <l:icon src="${detail.iconClassName}" />
-                    </div>
-                    ${detail.displayName}
-                  </x:element>
-                </st:include>
-              </j:forEach>
-            </j:forEach>
-          </div>
-        </div>
-
-        <st:include page="main.jelly" />
-      </div>
+      <st:include page="permalinks.jelly" />
     </l:main-panel>
   </l:layout>
 </j:jelly>
