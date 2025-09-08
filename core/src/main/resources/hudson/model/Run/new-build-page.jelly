@@ -61,18 +61,58 @@ THE SOFTWARE.
           </div>
         </div>
         <div class="jenkins-app-bar__controls">
-          <button class="jenkins-button jenkins-!-build-color">
-            <l:icon src="symbol-play" />
-            Rebuild
-          </button>
-          <button class="jenkins-button">
-            Configure
-          </button>
+          <div class="jenkins-split-button">
+            <button class="jenkins-button jenkins-!-build-color">
+              <l:icon src="symbol-refresh-outline plugin-ionicons-api" />
+              Rerun
+            </button>
+            <l:overflowButton id="button-install-after-restart"
+                              icon="symbol-chevron-down"
+                              tooltip="${null}"
+                              clazz="jenkins-!-build-color">
+            </l:overflowButton>
+          </div>
           <l:overflowButton />
         </div>
       </div>
 
       <div class="plugin-content">
+
+        <div class="plugin-app-bar">
+          <h1>Overview</h1>
+
+          <div class="mylittletown">
+            <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
+              <j:if test="${index gt 0}">
+                <hr />
+              </j:if>
+              <j:forEach var="detail" items="${group.value}">
+                <st:include page="detail.jelly" it="${detail}" optional="true">
+                  <x:element name="${detail.link != null ? 'a' : 'div'}">
+                    <x:attribute name="class">jenkins-card__details__item</x:attribute>
+                    <x:attribute name="href">${detail.link}</x:attribute>
+                    <div class="jenkins-card__details__item__icon">
+                      <l:icon src="${detail.iconClassName}" />
+                    </div>
+                    ${detail.displayName}
+                  </x:element>
+                </st:include>
+              </j:forEach>
+            </j:forEach>
+          </div>
+        </div>
+
+        <div class="cards">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+
       </div>
 
 <!--      <t:buildCaption controls="${controls}">${it.displayName}</t:buildCaption>-->

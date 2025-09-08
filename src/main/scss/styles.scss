@@ -10,10 +10,28 @@
 }
 
 .plugin-content {
-  height: 1000px;
   background: color-mix(in srgb, var(--text-color-secondary) 3%, transparent);
   border-top: var(--jenkins-border--subtle);
   margin-inline: calc(var(--section-padding) * -1);
+}
+
+.mylittletown {
+  display: flex;
+  gap: 1.25rem;
+  color: var(--text-color-secondary) !important;
+  font-weight: 450 !important;
+
+  .jenkins-card__details__item {
+    gap: 0.5rem;
+  }
+
+  svg * {
+    stroke-width: 40px;
+  }
+
+  * {
+    color: var(--text-color-secondary) !important;
+  }
 }
 
 .new-tabs {
@@ -60,21 +78,41 @@
       }
     }
 
-    &::before, &::after {
+    &::before {
       content: "";
       position: absolute;
       inset: 1.5px;
       border-radius: inherit;
       opacity: 0;
       transition: opacity var(--standard-transition);
-    }
-
-    &::before {
-      background: color-mix(in srgb, var(--color, var(--text-color-secondary)) 7.5%, transparent);
+      background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 7.5%, transparent);
+      border: var(--jenkins-border--subtle);
     }
 
     &::after {
-      border: var(--jenkins-border--subtle);
+      content: "";
+      position: absolute;
+      left: -0.5rem;
+      right: -0.5rem;
+      bottom: -15.5px;
+      border-radius: inherit;
+      opacity: 0;
+      height: 1.5px;
+      background:
+              linear-gradient(
+                              to right,
+                              transparent 0%,
+                              color-mix(in oklch, var(--color, var(--text-color-secondary)) 15%, transparent) 25%,
+                              color-mix(in oklch, var(--color, var(--text-color-secondary)) 15%, transparent) 75%,
+                              transparent 100%
+              ),
+              linear-gradient(
+                      to right,
+                      transparent 0%,
+                      var(--background),
+                      var(--background),
+                      transparent 100%
+      );
     }
 
     &:hover {
@@ -91,8 +129,11 @@
       cursor: default;
 
       &::before, &::after {
-        inset: 0;
         opacity: 1;
+      }
+
+      &::before {
+        inset: 0;
       }
 
       svg {
@@ -103,9 +144,40 @@
     }
 
     &.active.jenkins-\!-success-color {
-      &::after {
+      &::before {
         border: var(--jenkins-border--inherit-subtle);
       }
+    }
+  }
+}
+
+.plugin-app-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--section-padding);
+  margin-bottom: calc(var(--section-padding) * -1);
+
+  h1 {
+    margin-bottom: 0;
+    font-size: 1.3125rem;
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: var(--section-padding);
+  gap: calc(var(--section-padding) / 2);
+
+  & > div {
+    background: var(--card-background);
+    border: var(--jenkins-border);
+    border-radius: var(--form-input-border-radius);
+    height: 450px;
+
+    &:first-of-type {
+      grid-column: 1 / 3;
     }
   }
 }
