@@ -66,7 +66,24 @@ THE SOFTWARE.
           </p>
         </div>
       </l:card>
-      <l:card title="Artifacts" expandable="artifacts" />
+
+      <j:set var="it" value="${it.object}" />
+      <l:card title="Artifacts" expandable="artifacts">
+        <table>
+          <t:artifactList build="${it}" caption="${%Build Artifacts}" />
+        </table>
+      </l:card>
+      <l:card title="Legacy">
+        <table>
+          <j:forEach var="a" items="${it.allActions}">
+            <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />
+          </j:forEach>
+
+          <st:include page="summary.jelly" optional="true" />
+        </table>
+
+        <st:include page="main.jelly" optional="true" />
+      </l:card>
     </div>
   </l:run-host>
 </j:jelly>

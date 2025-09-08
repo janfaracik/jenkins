@@ -35,7 +35,7 @@ THE SOFTWARE.
 
   <l:run-host>
     <l:app-bar title="${%Console}">
-      <a class="jenkins-button" href="consoleText" download="${it.displayName}.txt">
+      <a class="jenkins-button" href="consoleText" download="${it.object.displayName}.txt">
         <l:icon src="symbol-download" />
         ${%Download}
       </a>
@@ -45,6 +45,7 @@ THE SOFTWARE.
       </a>
     </l:app-bar>
 
-    <st:include page="console-log.jelly" from="${it.object}" />
+    <j:set var="it" value="${it.object}" />
+    <st:include page="console-log.jelly" />
   </l:run-host>
 </j:jelly>
