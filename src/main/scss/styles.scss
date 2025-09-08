@@ -5,17 +5,22 @@
 @use "pages";
 
 .build-bar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   min-height: 2.875rem;
   margin-top: -5px;
   margin-bottom: 10px;
+
+  .buildicon {
+    justify-self: start;
+  }
 
   .jenkins-app-bar__controls {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    justify-self: end;
     gap: 0.75rem;
   }
 }
