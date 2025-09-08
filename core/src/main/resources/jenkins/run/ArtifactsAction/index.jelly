@@ -28,23 +28,10 @@ THE SOFTWARE.
   Displays the console output
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <j:new className="jenkins.run.ConsoleAction" var="it">
-    <j:arg value="${it}"/>
-  </j:new>
-
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:run-host>
-    <l:app-bar title="${%Console}">
-      <a class="jenkins-button" href="consoleText" download="${it.displayName}.txt">
-        <l:icon src="symbol-download" />
-        ${%Download}
-      </a>
-      <l:copyButton ref="out" label="${%Copy}" />
-      <a class="jenkins-button" href="consoleText">
-        ${%View as plain text}
-      </a>
+    <l:app-bar title="${it.displayName}">
+      asd
     </l:app-bar>
-
-    <st:include page="console-log.jelly" from="${it.object}" />
   </l:run-host>
 </j:jelly>

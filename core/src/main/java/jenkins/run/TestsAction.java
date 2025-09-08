@@ -24,9 +24,14 @@
 
 package jenkins.run;
 
+import hudson.model.Actionable;
 import jenkins.management.Badge;
 
-public class TestsAction implements RunTab {
+public class TestsAction extends RunTab {
+
+    public TestsAction(Actionable object) {
+        super(object);
+    }
 
     @Override
     public String getIconFileName() {

@@ -24,7 +24,13 @@
 
 package jenkins.run;
 
-public class OverviewAction implements RunTab {
+import hudson.model.Actionable;
+
+public class OverviewAction extends RunTab {
+
+    public OverviewAction(Actionable object) {
+        super(object);
+    }
 
     @Override
     public String getIconFileName() {

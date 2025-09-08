@@ -24,13 +24,18 @@
 
 package jenkins.run;
 
+import hudson.model.Actionable;
 import jenkins.management.Badge;
 
-public class ArtifactsAction implements RunTab {
+public class ArtifactsAction extends RunTab {
+
+    public ArtifactsAction(Actionable object) {
+        super(object);
+    }
 
     @Override
     public String getIconFileName() {
-        return "symbol-flask";
+        return "symbol-cube";
     }
 
     @Override

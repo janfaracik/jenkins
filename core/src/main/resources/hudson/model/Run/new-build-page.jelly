@@ -25,92 +25,42 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:x="jelly:xml">
-  <l:layout title="${it.fullDisplayName}">
-    <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
-    <l:main-panel>
-      <script src="${resURL}/jsbundles/pages/job.js" type="text/javascript" defer="true" />
+  <j:new className="jenkins.run.OverviewAction" var="it">
+    <j:arg value="${it}"/>
+  </j:new>
 
-      <j:set var="controls">
-        <t:editDescriptionButton permission="${it.UPDATE}"/>
-        <l:hasPermission permission="${it.UPDATE}">
-          <st:include page="logKeep.jelly" />
-        </l:hasPermission>
-      </j:set>
-
-      <div class="build-bar">
-        <a class="buildicon" href="${rootURL}/${it.url}">
-          <div>
-            <l:icon src="symbol-check" />
-          </div>
-          <h1>${it.displayName}</h1>
-        </a>
-
-        <j:set var="url" value="${h.getNearestAncestorUrl(request2, it)}"/>
-
-        <div class="new-tabs">
-          <j:forEach var="tab" items="${it.runTabs}">
-            <a href="${rootURL}/${it.url}${tab.urlName}" class="${h.hyperlinkMatchesCurrentPage(tab.urlName ?: url) ? 'active' : ''}">
-              <l:icon src="${tab.iconFileName}" />
-              ${tab.displayName}
-              <j:if test="${tab.badge != null}">
-                <div class="pill jenkins-!-${tab.badge.severity}-color">
-                  ${tab.badge.text}
+  <l:run-host>
+    <l:app-bar title="Overview">
+      <div class="mylittletown">
+        <j:forEach var="group" items="${h.getDetailsFor(run)}" indexVar="index">
+          <j:if test="${index gt 0}">
+            <hr />
+          </j:if>
+          <j:forEach var="detail" items="${group.value}">
+            <st:include page="detail.jelly" it="${detail}" optional="true">
+              <x:element name="${detail.link != null ? 'a' : 'div'}">
+                <x:attribute name="class">jenkins-card__details__item</x:attribute>
+                <x:attribute name="href">${detail.link}</x:attribute>
+                <div class="jenkins-card__details__item__icon">
+                  <l:icon src="${detail.iconClassName}" />
                 </div>
-              </j:if>
-            </a>
+                ${detail.displayName}
+              </x:element>
+            </st:include>
           </j:forEach>
-        </div>
-
-        <div class="jenkins-app-bar__controls">
-          <div class="jenkins-split-button">
-            <button class="jenkins-button jenkins-!-build-color">
-              <l:icon src="symbol-refresh-outline plugin-ionicons-api" />
-              Rerun
-            </button>
-            <l:overflowButton id="button-install-after-restart"
-                              icon="symbol-chevron-down"
-                              tooltip="${null}"
-                              clazz="jenkins-!-build-color">
-            </l:overflowButton>
-          </div>
-          <l:overflowButton />
-        </div>
+        </j:forEach>
       </div>
+    </l:app-bar>
 
-      <div class="plugin-content">
-        <l:app-bar title="Overview">
-          <div class="mylittletown">
-            <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
-              <j:if test="${index gt 0}">
-                <hr />
-              </j:if>
-              <j:forEach var="detail" items="${group.value}">
-                <st:include page="detail.jelly" it="${detail}" optional="true">
-                  <x:element name="${detail.link != null ? 'a' : 'div'}">
-                    <x:attribute name="class">jenkins-card__details__item</x:attribute>
-                    <x:attribute name="href">${detail.link}</x:attribute>
-                    <div class="jenkins-card__details__item__icon">
-                      <l:icon src="${detail.iconClassName}" />
-                    </div>
-                    ${detail.displayName}
-                  </x:element>
-                </st:include>
-              </j:forEach>
-            </j:forEach>
-          </div>
-        </l:app-bar>
-
-        <div class="cards">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-      </div>
-    </l:main-panel>
-  </l:layout>
+    <div class="cards">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </l:run-host>
 </j:jelly>

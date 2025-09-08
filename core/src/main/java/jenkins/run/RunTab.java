@@ -1,18 +1,17 @@
 package jenkins.run;
 
-import edu.umd.cs.findbugs.annotations.CheckForNull;
 import hudson.model.Action;
-import jenkins.management.Badge;
+import hudson.model.Actionable;
 
-public interface RunTab extends Action {
+public abstract class RunTab extends Badgeable implements Action {
 
-    /**
-     * A {@link Badge} shown on the action.
-     *
-     * @return badge or {@code null} if no badge should be shown.
-     * @since TODO
-     */
-    default @CheckForNull Badge getBadge() {
-        return null;
+    private final Actionable object;
+
+    public RunTab(Actionable object) {
+        this.object = object;
+    }
+
+    public Actionable getObject() {
+        return object;
     }
 }

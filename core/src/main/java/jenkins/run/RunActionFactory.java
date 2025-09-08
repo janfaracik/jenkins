@@ -18,6 +18,6 @@ public class RunActionFactory extends TransientActionFactory<Run> {
     @NonNull
     @Override
     public Collection<? extends RunTab> createFor(@NonNull Run target) {
-        return List.of(new OverviewAction(), new ConsoleAction(), new TestsAction(), new ArtifactsAction());
+        return List.of(new OverviewAction(target), new ConsoleAction(target), new TestsAction(target), new ArtifactsAction(target));
     }
 }
