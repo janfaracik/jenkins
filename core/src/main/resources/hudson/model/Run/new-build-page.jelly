@@ -32,7 +32,7 @@ THE SOFTWARE.
   <l:run-host>
     <l:app-bar title="Overview">
       <div class="mylittletown">
-        <j:forEach var="group" items="${h.getDetailsFor(run)}" indexVar="index">
+        <j:forEach var="group" items="${h.getDetailsFor(it.object)}" indexVar="index">
           <j:if test="${index gt 0}">
             <hr />
           </j:if>
@@ -53,14 +53,20 @@ THE SOFTWARE.
     </l:app-bar>
 
     <div class="cards">
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
-      <div></div>
+      <st:include page="console.jelly" from="${h.getConsoleProviderFor(it.object)}" optional="true" it="${it.object}" />
+      <l:card title="Tests" expandable="tests">
+        <div class="app-cards__tests">
+          <l:icon src="symbol-close-circle" />
+          <p>12 tests failed</p>
+          <p class="app-cards__tests__description">
+            12 failures (±0), 273 skipped (+273), 56,679 ran
+          </p>
+          <p class="app-cards__tests__description">
+            Took 15 hours
+          </p>
+        </div>
+      </l:card>
+      <l:card title="Artifacts" expandable="artifacts" />
     </div>
   </l:run-host>
 </j:jelly>

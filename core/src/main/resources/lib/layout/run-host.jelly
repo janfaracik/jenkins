@@ -29,7 +29,7 @@ THE SOFTWARE.
       <script src="${resURL}/jsbundles/pages/job.js" type="text/javascript" defer="true" />
 
       <div class="build-bar">
-        <a class="buildicon" href="${rootURL}/${it.object.url}">
+        <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
           <div>
             <l:icon src="symbol-check" />
           </div>

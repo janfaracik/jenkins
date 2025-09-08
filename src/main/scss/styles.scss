@@ -68,9 +68,9 @@
     margin-bottom: 20px;
   }
 
-  pre {
+  & > pre {
     background: var(--card-background);
-    border: var(--jenkins-border);
+    border: var(--card-border-width) solid var(--card-border-color);
   }
 }
 
@@ -210,13 +210,43 @@
   gap: calc(var(--section-padding) / 2);
 
   & > div {
-    background: var(--card-background);
-    border: var(--jenkins-border);
     border-radius: var(--form-input-border-radius);
     height: 450px;
+    margin-bottom: 0;
 
     &:first-of-type {
       grid-column: 1 / 3;
     }
   }
 }
+
+.app-cards__tests {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+  padding: 2rem;
+  pointer-events: none;
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 450;
+  }
+
+  svg {
+    width: 3rem;
+    height: 3rem;
+    color: var(--error-color);
+  }
+
+  &__description {
+    font-size: 0.875rem !important;
+    color: var(--text-color-secondary);
+  }
+}
+
