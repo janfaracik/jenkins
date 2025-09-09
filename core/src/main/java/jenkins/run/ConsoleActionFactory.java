@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.Collections;
 import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 
 @Extension(ordinal = Integer.MAX_VALUE - 1)
 public class ConsoleActionFactory extends TransientActionFactory<Run> {
@@ -21,8 +22,9 @@ public class ConsoleActionFactory extends TransientActionFactory<Run> {
     @Override
     public Collection<? extends RunTab> createFor(@NonNull Run target) {
         var consoleProvider = Functions.getConsoleProviderFor(target);
+        boolean isExperimentalUiEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
 
-        if (!consoleProvider.getClass().equals(DefaultConsoleUrlProvider.class)) {
+        if (!consoleProvider.getClass().equals(DefaultConsoleUrlProvider.class) || !isExperimentalUiEnabled) {
             return Collections.emptySet();
         }
 

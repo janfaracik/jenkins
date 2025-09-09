@@ -6,6 +6,7 @@ import hudson.model.Run;
 import java.util.Collection;
 import java.util.Collections;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 
 @Extension(ordinal = Integer.MAX_VALUE)
 public class OverviewActionFactory extends TransientActionFactory<Run> {
@@ -18,6 +19,12 @@ public class OverviewActionFactory extends TransientActionFactory<Run> {
     @NonNull
     @Override
     public Collection<? extends RunTab> createFor(@NonNull Run target) {
+        boolean isExperimentalUiEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
+
+        if (!isExperimentalUiEnabled) {
+            return Collections.emptySet();
+        }
+
         return Collections.singleton(new OverviewAction(target));
     }
 }

@@ -25,56 +25,70 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define">
   <l:layout title="${it.displayName} - ${it.object.displayName}">
-    <l:main-panel>
-      <div class="build-bar">
-        <div class="idkyet">
-          <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
-            <div>
-              <l:icon src="symbol-check" />
+    <l:userExperimentalFlag var="newBuildPage" flagClassName="jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag" />
+
+    <j:choose>
+      <j:when test="${newBuildPage}">
+        <l:main-panel>
+          <j:set var="buildUrl" value="${h.decompose(request2)}" />
+
+          <div class="build-bar">
+            <div class="idkyet">
+              <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
+                <div>
+                  <l:icon src="symbol-check" />
+                </div>
+              </a>
+              <j:if test="${it.object.previousBuild != null}">
+                <a href="${buildUrl.previousBuildUrl}"
+                   class="jenkins-button jenkins-button--tertiary"
+                   aria-label="Previous build">
+                  <l:icon class="symbol-chevron-back-outline plugin-ionicons-api icon-md" />
+                </a>
+              </j:if>
+              <h1>${it.object.displayName}</h1>
+              <j:if test="${it.object.nextBuild != null}">
+                <a href="${buildUrl.nextBuildUrl}"
+                   class="jenkins-button jenkins-button--tertiary"
+                   aria-label="Next build">
+                  <l:icon class="symbol-chevron-forward-outline plugin-ionicons-api icon-md" />
+                </a>
+              </j:if>
             </div>
-          </a>
-          <j:if test="${it.object.previousBuild != null}">
-            <a href="${rootURL}/${it.object.previousBuild.url}"
-               class="jenkins-button jenkins-button--tertiary"
-               aria-label="Previous build">
-              <l:icon class="symbol-chevron-back-outline plugin-ionicons-api icon-md" />
-            </a>
-          </j:if>
-          <h1>${it.object.displayName}</h1>
-          <j:if test="${it.object.nextBuild != null}">
-            <a href="${rootURL}/${it.object.nextBuild.url}"
-               class="jenkins-button jenkins-button--tertiary"
-               aria-label="Next build">
-              <l:icon class="symbol-chevron-forward-outline plugin-ionicons-api icon-md" />
-            </a>
-          </j:if>
-        </div>
 
-        <j:set var="url" value="${h.getNearestAncestorUrl(request2, it.object)}"/>
+            <j:set var="url" value="${h.getNearestAncestorUrl(request2, it.object)}"/>
 
-        <div>
-          <l:tabs items="${it.object.runTabs}" />
-        </div>
+            <div>
+              <l:tabs items="${it.object.runTabs}" />
+            </div>
 
-        <div class="jenkins-app-bar__controls">
-          <div class="jenkins-split-button">
-            <button class="jenkins-button jenkins-!-build-color">
-              <l:icon src="symbol-refresh-outline plugin-ionicons-api" />
-              Rerun
-            </button>
-            <l:overflowButton id="button-install-after-restart"
-                              icon="symbol-chevron-down"
-                              tooltip="${null}"
-                              clazz="jenkins-!-build-color">
-            </l:overflowButton>
+            <div class="jenkins-app-bar__controls">
+              <div class="jenkins-split-button">
+                <button class="jenkins-button jenkins-!-build-color">
+                  <l:icon src="symbol-refresh-outline plugin-ionicons-api" />
+                  Rerun
+                </button>
+                <l:overflowButton id="button-install-after-restart"
+                                  icon="symbol-chevron-down"
+                                  tooltip="${null}"
+                                  clazz="jenkins-!-build-color">
+                </l:overflowButton>
+              </div>
+              <l:overflowButton />
+            </div>
           </div>
-          <l:overflowButton />
-        </div>
-      </div>
 
-      <div class="plugin-content">
-        <d:invokeBody />
-      </div>
-    </l:main-panel>
+          <div class="plugin-content">
+            <d:invokeBody />
+          </div>
+        </l:main-panel>
+      </j:when>
+      <j:otherwise>
+        <!-- Hacky -->
+        <l:main-panel>
+          <d:invokeBody />
+        </l:main-panel>
+      </j:otherwise>
+    </j:choose>
   </l:layout>
 </j:jelly>

@@ -6,6 +6,7 @@ import hudson.model.Run;
 import java.util.Collection;
 import java.util.Collections;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 import jenkins.scm.RunWithSCM;
 
 @Extension(ordinal = Integer.MAX_VALUE - 2)
@@ -19,7 +20,9 @@ public class ChangesActionFactory extends TransientActionFactory<Run> {
     @NonNull
     @Override
     public Collection<? extends RunTab> createFor(@NonNull Run target) {
-        if (!(target instanceof RunWithSCM)) {
+        boolean isExperimentalUiEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
+
+        if (!(target instanceof RunWithSCM) || !isExperimentalUiEnabled) {
             return Collections.emptySet();
         }
 
