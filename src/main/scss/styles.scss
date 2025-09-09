@@ -60,12 +60,18 @@
   }
 }
 
+//Very hacky
+body:has(.plugin-content) {
+  background-color: color-mix(in srgb, var(--text-color-secondary) 3%, var(--background));
+  background-image: linear-gradient(var(--background), var(--background) 115px, var(--jenkins-border-color--subtle) 115px, var(--jenkins-border-color--subtle) 116.5px, transparent 116.5px, transparent);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
 .plugin-content {
   display: flex;
   flex-direction: column;
   padding: var(--section-padding);
-  background: color-mix(in srgb, var(--text-color-secondary) 3%, transparent);
-  border-top: var(--jenkins-border--subtle);
   margin-inline: calc(var(--section-padding) * -1);
 
   .jenkins-app-bar {
@@ -95,117 +101,6 @@
 
   * {
     color: var(--text-color-secondary) !important;
-  }
-}
-
-.new-tabs {
-  position: relative;
-  display: inline-flex;
-  gap: 0.25rem;
-  margin-left: -0.25rem;
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: var(--jenkins-border--subtle);
-    border-radius: 100px;
-    opacity: 0;
-    transition: var(--standard-transition);
-  }
-
-  &:hover::before {
-    opacity: 1;
-    inset: -3px;
-  }
-
-  a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-inline: 1rem;
-    border-radius: 100px;
-    gap: 0.5rem;
-    color: color-mix(in srgb, var(--text-color-secondary) 75%, var(--text-color));
-    height: 38px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: var(--standard-transition);
-
-    svg {
-      width: 1rem;
-      height: 1rem;
-
-      * {
-        stroke-width: 40px;
-      }
-    }
-
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 1.5px;
-      border-radius: inherit;
-      opacity: 0;
-      transition: var(--standard-transition);
-      background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 7.5%, transparent);
-      border: var(--jenkins-border--subtle);
-    }
-
-    &:not(.active) {
-      &:hover {
-        color: var(--text-color);
-
-        &::before {
-          background: color-mix(in oklch, var(--color, var(--text-color-secondary)) 3.75%, transparent);
-          opacity: 1;
-        }
-      }
-    }
-
-    &.active {
-      color: var(--color, var(--text-color));
-      font-weight: 450;
-      cursor: default;
-
-      &::before {
-        opacity: 1;
-        inset: 0;
-      }
-
-      svg {
-        * {
-          stroke-width: 40px;
-        }
-      }
-    }
-
-    .pill {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 100px;
-      font-size: 12px;
-      min-width: 20px;
-      text-align: center;
-      padding-inline: 6px;
-      text-box: cap alphabetic;
-      height: 20px;
-      z-index: 0;
-      margin-right: -0.25rem;
-
-      &::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: color-mix(in srgb, var(--color, var(--background)) 5%, var(--background));
-        border: var(--jenkins-border-width) solid color-mix(in srgb, var(--color, currentColor) 10%, transparent);
-        z-index: -1;
-      }
-    }
   }
 }
 

@@ -38,19 +38,7 @@ THE SOFTWARE.
 
         <j:set var="url" value="${h.getNearestAncestorUrl(request2, it.object)}"/>
 
-        <div class="new-tabs">
-          <j:forEach var="tab" items="${it.object.runTabs}">
-            <a href="${url}/${tab.urlName}" class="${h.hyperlinkMatchesCurrentPage(tab.urlName ?: url) ? 'active' : ''}">
-              <l:icon src="${tab.iconFileName}" />
-              ${tab.displayName}
-              <j:if test="${tab.badge != null}">
-                <div class="pill jenkins-!-${tab.badge.severity}-color">
-                  ${tab.badge.text}
-                </div>
-              </j:if>
-            </a>
-          </j:forEach>
-        </div>
+        <l:tabs items="${it.object.runTabs}" />
 
         <div class="jenkins-app-bar__controls">
           <div class="jenkins-split-button">
