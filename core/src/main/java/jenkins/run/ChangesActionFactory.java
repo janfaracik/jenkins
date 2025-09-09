@@ -23,9 +23,9 @@ public class ChangesActionFactory extends TransientActionFactory<Run> {
             return Collections.emptySet();
         }
 
-        var hasChangeSet = ((RunWithSCM)target).getChangeSets().isEmpty();
+        var noChangeSet = ((RunWithSCM)target).getChangeSets().isEmpty();
 
-        if (!hasChangeSet) {
+        if (noChangeSet) {
             return Collections.emptySet();
         }
 

@@ -24,7 +24,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:x="jelly:xml">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <j:new className="jenkins.run.OverviewAction" var="it">
     <j:arg value="${it}"/>
   </j:new>
@@ -44,27 +44,9 @@ THE SOFTWARE.
     </j:if>
 
     <div class="cards">
-      <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
-      <l:card title="Tests" expandable="tests">
-        <div class="app-cards__tests">
-          <l:icon src="symbol-close-circle" />
-          <p>12 tests failed</p>
-          <p class="app-cards__tests__description">
-            12 failures (±0), 273 skipped (+273), 56,679 ran
-          </p>
-          <p class="app-cards__tests__description">
-            Took 15 hours
-          </p>
-        </div>
-      </l:card>
-
-      <j:if test="${it.hasArtifacts}">
-        <l:card title="Artifacts" expandable="artifacts">
-          <table>
-            <t:artifactList build="${it}" caption="${%Build Artifacts}" />
-          </table>
-        </l:card>
-      </j:if>
+      <j:forEach var="a" items="${it.runTabs}">
+        <st:include page="widget.jelly" from="${a}" optional="true" />
+      </j:forEach>
 
       <l:card title="Legacy">
         <table>

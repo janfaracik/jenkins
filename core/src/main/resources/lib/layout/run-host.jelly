@@ -29,16 +29,34 @@ THE SOFTWARE.
       <script src="${resURL}/jsbundles/pages/job.js" type="text/javascript" defer="true" />
 
       <div class="build-bar">
-        <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
-          <div>
-            <l:icon src="symbol-check" />
-          </div>
+        <div class="idkyet">
+          <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
+            <div>
+              <l:icon src="symbol-check" />
+            </div>
+          </a>
+          <j:if test="${it.object.previousBuild != null}">
+            <a href="${rootURL}/${it.object.previousBuild.url}"
+               class="jenkins-button jenkins-button--tertiary"
+               aria-label="Previous build">
+              <l:icon class="symbol-chevron-back-outline plugin-ionicons-api icon-md" />
+            </a>
+          </j:if>
           <h1>${it.object.displayName}</h1>
-        </a>
+          <j:if test="${it.object.nextBuild != null}">
+            <a href="${rootURL}/${it.object.nextBuild.url}"
+               class="jenkins-button jenkins-button--tertiary"
+               aria-label="Next build">
+              <l:icon class="symbol-chevron-forward-outline plugin-ionicons-api icon-md" />
+            </a>
+          </j:if>
+        </div>
 
         <j:set var="url" value="${h.getNearestAncestorUrl(request2, it.object)}"/>
 
-        <l:tabs items="${it.object.runTabs}" />
+        <div>
+          <l:tabs items="${it.object.runTabs}" />
+        </div>
 
         <div class="jenkins-app-bar__controls">
           <div class="jenkins-split-button">

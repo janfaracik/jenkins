@@ -12,7 +12,7 @@
   margin-top: -5px;
   margin-bottom: 10px;
 
-  .buildicon {
+  .idkyet {
     justify-self: start;
   }
 
@@ -25,31 +25,37 @@
   }
 }
 
-.buildicon {
+.idkyet {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  margin-left: -0.25rem;
-  color: var(--text-color) !important;
 
-  div {
+  .buildicon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    color: var(--success-color);
-    background: color-mix(in oklch, currentColor 12.5%, transparent);
-    border: var(--jenkins-border-width) solid oklch(from currentColor l c h / 0.15);
-    border-radius: 100px;
+    gap: 0.75rem;
+    margin-left: -0.25rem;
+    color: var(--text-color) !important;
 
-    svg {
-      width: 1rem;
-      height: 1rem;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      color: var(--success-color);
+      background: color-mix(in oklch, currentColor 12.5%, transparent);
+      border: var(--jenkins-border-width) solid oklch(from currentColor l c h / 0.15);
+      border-radius: 100px;
 
-      * {
-        stroke-width: 50px;
+      svg {
+        width: 1rem;
+        height: 1rem;
+
+        * {
+          stroke-width: 50px;
+        }
       }
     }
   }
@@ -57,6 +63,25 @@
   h1 {
     margin-bottom: 0;
     font-size: 1.25rem;
+  }
+
+  .jenkins-button {
+    border-radius: 100px;
+    aspect-ratio: 1;
+    padding: 0;
+
+    &:not(:hover) {
+      color: color-mix(in srgb, var(--text-color-secondary) 75%, transparent) !important;
+    }
+
+    &::before, &::after {
+      inset: 7px;
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
   }
 }
 
