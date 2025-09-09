@@ -45,7 +45,7 @@ THE SOFTWARE.
 
     <div class="cards">
       <j:forEach var="a" items="${it.runTabs}">
-        <st:include page="widget.jelly" from="${a}" optional="true" />
+        <st:include page="widget.jelly" from="${a}" optional="true" it="${a}" />
       </j:forEach>
 
       <l:card title="Legacy">

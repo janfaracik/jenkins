@@ -105,7 +105,8 @@ $border-radius: 19px;
 
   &:hover::before {
     opacity: 1;
-    inset: -3px;
+    inset: -4px;
+    background: var(--card-background);
   }
 
   a {
@@ -123,18 +124,30 @@ $border-radius: 19px;
     &:not(.jenkins-button--tertiary) {
       pointer-events: none;
       font-weight: var(--font-bold-weight);
+
+      .pill::before {
+        border: var(--jenkins-border-width) solid color-mix(in srgb, var(--color, currentColor) 20%, transparent);
+      }
     }
 
     &.jenkins-button--tertiary {
       color: color-mix(in srgb, var(--text-color-secondary) 75%, var(--text-color)) !important;
 
       &::before, &::after {
-        inset: 1.5px;
+        inset: 3px;
       }
     }
 
     &:hover {
       color: var(--text-color) !important;
+
+      &::before, &::after {
+        inset: 1.5px;
+      }
+
+      .pill::before {
+        border: var(--jenkins-border-width) solid color-mix(in srgb, var(--color, currentColor) 20%, transparent);
+      }
     }
 
     .pill {
@@ -151,6 +164,7 @@ $border-radius: 19px;
       height: 20px;
       z-index: 0;
       margin-right: -0.25rem;
+      transition: border var(--standard-transition);
 
       &::before {
         content: "";

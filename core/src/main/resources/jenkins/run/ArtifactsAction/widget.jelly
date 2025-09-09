@@ -2,7 +2,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:card title="${%Artifacts}" expandable="artifactList">
     <table>
-      <t:artifactList build="${it}" caption="${%Build Artifacts}" />
+      <t:artifactList build="${it.object}" caption="${%Build Artifacts}" />
     </table>
   </l:card>
 </j:jelly>

@@ -26,8 +26,6 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define">
   <l:layout title="${it.displayName} - ${it.object.displayName}">
     <l:main-panel>
-      <script src="${resURL}/jsbundles/pages/job.js" type="text/javascript" defer="true" />
-
       <div class="build-bar">
         <div class="idkyet">
           <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
