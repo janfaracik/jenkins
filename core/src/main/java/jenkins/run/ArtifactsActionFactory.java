@@ -18,6 +18,12 @@ public class ArtifactsActionFactory extends TransientActionFactory<Run> {
     @NonNull
     @Override
     public Collection<? extends RunTab> createFor(@NonNull Run target) {
+        var hasArtifacts = target.getHasArtifacts();
+
+        if (!hasArtifacts) {
+            return Collections.emptySet();
+        }
+
         return Collections.singleton(new ArtifactsAction(target));
     }
 }

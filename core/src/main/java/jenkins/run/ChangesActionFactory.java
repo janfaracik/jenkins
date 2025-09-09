@@ -6,6 +6,7 @@ import hudson.model.Run;
 import java.util.Collection;
 import java.util.Collections;
 import jenkins.model.TransientActionFactory;
+import jenkins.scm.RunWithSCM;
 
 @Extension(ordinal = Integer.MAX_VALUE - 2)
 public class ChangesActionFactory extends TransientActionFactory<Run> {
@@ -18,6 +19,16 @@ public class ChangesActionFactory extends TransientActionFactory<Run> {
     @NonNull
     @Override
     public Collection<? extends RunTab> createFor(@NonNull Run target) {
+        if (!(target instanceof RunWithSCM)) {
+            return Collections.emptySet();
+        }
+
+        var hasChangeSet = ((RunWithSCM)target).getChangeSets().isEmpty();
+
+        if (!hasChangeSet) {
+            return Collections.emptySet();
+        }
+
         return Collections.singleton(new ChangesAction(target));
     }
 }
