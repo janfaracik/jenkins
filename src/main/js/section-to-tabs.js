@@ -18,31 +18,27 @@ tabPanes.forEach((tabPane, index) => {
   const tabPaneTitle = tabPane.querySelector(".jenkins-tab-pane__title");
   tabPaneTitle.style.display = "none";
 
-  const tab = document.createElement("div");
-  tab.className = "tab";
+  const tab = document.createElement("a");
+  tab.className = "jenkins-button jenkins-button--tertiary";
+  tab.setAttribute("href", "#");
+  tab.innerText = tabPaneTitle.textContent;
 
   if (index === 0) {
-    tab.classList.add("active");
+    tab.classList.remove("jenkins-button--tertiary");
   }
 
   tab.addEventListener("click", function (e) {
     e.preventDefault();
-    document.querySelectorAll(".tab").forEach((tab) => {
-      tab.classList.remove("active");
+    tabBar.querySelectorAll(".jenkins-button").forEach((tab) => {
+      tab.classList.add("jenkins-button--tertiary");
     });
-    tab.classList.add("active");
+    tab.classList.remove("jenkins-button--tertiary");
 
     tabPanes.forEach((tabPane) => {
       tabPane.style.display = "none";
     });
     tabPanes[index].style.display = "block";
   });
-
-  const tabLink = document.createElement("a");
-  tabLink.setAttribute("href", "#");
-  tabLink.innerText = tabPaneTitle.textContent;
-
-  tab.append(tabLink);
 
   tabBar.append(tab);
 });
