@@ -3,7 +3,7 @@ $icon-size: 1.25rem;
 
 .jenkins-card {
   position: relative;
-  border-radius: 1rem;
+  border-radius: var(--form-input-border-radius);
   margin-bottom: calc(var(--section-padding) / 2);
   background: var(--card-background);
 

@@ -30,9 +30,11 @@ THE SOFTWARE.
   </j:new>
 
   <l:run-host>
+    <j:set var="it" value="${it.object}" />
+
     <l:app-bar title="Overview">
       <div class="mylittletown">
-        <j:forEach var="group" items="${h.getDetailsFor(it.object)}" indexVar="index">
+        <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
           <j:if test="${index gt 0}">
             <hr />
           </j:if>
@@ -50,10 +52,17 @@ THE SOFTWARE.
           </j:forEach>
         </j:forEach>
       </div>
+      <t:editDescriptionButton permission="${it.UPDATE}" />
     </l:app-bar>
 
+    <j:if test="${it.description != null and it.description != ''}">
+      <l:card title="Description">
+        <t:editableDescription permission="${it.UPDATE}" hideButton="true" />
+      </l:card>
+    </j:if>
+
     <div class="cards">
-      <st:include page="console.jelly" from="${h.getConsoleProviderFor(it.object)}" optional="true" it="${it.object}" />
+      <st:include page="console.jelly" from="${h.getConsoleProviderFor(it)}" optional="true" />
       <l:card title="Tests" expandable="tests">
         <div class="app-cards__tests">
           <l:icon src="symbol-close-circle" />
@@ -67,7 +76,6 @@ THE SOFTWARE.
         </div>
       </l:card>
 
-      <j:set var="it" value="${it.object}" />
       <l:card title="Artifacts" expandable="artifacts">
         <table>
           <t:artifactList build="${it}" caption="${%Build Artifacts}" />

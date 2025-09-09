@@ -5,7 +5,7 @@ import hudson.model.Actionable;
 
 public abstract class RunTab extends Badgeable implements Action {
 
-    private final Actionable object;
+    protected Actionable object;
 
     public RunTab(Actionable object) {
         this.object = object;
