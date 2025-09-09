@@ -97,11 +97,11 @@ body:has(.plugin-content) {
   display: flex;
   flex-direction: column;
   padding: var(--section-padding);
+  padding-top: calc(var(--section-padding) / 2);;
   margin-inline: calc(var(--section-padding) * -1);
 
   .jenkins-app-bar {
-    margin-top: -10px;
-    margin-bottom: 20px;
+    margin-bottom: calc(var(--section-padding) / 2);
   }
 
   & > pre {
