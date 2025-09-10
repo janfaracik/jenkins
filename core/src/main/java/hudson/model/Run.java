@@ -122,6 +122,7 @@ import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.model.RunAction2;
 import jenkins.model.StandardArtifactManager;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.details.CauseDetail;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DurationDetail;
@@ -2709,7 +2710,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         }
 
         @NonNull @Override public List<? extends Detail> createFor(@NonNull Run target) {
-            return List.of(new TimestampDetail(target), new DurationDetail(target));
+            return List.of(new TimestampDetail(target), new DurationDetail(target), new CauseDetail(target));
         }
     }
 
