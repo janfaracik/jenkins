@@ -25,7 +25,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
   <div class="jenkins-card__details__item">
     <div class="jenkins-card__details__item__icon">
-      <l:icon src="symbol-trigger" />
+      <l:icon src="symbol-upstream" />
     </div>
     <st:include page="description.jelly" />
   </div>
