@@ -8,12 +8,17 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 /**
- * TODO
+ * Displays the cause for the given run
  */
 public class CauseDetail extends Detail {
 
     public CauseDetail(Run<?, ?> run) {
         super(run);
+    }
+
+    @Override
+    public int getOrder() {
+        return 0;
     }
 
     @Restricted(NoExternalUse.class)

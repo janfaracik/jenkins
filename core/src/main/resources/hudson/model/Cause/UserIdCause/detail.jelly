@@ -37,7 +37,7 @@ THE SOFTWARE.
     <j:otherwise>
       <div class="jenkins-card__details__item">
         <div class="jenkins-card__details__item__icon">
-          <l:icon src="symbol-person-circle"/>
+          <l:icon src="symbol-person-circle" />
         </div>
         <span>
           ${%started_by_anonymous}
