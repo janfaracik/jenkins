@@ -137,6 +137,7 @@ body:has(.plugin-content) {
   & > div {
     border-radius: var(--form-input-border-radius);
     min-height: 450px;
+    max-height: 450px;
     margin-bottom: 0;
 
     &:first-of-type {

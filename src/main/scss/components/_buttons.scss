@@ -85,12 +85,13 @@
 .jenkins-button--detail {
   --button-background: transparent !important;
 
-  min-height: 1.875rem;
-  padding: 0 0.875rem;
+  min-width: 51px;
+  min-height: 2rem;
+  padding-block: 0;
   color: var(--text-color-secondary) !important;
 
-  &::before {
-    border: var(--jenkins-border);
+  &:not(:hover, :active, :focus-visible) {
+    --jenkins-border--subtle: var(--jenkins-border);
   }
 
   svg {
