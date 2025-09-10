@@ -34,14 +34,12 @@ THE SOFTWARE.
 
     <l:app-bar title="Overview">
       <l:details-bar it="${it}" />
-      <t:editDescriptionButton permission="${it.UPDATE}" />
+      <t:editDescriptionButton permission="${it.UPDATE}"
+                               clazz="jenkins-button--detail"
+                               hideText="true" />
     </l:app-bar>
 
-    <j:if test="${it.description != null and it.description != ''}">
-      <l:card title="Description">
-        <t:editableDescription permission="${it.UPDATE}" hideButton="true" />
-      </l:card>
-    </j:if>
+    <t:editableDescription permission="${it.UPDATE}" hideButton="true"  />
 
     <div class="cards">
       <j:forEach var="a" items="${it.runTabs}">
