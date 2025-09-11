@@ -3,11 +3,11 @@ package jenkins.run;
 import hudson.model.Action;
 import hudson.model.Actionable;
 
-public abstract class RunTab extends Badgeable implements Action {
+public abstract class Tab extends Badgeable implements Action {
 
     protected Actionable object;
 
-    public RunTab(Actionable object) {
+    public Tab(Actionable object) {
         this.object = object;
     }
 

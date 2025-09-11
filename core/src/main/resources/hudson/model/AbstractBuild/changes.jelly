@@ -27,7 +27,7 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-  <j:new className="jenkins.run.ChangesAction" var="it">
+  <j:new className="jenkins.run.ChangesTab" var="it">
     <j:arg value="${it}"/>
   </j:new>
 

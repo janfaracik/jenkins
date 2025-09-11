@@ -2,14 +2,16 @@ package jenkins.run;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.Functions;
 import hudson.model.Run;
 import java.util.Collection;
 import java.util.Collections;
+import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 
-@Extension
-public class ArtifactsActionFactory extends TransientActionFactory<Run> {
+@Extension(ordinal = Integer.MAX_VALUE - 1)
+public class ConsoleTabFactory extends TransientActionFactory<Run> {
 
     @Override
     public Class<Run> type() {
@@ -18,14 +20,14 @@ public class ArtifactsActionFactory extends TransientActionFactory<Run> {
 
     @NonNull
     @Override
-    public Collection<? extends RunTab> createFor(@NonNull Run target) {
-        var hasArtifacts = target.getHasArtifacts();
+    public Collection<? extends Tab> createFor(@NonNull Run target) {
+        var consoleProvider = Functions.getConsoleProviderFor(target);
         boolean isExperimentalUiEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
 
-        if (!hasArtifacts || !isExperimentalUiEnabled) {
+        if (!consoleProvider.getClass().equals(DefaultConsoleUrlProvider.class) || !isExperimentalUiEnabled) {
             return Collections.emptySet();
         }
 
-        return Collections.singleton(new ArtifactsAction(target));
+        return Collections.singleton(new ConsoleTab(target));
     }
 }

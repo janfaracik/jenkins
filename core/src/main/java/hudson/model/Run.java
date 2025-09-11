@@ -129,7 +129,7 @@ import jenkins.model.details.DurationDetail;
 import jenkins.model.details.TimestampDetail;
 import jenkins.model.lazy.BuildReference;
 import jenkins.model.lazy.LazyBuildMixIn;
-import jenkins.run.RunTab;
+import jenkins.run.Tab;
 import jenkins.security.MasterToSlaveCallable;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.SystemProperties;
@@ -2746,7 +2746,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
      * TODO
      */
     @Restricted(NoExternalUse.class)
-    public List<RunTab> getRunTabs() {
-        return getActionsByOrdinal(RunTab.class);
+    public List<Tab> getRunTabs() {
+        return getActionsByOrdinal(Tab.class);
     }
 }

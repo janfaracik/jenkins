@@ -2,6 +2,8 @@ $card-padding: 1rem;
 $icon-size: 1.125rem;
 
 .jenkins-card {
+  display: flex;
+  flex-direction: column;
   position: relative;
   border-radius: var(--form-input-border-radius);
   margin-bottom: calc(var(--section-padding) / 2);
@@ -13,6 +15,7 @@ $icon-size: 1.125rem;
     justify-content: space-between;
     padding: 0 $card-padding;
     height: 50px;
+    flex-shrink: 0;
     font-size: var(--font-size-sm) !important;
     font-weight: var(--font-bold-weight);
     width: 100%;
@@ -51,6 +54,7 @@ $icon-size: 1.125rem;
     display: flex;
     flex-direction: column;
     padding: 0 $card-padding $card-padding;
+    overflow-y: auto;
 
     &:empty {
       display: none;

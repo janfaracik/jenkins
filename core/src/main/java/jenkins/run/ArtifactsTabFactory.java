@@ -7,10 +7,9 @@ import java.util.Collection;
 import java.util.Collections;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
-import jenkins.scm.RunWithSCM;
 
-@Extension(ordinal = Integer.MAX_VALUE - 2)
-public class ChangesActionFactory extends TransientActionFactory<Run> {
+@Extension
+public class ArtifactsTabFactory extends TransientActionFactory<Run> {
 
     @Override
     public Class<Run> type() {
@@ -19,19 +18,14 @@ public class ChangesActionFactory extends TransientActionFactory<Run> {
 
     @NonNull
     @Override
-    public Collection<? extends RunTab> createFor(@NonNull Run target) {
+    public Collection<? extends Tab> createFor(@NonNull Run target) {
+        var hasArtifacts = target.getHasArtifacts();
         boolean isExperimentalUiEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
 
-        if (!(target instanceof RunWithSCM) || !isExperimentalUiEnabled) {
+        if (!hasArtifacts || !isExperimentalUiEnabled) {
             return Collections.emptySet();
         }
 
-        var noChangeSet = ((RunWithSCM)target).getChangeSets().isEmpty();
-
-        if (noChangeSet) {
-            return Collections.emptySet();
-        }
-
-        return Collections.singleton(new ChangesAction(target));
+        return Collections.singleton(new ArtifactsTab(target));
     }
 }

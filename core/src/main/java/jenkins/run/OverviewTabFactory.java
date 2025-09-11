@@ -9,7 +9,7 @@ import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 
 @Extension(ordinal = Integer.MAX_VALUE)
-public class OverviewActionFactory extends TransientActionFactory<Run> {
+public class OverviewTabFactory extends TransientActionFactory<Run> {
 
     @Override
     public Class<Run> type() {
@@ -18,13 +18,13 @@ public class OverviewActionFactory extends TransientActionFactory<Run> {
 
     @NonNull
     @Override
-    public Collection<? extends RunTab> createFor(@NonNull Run target) {
+    public Collection<? extends Tab> createFor(@NonNull Run target) {
         boolean isExperimentalUiEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
 
         if (!isExperimentalUiEnabled) {
             return Collections.emptySet();
         }
 
-        return Collections.singleton(new OverviewAction(target));
+        return Collections.singleton(new OverviewTab(target));
     }
 }

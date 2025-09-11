@@ -25,40 +25,25 @@
 package jenkins.run;
 
 import hudson.model.Actionable;
-import hudson.model.Run;
-import jenkins.management.Badge;
 
-public class ArtifactsAction extends RunTab {
+public class OverviewTab extends Tab {
 
-    public ArtifactsAction(Actionable object) {
+    public OverviewTab(Actionable object) {
         super(object);
     }
 
     @Override
     public String getIconFileName() {
-        return "symbol-cube";
+        return "symbol-grid-outline plugin-ionicons-api";
     }
 
     @Override
     public String getDisplayName() {
-        return "Artifacts";
+        return "Overview";
     }
 
     @Override
     public String getUrlName() {
-        return "artifact";
-    }
-
-    @Override
-    public Badge getBadge() {
-        Run run = (Run) getObject();
-        var hasArtifacts = run.getHasArtifacts();
-
-        if (!hasArtifacts) {
-            return null;
-        }
-
-        String badgeText = String.valueOf(run.getArtifacts().size());
-        return new Badge(badgeText, "1 test failure", Badge.Severity.INFO);
+        return null;
     }
 }

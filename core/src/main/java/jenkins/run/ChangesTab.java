@@ -26,24 +26,24 @@ package jenkins.run;
 
 import hudson.model.Actionable;
 
-public class ConsoleAction extends RunTab {
+public class ChangesTab extends Tab {
 
-    public ConsoleAction(Actionable object) {
+    public ChangesTab(Actionable object) {
         super(object);
     }
 
     @Override
     public String getIconFileName() {
-        return "symbol-terminal";
+        return "symbol-changes";
     }
 
     @Override
     public String getDisplayName() {
-        return "Console";
+        return "Changes";
     }
 
     @Override
     public String getUrlName() {
-        return "console";
+        return "changes";
     }
 }

@@ -35,9 +35,8 @@ THE SOFTWARE.
           <div class="build-bar">
             <div class="idkyet">
               <a class="buildicon" href="${rootURL}/${it.object.url}" tabindex="-1">
-                <div>
-                  <l:icon src="symbol-check" />
-                </div>
+                <l:icon alt="${it.iconColor.description}"
+                        src="symbol-status-${it.object.iconColor.iconName}" />
               </a>
               <j:if test="${it.object.previousBuild != null}">
                 <a href="${buildUrl.previousBuildUrl}"
@@ -63,7 +62,16 @@ THE SOFTWARE.
             </div>
 
             <div class="jenkins-app-bar__controls">
-              <div class="jenkins-split-button">
+              <j:if test="${it.object.building}">
+                  <j:if test="${it.object.parent.hasAbortPermission()}">
+                    <button class="jenkins-button jenkins-!-error-color">
+                      <l:icon src="symbol-stop-circle-outline plugin-ionicons-api"/>
+                      ${%Cancel}
+                    </button>
+                  </j:if>
+              </j:if>
+
+              <div class="jenkins-split-button ${it.object.building ? 'jenkins-hidden' : ''}">
                 <button class="jenkins-button jenkins-!-build-color">
                   <l:icon src="symbol-refresh-outline plugin-ionicons-api" />
                   Rerun
@@ -74,6 +82,7 @@ THE SOFTWARE.
                                   clazz="jenkins-!-build-color">
                 </l:overflowButton>
               </div>
+
               <l:overflowButton>
                 <dd:custom>
                   <l:tasks>
@@ -86,6 +95,8 @@ THE SOFTWARE.
                 </dd:custom>
               </l:overflowButton>
             </div>
+
+            <st:adjunct includes="lib.hudson.build-caption" />
           </div>
 
           <div class="plugin-content">

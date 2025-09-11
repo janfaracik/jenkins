@@ -26,24 +26,24 @@ package jenkins.run;
 
 import hudson.model.Actionable;
 
-public class OverviewAction extends RunTab {
+public class ConsoleTab extends Tab {
 
-    public OverviewAction(Actionable object) {
+    public ConsoleTab(Actionable object) {
         super(object);
     }
 
     @Override
     public String getIconFileName() {
-        return "symbol-grid-outline plugin-ionicons-api";
+        return "symbol-terminal";
     }
 
     @Override
     public String getDisplayName() {
-        return "Overview";
+        return "Console";
     }
 
     @Override
     public String getUrlName() {
-        return null;
+        return "console";
     }
 }
