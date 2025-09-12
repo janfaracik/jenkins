@@ -50,6 +50,13 @@ THE SOFTWARE.
     </dd>
 
     <dt>
+      <l:icon src="symbol-status-blue-anime" />
+    </dt>
+    <dd>
+      ${%anime}
+    </dd>
+
+    <dt>
       <l:icon src="symbol-status-nobuilt" />
     </dt>
     <dd>
@@ -68,13 +75,6 @@ THE SOFTWARE.
     </dt>
     <dd>
       ${%grey}
-    </dd>
-
-    <dt>
-      <l:icon src="symbol-status-blue-anime" />
-    </dt>
-    <dd>
-      ${%anime}
     </dd>
   </dl>
 
