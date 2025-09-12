@@ -47,9 +47,9 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jenkins.model.RunIdMigrator;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
 
@@ -129,13 +129,15 @@ public abstract class LazyBuildMixIn<JobT extends Job<JobT, RunT> & Queue.Task &
         }
         if (currentBuilds != null) {
             // if we are reloading, keep all those that are still building intact
+            TreeMap<Integer, RunT> stillBuildingBuilds = new TreeMap<>();
             for (RunT r : currentBuilds.getLoadedBuilds().values()) {
                 if (r.isBuilding()) {
                     // Do not use RunMap.put(Run):
-                    _builds.put(r.getNumber(), r);
+                    stillBuildingBuilds.put(r.getNumber(), r);
                     LOGGER.log(Level.FINE, "keeping reloaded {0}", r);
                 }
             }
+            _builds.putAll(stillBuildingBuilds);
         }
         this.builds = _builds;
     }
@@ -146,10 +148,12 @@ public abstract class LazyBuildMixIn<JobT extends Job<JobT, RunT> & Queue.Task &
             public RunT create(File dir) throws IOException {
                 return loadBuild(dir);
             }
+
+            @Override
+            public Class<RunT> getBuildClass() {
+                return LazyBuildMixIn.this.getBuildClass();
+            }
         });
-        RunIdMigrator runIdMigrator = asJob().runIdMigrator;
-        assert runIdMigrator != null;
-        r.runIdMigrator = runIdMigrator;
         return r;
     }
 
