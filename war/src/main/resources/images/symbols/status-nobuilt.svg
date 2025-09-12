@@ -1,5 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <ellipse cx="256" cy="256" rx="256" ry="256" fill="var(--blue)" fill-opacity="0.15" />
+  <ellipse cx="256" cy="256" rx="256" ry="256" fill="var(--blue)" fill-opacity="var(--status-background-opacity)" />
+  <circle cx="256" cy="256" r="246" fill="none" stroke="var(--blue)" stroke-width="20" stroke-opacity="var(--status-border-opacity)" />
   <circle cx="256" cy="256" r="30" fill="var(--blue)" />
   <circle cx="352" cy="256" r="30" fill="var(--blue)" />
   <circle cx="160" cy="256" r="30" fill="var(--blue)" />

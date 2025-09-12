@@ -36,24 +36,10 @@ THE SOFTWARE.
     </dd>
 
     <dt>
-      <l:icon src="symbol-status-blue-anime" />
-    </dt>
-    <dd>
-      ${%blue_anime}
-    </dd>
-
-    <dt>
       <l:icon src="symbol-status-yellow" />
     </dt>
     <dd>
       ${%yellow}
-    </dd>
-
-    <dt>
-      <l:icon src="symbol-status-yellow-anime" />
-    </dt>
-    <dd>
-      ${%yellow_anime}
     </dd>
 
     <dt>
@@ -64,24 +50,10 @@ THE SOFTWARE.
     </dd>
 
     <dt>
-      <l:icon src="symbol-status-red-anime" />
-    </dt>
-    <dd>
-      ${%red_anime}
-    </dd>
-
-    <dt>
       <l:icon src="symbol-status-nobuilt" />
     </dt>
     <dd>
       ${%lightgrey}
-    </dd>
-
-    <dt>
-      <l:icon src="symbol-status-nobuilt-anime" />
-    </dt>
-    <dd>
-      ${%lightgrey_anime}
     </dd>
 
     <dt>
@@ -92,13 +64,6 @@ THE SOFTWARE.
     </dd>
 
     <dt>
-      <l:icon src="symbol-status-aborted-anime" />
-    </dt>
-    <dd>
-      ${%darkgrey_anime}
-    </dd>
-
-    <dt>
       <l:icon src="symbol-status-disabled" />
     </dt>
     <dd>
@@ -106,10 +71,10 @@ THE SOFTWARE.
     </dd>
 
     <dt>
-      <l:icon src="symbol-status-disabled-anime" />
+      <l:icon src="symbol-status-blue-anime" />
     </dt>
     <dd>
-      ${%grey_anime}
+      ${%anime}
     </dd>
   </dl>
 
