@@ -24,39 +24,10 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
   <j:new className="jenkins.run.OverviewTab" var="it">
     <j:arg value="${it}"/>
   </j:new>
 
-  <l:run-host>
-    <j:set var="it" value="${it.object}" />
-
-    <l:app-bar title="Overview">
-      <l:details-bar it="${it}" />
-      <t:editDescriptionButton permission="${it.UPDATE}"
-                               clazz="jenkins-button--detail"
-                               hideText="true" />
-    </l:app-bar>
-
-    <t:editableDescription permission="${it.UPDATE}" hideButton="true"  />
-
-    <div class="cards">
-      <j:forEach var="a" items="${it.runTabs}">
-        <st:include page="widget.jelly" from="${a}" optional="true" it="${a}" />
-      </j:forEach>
-
-      <l:card title="Legacy">
-        <table>
-          <j:forEach var="a" items="${it.allActions}">
-            <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />
-          </j:forEach>
-
-          <st:include page="summary.jelly" optional="true" />
-        </table>
-
-        <st:include page="main.jelly" optional="true" />
-      </l:card>
-    </div>
-  </l:run-host>
+  <st:include page="index.jelly" />
 </j:jelly>
