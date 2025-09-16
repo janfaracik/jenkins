@@ -56,18 +56,29 @@ THE SOFTWARE.
 
             <div class="jenkins-app-bar__controls">
               <j:if test="${it.hasPermission(it.CREATE)}">
-                <button class="jenkins-button">
+                <a class="jenkins-button"
+                   href="${rootURL}/${it.viewUrl}newJob">
                   <l:icon src="symbol-add" />
-                  Add
-                </button>
+                  New Item
+                </a>
+              </j:if>
+
+              <j:if test="${it.isEditable() and it.hasPermission(it.CONFIGURE)}">
+                <!-- /configure URL on Jenkins object is overloaded with Jenkins's system config, so always use the explicit name. -->
+                <a class="jenkins-button"
+                   href="${rootURL}/${it.viewUrl}configure">
+                  ${%Edit View}
+                </a>
               </j:if>
 
               <l:overflowButton>
-                <dd:custom>
-                  <l:tasks>
-
-                  </l:tasks>
-                </dd:custom>
+                <dd:item icon="symbol-information-circle" id="button-icon-legend" text="${%Legend}" />
+                <dd:separator />
+                <dd:submenu icon="symbol-rss" text="${%Atom feed}">
+                  <dd:item icon="symbol-rss" text="${%All}" href="rssAll" />
+                  <dd:item icon="symbol-rss" text="${%Failures}" href="rssFailed" />
+                  <dd:item icon="symbol-rss" text="${%LatestBuilds}" href="rssLatest" />
+                </dd:submenu>
               </l:overflowButton>
             </div>
 
@@ -79,13 +90,10 @@ THE SOFTWARE.
             <st:include page="sidepanel.jelly" />
             <j:set var="items" value="${it.items}"/>
             <div style="display: grid; grid-template-columns: 300px 1fr; gap: 1rem">
-              <div style="display: flex; flex-direction: column;">
-                <l:card title="Queue">
-                  Hello world
-                </l:card>
-                <l:card title="Running builds">
-                  Hello world
-                </l:card>
+              <div style="display: flex; flex-direction: column; gap: 1rem" class="lightyears">
+                <j:set var="mode" value="side-panel" />
+                <st:include page="sidepanel.jelly" />
+                <j:set var="mode" value="main-panel" />
               </div>
               <div>
                 <st:include page="main.jelly" />
