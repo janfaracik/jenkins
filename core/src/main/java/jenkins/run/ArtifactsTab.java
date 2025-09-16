@@ -25,8 +25,6 @@
 package jenkins.run;
 
 import hudson.model.Actionable;
-import hudson.model.Run;
-import jenkins.management.Badge;
 
 public class ArtifactsTab extends Tab {
 
@@ -47,18 +45,5 @@ public class ArtifactsTab extends Tab {
     @Override
     public String getUrlName() {
         return "artifact";
-    }
-
-    @Override
-    public Badge getBadge() {
-        Run run = (Run) getObject();
-        var hasArtifacts = run.getHasArtifacts();
-
-        if (!hasArtifacts) {
-            return null;
-        }
-
-        String badgeText = String.valueOf(run.getArtifacts().size());
-        return new Badge(badgeText, "1 test failure", Badge.Severity.INFO);
     }
 }
