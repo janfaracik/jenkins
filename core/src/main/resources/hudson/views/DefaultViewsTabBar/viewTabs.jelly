@@ -29,8 +29,8 @@ THE SOFTWARE.
     <j:forEach var="v" items="${it.sort(views)}">
       <l:tab name="${v.displayName}" active="${v==currentView}" href="${rootURL}/${v.url}" />
     </j:forEach>
-    <j:if test="${currentView.hasPermission(currentView.CREATE)}">
-      <l:tabNewItem href="${rootURL}/${currentView.owner.url}newView" title="${%New View}" />
-    </j:if>
   </l:tabBar>
+  <j:if test="${currentView.hasPermission(currentView.CREATE)}">
+    <l:tabNewItem href="${rootURL}/${currentView.owner.url}newView" title="${%New View}" />
+  </j:if>
 </j:jelly>

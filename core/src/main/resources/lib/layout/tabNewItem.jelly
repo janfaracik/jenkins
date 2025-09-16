@@ -9,9 +9,12 @@
         </st:attribute>
     </st:documentation>
 
-    <div class="tab">
-        <a href="${href}" class="addTab" aria-label="${attrs.title}" tooltip="${attrs.title}">
-            <l:icon src="symbol-add" />
-        </a>
-    </div>
+  <div class="new-tabs little-by-little">
+    <a href="${href}"
+       class="jenkins-button jenkins-button--tertiary addTab"
+       aria-label="${attrs.title}"
+       tooltip="${attrs.title}">
+        <l:icon src="symbol-add" />
+    </a>
+  </div>
 </j:jelly>

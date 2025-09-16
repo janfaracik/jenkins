@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <st:documentation>
     <st:attribute name="name" use="required">
       The name of the tab
@@ -38,16 +38,18 @@ THE SOFTWARE.
       The title of the tab
     </st:attribute>
   </st:documentation>
-  <div class="tab${attrs.active?' active':''}">
-    <j:choose>
-      <j:when test="${attrs.active}">
-        <input type="radio" id="tab-${tabBarId}-${tabIndex}" name="tab-group-${tabBarId}" checked="checked" />
-      </j:when>
-      <j:otherwise>
-        <input type="radio" id="tab-${tabBarId}-${tabIndex}" name="tab-group-${tabBarId}" />
-      </j:otherwise>
-    </j:choose>
-    <a href="${href}" class="${name.equals('+')?'addTab':''}" title="${attrs.title}">${attrs.name}</a>
-  </div>
-  <j:set scope="parent" var="tabIndex" value="${tabIndex+1}" />
+
+  <a href="${href}"
+     class="jenkins-button ${attrs.active ? '' : 'jenkins-button--tertiary'}"
+     title="${attrs.title}">
+    <j:if test="${tab.iconFileName != null}">
+      <l:icon src="${tab.iconFileName}" />
+    </j:if>
+    ${attrs.name}
+    <j:if test="${tab.badge != null}">
+      <div class="pill jenkins-!-${tab.badge.severity}-color" aria-label="${tab.badge.tooltip}">
+        ${tab.badge.text}
+      </div>
+    </j:if>
+  </a>
 </j:jelly>

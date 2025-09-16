@@ -37,11 +37,8 @@ THE SOFTWARE.
 
   <!-- Use the current millis time as an id for the tab group -->
   <j:set scope="parent" var="tabBarId" value="${h.getCurrentTime().getTime()}" />
-  <div class="tabBarFrame ${attrs.class} ${attrs.showBaseline ? 'showBaseline' : ''}">
-    <div class="tabBar">
-      <d:invokeBody/>
-    </div>
-    <div class="tabBarBaseline"></div>
+  <div class="new-tabs">
+    <d:invokeBody/>
   </div>
 
 </j:jelly>

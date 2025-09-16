@@ -376,10 +376,6 @@ public abstract class View extends AbstractModelObject implements AccessControll
 
     public String getIconFileName() {
         // TODO - remove this
-        if (getDisplayName().startsWith("Build Monitor")) {
-            return "symbol-grid-outline plugin-ionicons-api";
-        }
-
         if (getDisplayName().startsWith("Pull Requests")) {
             return "symbol-git-pull-request-outline plugin-ionicons-api";
         }
