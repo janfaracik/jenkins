@@ -16,6 +16,12 @@
     justify-self: start;
   }
 
+  div {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .jenkins-app-bar__controls {
     display: inline-flex;
     align-items: center;

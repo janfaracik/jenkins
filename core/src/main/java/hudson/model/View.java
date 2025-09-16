@@ -95,6 +95,7 @@ import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.item_category.Categories;
 import jenkins.model.item_category.Category;
 import jenkins.model.item_category.ItemCategory;
+import jenkins.run.Badgeable;
 import jenkins.search.SearchGroup;
 import jenkins.security.ExtendedReadRedaction;
 import jenkins.security.stapler.StaplerNotDispatchable;
@@ -144,7 +145,7 @@ import org.xml.sax.SAXException;
  * @see ViewGroup
  */
 @ExportedBean
-public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets {
+public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets, Badgeable {
 
     /**
      * Container of this view. Set right after the construction
@@ -366,6 +367,28 @@ public abstract class View extends AbstractModelObject implements AccessControll
     @Override
     public String getDisplayName() {
         return getViewName();
+    }
+
+    // TODO - remove this
+    public String getUrlName() {
+        return getUrl();
+    }
+
+    public String getIconFileName() {
+        // TODO - remove this
+        if (getDisplayName().startsWith("Build Monitor")) {
+            return "symbol-grid-outline plugin-ionicons-api";
+        }
+
+        if (getDisplayName().startsWith("Pull Requests")) {
+            return "symbol-git-pull-request-outline plugin-ionicons-api";
+        }
+
+        if (getDisplayName().startsWith("Branches")) {
+            return "symbol-git-branch-outline plugin-ionicons-api";
+        }
+
+        return null;
     }
 
     public String getNewPronoun() {

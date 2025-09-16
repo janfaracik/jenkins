@@ -87,6 +87,19 @@ $border-radius: 19px;
   padding: 0;
 }
 
+.tabcontainer {
+  display: flex;
+  gap: 1rem;
+
+  &:hover {
+    .new-tabs::before {
+      opacity: 1;
+      inset: -4px;
+      background: var(--card-background);
+    }
+  }
+}
+
 .new-tabs {
   position: relative;
   display: inline-flex;
@@ -176,5 +189,12 @@ $border-radius: 19px;
         z-index: -1;
       }
     }
+  }
+}
+
+.little-by-little {
+  .jenkins-button {
+    padding-inline: 0;
+    aspect-ratio: 1;
   }
 }
