@@ -10,7 +10,19 @@
   }
 
   #tasks, .pane-frame {
-    margin: 0 !important;
+    margin-inline: 0 !important;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  .pane-frame {
+    margin-bottom: 1rem !important;
+  }
+
+  .task {
+    margin-left: 0.5rem !important;
   }
 }
 

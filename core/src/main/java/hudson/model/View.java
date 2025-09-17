@@ -83,12 +83,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -366,7 +369,8 @@ public abstract class View extends AbstractModelObject implements AccessControll
 
     @Override
     public String getDisplayName() {
-        return getViewName();
+        // TODO - remove this
+        return getViewName().replace(" (2) ", "");
     }
 
     // TODO - remove this
@@ -385,6 +389,24 @@ public abstract class View extends AbstractModelObject implements AccessControll
         }
 
         return null;
+    }
+
+    public static Badge createBadgeFromLabel(String labelText) {
+        Pattern pattern = Pattern.compile("\\((\\d+)\\)");
+        Matcher matcher = pattern.matcher(labelText);
+
+        if (matcher.find()) {
+            String number = matcher.group(1);
+            String tooltip = "Total: " + number + " " + labelText.replaceAll("\\(.*?\\)", "").trim().toLowerCase();
+            return new Badge(number, tooltip, Badge.Severity.INFO);
+        }
+
+        return null; // No number found
+    }
+
+    @Override
+    public Badge getBadge() {
+        return createBadgeFromLabel(getDisplayName());
     }
 
     public String getNewPronoun() {

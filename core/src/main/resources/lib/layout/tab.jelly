@@ -42,13 +42,13 @@ THE SOFTWARE.
   <a href="${href}"
      class="jenkins-button ${attrs.active ? '' : 'jenkins-button--tertiary'}"
      title="${attrs.title}">
-    <j:if test="${tab.iconFileName != null}">
-      <l:icon src="${tab.iconFileName}" />
+    <j:if test="${attrs.icon != null}">
+      <l:icon src="${attrs.icon}" />
     </j:if>
     ${attrs.name}
-    <j:if test="${tab.badge != null}">
-      <div class="pill jenkins-!-${tab.badge.severity}-color" aria-label="${tab.badge.tooltip}">
-        ${tab.badge.text}
+    <j:if test="${attrs.badge != null}">
+      <div class="pill jenkins-!-${attrs.badge.severity}-color" aria-label="${attrs.badge.tooltip}">
+        ${attrs.badge.text}
       </div>
     </j:if>
   </a>

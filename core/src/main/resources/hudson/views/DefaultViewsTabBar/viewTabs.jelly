@@ -27,10 +27,10 @@ THE SOFTWARE.
   <!-- view tab bar -->
   <l:tabBar>
     <j:forEach var="v" items="${it.sort(views)}">
-      <l:tab name="${v.displayName}" active="${v==currentView}" href="${rootURL}/${v.url}" />
+      <l:tab name="${v.displayName}" active="${v==currentView}" href="${rootURL}/${v.url}" icon="${v.iconFileName}" badge="${v.badge}" />
     </j:forEach>
   </l:tabBar>
   <j:if test="${currentView.hasPermission(currentView.CREATE)}">
-    <l:tabNewItem href="${rootURL}/${currentView.owner.url}newView" title="${%New View}" />
+    <l:tabNewItem href="${rootURL}/${currentView.owner.url}newView" title="${%New View}" icon="${v.iconFileName}" badge="${v.badge}" />
   </j:if>
 </j:jelly>
