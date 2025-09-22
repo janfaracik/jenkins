@@ -33,9 +33,6 @@ THE SOFTWARE.
 
   <div class="mylittletown">
     <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
-      <j:if test="${index gt 0}">
-        <hr />
-      </j:if>
       <j:forEach var="detail" items="${group.value}">
         <st:include page="detail.jelly" it="${detail}" optional="true">
           <x:element name="${detail.link != null ? 'a' : 'div'}">
