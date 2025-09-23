@@ -193,3 +193,14 @@ body:has(.plugin-content) {
   }
 }
 
+.app-status-icon-scale {
+  animation: pulseScale 2s both ease-in-out infinite;
+  opacity: 0.25;
+
+  @keyframes pulseScale {
+    50% {
+      scale: 2.25;
+      opacity: 1;
+    }
+  }
+}
