@@ -25,43 +25,50 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:layout title="${it.displayName}${not empty it.parent.fullDisplayName?' ['+it.parent.fullDisplayName+']':''}">
-    <st:include page="sidepanel.jelly" />
+<!--    <st:include page="sidepanel.jelly" />-->
     <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
     <l:main-panel>
-      <div class="jenkins-app-bar">
-        <div class="jenkins-app-bar__content jenkins-build-caption">
-          <j:set var="lastBuild" value="${it.lastBuild}" />
-          <j:if test="${lastBuild != null}">
-            <a href="${rootURL + '/' + lastBuild.url}" class="jenkins-!-display-contents" tabindex="-1">
-              <l:icon src="symbol-status-${lastBuild.iconColor.iconName}" tooltip="${lastBuild.iconColor.description}"/>
-            </a>
-          </j:if>
-          <h1 class="job-index-headline page-headline">
-            <l:breakable value="${it.displayName}"/>
-          </h1>
+
+      <div class="build-bar">
+        <div class="idkyet">
+          <a class="buildicon" href="${rootURL}/${it.url}" tabindex="-1">
+            <l:icon alt="${it.iconColor.description}"
+                    src="symbol-status-${it.iconColor.iconName}" />
+          </a>
+          <h1>${it.displayName}</h1>
         </div>
+
+        <div></div>
+
         <div class="jenkins-app-bar__controls">
-          <t:editDescriptionButton permission="${it.CONFIGURE}"/>
+          <button class="jenkins-button jenkins-!-build-color">
+            <l:icon src="symbol-play" />
+            Build
+          </button>
+
+          <button class="jenkins-button">
+            Configure
+          </button>
+
+          <l:overflowButton>
+          </l:overflowButton>
         </div>
+
+        <st:adjunct includes="lib.hudson.build-caption" />
       </div>
 
-      <j:if test="${(it.fullName!=it.fullDisplayName) and (it.class.name!='hudson.matrix.MatrixConfiguration')}"> <!-- TODO rather check for TopLevelItem (how to do this from Jelly?) -->
-        <j:choose>
-          <j:when test="${it.parent!=app}">
-            ${%Full project name}: ${it.fullName}
-          </j:when>
-          <j:otherwise>
-            ${%Project name}: ${it.fullName}
-          </j:otherwise>
-        </j:choose>
-      </j:if>
-      <t:editableDescription permission="${it.CONFIGURE}" hideButton="true"/>
+      <div class="plugin-content">
+        <l:app-bar title="${%Overview}">
+          <l:details-bar it="${it}" />
+          <t:editDescriptionButton permission="${it.CONFIGURE}"
+                                   clazz="jenkins-button--detail"
+                                   hideText="true" />
+        </l:app-bar>
 
-      <st:include page="jobpropertysummaries.jelly" />
-      <!-- inject main part here -->
-      <st:include page="main.jelly" />
+        <t:editableDescription permission="${it.CONFIGURE}" hideButton="true" />
 
-      <st:include page="permalinks.jelly" />
+        <st:include page="main.jelly" />
+      </div>
     </l:main-panel>
   </l:layout>
 </j:jelly>

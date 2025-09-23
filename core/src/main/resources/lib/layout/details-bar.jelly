@@ -34,18 +34,20 @@ THE SOFTWARE.
   <div class="mylittletown">
     <j:forEach var="group" items="${h.getDetailsFor(it)}" indexVar="index">
       <j:if test="${index gt 0}">
-        <hr />
+        <div style="color: var(--text-color-secondary); opacity: 0.5;">•</div>
       </j:if>
       <j:forEach var="detail" items="${group.value}">
         <st:include page="detail.jelly" it="${detail}" optional="true">
-          <x:element name="${detail.link != null ? 'a' : 'div'}">
-            <x:attribute name="class">jenkins-card__details__item</x:attribute>
-            <x:attribute name="href">${detail.link}</x:attribute>
-            <div class="jenkins-card__details__item__icon">
-              <l:icon src="${detail.iconClassName}" />
-            </div>
-            ${detail.displayName}
-          </x:element>
+          <j:if test="${detail.iconClassName != null}">
+            <x:element name="${detail.link != null ? 'a' : 'div'}">
+              <x:attribute name="class">jenkins-card__details__item</x:attribute>
+              <x:attribute name="href">${detail.link}</x:attribute>
+              <div class="jenkins-card__details__item__icon">
+                <l:icon src="${detail.iconClassName}" />
+              </div>
+              ${detail.displayName}
+            </x:element>
+          </j:if>
         </st:include>
       </j:forEach>
     </j:forEach>
