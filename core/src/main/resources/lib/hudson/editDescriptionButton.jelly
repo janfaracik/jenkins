@@ -41,7 +41,7 @@
        data-description="${actualDescription}"
        data-url="${submissionUrl}"
        tooltip="${attrs.hideText ? label : null}">
-      <l:icon src="symbol-edit" />
+      <l:icon src="symbol-description" />
       <j:if test="${!attrs.hideText}">
         ${label}
       </j:if>
