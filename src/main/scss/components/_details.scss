@@ -2,6 +2,7 @@ $icon-size: 1.125rem;
 
 .jenkins-details {
   display: flex;
+  align-items: center;
   gap: 0.75rem 1.25rem;
   flex-wrap: wrap;
 
@@ -36,7 +37,26 @@ $icon-size: 1.125rem;
     opacity: 0.5;
   }
 
+
   &__button {
-    background: red;
+    --button-background: transparent !important;
+
+    min-width: 51px;
+    min-height: 2rem;
+    padding-block: 0;
+    color: var(--text-color-secondary) !important;
+
+    &:not(:hover, :active, :focus-visible) {
+      --jenkins-border--subtle: var(--jenkins-border);
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+
+      * {
+        stroke-width: 40px;
+      }
+    }
   }
 }
