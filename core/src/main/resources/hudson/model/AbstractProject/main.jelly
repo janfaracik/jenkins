@@ -25,7 +25,6 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:p="/lib/hudson/project">
-  <l:userExperimentalFlag var="newBuildPage" flagClassName="jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag" />
 
   <p:makeDisabled/>
 
@@ -47,7 +46,5 @@ THE SOFTWARE.
     <st:include page="jobMain.jelly" it="${a}" optional="true" />
   </j:forEach>
 
-  <j:if test="${!newBuildPage}">
-    <p:upstream-downstream />
-  </j:if>
+  <p:upstream-downstream />
 </j:jelly>
