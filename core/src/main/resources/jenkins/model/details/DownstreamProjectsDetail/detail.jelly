@@ -24,37 +24,27 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:d="jelly:define" xmlns:local="local">
-  <d:taglib uri="local">
-    <d:tag name="relationship">
-      <j:if test="${lhs.fingerprintConfigured and rhs.fingerprintConfigured}">
-        <st:nbsp/>
-        <a href="${rootURL}/projectRelationship?lhs=${h.urlEncode(lhs.name)}&amp;rhs=${h.urlEncode(rhs.name)}">
-          <l:icon class="icon-fingerprint icon-sm"/>
-        </a>
-      </j:if>
-    </d:tag>
-
-    <d:tag name="list"> <!-- @title, @items and @up -->
-      <j:if test="${!empty(items)}">
+  <l:renderOnDemand clazz="downstream-projects-template" tag="template" capture="it">
+    <l:ajax>
+      <template id="downstream-projects-template" data-title="${it.displayName}">
         <ul style="list-style-type: none; margin: 0; padding: 0;">
-          <j:forEach var="item" items="${items}">
+          <j:forEach var="item" items="${it.projects}">
             <j:if test="${h.hasPermission(item,item.READ)}">
               <li>
-                <t:jobLink job="${item}"/>
-                <local:relationship lhs="${up ? item : it}" rhs="${up ? it : item}"/>
+                <t:jobLink job="${item}" />
+                <j:if test="${it.fingerprintConfigured and item.fingerprintConfigured}">
+                  <st:nbsp/>
+                  <a href="${rootURL}/projectRelationship?item=${h.urlEncode(it.name)}&amp;rhs=${h.urlEncode(item.name)}">
+                    <l:icon class="icon-fingerprint icon-sm" />
+                  </a>
+                </j:if>
               </li>
             </j:if>
           </j:forEach>
         </ul>
-      </j:if>
-    </d:tag>
-  </d:taglib>
-
-  <template id="downstream-projects-template" data-title="${it.displayName}">
-    <div>
-      <local:list items="${it.projects}" up="false" />
-    </div>
-  </template>
+      </template>
+    </l:ajax>
+  </l:renderOnDemand>
 
   <button class="jenkins-details__item" id="downstream-projects">
     <div class="jenkins-details__item__icon">
