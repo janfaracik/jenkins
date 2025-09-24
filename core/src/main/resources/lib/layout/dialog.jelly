@@ -21,33 +21,24 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
-
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-  <l:dialog title="${it.displayName}">
-    <ul style="list-style-type: none; margin: 0; padding: 0;">
-      <j:forEach var="item" items="${it.projects}">
-        <li>
-          <t:jobLink job="${item}" />
-          <j:if test="${item.fingerprintConfigured and it.fingerprintConfigured}">
-            <st:nbsp />
-            <a href="${rootURL}/projectRelationship?item=${h.urlEncode(item.name)}&amp;rhs=${h.urlEncode(it.name)}">
-              <l:icon class="icon-fingerprint icon-sm" />
-            </a>
-          </j:if>
-        </li>
-      </j:forEach>
-    </ul>
-  </l:dialog>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
+  <st:documentation>
+    <st:attribute name="title" use="required">
+      The title for the dialog.
+    </st:attribute>
 
-  <button class="jenkins-details__item"
-          data-type="dialog-opener"
-          data-dialog-id="${dialogId}">
-    <div class="jenkins-details__item__icon">
-      <l:icon src="${it.iconClassName}" />
-    </div>
-    <span>
-      ${it.displayName}
-    </span>
-  </button>
+    A lazy-loaded dialog. Set 'data-type="dialog-opener"' and 'data-dialog-id="${dialogId}"'
+    on your control to open the dialog.
+  </st:documentation>
+
+  <j:set var="dialogId" value="${h.generateId()}" scope="parent" />
+
+  <l:renderOnDemand clazz="${dialogId}-template" tag="template" capture="it,dialogId">
+    <l:ajax>
+      <template id="${dialogId}-template" data-title="${attrs.title}">
+        <d:invokeBody />
+      </template>
+    </l:ajax>
+  </l:renderOnDemand>
 </j:jelly>
