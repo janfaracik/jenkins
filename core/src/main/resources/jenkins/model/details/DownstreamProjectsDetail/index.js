@@ -1,4 +1,4 @@
-document.querySelector("#downstream-projects").addEventListener('click', () => {
+document.querySelector("#downstream-projects").addEventListener("click", () => {
   const template = document.querySelector("#downstream-projects-template");
   const title = template.dataset.title;
   const content = template.content.firstElementChild.cloneNode(true);
@@ -6,4 +6,4 @@ document.querySelector("#downstream-projects").addEventListener('click', () => {
     maxWidth: "550px",
     title: title,
   });
-})
+});
