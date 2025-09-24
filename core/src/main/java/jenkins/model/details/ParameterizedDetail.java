@@ -9,7 +9,7 @@ import hudson.model.Run;
  */
 public class ParameterizedDetail extends Detail {
 
-    private final ParametersAction action;
+    public final ParametersAction action;
 
     public ParameterizedDetail(Run<?, ?> run) {
         super(run);
@@ -23,9 +23,5 @@ public class ParameterizedDetail extends Detail {
     @Override
     public @Nullable String getDisplayName() {
         return action.getDisplayName();
-    }
-
-    public @Nullable String getLink() {
-        return action.getUrlName();
     }
 }

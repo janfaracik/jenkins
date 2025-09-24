@@ -23,10 +23,19 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <l:dialog title="${it.displayName}">
     <div>
-      Hello I am lazy loaded!
+      <j:invokeStatic var="currentThread" className="java.lang.Thread" method="currentThread" />
+      <j:invoke var="buildClass" on="${currentThread.contextClassLoader}" method="loadClass">
+        <j:arg value="hudson.model.Run" />
+      </j:invoke>
+      <j:set var="build" value="${request2.findAncestorObject(buildClass)}" />
+      <j:set var="escapeEntryTitleAndDescription" value="true" /> <!-- SECURITY-353 defense unless overridden -->
+      <j:set var="readOnlyMode" value="true"/>
+      <j:forEach var="parameterValue" items="${it.action.parameters}">
+        <st:include it="${parameterValue}" page="value.jelly" />
+      </j:forEach>
     </div>
   </l:dialog>
 
