@@ -12,7 +12,7 @@ $icon-size: 1.125rem;
     @include mixins.item($border: false);
 
     &::before, &::after {
-      inset: -5px -10px;
+      inset: -5px -8px;
       pointer-events: all;
     }
   }
@@ -48,6 +48,7 @@ $icon-size: 1.125rem;
   &__separator {
     color: var(--text-color-secondary);
     opacity: 0.5;
+    margin-inline: -0.5rem;
   }
 
   &__button {
