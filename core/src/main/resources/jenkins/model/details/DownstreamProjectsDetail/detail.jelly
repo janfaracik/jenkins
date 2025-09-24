@@ -23,30 +23,28 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:d="jelly:define" xmlns:local="local">
-  <l:renderOnDemand clazz="downstream-projects-template" tag="template" capture="it">
-    <l:ajax>
-      <template id="downstream-projects-template" data-title="${it.displayName}">
-        <ul style="list-style-type: none; margin: 0; padding: 0;">
-          <j:forEach var="item" items="${it.projects}">
-            <j:if test="${h.hasPermission(item,item.READ)}">
-              <li>
-                <t:jobLink job="${item}" />
-                <j:if test="${it.fingerprintConfigured and item.fingerprintConfigured}">
-                  <st:nbsp/>
-                  <a href="${rootURL}/projectRelationship?item=${h.urlEncode(it.name)}&amp;rhs=${h.urlEncode(item.name)}">
-                    <l:icon class="icon-fingerprint icon-sm" />
-                  </a>
-                </j:if>
-              </li>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+  <l:dialog title="${it.displayName}">
+    <ul style="list-style-type: none; margin: 0; padding: 0;">
+      <j:forEach var="item" items="${it.projects}">
+        <j:if test="${h.hasPermission(item,item.READ)}">
+          <li>
+            <t:jobLink job="${item}" />
+            <j:if test="${it.fingerprintConfigured and item.fingerprintConfigured}">
+              <st:nbsp/>
+              <a href="${rootURL}/projectRelationship?item=${h.urlEncode(it.name)}&amp;rhs=${h.urlEncode(item.name)}">
+                <l:icon class="icon-fingerprint icon-sm" />
+              </a>
             </j:if>
-          </j:forEach>
-        </ul>
-      </template>
-    </l:ajax>
-  </l:renderOnDemand>
+          </li>
+        </j:if>
+      </j:forEach>
+    </ul>
+  </l:dialog>
 
-  <button class="jenkins-details__item" id="downstream-projects">
+  <button class="jenkins-details__item"
+          data-type="dialog-opener"
+          data-dialog-id="${dialogId}">
     <div class="jenkins-details__item__icon">
       <l:icon src="${it.iconClassName}" />
     </div>
@@ -54,6 +52,4 @@ THE SOFTWARE.
       ${it.displayName}
     </span>
   </button>
-
-  <st:adjunct includes="jenkins.model.details.DownstreamProjectsDetail.index" />
 </j:jelly>
