@@ -53,20 +53,5 @@ THE SOFTWARE.
         <st:include page="main.jelly" optional="true" />
       </l:card>
     </div>
-
-    <br />
-
-    <l:card title="This is an experimental interface - let us know your thoughts.">
-      <div>
-        <button class="jenkins-button jenkins-!-success-color">
-          <l:icon src="symbol-weather-icon-health-80plus" />
-          I like it
-        </button>
-        <button class="jenkins-button jenkins-!-error-color">
-          <l:icon src="symbol-weather-icon-health-20to39" />
-          I dislike it
-        </button>
-      </div>
-    </l:card>
   </l:run-host>
 </j:jelly>

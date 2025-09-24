@@ -41,14 +41,22 @@ THE SOFTWARE.
         <div></div>
 
         <div class="jenkins-app-bar__controls">
-          <button class="jenkins-button jenkins-!-build-color">
+          <l:dialog title="Build with parameters">
+            <div>
+              <st:include page="index.jelly" class="hudson.model.ParametersDefinitionProperty" />
+            </div>
+          </l:dialog>
+
+          <button class="jenkins-button jenkins-!-build-color"
+                  data-type="dialog-opener"
+                  data-dialog-id="${dialogId}">
             <l:icon src="symbol-play" />
-            Build
+            Build with parameters
           </button>
 
-          <button class="jenkins-button">
+          <a class="jenkins-button" href="configure">
             Configure
-          </button>
+          </a>
 
           <l:overflowButton>
           </l:overflowButton>
@@ -67,7 +75,11 @@ THE SOFTWARE.
 
         <t:editableDescription permission="${it.CONFIGURE}" hideButton="true" />
 
-        <st:include page="main.jelly" />
+        <j:forEach var="a" items="${it.allActions}">
+          <j:if test="${a.class.simpleName eq 'MultiPipelineGraphViewAction'}">
+            <st:include page="jobMain.jelly" it="${a}" optional="true" />
+          </j:if>
+        </j:forEach>
       </div>
     </l:main-panel>
   </l:layout>

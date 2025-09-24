@@ -1,5 +1,6 @@
 package jenkins.model.details;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Run;
@@ -25,5 +26,11 @@ public class CauseDetail extends Detail {
     public Map<Cause, Integer> getCauseCounts() {
         CauseAction causeAction = getObject().getAction(CauseAction.class);
         return causeAction.getCauseCounts();
+    }
+
+    @Nullable
+    @Override
+    public String getIconClassName() {
+        return "";
     }
 }

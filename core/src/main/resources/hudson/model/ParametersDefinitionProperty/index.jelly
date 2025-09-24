@@ -34,10 +34,10 @@ THE SOFTWARE.
     send back 4xx code so that machine agents don't confuse this form with successful build triggering
     405 is "Method Not Allowed" and this fits here because we need POST.
   -->
-  <st:statusCode value="405" />
-  <l:layout title="${it.displayName}">
-    <st:include page="sidepanel.jelly" it="${it.job}"/>
-    <l:main-panel>
+<!--  <st:statusCode value="405" />-->
+<!--  <l:layout title="${it.displayName}">-->
+<!--    <st:include page="sidepanel.jelly" it="${it.job}"/>-->
+<!--    <l:main-panel>-->
       <h1>${it.job.pronoun} ${it.job.displayName}</h1>
       <p class="jenkins-description">${%description}</p>
       <j:set var="delay" value="${request2.getParameter('delay')}" />
@@ -71,6 +71,6 @@ THE SOFTWARE.
           </a>
         </f:bottomButtonBar>
       </f:form>
-    </l:main-panel>
-  </l:layout>
+<!--    </l:main-panel>-->
+<!--  </l:layout>-->
 </j:jelly>
