@@ -317,7 +317,7 @@ function init() {
         }
 
         renderOnDemand(document.querySelector("." + templateId), render);
-      })
+      });
     },
   );
 }

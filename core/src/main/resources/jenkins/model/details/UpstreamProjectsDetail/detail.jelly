@@ -27,17 +27,15 @@ THE SOFTWARE.
   <l:dialog title="${it.displayName}">
     <ul style="list-style-type: none; margin: 0; padding: 0;">
       <j:forEach var="item" items="${it.projects}">
-        <j:if test="${h.hasPermission(item,item.READ)}">
-          <li>
-            <t:jobLink job="${item}" />
-            <j:if test="${item.fingerprintConfigured and it.fingerprintConfigured}">
-              <st:nbsp/>
-              <a href="${rootURL}/projectRelationship?item=${h.urlEncode(item.name)}&amp;rhs=${h.urlEncode(it.name)}">
-                <l:icon class="icon-fingerprint icon-sm" />
-              </a>
-            </j:if>
-          </li>
-        </j:if>
+        <li>
+          <t:jobLink job="${item}" />
+          <j:if test="${item.fingerprintConfigured and it.fingerprintConfigured}">
+            <st:nbsp />
+            <a href="${rootURL}/projectRelationship?item=${h.urlEncode(item.name)}&amp;rhs=${h.urlEncode(it.name)}">
+              <l:icon class="icon-fingerprint icon-sm" />
+            </a>
+          </j:if>
+        </li>
       </j:forEach>
     </ul>
   </l:dialog>
