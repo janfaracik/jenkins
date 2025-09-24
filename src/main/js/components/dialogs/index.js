@@ -305,6 +305,8 @@ function init() {
           const template = document.querySelector("#" + templateId);
           const title = template.dataset.title;
           const content = template.content.firstElementChild.cloneNode(true);
+
+          behaviorShim.applySubtree(content, false);
           dialog.modal(content, {
             maxWidth: "550px",
             title: title,

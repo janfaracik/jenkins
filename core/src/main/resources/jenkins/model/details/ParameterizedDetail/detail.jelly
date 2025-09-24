@@ -25,7 +25,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <l:dialog title="${it.displayName}">
-    <div style="font-size: 14px">
+    <div class="app-parameters-dialog">
       <j:invokeStatic var="currentThread" className="java.lang.Thread" method="currentThread" />
       <j:invoke var="buildClass" on="${currentThread.contextClassLoader}" method="loadClass">
         <j:arg value="hudson.model.Run" />
