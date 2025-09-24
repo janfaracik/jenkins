@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2014 Daniel Beck
+Copyright (c) 2025 Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,23 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
-    <st:statusCode value="404" />
-    <l:layout title="${%Signup not supported}" type="one-column">
-        <l:breadcrumb title="${%Signup}" />
-        <l:main-panel>
-            <h1>${%Sign up}</h1>
-            ${%This is not supported in the current configuration.}
-        </l:main-panel>
-    </l:layout>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
+  <st:documentation>
+    <st:attribute name="title" use="required">
+      The title for the dialog.
+    </st:attribute>
+
+    A lazy-loaded dialog. Set 'data-type="dialog-opener"' and 'data-dialog-id="${dialogId}"'
+    on your control to open the dialog.
+  </st:documentation>
+
+  <j:set var="dialogId" value="${h.generateId()}" scope="parent" />
+
+  <l:renderOnDemand clazz="${dialogId}-template" tag="template" capture="it,dialogId">
+    <l:ajax>
+      <template id="${dialogId}-template" data-title="${attrs.title}">
+        <d:invokeBody />
+      </template>
+    </l:ajax>
+  </l:renderOnDemand>
 </j:jelly>
