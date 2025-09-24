@@ -12,7 +12,7 @@ $icon-size: 1.125rem;
     @include mixins.item($border: false);
 
     &::before, &::after {
-      inset: 0 -8px;
+      inset: 0 -0.5rem;
       pointer-events: all;
     }
   }
