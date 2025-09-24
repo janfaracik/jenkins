@@ -41,18 +41,10 @@ THE SOFTWARE.
         <div></div>
 
         <div class="jenkins-app-bar__controls">
-          <l:dialog title="Build with parameters">
-            <div>
-              <st:include page="index.jelly" class="hudson.model.ParametersDefinitionProperty" />
-            </div>
-          </l:dialog>
-
-          <button class="jenkins-button jenkins-!-build-color"
-                  data-type="dialog-opener"
-                  data-dialog-id="${dialogId}">
+          <a class="jenkins-button jenkins-!-build-color" href="buildWithParameters">
             <l:icon src="symbol-play" />
             Build with parameters
-          </button>
+          </a>
 
           <a class="jenkins-button" href="configure">
             Configure
