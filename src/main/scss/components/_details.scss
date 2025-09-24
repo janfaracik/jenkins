@@ -1,0 +1,65 @@
+@use "../abstracts/mixins";
+
+$icon-size: 1.125rem;
+
+.jenkins-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  flex-wrap: wrap;
+
+  &__item {
+    @include mixins.item($border: false);
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    font-weight: normal;
+    color: var(--text-color-secondary);
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      align-self: start;
+      width: $icon-size;
+      height: 1lh;
+
+      svg {
+        width: $icon-size;
+        height: $icon-size;
+
+        * {
+          stroke-width: 40px;
+        }
+      }
+    }
+  }
+
+  &__separator {
+    color: var(--text-color-secondary);
+    opacity: 0.5;
+  }
+
+  &__button {
+    --button-background: transparent !important;
+
+    min-width: 51px;
+    min-height: 2rem;
+    padding-block: 0;
+    color: var(--text-color-secondary) !important;
+
+    &:not(:hover, :active, :focus-visible) {
+      --jenkins-border--subtle: var(--jenkins-border);
+    }
+
+    svg {
+      width: $icon-size;
+      height: $icon-size;
+
+      * {
+        stroke-width: 40px;
+      }
+    }
+  }
+}
