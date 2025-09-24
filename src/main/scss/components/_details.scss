@@ -10,6 +10,11 @@ $icon-size: 1.125rem;
 
   button.jenkins-details__item, a.jenkins-details__item {
     @include mixins.item($border: false);
+
+    &::before, &::after {
+      inset: -5px -10px;
+      pointer-events: all;
+    }
   }
 
   &__item {
@@ -18,7 +23,7 @@ $icon-size: 1.125rem;
     justify-content: center;
     gap: 0.5rem;
     font-weight: normal;
-    color: var(--text-color-secondary);
+    color: var(--text-color-secondary) !important;
     padding: 0;
 
     &__icon {
