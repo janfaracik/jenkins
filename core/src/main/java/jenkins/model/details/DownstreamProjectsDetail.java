@@ -1,11 +1,14 @@
 package jenkins.model.details;
 
 import edu.umd.cs.findbugs.annotations.Nullable;
+import hudson.model.AbstractProject;
 import hudson.model.Actionable;
 import hudson.model.FreeStyleProject;
 
+import java.util.List;
+
 /**
- * Todo
+ * Displays downstream projects of a project (if any)
  */
 public class DownstreamProjectsDetail extends Detail {
 
@@ -14,7 +17,7 @@ public class DownstreamProjectsDetail extends Detail {
     }
 
     public @Nullable String getIconClassName() {
-        if (getDownstreamProjects() == 0) {
+        if (getProjects().isEmpty()) {
             return null;
         }
 
@@ -23,14 +26,16 @@ public class DownstreamProjectsDetail extends Detail {
 
     @Override
     public @Nullable String getDisplayName() {
-        if (getDownstreamProjects() == 1) {
+        int projectSize = getProjects().size();
+
+        if (projectSize == 1) {
             return "1 downstream project";
         }
 
-        return getDownstreamProjects() + " downstream projects";
+        return projectSize + " downstream projects";
     }
 
-    private int getDownstreamProjects() {
-        return ((FreeStyleProject) getObject()).getDownstreamProjects().size();
+    private List<AbstractProject> getProjects() {
+        return ((FreeStyleProject) getObject()).getDownstreamProjects();
     }
 }
