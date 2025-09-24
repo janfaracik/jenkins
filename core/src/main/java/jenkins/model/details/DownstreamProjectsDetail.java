@@ -30,10 +30,6 @@ public class DownstreamProjectsDetail extends Detail {
         return getDownstreamProjects() + " downstream projects";
     }
 
-    public @Nullable String getLink() {
-        return "";
-    }
-
     private int getDownstreamProjects() {
         return ((FreeStyleProject) getObject()).getDownstreamProjects().size();
     }

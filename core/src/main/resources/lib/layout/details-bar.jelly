@@ -37,8 +37,8 @@ THE SOFTWARE.
         <div class="jenkins-details__separator">•</div>
       </j:if>
       <j:forEach var="detail" items="${group.value}">
-        <st:include page="detail.jelly" it="${detail}" optional="true">
-          <j:if test="${detail.iconClassName != null}">
+        <j:if test="${detail.iconClassName != null}">
+          <st:include page="detail.jelly" it="${detail}" optional="true">
             <x:element name="${detail.link != null ? 'a' : 'div'}">
               <x:attribute name="class">jenkins-details__item</x:attribute>
               <x:attribute name="href">${detail.link}</x:attribute>
@@ -47,8 +47,8 @@ THE SOFTWARE.
               </div>
               ${detail.displayName}
             </x:element>
-          </j:if>
-        </st:include>
+          </st:include>
+        </j:if>
       </j:forEach>
     </j:forEach>
     <d:invokeBody />

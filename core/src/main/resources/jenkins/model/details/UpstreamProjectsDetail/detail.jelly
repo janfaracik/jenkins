@@ -36,7 +36,7 @@ THE SOFTWARE.
 
     <d:tag name="list"> <!-- @title, @items and @up -->
       <j:if test="${!empty(items)}">
-        <ul style="list-style-type: none;">
+        <ul style="list-style-type: none; margin: 0; padding: 0;">
           <j:forEach var="item" items="${items}">
             <j:if test="${h.hasPermission(item,item.READ)}">
               <li>
@@ -50,13 +50,13 @@ THE SOFTWARE.
     </d:tag>
   </d:taglib>
 
-  <template id="upstream-projects-template">
+  <template id="upstream-projects-template" data-title="${it.displayName}">
     <div>
       <local:list items="${it.object.upstreamProjects}" up="true" />
     </div>
   </template>
 
-  <button class="jenkins-details__item" id="upstream-projects" data-title="${it.displayName}">
+  <button class="jenkins-details__item" id="upstream-projects">
     <div class="jenkins-details__item__icon">
       <l:icon src="${it.iconClassName}" />
     </div>
@@ -65,16 +65,5 @@ THE SOFTWARE.
     </span>
   </button>
 
-  <script>
-    const button = document.querySelector("#upstream-projects");
-    button.addEventListener('click', () => {
-      const template = document.querySelector("#upstream-projects-template");
-      const title = template.dataset.title;
-      const content = template.content.firstElementChild.cloneNode(true);
-      dialog.modal(content, {
-        maxWidth: "550px",
-        title: title,
-      });
-    })
-  </script>
+  <st:adjunct includes="jenkins.model.details.UpstreamProjectsDetail.index" />
 </j:jelly>
