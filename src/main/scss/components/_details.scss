@@ -13,6 +13,7 @@ $icon-size: 1.125rem;
 
     &::before, &::after {
       inset: -5px -10px;
+      pointer-events: all;
     }
   }
 
@@ -22,7 +23,7 @@ $icon-size: 1.125rem;
     justify-content: center;
     gap: 0.5rem;
     font-weight: normal;
-    color: var(--text-color-secondary);
+    color: var(--text-color-secondary) !important;
     padding: 0;
 
     &__icon {
