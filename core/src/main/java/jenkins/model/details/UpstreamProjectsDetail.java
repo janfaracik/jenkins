@@ -34,7 +34,7 @@ public class UpstreamProjectsDetail extends Detail {
         return projectSize + " upstream projects";
     }
 
-    private List<AbstractProject> getProjects() {
+    public List<AbstractProject> getProjects() {
         return ((FreeStyleProject) getObject()).getUpstreamProjects();
     }
 }
