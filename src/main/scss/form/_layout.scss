@@ -87,6 +87,11 @@
     border-radius: calc(var(--form-input-border-radius) - 0.25rem);
   }
 
+  &--full-width {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
   &--monospace {
     font-family: var(--font-family-mono);
   }

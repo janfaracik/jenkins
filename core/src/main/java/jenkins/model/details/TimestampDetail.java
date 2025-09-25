@@ -1,5 +1,6 @@
 package jenkins.model.details;
 
+import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.model.Run;
 
 /**
@@ -9,5 +10,11 @@ public class TimestampDetail extends Detail {
 
     public TimestampDetail(Run<?, ?> run) {
         super(run);
+    }
+
+    @Nullable
+    @Override
+    public String getIconClassName() {
+        return "";
     }
 }
