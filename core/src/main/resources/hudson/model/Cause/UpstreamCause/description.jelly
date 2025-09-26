@@ -40,14 +40,5 @@ THE SOFTWARE.
           ${it.shortDescription}
         </j:otherwise>
       </j:choose>
-
-        <j:if test="${!it.upstreamCauses.isEmpty()}">
-            <br />${%caused_by}
-            <ul>
-	        <j:forEach var="c" items="${it.upstreamCauses}">
-	          <li><st:include page="description.jelly" it="${c}" /></li>
-	        </j:forEach>
-            </ul>
-        </j:if>
     </span>
 </j:jelly>
