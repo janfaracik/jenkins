@@ -22,11 +22,43 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler">
-  <div class="jenkins-details__item">
-    <div class="jenkins-details__item__icon">
-      <l:icon src="symbol-upstream" />
-    </div>
-    <st:include page="description.jelly" />
-  </div>
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+  <j:choose>
+    <j:when test="${it.upstreamUrl!=null and app.getItemByFullName(it.upstreamProject)!=null}">
+      <j:choose>
+        <j:when test="${app.getItemByFullName(it.upstreamProject).getBuildByNumber(it.upstreamBuild)!=null}">
+          <a class="jenkins-details__item"
+             href="${rootURL}/${it.upstreamUrl}${it.upstreamBuild.toString()}">
+            <div class="jenkins-details__item__icon">
+              <l:icon src="symbol-upstream" />
+            </div>
+            <span>
+              ${%started_by_project(app.getItemByFullName(it.upstreamProject).fullDisplayName,it.upstreamBuild.toString(),it.upstreamUrl,rootURL)}
+            </span>
+          </a>
+        </j:when>
+        <j:otherwise>
+          <a class="jenkins-details__item"
+             href="${rootURL}${it.upstreamUrl}">
+            <div class="jenkins-details__item__icon">
+              <l:icon src="symbol-upstream" />
+            </div>
+            <span>
+              ${%started_by_project_with_deleted_build(app.getItemByFullName(it.upstreamProject).fullDisplayName,it.upstreamBuild.toString(),it.upstreamUrl,rootURL)}
+            </span>
+          </a>
+        </j:otherwise>
+      </j:choose>
+    </j:when>
+    <j:otherwise>
+      <div class="jenkins-details__item">
+        <div class="jenkins-details__item__icon">
+          <l:icon src="symbol-upstream" />
+        </div>
+        <span>
+          ${it.shortDescription}
+        </span>
+      </div>
+    </j:otherwise>
+  </j:choose>
 </j:jelly>

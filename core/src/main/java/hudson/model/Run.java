@@ -2707,7 +2707,7 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         }
 
         @NonNull @Override public List<? extends Detail> createFor(@NonNull Run target) {
-            return List.of(new TimestampDetail(target), new DurationDetail(target), new CauseDetail(target));
+            return List.of(new CauseDetail(target), new TimestampDetail(target), new DurationDetail(target));
         }
     }
 }

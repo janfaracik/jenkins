@@ -13,6 +13,6 @@ public class TimestampDetail extends Detail {
 
     @Override
     public int getOrder() {
-        return 1;
+        return Integer.MAX_VALUE - 1;
     }
 }
