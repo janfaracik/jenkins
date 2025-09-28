@@ -37,6 +37,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.AbortException;
 import hudson.CopyOnWrite;
 import hudson.EnvVars;
+import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.FilePath;
@@ -102,6 +103,10 @@ import jenkins.model.BlockedBecauseOfBuildInProgress;
 import jenkins.model.Jenkins;
 import jenkins.model.ParameterizedJobMixIn;
 import jenkins.model.Uptime;
+import jenkins.model.details.Detail;
+import jenkins.model.details.DetailFactory;
+import jenkins.model.details.DownstreamProjectsDetail;
+import jenkins.model.details.UpstreamProjectsDetail;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.scm.DefaultSCMCheckoutStrategyImpl;
 import jenkins.scm.SCMCheckoutStrategy;
@@ -2160,4 +2165,16 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
 
     }
 
+    @Extension
+    public static final class BasicProjectDetailFactory extends DetailFactory<AbstractProject> {
+
+        @Override
+        public Class<AbstractProject> type() {
+            return AbstractProject.class;
+        }
+
+        @NonNull @Override public List<? extends Detail> createFor(@NonNull AbstractProject target) {
+            return List.of(new UpstreamProjectsDetail(target), new DownstreamProjectsDetail(target));
+        }
+    }
 }
