@@ -27,7 +27,7 @@ THE SOFTWARE.
 
   <!--  The point of this component is to generate the top right app bar controls/overflow menu -->
 
-  <j:set var="actions" value="${it.magic}" />
+  <j:set var="actions" value="${it.object.magic}" />
   <j:if test="${actions != null}">
     <div class="jenkins-app-bar__controls">
       <button id="auto-overflow" class="jenkins-button"
