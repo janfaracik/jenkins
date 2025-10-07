@@ -58,10 +58,6 @@ function dropdown() {
         referenceParent.classList.add("model-link--open");
       }
     },
-    onHide: (instance) => {
-      const referenceParent = instance.reference.parentNode;
-      referenceParent.classList.remove("model-link--open");
-    },
   };
 }
 
