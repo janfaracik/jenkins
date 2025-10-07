@@ -37,7 +37,7 @@ public class EditRunAction extends TransientActionFactory<Run> {
 
             @Override
             public Group getGroup() {
-                return Group.IN_APP_BAR;
+                return Group.FIRST_IN_MENU;
             }
 
             @Override
