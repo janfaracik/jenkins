@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.model.ModelObjectWithContextMenu;
+import jenkins.model.Tab;
 import jenkins.model.TransientActionFactory;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import org.apache.commons.lang.StringUtils;
@@ -127,6 +128,7 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
         // TODO - Think of an appropriate name for this and see if we can combine the functions
 
         return getAllActions().stream()
+                .filter(e -> !(e instanceof Tab))
                 .filter(e -> {
                     String icon = e.getIconFileName();
 
