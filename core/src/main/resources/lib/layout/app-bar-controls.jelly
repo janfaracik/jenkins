@@ -29,7 +29,7 @@ THE SOFTWARE.
 
   <j:set var="actions" value="${it.object.magic}" />
   <j:if test="${actions != null}">
-    <div class="jenkins-app-bar__controls">
+<!--    <div class="jenkins-app-bar__controls">-->
       <button id="auto-overflow" class="jenkins-button"
               tooltip="${%More actions}"
               type="button">
@@ -42,6 +42,6 @@ THE SOFTWARE.
       <template>
         ${h.convertActionsToJson(actions)}
       </template>
-    </div>
+<!--    </div>-->
   </j:if>
 </j:jelly>
