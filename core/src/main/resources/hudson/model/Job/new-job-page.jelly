@@ -29,11 +29,10 @@ THE SOFTWARE.
     <l:main-panel>
       <div class="app-build-bar">
         <div class="app-build-bar__content">
-          <div></div>
           <j:set var="lastBuild" value="${it.lastBuild}" />
           <j:if test="${lastBuild != null}">
             <a href="${rootURL + '/' + lastBuild.url}" class="jenkins-!-display-contents" tabindex="-1">
-              <l:icon src="symbol-status-${lastBuild.iconColor.iconName}" tooltip="${lastBuild.iconColor.description}" class="icon-sm" />
+              <l:icon src="symbol-status-${lastBuild.iconColor.iconName}" tooltip="${lastBuild.iconColor.description}" class="icon-md" />
             </a>
           </j:if>
           <h1 class="job-index-headline page-headline">
