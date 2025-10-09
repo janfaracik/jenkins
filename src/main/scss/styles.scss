@@ -3,29 +3,3 @@
 @use "components";
 @use "form";
 @use "pages";
-
-.app-tabs-thing {
-  display: flex;
-  margin-top: -0.25rem;
-  margin-bottom: -0.25rem;
-
-  div {
-    border-radius: 100px;
-    padding: 0.35rem 0.85rem;
-    color: var(--text-color-secondary);
-    font-size: 13px;
-    font-weight: 450;
-    cursor: pointer;
-    border: 1.5px solid transparent;
-
-    &:first-of-type {
-      background: var(--card-background);
-      border: 1.5px solid var(--card-border-color);
-      color: var(--text-color);
-    }
-
-    &:hover {
-      border: var(--jenkins-border);
-    }
-  }
-}
