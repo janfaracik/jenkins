@@ -106,6 +106,7 @@ import jenkins.model.Uptime;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DownstreamProjectsDetail;
+import jenkins.model.details.ProjectNameDetail;
 import jenkins.model.details.UpstreamProjectsDetail;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.scm.DefaultSCMCheckoutStrategyImpl;
@@ -2174,7 +2175,7 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
         }
 
         @NonNull @Override public List<? extends Detail> createFor(@NonNull AbstractProject target) {
-            return List.of(new UpstreamProjectsDetail(target), new DownstreamProjectsDetail(target));
+            return List.of(new UpstreamProjectsDetail(target), new DownstreamProjectsDetail(target), new ProjectNameDetail(target));
         }
     }
 }
