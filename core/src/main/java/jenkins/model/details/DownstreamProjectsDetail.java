@@ -3,7 +3,6 @@ package jenkins.model.details;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.model.AbstractProject;
 import hudson.model.Actionable;
-import hudson.model.FreeStyleProject;
 import hudson.model.Item;
 import java.util.List;
 
@@ -36,6 +35,11 @@ public class DownstreamProjectsDetail extends Detail {
     }
 
     public List<AbstractProject> getProjects() {
-        return ((FreeStyleProject) getObject()).getDownstreamProjects().stream().filter(e -> e.hasPermission(Item.READ)).toList();
+        if (!(getObject() instanceof AbstractProject)) {
+            return List.of();
+        }
+
+        List<AbstractProject> projects = ((AbstractProject) getObject()).getDownstreamProjects();
+        return projects.stream().filter(e -> e.hasPermission(Item.READ)).toList();
     }
 }
