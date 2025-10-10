@@ -46,7 +46,7 @@ THE SOFTWARE.
           ${attrs.title}
         </j:when>
         <j:otherwise>
-          <a href="${attrs.expandable}" class="jenkins-card__title-link">
+          <a href="${attrs.expandable}" class="jenkins-card__title-link jenkins-card__reveal">
             ${attrs.title}
             <l:icon src="symbol-chevron-forward" />
           </a>
