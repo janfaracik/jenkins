@@ -31,7 +31,7 @@ THE SOFTWARE.
     <j:arg value="${it.owner}" />
   </j:new>
 
-  <l:run-host>
+  <l:run-subpage>
     <j:set var="action" value="${it}" />
     <j:set var="it" value="${dir}" />
 
@@ -142,5 +142,5 @@ THE SOFTWARE.
         </j:otherwise>
       </j:choose>
     </div>
-  </l:run-host>
+  </l:run-subpage>
 </j:jelly>
