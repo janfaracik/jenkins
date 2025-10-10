@@ -40,6 +40,26 @@ THE SOFTWARE.
           </h1>
         </div>
         <div class="app-build-bar__controls">
+          <j:if test="${it.buildable}">
+            <button class="jenkins-button jenkins-!-build-color">
+              <l:icon src="symbol-play" />
+              Build
+            </button>
+          </j:if>
+          <j:choose>
+            <j:when test="${h.hasPermission(it,it.CONFIGURE)}">
+              <a href="configure"
+                 class="jenkins-button">
+                ${%Configure}
+              </a>
+            </j:when>
+            <j:when test="${h.hasPermission(it,it.EXTENDED_READ)}">
+              <a href="configure"
+                 class="jenkins-button">
+                ${%View Configuration}
+              </a>
+            </j:when>
+          </j:choose>
           <l:overflowButton>
             <dd:custom>
               <div class="app-build-overflow">
