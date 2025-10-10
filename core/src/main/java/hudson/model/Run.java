@@ -41,7 +41,6 @@ import hudson.AbortException;
 import hudson.BulkChange;
 import hudson.EnvVars;
 import hudson.Extension;
-import hudson.ExtensionComponent;
 import hudson.ExtensionList;
 import hudson.ExtensionPoint;
 import hudson.FeedAdapter;
@@ -121,14 +120,14 @@ import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.model.RunAction2;
 import jenkins.model.StandardArtifactManager;
-import jenkins.model.TransientActionFactory;
+import jenkins.model.Tab;
+import jenkins.model.details.CauseDetail;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DurationDetail;
 import jenkins.model.details.TimestampDetail;
 import jenkins.model.lazy.BuildReference;
 import jenkins.model.lazy.LazyBuildMixIn;
-import jenkins.run.Tab;
 import jenkins.security.MasterToSlaveCallable;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.SystemProperties;
@@ -2708,46 +2707,16 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
             return Run.class;
         }
 
-        @NonNull
-        @Override
-        public List<? extends Detail> createFor(@NonNull Run target) {
-            return List.of(new TimestampDetail(target), new DurationDetail(target));
+        @NonNull @Override public List<? extends Detail> createFor(@NonNull Run target) {
+            return List.of(new CauseDetail(target), new TimestampDetail(target), new DurationDetail(target));
         }
     }
 
-    // TODO - refine/remove? actions arent ordered correctly without this
-    private <T extends Action> List<T> getActionsByOrdinal(Class<T> type) {
-        // start with persisted actions only
-        List<T> result = new ArrayList<>();
-
-        // sort factories by ordinal descending and collect their actions
-        ExtensionList<TransientActionFactory> factories = ExtensionList.lookup(TransientActionFactory.class);
-        factories.getComponents().stream()
-                .filter(c -> {
-                    TransientActionFactory f = c.getInstance();
-                    return f.type().isAssignableFrom(getClass());
-                })
-                .sorted(Comparator.comparingDouble(e -> ((ExtensionComponent)e).ordinal()).reversed()) // higher ordinal first
-                .forEach(c -> {
-                    TransientActionFactory f = c.getInstance();
-                    Collection<? extends Action> created = f.createFor(this);
-                    for (Action a : created) {
-                        if (type.isInstance(a)) {
-                            result.add(type.cast(a));
-                        }
-                    }
-                });
-
-        result.addAll(Util.filter(getActions(), type));
-
-        return Collections.unmodifiableList(result);
-    }
-
     /**
-     * TODO
+     * Retrieves the tabs for a given run
      */
     @Restricted(NoExternalUse.class)
     public List<Tab> getRunTabs() {
-        return getActionsByOrdinal(Tab.class);
+        return getActions(Tab.class);
     }
 }

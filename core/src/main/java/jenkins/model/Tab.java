@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (c) 2018 CloudBees, Inc.
+ * Copyright (c) 2025, Jan Faracik
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,28 +22,34 @@
  * THE SOFTWARE.
  */
 
-package jenkins.util.java;
+package jenkins.model;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import hudson.model.Action;
+import hudson.model.Actionable;
 
-import org.junit.jupiter.api.Test;
-import org.jvnet.hudson.test.For;
+/**
+ * Represents a tab element shown on {@link Actionable} views.
+ * <p>
+ * A {@code Tab} is an {@link Action} that can be attached to an {@link Actionable} object
+ * (such as a job or build) and displayed as a separate tab in the UI.
+ * </p>
+ *
+ * <p>
+ * Tabs may also implement {@link Badgeable} to display a visual badge associated
+ * with the tab’s action
+ * </p>
+ *
+ * @since TODO
+ */
+public abstract class Tab implements Action, Badgeable {
 
-@For(JavaUtils.class)
-class JavaUtilsTest {
+    protected Actionable object;
 
-    @Test
-    void verifyJava8() {
-        assumeTrue(System.getProperty("java.version").startsWith("1."), "Test is for Java 8 only");
-        assertFalse(JavaUtils.isRunningWithPostJava8(), "isRunningWithPostJava8() should return false on Java 8 and below");
+    public Tab(Actionable object) {
+        this.object = object;
     }
 
-    @Test
-    void verifyPostJava8() {
-        assumeFalse(System.getProperty("java.version").startsWith("1."), "Test is for Java 9+ only");
-        assertTrue(JavaUtils.isRunningWithPostJava8(), "isRunningWithPostJava8() should return true on Java 9 and above");
+    public Actionable getObject() {
+        return object;
     }
 }
