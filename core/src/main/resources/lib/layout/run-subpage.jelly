@@ -45,16 +45,42 @@ THE SOFTWARE.
                         src="symbol-status-${it.object.iconColor.iconName}" />
               </a>
               <j:if test="${it.object.previousBuild != null}">
+                <j:set var="tooltip">
+                  <div class="jenkins-keyboard-shortcut__tooltip">
+                    <span class="jenkins-!-margin-right-1">
+                      ${%Previous build}
+                    </span>
+                    <l:keyboard-shortcut shortcut="symbol-arrow-left" />
+                  </div>
+                </j:set>
                 <a href="${buildUrl.previousBuildUrl}"
                    class="jenkins-button jenkins-button--tertiary"
+                   data-keyboard-shortcut-title="${%Previous build}"
+                   data-keyboard-shortcut-subtitle="${it.object.previousBuild.displayName}"
+                   data-keyboard-shortcut="left"
+                   data-html-tooltip="${tooltip}"
+                   data-tooltip-delay="400"
                    aria-label="${%Previous build}">
                   <l:icon class="symbol-chevron-back" />
                 </a>
               </j:if>
               <h1>${it.object.displayName}</h1>
               <j:if test="${it.object.nextBuild != null}">
+                <j:set var="tooltip">
+                  <div class="jenkins-keyboard-shortcut__tooltip">
+                    <span class="jenkins-!-margin-right-1">
+                      ${%Next build}
+                    </span>
+                    <l:keyboard-shortcut shortcut="symbol-arrow-right" />
+                  </div>
+                </j:set>
                 <a href="${buildUrl.nextBuildUrl}"
                    class="jenkins-button jenkins-button--tertiary"
+                   data-keyboard-shortcut-title="${%Next build}"
+                   data-keyboard-shortcut-subtitle="${it.object.nextBuild.displayName}"
+                   data-keyboard-shortcut="right"
+                   data-html-tooltip="${tooltip}"
+                   data-tooltip-delay="400"
                    aria-label="${%Next build}">
                   <l:icon class="symbol-chevron-forward" />
                 </a>
