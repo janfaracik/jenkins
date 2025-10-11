@@ -53,7 +53,7 @@ THE SOFTWARE.
                 </j:forEach>
               </j:when>
               <j:otherwise>
-                <div class="app-build__card-teaser">
+                <div class="jenkins-card__teaser">
                   <l:icon src="symbol-cube" />
                   <div>
                     There's too many artifacts to show
