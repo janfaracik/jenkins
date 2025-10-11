@@ -1,9 +1,10 @@
 $card-padding: 1rem;
-$icon-size: 1.375rem;
 
 .jenkins-card {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  border-radius: 1rem;
+  border-radius: var(--form-input-border-radius);
   margin-bottom: calc(var(--section-padding) / 2);
   background: var(--card-background);
 
@@ -13,6 +14,7 @@ $icon-size: 1.375rem;
     justify-content: space-between;
     padding: 0 $card-padding;
     height: 50px;
+    flex-shrink: 0;
     font-size: var(--font-size-sm) !important;
     font-weight: var(--font-bold-weight);
     width: 100%;
@@ -51,6 +53,7 @@ $icon-size: 1.375rem;
     display: flex;
     flex-direction: column;
     padding: 0 $card-padding $card-padding;
+    overflow-y: auto;
 
     &:empty {
       display: none;
@@ -108,35 +111,6 @@ $icon-size: 1.375rem;
     border-top: var(--card-border-width) solid var(--text-color-secondary);
     opacity: 0.1;
     margin: 0;
-  }
-}
-
-.jenkins-card__details {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 0.75rem;
-}
-
-.jenkins-card__details__item {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 0.75rem;
-  font-weight: normal;
-
-  &__icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: start;
-    width: $icon-size;
-    height: 1lh;
-
-    svg {
-      width: $icon-size;
-      height: $icon-size;
-      color: var(--text-color);
-    }
   }
 }
 

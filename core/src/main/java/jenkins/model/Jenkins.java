@@ -176,6 +176,7 @@ import hudson.slaves.NodePropertyDescriptor;
 import hudson.slaves.NodeProvisioner;
 import hudson.slaves.OfflineCause;
 import hudson.slaves.RetentionStrategy;
+import hudson.slaves.SlaveComputer;
 import hudson.tasks.BuildWrapper;
 import hudson.tasks.Builder;
 import hudson.tasks.Publisher;
@@ -1731,6 +1732,7 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
     }
 
 
+    @NonNull
     @Override
     public String getFullName() {
         return "";
@@ -2836,7 +2838,7 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
      *      For URL access to descriptors, see {@link hudson.model.DescriptorByNameOwner}.
      *      For URL access to specific other {@link hudson.Extension} annotated elements, create your own {@link hudson.model.Action}, like {@link hudson.console.ConsoleAnnotatorFactory.RootAction}.
      */
-    @Deprecated(since = "TODO")
+    @Deprecated(since = "2.519")
     public ExtensionList getExtensionList(String extensionType) throws ClassNotFoundException {
         return getExtensionList(pluginManager.uberClassLoader.loadClass(extensionType));
     }
@@ -3774,7 +3776,10 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
             for (Computer c : getComputersCollection()) {
                 try {
                     c.interrupt();
-                    killComputer(c);
+                    c.setNumExecutors(0);
+                    if (Main.isUnitTest && c instanceof SlaveComputer sc) {
+                        sc.closeLog(); // help TemporaryDirectoryAllocator.dispose esp. on Windows
+                    }
                     pending.add(c.disconnect(null));
                 } catch (OutOfMemoryError e) {
                     // we should just propagate this, no point trying to log
@@ -3949,9 +3954,15 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         if (!pending.isEmpty()) {
             LOGGER.log(Main.isUnitTest ? Level.FINE : Level.INFO, "Waiting for node disconnection completion");
         }
+        long end = System.nanoTime() + Duration.ofSeconds(10).toNanos();
         for (Future<?> f : pending) {
             try {
-                f.get(10, TimeUnit.SECONDS);    // if clean up operation didn't complete in time, we fail the test
+                long remaining = end - System.nanoTime();
+                if (remaining <= 0) {
+                    LOGGER.warning("Ran out of time waiting for agents to disconnect");
+                    break;
+                }
+                f.get(remaining, TimeUnit.NANOSECONDS);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;  // someone wants us to die now. quick!
