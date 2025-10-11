@@ -13,7 +13,7 @@
   gap: calc(var(--section-padding) / 2);
   margin-bottom: calc(var(--section-padding) * -0.5);
 
-  .jenkins-card {
+  & > * {
     height: 350px;
   }
 
