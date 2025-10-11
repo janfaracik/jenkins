@@ -1,12 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-  <j:set var="controls">
-    <a href="consoleText" download="${it.displayName}.txt" tooltip="${%Download all}" class="jenkins-card__reveal">
-      <l:icon src="symbol-download" />
-    </a>
-  </j:set>
-
-  <l:card title="${%Artifacts}" expandable="artifact" controls="${controls}">
+  <l:card title="${%Artifacts}" controls="${controls}">
     <table>
       <t:artifactList build="${it.object}" caption="${%Build Artifacts}" />
     </table>

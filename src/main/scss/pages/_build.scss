@@ -256,3 +256,51 @@ body:has(.app-build-bar) {
     }
   }
 }
+
+.app-build__artifact-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  padding: 0.25rem 0.5rem;
+  min-height: 0;
+  margin-inline: -0.5rem;
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1lh;
+    margin-inline: -0.125rem;
+  }
+}
+
+.app-build__card-teaser {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 1rem;
+
+  svg {
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 0.5rem;
+
+    * {
+      stroke-width: 40px;
+    }
+  }
+
+  div {
+    font-weight: var(--font-bold-weight);
+    color: var(--text-color-secondary);
+
+    &:first-of-type {
+      color: var(--text-color);
+    }
+  }
+}

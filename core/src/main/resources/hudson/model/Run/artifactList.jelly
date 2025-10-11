@@ -38,34 +38,32 @@ THE SOFTWARE.
                 ${%building}
               </p>
             </j:if>
-            <j:if test="${size(artifacts) le it.LIST_CUTOFF}">
+            <j:choose>
               <!-- if not too many, just list them -->
-              <table class="fileList">
+              <j:when test="${size(artifacts) le it.LIST_CUTOFF}">
                 <j:forEach var="f" items="${artifacts}">
-                  <tr>
-                    <td>
-                      <l:icon class="icon-document icon-sm"/>
-                    </td>
-                    <td>
-                      <a href="${rootURL}/${it.url}artifact/${f.href}">${f.displayPath}</a>
-                    </td>
-                    <td class="fileSize">
-                      ${h.humanReadableByteSize(f.getFileSize())}
-                    </td>
-                    <td>
-                      <j:if test="${app.fingerprintMap.ready}">
-                        <a href="${rootURL}/${it.url}artifact/${f.href}/*fingerprint*/">
-                          <l:icon class="icon-fingerprint icon-sm"/>
-                        </a>
-                        <st:nbsp/>
-                      </j:if>
-                      <a href="${rootURL}/${it.url}artifact/${f.href}/*view*/">${%view}</a>
-                    </td>
-                  </tr>
+                  <a href="${rootURL}/${it.url}artifact/${f.href}"
+                     class="jenkins-button jenkins-button--tertiary app-build__artifact-item">
+                    <div class="app-build__artifact-item__icon">
+                      <l:icon class="icon-document icon-sm" />
+                    </div>
+                    ${f.displayPath}
+                    <span class="jenkins-!-text-color-secondary">${h.humanReadableByteSize(f.getFileSize())}</span>
+                  </a>
                 </j:forEach>
-              </table>
-            </j:if>
-            <!-- otherwise just show link to directory browser -->
+              </j:when>
+              <j:otherwise>
+                <div class="app-build__card-teaser">
+                  <l:icon src="symbol-cube" />
+                  <div>
+                    There's too many artifacts to show
+                  </div>
+                  <a href="artifact">
+                    View artifacts
+                  </a>
+                </div>
+              </j:otherwise>
+            </j:choose>
           </j:if>
         </j:if>
       </l:ajax>
