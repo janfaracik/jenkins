@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-  <l:card title="${%Artifacts}" controls="${controls}">
+  <l:card title="${%Artifacts}" expandable="artifact">
     <table>
       <t:artifactList build="${it.object}" caption="${%Build Artifacts}" />
     </table>
