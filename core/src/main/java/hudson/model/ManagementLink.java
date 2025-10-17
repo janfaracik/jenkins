@@ -175,6 +175,10 @@ public abstract class ManagementLink implements ExtensionPoint, Action {
          */
         CONFIGURATION(Messages._ManagementLink_Category_CONFIGURATION()),
         /**
+         * TODO
+         */
+        PLUGINS(Messages._ManagementLink_Category_PLUGINS()),
+        /**
          * Security related options. Useful for plugins providing security related {@code ManagementLink}s (e.g. security realms).
          * Use {@link Category#STATUS} instead if the feature is informational.
          */
