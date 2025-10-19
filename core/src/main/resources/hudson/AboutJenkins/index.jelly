@@ -53,8 +53,7 @@ THE SOFTWARE.
 
       <p class="app-about-paragraph">${%blurb}</p>
 
-      <div class="jenkins-tab-pane">
-        <h2 class="jenkins-tab-pane__title">${%maven.dependencies}</h2>
+      <l:tabPane title="${%maven.dependencies}" icon="symbol-menu">
         <j:set var="uri" value="${it.licensesURL}"/>
         <j:choose>
           <j:when test="${uri != null}">
@@ -66,10 +65,9 @@ THE SOFTWARE.
             <p>${%No information recorded}</p>
           </j:otherwise>
         </j:choose>
-      </div>
+      </l:tabPane>
 
-      <div class="jenkins-tab-pane">
-        <h2 class="jenkins-tab-pane__title">${%static.dependencies}</h2>
+      <l:tabPane title="${%static.dependencies}" icon="symbol-list">
         <table class="jenkins-table sortable">
           <thead>
             <tr>
@@ -107,10 +105,9 @@ THE SOFTWARE.
             </tr>
           </tbody>
         </table>
-      </div>
+      </l:tabPane>
 
-      <div class="jenkins-tab-pane">
-        <h2 class="jenkins-tab-pane__title">${%plugin.dependencies}</h2>
+      <l:tabPane title="${%plugin.dependencies}" icon="symbol-plugins">
         <table class="jenkins-table sortable">
           <thead>
             <tr>
@@ -136,7 +133,7 @@ THE SOFTWARE.
             </j:forEach>
           </tbody>
         </table>
-      </div>
+      </l:tabPane>
     </l:main-panel>
   </l:layout>
 </j:jelly>

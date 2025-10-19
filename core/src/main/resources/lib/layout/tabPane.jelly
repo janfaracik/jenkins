@@ -23,14 +23,22 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
   <st:documentation>
     <st:attribute name="title" use="required">
       The title of the tab
     </st:attribute>
+    <st:attribute name="icon" since="TODO">
+      Optional icon for the tab.
+    </st:attribute>
     @since 2.385
   </st:documentation>
-  <div class="jenkins-tab-pane">
+
+  <j:set var="icon">
+    <l:icon src="${attrs.icon}" />
+  </j:set>
+
+  <div class="jenkins-tab-pane" data-icon="${icon}">
     <h2 class="jenkins-tab-pane__title">${attrs.title}</h2>
 
     <d:invokeBody />

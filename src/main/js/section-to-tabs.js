@@ -11,38 +11,37 @@ tabPanes.forEach((tabPane) => {
 tabPanes[0].style.display = "block";
 
 const tabBar = document.createElement("div");
-tabBar.className = "tabBar";
+tabBar.className = "app-build-tabs jenkins-!-margin-bottom-4";
 
 // Add tabs for each tab pane
 tabPanes.forEach((tabPane, index) => {
   const tabPaneTitle = tabPane.querySelector(".jenkins-tab-pane__title");
   tabPaneTitle.style.display = "none";
 
-  const tab = document.createElement("div");
-  tab.className = "tab";
+  const tab = document.createElement("button");
+  tab.className = "jenkins-button";
+  tab.innerText = tabPaneTitle.textContent;
 
-  if (index === 0) {
-    tab.classList.add("active");
+  if (tabPane.dataset.icon) {
+    tab.insertAdjacentHTML("afterbegin", tabPane.dataset.icon);
+  }
+
+  if (index > 0) {
+    tab.classList.add("jenkins-button--tertiary");
   }
 
   tab.addEventListener("click", function (e) {
     e.preventDefault();
-    document.querySelectorAll(".tab").forEach((tab) => {
-      tab.classList.remove("active");
+    tabBar.querySelectorAll(".jenkins-button").forEach((tab) => {
+      tab.classList.add("jenkins-button--tertiary");
     });
-    tab.classList.add("active");
+    tab.classList.remove("jenkins-button--tertiary");
 
     tabPanes.forEach((tabPane) => {
       tabPane.style.display = "none";
     });
     tabPanes[index].style.display = "block";
   });
-
-  const tabLink = document.createElement("a");
-  tabLink.setAttribute("href", "#");
-  tabLink.innerText = tabPaneTitle.textContent;
-
-  tab.append(tabLink);
 
   tabBar.append(tab);
 });
