@@ -129,7 +129,13 @@ $border-radius: 19px;
     pointer-events: none;
   }
 
-  &:not(:has(.jenkins-button:hover)) .jenkins-button:not(.jenkins-button--tertiary) {
+  &:focus-within {
+    &::after {
+      box-shadow: 0 0 0 0.2rem var(--text-color) !important;
+    }
+  }
+
+  &:not(:has(.jenkins-button:hover, .jenkins-button:focus-visible)) .jenkins-button:not(.jenkins-button--tertiary) {
     anchor-name: --a;
     color: var(--text-color) !important;
   }
@@ -166,18 +172,13 @@ $border-radius: 19px;
     &:not(.jenkins-button--tertiary) {
       pointer-events: none;
 
-      //&::before, &::after {
-        //display: unset;
-        //inset: 3px;
-      //}
-
       .pill::before {
         border: var(--jenkins-border-width) solid
           color-mix(in sRGB, var(--color, currentColor) 20%, transparent);
       }
     }
 
-    &:hover {
+    &:hover, &:focus-visible {
       color: var(--text-color) !important;
       anchor-name: --a !important;
 
