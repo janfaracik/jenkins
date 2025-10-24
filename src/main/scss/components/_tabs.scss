@@ -118,8 +118,8 @@ $border-radius: 19px;
   &::after {
     content: "";
     position: absolute;
-    top: 0;
-    bottom: 0;
+    top: anchor(--a top);
+    bottom: anchor(--a bottom);
     border: var(--jenkins-border--subtle);
     border-radius: 100px;
     transition: var(--standard-transition);
