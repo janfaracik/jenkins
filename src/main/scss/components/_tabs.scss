@@ -171,26 +171,11 @@ $border-radius: 19px;
 
     &:not(.jenkins-button--tertiary) {
       pointer-events: none;
-
-      .pill::before {
-        border: var(--jenkins-border-width) solid
-          color-mix(in sRGB, var(--color, currentColor) 20%, transparent);
-      }
     }
 
     &:hover, &:focus-visible {
       color: var(--text-color) !important;
       anchor-name: --a !important;
-
-      &::before,
-      &::after {
-        inset: 1.5px;
-      }
-
-      .pill::before {
-        border: var(--jenkins-border-width) solid
-          color-mix(in sRGB, var(--color, currentColor) 20%, transparent);
-      }
     }
 
     .pill {
