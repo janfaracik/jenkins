@@ -237,11 +237,7 @@ body:has(.app-build-bar) {
     transition: translate var(--standard-transition);
 
     &:not(:hover) {
-      color: color-mix(
-        in sRGB,
-        var(--text-color-secondary) 75%,
-        transparent
-      ) !important;
+      color: var(--text-color-secondary) !important;
     }
 
     &::before,
