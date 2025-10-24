@@ -91,13 +91,20 @@ $border-radius: 19px;
   position: relative;
   display: inline-flex;
   z-index: 0;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+
+  @media (width <= 1200px) {
+    justify-content: start;
+  }
 
   &::before {
     content: "";
     position: absolute;
     inset: 0;
     border: var(--jenkins-border--subtle);
-    border-radius: 100px;
+    border-radius: 22px;
     opacity: 0;
     transition: var(--standard-transition);
   }
