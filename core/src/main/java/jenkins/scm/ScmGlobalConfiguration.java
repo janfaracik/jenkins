@@ -63,7 +63,7 @@ public class ScmGlobalConfiguration extends ManagementLink {
 
     @Override
     public String getDescription() {
-        return "Configure source control connections";
+        return "Configure source control connections.";
     }
 
     @Override
