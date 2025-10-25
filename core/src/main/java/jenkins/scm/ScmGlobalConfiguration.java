@@ -63,12 +63,12 @@ public class ScmGlobalConfiguration extends ManagementLink {
 
     @Override
     public String getDescription() {
-        return "Configure source control connections.";
+        return "TODO.";
     }
 
     @Override
     public String getUrlName() {
-        return "source-code-management";
+        return "sourceCodeManagement";
     }
 
     @NonNull
