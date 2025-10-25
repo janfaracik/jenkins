@@ -58,17 +58,17 @@ public class ScmGlobalConfiguration extends ManagementLink {
 
     @Override
     public String getDisplayName() {
-        return "SCMMMMM";
+        return "Source Code Management";
     }
 
     @Override
     public String getDescription() {
-        return "SCM settings!";
+        return "Configure source control connections";
     }
 
     @Override
     public String getUrlName() {
-        return "scm";
+        return "source-code-management";
     }
 
     @NonNull

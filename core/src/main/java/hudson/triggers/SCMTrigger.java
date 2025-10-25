@@ -74,9 +74,11 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jenkins.model.GlobalConfigurationCategory;
 import jenkins.model.Jenkins;
 import jenkins.model.RunAction2;
 import jenkins.scm.SCMDecisionHandler;
+import jenkins.scm.ScmCategory;
 import jenkins.triggers.SCMTriggerItem;
 import jenkins.util.SystemProperties;
 import net.sf.json.JSONObject;
@@ -353,6 +355,12 @@ public class SCMTrigger extends Trigger<Item> {
         @PostConstruct
         /*package*/ synchronized void resizeThreadPool() {
             queue.setExecutors(Executors.newFixedThreadPool(maximumThreads, threadFactory()));
+        }
+
+        @NonNull
+        @Override
+        public GlobalConfigurationCategory getCategory() {
+            return GlobalConfigurationCategory.get(ScmCategory.class);
         }
 
         @Override
