@@ -28,6 +28,7 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.security.Permission;
 import java.io.IOException;
+import jenkins.scm.ScmCategory;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.jenkinsci.Symbol;
@@ -61,5 +62,11 @@ public class GlobalSCMRetryCountConfiguration extends GlobalConfiguration {
     @Override
     public Permission getRequiredGlobalConfigPagePermission() {
         return Jenkins.MANAGE;
+    }
+
+    @NonNull
+    @Override
+    public GlobalConfigurationCategory getCategory() {
+        return GlobalConfigurationCategory.get(ScmCategory.class);
     }
 }
