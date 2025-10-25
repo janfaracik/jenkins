@@ -907,11 +907,11 @@ public abstract class Descriptor<T extends Describable<T>> implements Loadable, 
     }
 
     /**
-     * Define the global configuration category the global config of this Descriptor is in.
+     * Define the subcategory the global config of this Descriptor is in.
      *
      * @return never null, always the same value for a given instance of {@link Descriptor}.
      *
-     * @since 2.0, used to be in {@link GlobalConfiguration} before that.
+     * @since TODO
      */
     public @NonNull GlobalConfigurationSubcategory getSubcategory() {
         return GlobalConfigurationSubcategory.get(GlobalConfigurationSubcategory.Unclassified.class);

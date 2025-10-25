@@ -1282,9 +1282,8 @@ public class Functions {
     }
 
     /**
-     *
-     * @param descriptors
-     * @return
+     * Groups global configuration descriptors by their subcategory and orders the groups
+     * based on the ordinal defined in their subcategory extension, with higher ordinals first.
      */
     @Restricted(NoExternalUse.class)
     public static Map<GlobalConfigurationSubcategory, Collection<Descriptor>> groupDescriptorsForGlobalConfigBySubcategory(Collection<Descriptor> descriptors) {
