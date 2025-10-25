@@ -75,6 +75,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
+import jenkins.model.GlobalConfigurationSubcategory;
 import jenkins.model.Jenkins;
 import jenkins.model.Loadable;
 import jenkins.security.RedactSecretJsonInErrorMessageSanitizer;
@@ -903,6 +904,17 @@ public abstract class Descriptor<T extends Describable<T>> implements Loadable, 
      */
     public @NonNull GlobalConfigurationCategory getCategory() {
         return GlobalConfigurationCategory.get(GlobalConfigurationCategory.Unclassified.class);
+    }
+
+    /**
+     * Define the global configuration category the global config of this Descriptor is in.
+     *
+     * @return never null, always the same value for a given instance of {@link Descriptor}.
+     *
+     * @since 2.0, used to be in {@link GlobalConfiguration} before that.
+     */
+    public @NonNull GlobalConfigurationSubcategory getSubcategory() {
+        return GlobalConfigurationSubcategory.get(GlobalConfigurationSubcategory.Unclassified.class);
     }
 
     /**

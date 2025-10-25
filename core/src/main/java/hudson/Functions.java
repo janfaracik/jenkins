@@ -162,6 +162,7 @@ import jenkins.console.DefaultConsoleUrlProvider;
 import jenkins.console.WithConsoleUrl;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.GlobalConfigurationCategory;
+import jenkins.model.GlobalConfigurationSubcategory;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -1278,6 +1279,31 @@ public class Functions {
 
             return hasAnyPermission(Jenkins.get(), permissions);
         }
+    }
+
+    /**
+     *
+     * @param descriptors
+     * @return
+     */
+    @Restricted(NoExternalUse.class)
+    public static Map<GlobalConfigurationSubcategory, Collection<Descriptor>> groupDescriptorsForGlobalConfigBySubcategory(Collection<Descriptor> descriptors) {
+        Map<String, Double> subcategoryOrdinal = ExtensionList.lookup(GlobalConfigurationSubcategory.class)
+                .getComponents()
+                .stream()
+                .collect(Collectors.toMap(
+                        c -> c.getInstance().getClass().getName(),
+                        ExtensionComponent::ordinal
+                ));
+
+        return descriptors.stream()
+                .collect(Collectors.groupingBy(
+                        Descriptor::getSubcategory,
+                        () -> new TreeMap<>(Comparator.comparingDouble(
+                                s -> subcategoryOrdinal.get(s.getClass().getName())
+                        ).reversed()),
+                        Collectors.toCollection(ArrayList::new)
+                ));
     }
 
     /**

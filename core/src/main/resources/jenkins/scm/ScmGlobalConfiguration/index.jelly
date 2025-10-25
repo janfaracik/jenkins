@@ -36,11 +36,17 @@ THE SOFTWARE.
         <j:set var="instance" value="${it}" />
         <j:set var="descriptor" value="${instance.descriptor}" />
 
-        <j:forEach var="descriptor" items="${h.getSortedDescriptorsForGlobalConfigByDescriptor(it.FILTER)}">
-          <j:set var="instance" value="${descriptor}" />
-          <f:rowSet name="${descriptor.jsonSafeClassName}">
-            <st:include page="${descriptor.globalConfigPage}" from="${descriptor}" />
-          </f:rowSet>
+        <j:set var="items" value="${h.getSortedDescriptorsForGlobalConfigByDescriptor(it.FILTER)}" />
+        <j:forEach var="subcategory" items="${h.groupDescriptorsForGlobalConfigBySubcategory(items)}">
+          <f:section title="${subcategory.key.hideSectionTitle ? null : subcategory.key.displayName}"
+                     description="${subcategory.key.shortDescription}">
+            <j:forEach var="descriptor" items="${subcategory.value}">
+              <j:set var="instance" value="${descriptor}" />
+              <f:rowSet name="${descriptor.jsonSafeClassName}">
+                <st:include page="${descriptor.globalConfigPage}" from="${descriptor}" />
+              </f:rowSet>
+            </j:forEach>
+          </f:section>
         </j:forEach>
 
         <f:saveApplyBar/>

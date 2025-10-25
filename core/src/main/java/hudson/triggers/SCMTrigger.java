@@ -75,6 +75,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.GlobalConfigurationCategory;
+import jenkins.model.GlobalConfigurationSubcategory;
 import jenkins.model.Jenkins;
 import jenkins.model.RunAction2;
 import jenkins.scm.SCMDecisionHandler;
@@ -361,6 +362,12 @@ public class SCMTrigger extends Trigger<Item> {
         @Override
         public GlobalConfigurationCategory getCategory() {
             return GlobalConfigurationCategory.get(ScmCategory.class);
+        }
+
+        @NonNull
+        @Override
+        public GlobalConfigurationSubcategory getSubcategory() {
+            return GlobalConfigurationSubcategory.get(GlobalConfigurationSubcategory.General.class);
         }
 
         @Override

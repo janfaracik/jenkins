@@ -69,4 +69,10 @@ public class GlobalSCMRetryCountConfiguration extends GlobalConfiguration {
     public GlobalConfigurationCategory getCategory() {
         return GlobalConfigurationCategory.get(ScmCategory.class);
     }
+
+    @NonNull
+    @Override
+    public GlobalConfigurationSubcategory getSubcategory() {
+        return GlobalConfigurationSubcategory.get(GlobalConfigurationSubcategory.General.class);
+    }
 }
