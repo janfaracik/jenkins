@@ -93,7 +93,6 @@ $border-radius: 19px;
   z-index: 0;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.25rem;
 
   @media (width <= 1200px) {
     justify-content: start;
@@ -107,12 +106,6 @@ $border-radius: 19px;
     border-radius: 22px;
     opacity: 0;
     transition: var(--standard-transition);
-  }
-
-  &:hover::before {
-    opacity: 1;
-    inset: -4px;
-    background: var(--card-background);
   }
 
   &::after {
@@ -129,6 +122,24 @@ $border-radius: 19px;
     pointer-events: none;
   }
 
+  &:hover {
+    &::before {
+      opacity: 1;
+      inset: -0.25rem;
+      background: var(--card-background);
+    }
+
+    &::after {
+      background-color: var(--button-background--hover);
+    }
+  }
+
+  &:active {
+    &::after {
+      background-color: var(--button-background--active);
+    }
+  }
+
   &:focus-within {
     &::after {
       box-shadow: 0 0 0 0.2rem var(--text-color) !important;
@@ -138,12 +149,6 @@ $border-radius: 19px;
   &:not(:has(.jenkins-button:hover, .jenkins-button:focus-visible)) .jenkins-button:not(.jenkins-button--tertiary) {
     anchor-name: --a;
     color: var(--text-color) !important;
-  }
-
-  &:active {
-    &::after {
-      background-color: var(--button-background--hover);
-    }
   }
 
   a, button {
