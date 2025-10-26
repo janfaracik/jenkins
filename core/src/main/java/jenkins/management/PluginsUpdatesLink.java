@@ -30,23 +30,25 @@ import hudson.model.ManagementLink;
 import hudson.model.UpdateCenter;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
+import jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag;
 
 @Extension(ordinal = Integer.MAX_VALUE)
 public class PluginsUpdatesLink extends ManagementLink {
 
     @Override
     public String getIconFileName() {
+        var flagEnabled = new NewManageJenkinsUserExperimentalFlag().getFlagValue();
+
+        if (!flagEnabled) {
+            return null;
+        }
+
         return "symbol-download";
     }
 
     @Override
     public String getDisplayName() {
         return "Updates";
-    }
-
-    @Override
-    public String getDescription() {
-        return Messages.PluginsLink_Description();
     }
 
     @Override

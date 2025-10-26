@@ -29,28 +29,36 @@ import hudson.Extension;
 import hudson.model.ManagementLink;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
+import jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag;
 
-@Extension
-public class PluginsAdvancedLink extends ManagementLink {
+@Extension(ordinal = Integer.MAX_VALUE - 3)
+public class PluginsDownloadProgressLink extends ManagementLink {
 
     @Override
     public String getIconFileName() {
-        return "symbol-settings";
+        var flagEnabled = new NewManageJenkinsUserExperimentalFlag().getFlagValue();
+
+        if (!flagEnabled) {
+            return null;
+        }
+
+        // Hide the 'Download progress' link if there are
+        // no active downloads or restarts pending
+        if (Jenkins.get().getUpdateCenter().getJobs().isEmpty()) {
+            return null;
+        }
+
+        return "symbol-list";
     }
 
     @Override
     public String getDisplayName() {
-        return "Advanced";
-    }
-
-    @Override
-    public String getDescription() {
-        return Messages.PluginsLink_Description();
+        return "Download progress";
     }
 
     @Override
     public String getUrlName() {
-        return "pluginManager/advanced";
+        return "pluginManager/updates";
     }
 
     @NonNull

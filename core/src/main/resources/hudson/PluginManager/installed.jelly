@@ -42,6 +42,9 @@ THE SOFTWARE.
                         value="${request2.getParameter('filter')}"
                         enabled="${!noPlugins}" />
         </div>
+        <div class="jenkins-app-bar__controls">
+          <st:include page="overflow.jelly" />
+        </div>
       </div>
 
       <st:adjunct includes="hudson.PluginManager._table"/>

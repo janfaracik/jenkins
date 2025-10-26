@@ -30,7 +30,6 @@ function init() {
       Math.min(40, scrollY) + "px",
     );
     if (
-      !document.querySelector(".jenkins-search--app-bar") &&
       !document.querySelector(".app-page-body__sidebar--sticky")
     ) {
       const prefersContrast = window.matchMedia(

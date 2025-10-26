@@ -61,6 +61,7 @@ THE SOFTWARE.
             </div>
           </l:isAdmin>
           <st:include page="check.jelly"/>
+          <st:include page="overflow.jelly" />
         </div>
       </div>
 
