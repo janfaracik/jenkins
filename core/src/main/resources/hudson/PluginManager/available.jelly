@@ -27,11 +27,7 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:dd="/lib/layout/dropdowns">
-  <l:layout title="${%Available plugins} - ${%Plugins}" permission="${app.SYSTEM_READ}">
-    <st:include page="sidepanel.jelly"/>
-    <!-- no need for additional breadcrumb here as the side panel offers enough functionality to browse between different pages -->
-
-    <l:main-panel>
+  <l:settings-subpage permission="${app.SYSTEM_READ}" header="${null}">
       <div class="jenkins-app-bar jenkins-app-bar--sticky">
         <div class="jenkins-app-bar__content">
           <l:search-bar clazz="jenkins-search--app-bar"
@@ -96,7 +92,5 @@ THE SOFTWARE.
           <tbody/>
         </table>
       </form>
-    </l:main-panel>
-  </l:layout>
-
+  </l:settings-subpage>
 </j:jelly>
