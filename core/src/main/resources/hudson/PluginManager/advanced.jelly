@@ -38,7 +38,7 @@ THE SOFTWARE.
                   <section class="jenkins-section jenkins-!-margin-bottom-5">
                       <h2 class="jenkins-section__title">${%Deploy Plugin}</h2>
                       <f:form method="post" action="uploadPlugin" name="uploadPlugin" enctype="multipart/form-data">
-                          <div style="margin-bottom: 1em;">
+                          <div class="jenkins-description" style="margin-bottom: 1em;">
                               ${%deploytext}
                           </div>
                           <f:entry title="${%File}" field="name">
@@ -57,7 +57,7 @@ THE SOFTWARE.
               <section class="jenkins-section jenkins-!-margin-bottom-5">
                   <h2 class="jenkins-section__title">${%Update Site}</h2>
                   <f:form method="post" action="siteConfigure" name="siteConfigure">
-                      <f:entry title="${%URL}">
+                      <f:entry title="${%URL}" description="TODO TODO TODO TODO TODO TODO.">
                           <l:isAdmin>
                               <j:if test="${app.updateCenter.ID_DEFAULT.equals(app.updateCenter.PREDEFINED_UPDATE_SITE_ID)}">
                                   <a id="reset-to-default" href="#">${%Reset to default}</a>

@@ -34,6 +34,7 @@ THE SOFTWARE.
                         placeholder="${%Search plugin updates}"
                         id="filter-box"
                         autofocus="true"
+                        hasKeyboardShortcut="false"
                         value="${request2.getParameter('filter')}"
                         enabled="${!empty(list)}" />
         </div>
