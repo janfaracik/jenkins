@@ -140,7 +140,7 @@ $border-radius: 19px;
     }
   }
 
-  &:focus-within {
+  &:has(.jenkins-button:focus-visible) {
     &::after {
       box-shadow: 0 0 0 0.2rem var(--text-color) !important;
     }
