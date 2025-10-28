@@ -58,7 +58,7 @@ public class PluginsDownloadProgressLink extends ManagementLink {
 
     @Override
     public String getUrlName() {
-        return "pluginManager/updates";
+        return "pluginManager/updates/";
     }
 
     @NonNull
