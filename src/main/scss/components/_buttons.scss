@@ -19,10 +19,6 @@
   white-space: nowrap;
   gap: 1ch;
 
-  &:not(.jenkins-button--tertiary) {
-    box-shadow: 0 2px 3px rgb(0 0 0 / 0.015);
-  }
-
   svg {
     width: 1.125rem;
     height: 1.125rem;
