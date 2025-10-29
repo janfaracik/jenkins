@@ -6,9 +6,7 @@
   position: relative;
   width: 100%;
   background: var(--table-background);
-  border-radius: calc(
-    var(--table-border-radius) + (var(--card-border-width) * 2)
-  );
+  border-radius: var(--table-border-radius);
   border: calc(var(--card-border-width) * 2) solid var(--table-background);
   border-bottom-width: var(--card-border-width);
   border-spacing: 0 var(--card-border-width);

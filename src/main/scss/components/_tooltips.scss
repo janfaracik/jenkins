@@ -1,9 +1,12 @@
+$tooltip-padding-y: 0.4375rem;
+$tooltip-padding-x: 0.75rem;
+
 .tippy-box[data-theme~="tooltip"] {
   color: var(--tooltip-color);
-  padding: 0.45rem 0.8rem;
-  border-radius: 0.66rem;
+  padding: $tooltip-padding-y $tooltip-padding-x;
+  border-radius: var(--form-input-border-radius);
   box-shadow: var(--tooltip-box-shadow);
-  font-size: 0.75rem;
+  font-size: var(--font-size-xs);
   line-height: 1.6;
   max-width: min(50vw, 1000px) !important;
   white-space: pre-line;
@@ -18,8 +21,8 @@
   // We style tables as they have additional margin/border radius when in tooltips
   .jenkins-tooltip--table-wrapper {
     background-color: oklch(from var(--text-color-secondary) l c h / 0.075);
-    margin: -0.45rem -0.8rem;
-    border-radius: 0.6rem;
+    margin: -#{$tooltip-padding-y} -#{$tooltip-padding-x};
+    border-radius: 0;
   }
 
   .jenkins-table {
@@ -67,8 +70,8 @@
 }
 
 .tippy-box[data-animation="tooltip"][data-state="hidden"] {
-  $translate: 2px;
-  $scale: 0.99;
+  $translate: 3px;
+  $scale: 0.98;
 
   opacity: 0;
   transform: scale($scale);
