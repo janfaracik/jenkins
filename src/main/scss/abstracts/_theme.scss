@@ -74,7 +74,7 @@ $semantics: (
   --header-background: var(--background);
   --header-border: var(--text-color-secondary);
   --header-color: var(--text-color);
-  --header-height: 4.125rem;
+  --header-height: 4rem;
 
   // App bar
   --bottom-app-bar-shadow: color-mix(
@@ -265,7 +265,7 @@ $semantics: (
   --panel-border-color: var(--light-grey);
 
   // Form
-  --section-padding: 1.625rem;
+  --section-padding: 1.5rem;
   --input-color: var(--white);
   --input-border: color-mix(
     in sRGB,
