@@ -138,18 +138,6 @@
   }
 }
 
-body:has(.app-build-bar) {
-  --top: color-mix(in sRGB, var(--text-color-secondary) 4%, var(--background));
-  --bottom: color-mix(
-    in sRGB,
-    var(--text-color-secondary) 2%,
-    var(--background)
-  );
-
-  background: linear-gradient(var(--top), var(--bottom));
-  background-attachment: fixed;
-}
-
 .app-build-bar {
   position: relative;
   display: grid;
@@ -164,15 +152,6 @@ body:has(.app-build-bar) {
   @media (width <= 1200px) {
     display: flex;
     flex-direction: column;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: -1000px calc(var(--section-padding) * -1) 0;
-    background-color: var(--background);
-    border-bottom: var(--jenkins-border-width) solid var(--card-border-color);
-    z-index: -1;
   }
 
   .app-build-bar__content {
@@ -269,6 +248,12 @@ body:has(.app-build-bar) {
   flex-direction: column;
   padding: 0 var(--section-padding);
   margin-inline: calc(var(--section-padding) * -1);
+  border-top-left-radius: var(--form-input-border-radius);
+  border-top-right-radius: var(--form-input-border-radius);
+  box-shadow: inset 0 var(--jenkins-border-width) var(--card-border-color);
+  min-height: 100vh;
+  --top: color-mix(in sRGB, var(--text-color-secondary) 4%, transparent);
+  background: linear-gradient(var(--top), transparent);
 
   .jenkins-app-bar {
     margin-block: 1.0625rem;
