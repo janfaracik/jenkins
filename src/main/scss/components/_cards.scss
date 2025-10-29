@@ -8,6 +8,7 @@ $card-padding: 1rem;
   position: relative;
   border-radius: var(--form-input-border-radius);
   background: var(--card-background);
+  box-shadow: 0 2px 3px rgb(0 0 0 / 0.015);
 
   &__title {
     display: flex;
