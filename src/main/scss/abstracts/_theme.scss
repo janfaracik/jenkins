@@ -312,13 +312,9 @@ $semantics: (
   --plugin-manager-bg-color-already-upgraded: var(--light-grey);
 
   // Default button
-  --button-background: oklch(from var(--text-color-secondary) l c h / 0.075);
-  --button-background--hover: oklch(
-    from var(--text-color-secondary) l c h / 0.125
-  );
-  --button-background--active: oklch(
-    from var(--text-color-secondary) l c h / 0.175
-  );
+  --button-background: color-mix(in oklch, var(--text-color-secondary) 8.5%, var(--background));
+  --button-background--hover: color-mix(in oklch, var(--text-color-secondary) 12.5%, var(--background));
+  --button-background--active: color-mix(in oklch, var(--text-color-secondary) 17.5%, var(--background));
   --button-box-shadow--focus: oklch(
     from var(--text-color-secondary) l c h / 0.1
   );
