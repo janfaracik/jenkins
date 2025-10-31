@@ -54,6 +54,10 @@ $background-outset: 0.5rem;
   .task .task-link {
     @include mixins.item;
 
+    --item-background--hover: var(--button-background--hover);
+    --item-background--active: var(--button-background--active);
+    --item-box-shadow--focus: var(--button-box-shadow--focus);
+
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -93,9 +97,11 @@ $background-outset: 0.5rem;
     }
 
     &--active {
-      --item-background: var(--button-background);
+      --item-background: var(--button-background) !important;
+
       font-weight: var(--font-bold-weight);
       cursor: default;
+      pointer-events: none;
 
       svg * {
         stroke-width: 35px;
