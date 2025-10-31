@@ -93,15 +93,12 @@ $background-outset: 0.5rem;
     }
 
     &--active {
+      --item-background: var(--button-background);
       font-weight: var(--font-bold-weight);
       cursor: default;
 
       svg * {
         stroke-width: 35px;
-      }
-
-      &::before {
-        background-color: var(--button-background) !important;
       }
 
       &::after {
