@@ -292,7 +292,7 @@ body:has(.app-settings-container) {
   border-top-left-radius: var(--form-input-border-radius);
   border-top-right-radius: var(--form-input-border-radius);
   box-shadow: inset 0 var(--jenkins-border-width) var(--card-border-color);
-  min-height: 100vh;
+  min-height: 80vh;
   --top: color-mix(in sRGB, var(--text-color-secondary) 4%, transparent);
   background: linear-gradient(var(--top), transparent);
 
