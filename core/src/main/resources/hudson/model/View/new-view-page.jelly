@@ -43,10 +43,10 @@ THE SOFTWARE.
             </j:if>
             <j:choose>
               <j:when test="${iconClass != null}">
-                <l:icon class="${iconClass}" alt="${it.owner.iconColor.description}" tooltip="${it.owner.iconColor.description}" />
+                <l:icon class="${iconClass}" alt="${it.owner.iconColor.description}" />
               </j:when>
               <j:when test="${it.owner.iconColor.getImageOf('32x32') != null}">
-                <l:icon src="${it.owner.iconColor.getImageOf('32x32')}" alt="${it.owner.iconColor.description}" tooltip="${it.owner.iconColor.description}" />
+                <l:icon src="${it.owner.iconColor.getImageOf('32x32')}" alt="${it.owner.iconColor.description}" />
               </j:when>
             </j:choose>
 
