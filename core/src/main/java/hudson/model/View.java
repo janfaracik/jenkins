@@ -369,6 +369,15 @@ public abstract class View extends AbstractModelObject implements AccessControll
         return getViewName();
     }
 
+    /**
+     * Returns the icon file name for this action.
+     * <p>
+     * Only displays if {@link jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag} is enabled.
+     * <p>
+     * This behaves similarly to {@link Action#getIconFileName()}, except that
+     * returning {@code null} here does not hide the associated view; the view
+     * will still be displayed even when this method returns {@code null}.
+     */
     public String getIconFileName() {
         return null;
     }
@@ -1239,6 +1248,12 @@ public abstract class View extends AbstractModelObject implements AccessControll
         } catch (StreamException | ConversionException | Error e) { // mostly reflection errors
             throw new IOException("Unable to read", e);
         }
+    }
+
+    // for Jelly
+    @Restricted(DoNotUse.class)
+    public boolean isMyViewsProperty() {
+        return getOwner() instanceof MyViewsProperty;
     }
 
     public static class PropertyList extends DescribableList<ViewProperty, ViewPropertyDescriptor> {
