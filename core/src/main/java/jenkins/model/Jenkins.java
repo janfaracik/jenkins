@@ -105,6 +105,7 @@ import hudson.model.Fingerprint;
 import hudson.model.FingerprintCleanupThread;
 import hudson.model.FingerprintMap;
 import hudson.model.Hudson;
+import hudson.model.InvisibleAction;
 import hudson.model.Item;
 import hudson.model.ItemGroup;
 import hudson.model.ItemGroupMixIn;
@@ -6021,6 +6022,20 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
 
         void setSafeRestart(boolean safeRestart) {
             this.safeRestart = safeRestart;
+        }
+    }
+
+    /* Replacement for historical Jenkins#doException URL */
+    @Extension
+    public static class ExceptionAction extends InvisibleAction implements RootAction {
+        @WebMethod(name = "")
+        public void doException() {
+            throw new RuntimeException();
+        }
+
+        @Override
+        public String getUrlName() {
+            return "exception";
         }
     }
 }
