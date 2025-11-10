@@ -243,8 +243,8 @@ $semantics: (
 
   // Cards
   --card-background: var(--white);
-  --card-background--hover: transparent;
-  --card-background--active: transparent;
+  --card-background--hover: color-mix(in srgb, var(--item-background--hover) 75%, transparent);
+  --card-background--active: color-mix(in srgb, var(--item-background--active) 75%, transparent);
   --card-border-color: var(--jenkins-border-color);
   --card-border-color--hover: oklch(
     from var(--text-color-secondary) l c h / 0.3

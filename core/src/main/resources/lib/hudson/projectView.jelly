@@ -87,8 +87,10 @@ THE SOFTWARE.
               <div class="jenkins-jobs-list__item__details__text">
                 <p class="jenkins-jobs-list__item__label">${job.displayName}</p>
                 <div class="jenkins-jobs-list__item__description">
-                  <j:forEach var="col" items="${columnExtensions}">
-                    <st:include page="compactColumn.jelly" it="${col}" optional="true" />
+                  <j:forEach var="col" items="${columnExtensions}" indexVar="index">
+                    <div class="db-blackstar">
+                      <st:include page="compactColumn.jelly" it="${col}" optional="true" />
+                    </div>
                   </j:forEach>
                 </div>
               </div>
