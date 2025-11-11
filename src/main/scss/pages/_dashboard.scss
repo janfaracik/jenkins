@@ -78,7 +78,9 @@ $min-button-size: 2.375rem;
     grid-template-columns: 1fr auto;
     align-items: center;
     transition: var(--standard-transition);
-    box-shadow: 0 0 0 0 transparent, 0 0 0 0.5rem transparent;
+    box-shadow:
+      0 0 0 0 transparent,
+      0 0 0 0.5rem transparent;
 
     &:not(:last-of-type) {
       border-bottom: var(--card-border-width) solid var(--card-border-color);
@@ -88,14 +90,32 @@ $min-button-size: 2.375rem;
       background: var(--card-background--hover);
     }
 
-    &:active, &:has(.jenkins-jobs-list__item__details:focus) {
+    &:active,
+    &:has(.jenkins-jobs-list__item__details:focus) {
       border-bottom-color: transparent;
       border-radius: calc(var(--form-input-border-radius) / 2);
     }
 
     &:has(.jenkins-jobs-list__item__details:active) {
       background: var(--card-background--active);
-      box-shadow: 0 0 0 0.09375rem color-mix(in srgb, var(--text-color-secondary) 20%, var(--card-background)), 0 0 0 0.34375rem color-mix(in srgb, var(--text-color-secondary) 10%, var(--card-background));
+      box-shadow:
+        0 0 0 0.09375rem
+          color-mix(
+            in sRGB,
+            var(--text-color-secondary) 20%,
+            var(--card-background)
+          ),
+        0 0 0 0.34375rem
+          color-mix(
+            in sRGB,
+            color-mix(
+                in sRGB,
+                var(--text-color-secondary) 15%,
+                var(--card-background)
+              )
+              65%,
+            transparent
+          );
     }
 
     &:has(.jenkins-jobs-list__item__details:focus) {
@@ -104,13 +124,21 @@ $min-button-size: 2.375rem;
     }
 
     &:first-of-type {
-      border-top-left-radius: calc(var(--form-input-border-radius) - var(--jenkins-border-width));
-      border-top-right-radius: calc(var(--form-input-border-radius) - var(--jenkins-border-width));
+      border-top-left-radius: calc(
+        var(--form-input-border-radius) - var(--jenkins-border-width)
+      ) !important;
+      border-top-right-radius: calc(
+        var(--form-input-border-radius) - var(--jenkins-border-width)
+      ) !important;
     }
 
     &:last-of-type {
-      border-bottom-left-radius: calc(var(--form-input-border-radius) - var(--jenkins-border-width));
-      border-bottom-right-radius: calc(var(--form-input-border-radius) - var(--jenkins-border-width));
+      border-bottom-left-radius: calc(
+        var(--form-input-border-radius) - var(--jenkins-border-width)
+      ) !important;
+      border-bottom-right-radius: calc(
+        var(--form-input-border-radius) - var(--jenkins-border-width)
+      ) !important;
     }
 
     &__icons {
