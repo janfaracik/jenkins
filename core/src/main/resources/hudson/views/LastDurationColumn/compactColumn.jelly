@@ -26,6 +26,6 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core">
   <j:set var="lBuild" value="${job.lastSuccessfulBuild ?: job.lastFailedBuild}"/>
   <j:if test="${lBuild!=null}">
-    ${%took(lBuild.durationString)}
+    ${%took(lBuild.timestampString, lBuild.durationString)}
   </j:if>
 </j:jelly>
