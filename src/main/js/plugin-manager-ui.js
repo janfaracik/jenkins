@@ -60,8 +60,6 @@ var handleFilter = function (e) {
 
 var debouncedFilter = debounce(handleFilter, 150);
 
-console.log('hello')
-
 document.addEventListener("DOMContentLoaded", function () {
   var filterInput = document.getElementById("filter-box");
   filterInput.addEventListener("input", function (e) {
