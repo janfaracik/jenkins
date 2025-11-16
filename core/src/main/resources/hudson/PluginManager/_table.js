@@ -222,8 +222,6 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
           }
           uninstall.disabled = true;
         }
-
-        console.log(row, enableInput, rollback, uninstall);
       }
     }
 
