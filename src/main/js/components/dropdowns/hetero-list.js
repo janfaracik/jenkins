@@ -151,7 +151,6 @@ function generateButtons() {
             }
             Behaviour.applySubtree(nc, true);
             ensureVisible(nc);
-            nc.classList.remove("fade-in");
             layoutUpdateCallback.call();
           },
           true,
@@ -166,6 +165,23 @@ function generateButtons() {
       }
 
       let oneEach = e.classList.contains("one-each");
+
+      /**
+       * Disable the Add button if there are no more items to add
+       */
+      function toggleButtonState() {
+        const templateCount = templates.length;
+        const selectedCount = Array.from(e.children).filter((e) =>
+          e.classList.contains("repeated-chunk"),
+        ).length;
+
+        btn.disabled = oneEach && selectedCount >= templateCount;
+      }
+      const observer = new MutationObserver(() => {
+        toggleButtonState();
+      });
+      observer.observe(e, { childList: true });
+      toggleButtonState();
 
       generateDropDown(btn, (instance) => {
         let menuItems = [];

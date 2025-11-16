@@ -821,16 +821,16 @@ function registerMinMaxValidator(e) {
     }
 
     if (isInteger(this.value)) {
+      const valueInt = parseInt(this.value);
+
       // Ensure the value is an integer
       if (min !== null && isInteger(min) && max !== null && isInteger(max)) {
         // Both min and max attributes are available
-
-        if (min <= max) {
+        const minInt = parseInt(min);
+        const maxInt = parseInt(max);
+        if (minInt <= maxInt) {
           // Add the validator if min <= max
-          if (
-            parseInt(min) > parseInt(this.value) ||
-            parseInt(this.value) > parseInt(max)
-          ) {
+          if (minInt > valueInt || valueInt > maxInt) {
             // The value is out of range
             updateValidationArea(
               this.targetElement,
@@ -850,7 +850,8 @@ function registerMinMaxValidator(e) {
       ) {
         // There is only 'min' available
 
-        if (parseInt(min) > parseInt(this.value)) {
+        const minInt = parseInt(min);
+        if (minInt > valueInt) {
           updateValidationArea(
             this.targetElement,
             `<div class="error">This value should be larger than ${min}</div>`,
@@ -868,7 +869,8 @@ function registerMinMaxValidator(e) {
       ) {
         // There is only 'max' available
 
-        if (parseInt(max) < parseInt(this.value)) {
+        const maxInt = parseInt(max);
+        if (maxInt < valueInt) {
           updateValidationArea(
             this.targetElement,
             `<div class="error">This value should be less than ${max}</div>`,
@@ -1101,17 +1103,25 @@ function labelAttachPreviousOnClick() {
 }
 
 function helpButtonOnClick() {
-  var tr =
-    findFollowingTR(this, "help-area", "help-sibling") ||
-    findFollowingTR(this, "help-area", "setting-help") ||
-    findFollowingTR(this, "help-area");
-  var div = tr.firstElementChild;
+  let helpArea;
+
+  // Custom condition for repeatable chunks
+  if (this.parentNode.classList.contains("repeated-chunk__header")) {
+    helpArea = this.closest(".repeated-chunk").querySelector(".help-area");
+  } else {
+    helpArea =
+      findFollowingTR(this, "help-area", "help-sibling") ||
+      findFollowingTR(this, "help-area", "setting-help") ||
+      findFollowingTR(this, "help-area");
+  }
+
+  var div = helpArea.firstElementChild;
   if (!div.classList.contains("help")) {
     div = div.nextElementSibling.firstElementChild;
   }
 
-  if (div.style.display != "block") {
-    div.style.display = "block";
+  if (helpArea.style.display !== "block") {
+    helpArea.style.display = "block";
     // make it visible
 
     fetch(this.getAttribute("helpURL")).then((rsp) => {
@@ -1145,7 +1155,7 @@ function helpButtonOnClick() {
       });
     });
   } else {
-    div.style.display = "none";
+    helpArea.style.display = "none";
     layoutUpdateCallback.call();
   }
 
@@ -1281,7 +1291,7 @@ function rowvgStartEachRow(recursive, f) {
 
   // validate required form values
   Behaviour.specify("INPUT.required", "input-required", ++p, function (e) {
-    registerRegexpValidator(e, /./, "Field is required");
+    registerRegexpValidator(e, /\S/, "Field is required");
   });
 
   // validate form values to be an integer
