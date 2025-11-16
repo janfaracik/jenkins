@@ -238,7 +238,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         infoContainer.innerHTML =
           '<div class="title">' +
           i18n("cannot-enable") +
-          '</div><div class="subtitle">' +
+          '</div><div class="jenkins-!-text-color-secondary">' +
           i18n("disabled-dependencies") +
           ".</div>";
 
@@ -258,7 +258,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
             dependencySpan.style.display = "none";
           } else {
             // It's disabled ... show the span
-            dependencySpan.style.display = "inline-block";
+            dependencySpan.style.display = "inline-flex";
           }
         }
 
@@ -283,7 +283,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
           infoContainer.innerHTML =
             '<div class="title">' +
             i18n("cannot-disable") +
-            '</div><div class="subtitle">' +
+            '</div><div class="jenkins-!-text-color-secondary">' +
             i18n("enabled-dependents") +
             ".</div>";
           infoContainer.appendChild(getDependentsDiv(pluginTR, true));
@@ -295,7 +295,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         infoContainer.innerHTML =
           '<div class="title">' +
           i18n("detached-disable") +
-          '</div><div class="subtitle">' +
+          '</div><div class="jenkins-!-text-color-secondary">' +
           i18n("detached-possible-dependents") +
           "</div>";
         infoContainer.appendChild(getDependentsDiv(pluginTR, true));
@@ -315,7 +315,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         infoContainer.innerHTML =
           '<div class="title">' +
           i18n("cannot-uninstall") +
-          '</div><div class="subtitle">' +
+          '</div><div class="jenkins-!-text-color-secondary">' +
           i18n("installed-dependents") +
           ".</div>";
         infoContainer.appendChild(getDependentsDiv(pluginTR, false));
@@ -326,7 +326,7 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         infoContainer.innerHTML =
           '<div class="title">' +
           i18n("detached-uninstall") +
-          '</div><div class="subtitle">' +
+          '</div><div class="jenkins-!-text-color-secondary">' +
           i18n("detached-possible-dependents") +
           "</div>";
         infoContainer.appendChild(getDependentsDiv(pluginTR, false));
@@ -348,13 +348,13 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         var dependentId = dependentSpan.getAttribute("data-plugin-id");
 
         if (!hideDisabled || dependentId === "jenkins-core") {
-          dependentSpan.style.display = "inline-block";
+          dependentSpan.style.display = "inline-flex";
         } else {
           var depPluginTR = getPluginTR(dependentId);
           var depPluginMetadata = depPluginTR.jenkinsPluginMetadata;
           if (depPluginMetadata.enableInput.checked) {
             // It's enabled ... show the span
-            dependentSpan.style.display = "inline-block";
+            dependentSpan.style.display = "inline-flex";
           } else {
             // It's disabled ... hide the span
             dependentSpan.style.display = "none";
