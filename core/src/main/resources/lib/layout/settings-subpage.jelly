@@ -47,6 +47,8 @@ THE SOFTWARE.
     </st:attribute>
     <st:attribute name="noDefer">
     </st:attribute>
+    <st:attribute name="includeSidepanel">
+    </st:attribute>
   </st:documentation>
 
   <j:new className="hudson.model.ManageJenkinsAction" var="manageJenkinsAction" />
@@ -55,7 +57,7 @@ THE SOFTWARE.
   <l:layout title="${it.displayName} - ${manageJenkinsAction.displayName}"
             permission="${attrs.permission}"
             permissions="${attrs.permissions}"
-            type="${newManageJenkins ? 'two-column' : 'one-column'}">
+            type="${(newManageJenkins or attrs.includeSidepanel) ? 'two-column' : 'one-column'}">
 
     <j:if test="${attrs.includeBreadcrumb}">
       <!-- Hacky - this will be improved in subsequent PRs -->
@@ -135,6 +137,10 @@ THE SOFTWARE.
         </l:main-panel>
       </j:when>
       <j:otherwise>
+        <j:if test="${attrs.includeSidepanel}">
+          <st:include page="sidepanel" />
+        </j:if>
+
         <l:main-panel>
           <j:if test="${!attrs.containsKey('header')}">
             <l:app-bar title="${it.displayName}" />

@@ -28,7 +28,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <l:settings-subpage permission="${app.SYSTEM_READ}" header="${null}">
+    <l:settings-subpage permission="${app.SYSTEM_READ}" header="${null}" includeSidepanel="true">
         <j:set var="readOnlyMode" value="${!app.hasPermission(app.ADMINISTER)}"/>
 
         <l:app-bar title="${%Advanced settings}"/>
