@@ -202,7 +202,6 @@ Behaviour.specify("#filter-box", "_table", 0, function (e) {
         markAllDependentsDisabled(pluginTRs[i]);
         markHasDisabledDependencies(pluginTRs[i]);
 
-        //// do the thing
         const row = pluginTRs[i];
         const enableInput = pluginMetadata.enableInput;
         const rollback = select("td.rollback button", pluginTRs[i]);
