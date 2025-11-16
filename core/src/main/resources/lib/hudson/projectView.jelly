@@ -98,6 +98,15 @@ THE SOFTWARE.
                       </div>
                     </j:if>
                   </j:forEach>
+
+                  <j:set var="lBuild" value="${job.lastSuccessfulBuild ?: job.lastFailedBuild}"/>
+                  <j:set var="lastChangeSet" value="${lBuild.changeSets[0].items[0]}"/>
+
+                  <j:if test="${lastChangeSet != null}">
+                    <div class="db-blackstar">
+                      '${lastChangeSet.msg}' by ${lastChangeSet.author.displayName}
+                    </div>
+                  </j:if>
                 </div>
               </div>
             </a>

@@ -26,7 +26,7 @@ THE SOFTWARE.
   Render build histories. 
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:i="jelly:fmt" xmlns:l="/lib/layout">
   <j:set target="${it}" property="nextBuildNumberToFetch" value="${it.nextBuildNumber}" />
   <j:if test="${h.isUserTimeZoneOverride()}">
     <i:setTimeZone value="${h.getUserTimeZone()}" />
@@ -43,6 +43,15 @@ THE SOFTWARE.
       <j:set var="pastDate" value="${date}" />
     </j:if>
 
-    <st:include page="/hudson/widgets/HistoryWidget/entry.jelly" />
+    <l:userExperimentalFlag var="newJobPage" flagClassName="jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag" />
+
+    <j:choose>
+      <j:when test="${newJobPage}">
+        <st:include page="/hudson/widgets/HistoryWidget/entry-new.jelly" />
+      </j:when>
+      <j:otherwise>
+        <st:include page="/hudson/widgets/HistoryWidget/entry.jelly" />
+      </j:otherwise>
+    </j:choose>
   </j:forEach>
 </j:jelly>
