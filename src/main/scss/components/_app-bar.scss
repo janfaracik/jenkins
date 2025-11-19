@@ -70,26 +70,33 @@
     position: sticky;
     top: var(--header-height);
     z-index: 2;
+    padding: var(--section-padding) 0;
+    margin: -1rem 0 0.5rem 0;
 
     &::before,
     &::after {
       content: "";
       position: absolute;
-      inset: calc(var(--header-height) * -1)
-        calc(var(--section-padding) * -1) -0.875rem;
+      inset: 0;
       z-index: -1;
       pointer-events: none;
     }
 
     &::before {
-      background: var(--background);
-      mask-image: linear-gradient(black 70%, transparent);
-      opacity: 0.55;
+      background: color-mix(
+                      in sRGB,
+                      var(--text-color-secondary) 2%,
+                      var(--card-background)
+      );
+      mask-image: linear-gradient(black 60%, transparent);
+      opacity: 0.75;
     }
 
     &::after {
+      left: calc(var(--section-padding) * -1);
+      right: calc(var(--section-padding) * -1);
       backdrop-filter: blur(10px);
-      mask-image: linear-gradient(black 50%, transparent);
+      mask-image: linear-gradient(black 65%, transparent);
     }
   }
 

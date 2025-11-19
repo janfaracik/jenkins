@@ -176,6 +176,10 @@ body:has(.app-settings-container) {
     padding: var(--section-padding);
     display: flex;
     flex-direction: column;
+
+    &:has(.jenkins-app-bar--sticky) {
+      max-width: 1200px;
+    }
   }
 }
 
