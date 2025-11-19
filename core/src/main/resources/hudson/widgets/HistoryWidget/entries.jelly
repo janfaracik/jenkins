@@ -47,7 +47,7 @@ THE SOFTWARE.
 
     <j:choose>
       <j:when test="${newJobPage}">
-        <st:include page="/hudson/widgets/HistoryWidget/entry-new.jelly" />
+        <st:include page="/hudson/widgets/HistoryWidget/entry.jelly" />
       </j:when>
       <j:otherwise>
         <st:include page="/hudson/widgets/HistoryWidget/entry.jelly" />
