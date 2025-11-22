@@ -138,6 +138,10 @@
   }
 }
 
+body:has(.app-build-content) {
+  background: color-mix(in sRGB, var(--text-color-secondary) 1%, var(--background));
+}
+
 body:has(.app-settings-container) {
   --top: color-mix(in sRGB, var(--text-color-secondary) 4%, var(--background));
   --bottom: color-mix(
@@ -194,13 +198,6 @@ body:has(.app-settings-container) {
     flex-direction: column;
   }
 
-  .app-build-bar__content {
-    display: inline-flex;
-    align-items: center;
-    justify-content: start;
-    min-height: 38px;
-  }
-
   .app-build-bar__tabs {
     display: inline-flex;
     align-items: center;
@@ -221,9 +218,10 @@ body:has(.app-settings-container) {
 }
 
 .app-build-bar__content {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
+  min-height: 38px;
   gap: 1rem;
 
   .app-build-bar__content__headline {
@@ -293,7 +291,7 @@ body:has(.app-settings-container) {
   border-top-right-radius: var(--form-input-border-radius);
   box-shadow: inset 0 var(--jenkins-border-width) var(--card-border-color);
   min-height: 80vh;
-  --top: color-mix(in sRGB, var(--text-color-secondary) 4%, transparent);
+  --top: color-mix(in sRGB, var(--text-color-secondary) 3%, transparent);
   background: linear-gradient(var(--top), transparent);
 
   .jenkins-app-bar {
