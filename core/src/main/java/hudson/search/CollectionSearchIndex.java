@@ -24,6 +24,8 @@
 
 package hudson.search;
 
+import static hudson.search.Search.nameMatchesToken;
+
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Collection;
 import java.util.Collections;
@@ -62,16 +64,14 @@ public abstract class CollectionSearchIndex<SMT extends SearchableModelObject> i
 
     @Override
     public void suggest(String token, List<SearchItem> result) {
-        boolean isCaseSensitive = UserSearchProperty.isCaseInsensitive();
-        if (isCaseSensitive) {
-          token = token.toLowerCase();
-        }
         for (SMT o : allAsIterable()) {
+            if (o == null) {
+                continue;
+            }
             String name = getName(o);
-            if (isCaseSensitive)
-                name = name.toLowerCase();
-            if (o != null && name.contains(token))
+            if (nameMatchesToken(token, name)) {
                 result.add(o);
+            }
         }
     }
 

@@ -38,10 +38,12 @@ import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -559,6 +561,34 @@ public class Search implements StaplerProxy {
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "for script console")
     @Restricted(NoExternalUse.class)
     public static /* Script Console modifiable */ boolean SKIP_PERMISSION_CHECK = SystemProperties.getBoolean(Search.class.getName() + ".skipPermissionCheck");
+
+    /**
+     * Checks if a given token matches within the provided name. The comparison can be case-insensitive
+     * depending on the user search property configuration. Non-alphanumeric characters from both the
+     * token and the name are removed before comparison.
+     *
+     * @param token the string token to search for, unaffected by casing and special characters
+     * @param name the string in which to search for the token, unaffected by casing and special characters
+     * @return true if the cleaned and optionally case-normalized token is found within the cleaned name; otherwise, false
+     */
+    public static boolean nameMatchesToken(String token, String name) {
+        boolean caseInsensitive = UserSearchProperty.isCaseInsensitive();
+
+        if (token == null || name == null) {
+            return false;
+        }
+
+        // Strip all non-alphanumeric chars
+        String cleanedToken = token.replaceAll("[^A-Za-z0-9]+", "");
+        String cleanedName  = name.replaceAll("[^A-Za-z0-9]+", "");
+
+        if (caseInsensitive) {
+            cleanedToken = cleanedToken.toLowerCase(Locale.ROOT);
+            cleanedName  = cleanedName.toLowerCase(Locale.ROOT);
+        }
+
+        return cleanedName.contains(cleanedToken);
+    }
 
     private static final Logger LOGGER = Logger.getLogger(Search.class.getName());
 }
