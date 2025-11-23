@@ -23,9 +23,13 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns">
-  <l:overflowButton>
-    <dd:item icon="symbol-settings"
-             text="${%Advanced settings}"
-             href="advanced" />
-  </l:overflowButton>
+  <l:userExperimentalFlag var="newManageJenkins" flagClassName="jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag" />
+
+  <j:if test="${newManageJenkins}">
+    <l:overflowButton>
+      <dd:item icon="symbol-settings"
+               text="${%Advanced settings}"
+               href="advanced" />
+    </l:overflowButton>
+  </j:if>
 </j:jelly>

@@ -1032,10 +1032,6 @@ function renderOnDemand(e, callback, noBehaviour) {
     }
     e.remove();
 
-    if (callback) {
-      callback(t);
-    }
-
     evalInnerHtmlScripts(t.responseText, function () {
       Behaviour.applySubtree(elements, true);
       if (callback) {

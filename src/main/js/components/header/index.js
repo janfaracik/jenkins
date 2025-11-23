@@ -30,6 +30,7 @@ function init() {
       Math.min(40, scrollY) + "px",
     );
     if (
+      !document.querySelector("#main-panel > .jenkins-search--app-bar") &&
       !document.querySelector(".app-page-body__sidebar--sticky")
     ) {
       const prefersContrast = window.matchMedia(
@@ -48,6 +49,12 @@ function init() {
   window.addEventListener("load", () => {
     // We can't use :has due to HtmlUnit CSS Parser not supporting it, so
     // these are workarounds for that same behaviour
+    if (document.querySelector("#main-panel > .jenkins-app-bar--sticky")) {
+      document
+        .querySelector(".jenkins-header")
+        .classList.add("jenkins-header--has-sticky-app-bar");
+    }
+
     if (!document.querySelector(".jenkins-breadcrumbs__list-item")) {
       document
         .querySelector(".jenkins-header")
