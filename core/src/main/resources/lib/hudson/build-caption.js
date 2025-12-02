@@ -1,6 +1,8 @@
 (function () {
+  const title = document.title;
+
   function updateBuildCaptionIcon() {
-    const buildCaption = document.querySelector(".jenkins-build-caption");
+    const buildCaption = document.querySelector("[data-status-url]");
     const url = buildCaption.dataset.statusUrl;
     fetch(url).then((rsp) => {
       if (rsp.ok) {
@@ -30,6 +32,7 @@
           if (progressBarDone) {
             progressBarDone.style.width = `${progress}%`;
           }
+          document.title = "(" + progress + "%) " + title;
         } else {
           let progressBar = document.querySelector(
             ".build-caption-progress-container",
@@ -37,15 +40,18 @@
           if (progressBar) {
             progressBar.style.display = "none";
           }
+          document.title = title;
         }
         rsp.text().then((responseText) => {
-          document.querySelector(".jenkins-build-caption svg").outerHTML =
-            responseText;
+          // The first svg selector can be removed once experimental Run UI is default
+          buildCaption.querySelector(
+            "svg, .app-build-bar__content__headline svg",
+          ).outerHTML = responseText;
           Behaviour.applySubtree(buildCaption, false);
         });
       }
     });
   }
 
-  setTimeout(updateBuildCaptionIcon, 5000);
+  setTimeout(updateBuildCaptionIcon, 1000);
 })();
