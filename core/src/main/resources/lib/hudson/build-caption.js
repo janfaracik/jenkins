@@ -1,9 +1,10 @@
 (function () {
+  const buildCaption = document.querySelector("[data-status-url]");
+  const progress = buildCaption.dataset.progress;
+  const url = buildCaption.dataset.statusUrl;
   const title = document.title;
 
   function updateBuildCaptionIcon() {
-    const buildCaption = document.querySelector("[data-status-url]");
-    const url = buildCaption.dataset.statusUrl;
     fetch(url).then((rsp) => {
       if (rsp.ok) {
         let isBuilding = rsp.headers.get("X-Building");
@@ -32,7 +33,7 @@
           if (progressBarDone) {
             progressBarDone.style.width = `${progress}%`;
           }
-          document.title = "(" + progress + "%) " + title;
+          setTitle(progress);
         } else {
           let progressBar = document.querySelector(
             ".build-caption-progress-container",
@@ -53,5 +54,14 @@
     });
   }
 
-  setTimeout(updateBuildCaptionIcon, 1000);
+  function setTitle(percentage) {
+    if (percentage === "-1") {
+      return;
+    }
+
+    document.title = "(" + percentage + "%) " + title;
+  }
+
+  setTimeout(updateBuildCaptionIcon, 5000);
+  setTitle(progress);
 })();
