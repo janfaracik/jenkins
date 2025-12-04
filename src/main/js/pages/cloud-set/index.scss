@@ -1,7 +1,3 @@
-.dd-handle {
-  cursor: move;
-}
-
 .app-cloud-item {
   --tertiary-color: var(--text-color-secondary);
 
@@ -12,7 +8,7 @@
   & > svg {
     width: 1.125rem;
     height: 1.125rem;
-    margin-right: 1rem;
+    margin-right: 0.75rem;
   }
 
   &__actions {
@@ -25,11 +21,6 @@
       aspect-ratio: 1;
       transition: color var(--standard-transition);
       min-height: 2rem !important;
-
-      svg {
-        width: 1.125rem !important;
-        height: 1.125rem !important;
-      }
     }
 
     &:empty {
