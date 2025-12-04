@@ -87,7 +87,7 @@ THE SOFTWARE.
 
           <l:isAdmin>
             <f:bottomButtonBar>
-              <f:apply value="${%Save}" />
+              <f:apply value="${%Save}" clazz="jenkins-button--primary" />
             </f:bottomButtonBar>
           </l:isAdmin>
         </f:form>
