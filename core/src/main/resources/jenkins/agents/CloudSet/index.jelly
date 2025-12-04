@@ -87,7 +87,7 @@ THE SOFTWARE.
 
           <l:isAdmin>
             <f:bottomButtonBar>
-              <f:submit id="saveButton" value="${%Save}" />
+              <f:apply value="${%Save}" />
             </f:bottomButtonBar>
           </l:isAdmin>
         </f:form>
