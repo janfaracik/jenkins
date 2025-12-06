@@ -1103,17 +1103,25 @@ function labelAttachPreviousOnClick() {
 }
 
 function helpButtonOnClick() {
-  var tr =
-    findFollowingTR(this, "help-area", "help-sibling") ||
-    findFollowingTR(this, "help-area", "setting-help") ||
-    findFollowingTR(this, "help-area");
-  var div = tr.firstElementChild;
+  let helpArea;
+
+  // Custom condition for repeatable chunks
+  if (this.parentNode.classList.contains("repeated-chunk__header")) {
+    helpArea = this.closest(".repeated-chunk").querySelector(".help-area");
+  } else {
+    helpArea =
+      findFollowingTR(this, "help-area", "help-sibling") ||
+      findFollowingTR(this, "help-area", "setting-help") ||
+      findFollowingTR(this, "help-area");
+  }
+
+  var div = helpArea.firstElementChild;
   if (!div.classList.contains("help")) {
     div = div.nextElementSibling.firstElementChild;
   }
 
-  if (div.style.display != "block") {
-    div.style.display = "block";
+  if (helpArea.style.display !== "block") {
+    helpArea.style.display = "block";
     // make it visible
 
     fetch(this.getAttribute("helpURL")).then((rsp) => {
@@ -1147,7 +1155,7 @@ function helpButtonOnClick() {
       });
     });
   } else {
-    div.style.display = "none";
+    helpArea.style.display = "none";
     layoutUpdateCallback.call();
   }
 
@@ -2628,6 +2636,16 @@ function validateButton(checkUrl, paramList, button) {
       target.innerHTML = `<div class="validation-error-area" />`;
       updateValidationArea(target.children[0], responseText);
       layoutUpdateCallback.call();
+      let json = rsp.headers.get("X-Jenkins-ValidateButton-Callback");
+      if (json != null) {
+        let callInfo = JSON.parse(json);
+        let callback = callInfo["callback"];
+        let args = callInfo["arguments"];
+        if (window[callback] && typeof window[callback] === "function") {
+          window[callback].apply(window, args);
+        }
+      }
+
       var s = rsp.headers.get("script");
       try {
         geval(s);

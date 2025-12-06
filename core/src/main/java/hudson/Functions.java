@@ -2015,7 +2015,7 @@ public class Functions {
             else
                 buf.append('_');    // escape
         }
-        return String.valueOf(buf);
+        return buf.toString();
     }
 
     /**
