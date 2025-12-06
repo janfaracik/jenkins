@@ -35,6 +35,7 @@ import hudson.model.Failure;
 import hudson.model.RootAction;
 import hudson.model.UpdateCenter;
 import hudson.slaves.Cloud;
+import hudson.util.FormApply;
 import hudson.util.FormValidation;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
@@ -267,7 +268,7 @@ public class CloudSet extends AbstractModelObject implements Describable<CloudSe
     }
 
     @POST
-    public void doReorder(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException {
+    public void doReorder(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         var names = req.getParameterValues("name");
         if (names == null) {
@@ -277,7 +278,7 @@ public class CloudSet extends AbstractModelObject implements Describable<CloudSe
         var clouds = new ArrayList<>(Jenkins.get().clouds);
         clouds.sort(Comparator.comparingInt(c -> getIndexOf(namesList, c)));
         Jenkins.get().clouds.replaceBy(clouds);
-        rsp.sendRedirect2(".");
+        FormApply.success(req.getContextPath() + "/manage").generateResponse(req, rsp, null);
     }
 
     private static int getIndexOf(List<String> namesList, Cloud cloud) {
