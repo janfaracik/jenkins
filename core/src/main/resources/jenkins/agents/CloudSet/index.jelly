@@ -42,7 +42,16 @@ THE SOFTWARE.
         </j:if>
         <t:help href="https://www.jenkins.io/redirect/distributed-builds" />
       </l:app-bar>
-      <p class="jenkins-page-description">${managementLink.description}</p>
+      <p class="jenkins-page-description">
+        <j:choose>
+          <j:when test="${it.cloudAvailable and it.hasClouds()}">
+            ${%description}
+          </j:when>
+          <j:otherwise>
+            ${managementLink.description}
+          </j:otherwise>
+        </j:choose>
+      </p>
     </l:view>
   </j:set>
 
