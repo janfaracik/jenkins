@@ -2,6 +2,20 @@
 @use "../components/cards";
 @use "../components/dialogs";
 
+.app-build-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+
+  &__icon {
+    margin: 0.75rem 0 0 0.875rem;
+
+    svg {
+      width: 1.375rem;
+      height: 1.375rem;
+    }
+  }
+}
+
 .build-caption-progress-container {
   display: flex;
   align-items: center;

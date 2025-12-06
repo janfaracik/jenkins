@@ -45,8 +45,11 @@ THE SOFTWARE.
        data-page-has-up="${page.hasUpPage}"
        data-page-has-down="${page.hasDownPage}">
     <l:card id="jenkins-builds" title="Builds" controls="${controls}" expandable="${it.baseUrl}/buildTimeTrend">
-      <l:search-bar placeholder="${%find}"
-                    clazz="${page.runs.isEmpty() and page.queueItems.isEmpty() ? 'jenkins-hidden' : ''}"/>
+      <div>
+        <l:search-bar placeholder="${%find}"
+                      clazz="${page.runs.isEmpty() and page.queueItems.isEmpty() ? 'jenkins-hidden' : ''}"/>
+        <button>Only successful</button>
+      </div>
 
       <div class="app-builds-container">
         <div id="loading-builds" class="app-builds-container__placeholder">
