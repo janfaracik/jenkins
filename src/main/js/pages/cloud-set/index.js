@@ -1,6 +1,12 @@
 import { registerSortableDragDrop } from "@/sortable-drag-drop";
 
 document.addEventListener("DOMContentLoaded", function () {
+  const bottomStickerShadow = document.querySelector(
+    ".jenkins-bottom-app-bar__shadow",
+  );
+  const bottomSticker = document.querySelector("#bottom-sticker");
+
+  // Hide the bottom sticker initially
   hideBottomSticker();
 
   // Hide the bottom sticker when the Save button is clicked
@@ -11,11 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
   // Show the bottom sticker when clouds have been reordered
   const items = document.querySelector(".with-drag-drop");
   registerSortableDragDrop(items, showBottomSticker);
-
-  const bottomStickerShadow = document.querySelector(
-    ".jenkins-bottom-app-bar__shadow",
-  );
-  const bottomSticker = document.querySelector("#bottom-sticker");
 
   function showBottomSticker() {
     bottomStickerShadow.classList.remove("jenkins-hidden");
