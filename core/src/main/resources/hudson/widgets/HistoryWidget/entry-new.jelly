@@ -26,7 +26,7 @@ THE SOFTWARE.
   Render a single build history entry indicated by ${build} (jenkins.model.HistoricalBuild)
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:i="jelly:fmt" xmlns:x="jelly:xml">
   <j:set var="build" value="${pageEntry.entry}" />
   <j:set var="firstTransientBuildKey" value="${it.widget.firstTransientBuildKey}" />
   <j:set var="transitive" value="${(firstTransientBuildKey!=null and (it.widget.adapter.compare(build,firstTransientBuildKey) ge 0)) ? 'transitive' : null}" />
@@ -43,24 +43,35 @@ THE SOFTWARE.
          data-tooltip-append-to-parent="true">
         <l:icon src="symbol-status-${build.iconColor.iconName}" />
       </a>
-      <a class="jenkins-jobs-list__item__details" href="${link}">
+      <div class="jenkins-jobs-list__item__details" href="${link}">
         <div class="jenkins-jobs-list__item__details__text">
           <p class="jenkins-jobs-list__item__label">${build.displayName}</p>
           <div class="jenkins-jobs-list__item__description">
-            <j:set var="linkTitleAttr" value="${null}" />
 
-            Started by Jan
-
-            <div tooltip="${linkTitleAttr}" data-tooltip-append-to-parent="true">
-              <i:formatDate value="${build.timestamp.time}" type="time" timeStyle="short" />
-              ${h.getUserTimeZonePostfix()}
+            <div class="jenkins-details">
+              <j:forEach var="group" items="${h.getShorthandDetailsFor(build)}" indexVar="index">
+                <j:if test="${index gt 0}">
+                  <div class="jenkins-details__separator">•</div>
+                </j:if>
+                <j:forEach var="detail" items="${group.value}">
+                  <st:include page="detail.jelly" it="${detail}" optional="true">
+                    <j:if test="${detail.iconClassName != null}">
+                      <div class="jenkins-details__item">
+                        <div class="jenkins-details__item__icon">
+                          <l:icon src="${detail.iconClassName}" />
+                        </div>
+                        ${detail.displayName}
+                      </div>
+                    </j:if>
+                  </st:include>
+                </j:forEach>
+              </j:forEach>
             </div>
 
-            <j:if test="${!build.building}">
-              ${%Took} ${build.durationString}
-            </j:if>
-
             <j:if test="${!empty build.truncatedDescription}">
+              <j:if test="${index gt 0}">
+                <div class="jenkins-details__separator">•</div>
+              </j:if>
               <j:out value="${app.markupFormatter.translate(build.truncatedDescription)}"/>
             </j:if>
 
@@ -72,7 +83,22 @@ THE SOFTWARE.
             </j:if>
           </div>
         </div>
-      </a>
+      </div>
+
+      <div class="app-stages">
+        <l:icon src="symbol-status-blue" />
+        <l:icon src="symbol-status-blue" />
+        <l:icon src="symbol-status-blue" />
+        <l:icon src="symbol-status-red" />
+        <l:icon src="symbol-status-disabled" />
+      </div>
+
+      <div class="app-tests">
+        <span class="jenkins-badge jenkins-!-danger-color ${attrs.class?:''}" tooltip="${attrs.badge.tooltip}">
+          123 tests passed
+        </span>
+      </div>
+
       <div class="jenkins-jobs-list__item__actions">
         <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
                 tooltip="More actions"

@@ -2626,6 +2626,29 @@ public class Functions {
         return result;
     }
 
+    /**
+     *
+     * @return
+     */
+    @Restricted(NoExternalUse.class)
+    public static Map<DetailGroup, List<Detail>> getShorthandDetailsFor(Actionable object) {
+        Map<DetailGroup, List<Detail>> all = getDetailsFor(object);
+        Map<DetailGroup, List<Detail>> result = new HashMap<>();
+
+        for (Map.Entry<DetailGroup, List<Detail>> entry : all.entrySet()) {
+            List<Detail> filtered = entry.getValue()
+                    .stream()
+                    .filter(Detail::isShorthand)
+                    .collect(Collectors.toList());
+
+            if (!filtered.isEmpty()) {
+                result.put(entry.getKey(), filtered);
+            }
+        }
+
+        return result;
+    }
+
     @Restricted(NoExternalUse.class)
     public static ExtensionList<SearchFactory> getSearchFactories() {
         return SearchFactory.all();

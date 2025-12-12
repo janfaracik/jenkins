@@ -15,4 +15,9 @@ public class TimestampDetail extends Detail {
     public int getOrder() {
         return Integer.MAX_VALUE - 1;
     }
+
+    @Override
+    public boolean isShorthand() {
+        return true;
+    }
 }

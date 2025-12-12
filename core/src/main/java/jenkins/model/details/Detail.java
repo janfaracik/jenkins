@@ -65,4 +65,11 @@ public abstract class Detail implements ModelObject, IconSpec {
     public int getOrder() {
         return 0;
     }
+
+    /**
+     * @return whether this detail should appear in model summaries.
+     */
+    public boolean isShorthand() {
+        return false;
+    }
 }

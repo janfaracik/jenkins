@@ -5,14 +5,14 @@ import hudson.model.Run;
 /**
  * Displays the duration of the given run, or, if the run has completed, shows the total time it took to execute
  */
-public class DurationDetail extends Detail {
+public class TestsColumn extends BuildColumn {
 
-    public DurationDetail(Run<?, ?> run) {
+    public TestsColumn(Run<?, ?> run) {
         super(run);
     }
 
     @Override
-    public boolean isShorthand() {
-        return true;
+    public String getDisplayName() {
+        return "Tests";
     }
 }
