@@ -177,6 +177,7 @@ $min-button-size: 2.375rem;
 
     &__actions {
       display: flex;
+      gap: var(--jenkins-border-width);
       padding-right: 0.875rem;
 
       & > .jenkins-button {
@@ -195,8 +196,14 @@ $min-button-size: 2.375rem;
     }
 
     &__label {
+      display: flex;
+      gap: 0.5rem;
       font-weight: var(--font-bold-weight);
       margin: 0;
+
+      .jenkins-badge {
+        padding: 0 0.5rem;
+      }
     }
 
     &__description {

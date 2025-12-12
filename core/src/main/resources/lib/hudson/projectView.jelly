@@ -85,7 +85,13 @@ THE SOFTWARE.
                 </j:choose>
               </div>
               <div class="jenkins-jobs-list__item__details__text">
-                <p class="jenkins-jobs-list__item__label">${job.displayName}</p>
+                <p class="jenkins-jobs-list__item__label">
+                  ${job.displayName}
+                  <!-- TODO - Hack - don't merge the below! -->
+                  <j:if test="${job.displayName eq 'main'}">
+                    <span class="jenkins-badge jenkins-!-info-color">Default</span>
+                  </j:if>
+                </p>
                 <div class="jenkins-jobs-list__item__description">
                   <j:forEach var="col" items="${columnExtensions}" indexVar="index">
                     <j:set var="item">
