@@ -19,7 +19,7 @@ const paginationNext = document.querySelector("#down");
 
 // Refresh variables
 let buildRefreshTimeout;
-const updateBuildsRefreshInterval = 5000;
+const updateBuildsRefreshInterval = 50000;
 
 /**
  * Refresh the 'Builds' card

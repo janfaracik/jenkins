@@ -94,9 +94,11 @@ THE SOFTWARE.
       </div>
 
       <div class="app-tests">
-        <span class="jenkins-badge jenkins-!-danger-color ${attrs.class?:''}" tooltip="${attrs.badge.tooltip}">
-          123 tests passed
-        </span>
+        <div>
+          <span class="jenkins-badge jenkins-!-danger-color ${attrs.class?:''}" tooltip="${attrs.badge.tooltip}">
+            123 tests failed
+          </span>
+        </div>
       </div>
 
       <div class="jenkins-jobs-list__item__actions">

@@ -177,6 +177,7 @@ $min-button-size: 2.375rem;
 
     &__actions {
       display: flex;
+      align-items: center;
       gap: var(--jenkins-border-width);
       padding-right: 0.875rem;
 
@@ -216,6 +217,20 @@ $min-button-size: 2.375rem;
       mask-image: linear-gradient(90deg, black calc(100% - 1rem), transparent);
       font-size: var(--font-size-xs);
       font-weight: normal;
+
+      .jenkins-details__item {
+        min-height: 0 !important;
+        padding: 0 !important;
+
+        .jenkins-details__item__icon {
+          height: 1rem !important;
+
+          svg, img {
+            width: 1rem !important;
+            height: 1rem !important;
+          }
+        }
+      }
 
       svg {
         width: 1rem;

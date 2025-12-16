@@ -2,8 +2,15 @@
 @use "../components/cards";
 @use "../components/dialogs";
 
+.jenkins-jobs-list {
+  .jenkins-details {
+    gap: 0.5rem;
+  }
+}
+
 .app-stages {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
 
   & > svg {
@@ -14,12 +21,14 @@
 
 .app-tests {
   display: flex;
-  align-items: start;
+  align-items: center;
+  margin-left: 1rem;
+  margin-right: 0.5rem;
 }
 
 .app-build-item {
   display: grid;
-  grid-template-columns: auto 1fr auto auto auto;
+  grid-template-columns: auto 35vw 10vw 1fr auto;
 
   &__icon {
     margin: 0.75rem 0 0 0.875rem;

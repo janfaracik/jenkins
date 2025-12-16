@@ -105,6 +105,7 @@ import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DownstreamProjectsDetail;
 import jenkins.model.details.ProjectNameDetail;
 import jenkins.model.details.UpstreamProjectsDetail;
+import jenkins.model.details.WeatherDetail;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.scm.RunWithSCM;
 import jenkins.security.HexStringConfidentialKey;
@@ -1709,7 +1710,7 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         }
 
         @NonNull @Override public List<? extends Detail> createFor(@NonNull Job target) {
-            return Stream.of(new UpstreamProjectsDetail(target), new DownstreamProjectsDetail(target), new ProjectNameDetail(target)).filter(e -> e.getIconClassName() != null).toList();
+            return Stream.of(new WeatherDetail(target), new UpstreamProjectsDetail(target), new DownstreamProjectsDetail(target), new ProjectNameDetail(target)).filter(e -> e.getIconClassName() != null).toList();
         }
     }
 
