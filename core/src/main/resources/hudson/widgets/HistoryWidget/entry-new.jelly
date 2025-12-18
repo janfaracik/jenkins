@@ -85,13 +85,51 @@ THE SOFTWARE.
         </div>
       </div>
 
-      <div class="app-stages">
-        <l:icon src="symbol-status-blue" />
-        <l:icon src="symbol-status-blue" />
-        <l:icon src="symbol-status-blue" />
-        <l:icon src="symbol-status-red" />
-        <l:icon src="symbol-status-disabled" />
+      <div class="app-stages-2">
+        <a class="jenkins-button jenkins-!-build-color">
+          <div>
+            <l:icon src="symbol-check" />
+            Checkout
+          </div>
+          <span>2s</span>
+        </a>
+        <a class="jenkins-button jenkins-!-build-color">
+          <div>
+            <l:icon src="symbol-check" />
+            Build
+          </div>
+          <span>37s</span>
+        </a>
+        <a class="jenkins-button jenkins-!-build-color">
+          <div>
+            <l:icon src="symbol-check" />
+            Lint
+          </div>
+          <span>1s</span>
+        </a>
+        <a class="jenkins-button jenkins-!-error-color">
+          <div>
+            <l:icon src="symbol-close" />
+            Test
+          </div>
+          <span>1m 57s</span>
+        </a>
+        <a class="jenkins-button jenkins-!-disabled-color">
+          <div>
+            <l:icon src="symbol-check" />
+            Deploy
+          </div>
+          <span>N/A</span>
+        </a>
       </div>
+
+<!--      <div class="app-stages">-->
+<!--        <l:icon src="symbol-status-blue" />-->
+<!--        <l:icon src="symbol-status-blue" />-->
+<!--        <l:icon src="symbol-status-blue" />-->
+<!--        <l:icon src="symbol-status-red" />-->
+<!--        <l:icon src="symbol-status-disabled" />-->
+<!--      </div>-->
 
       <div class="app-tests">
         <div>
