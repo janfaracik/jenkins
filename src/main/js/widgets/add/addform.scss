@@ -1,4 +1,5 @@
 @use "../../../scss/abstracts/mixins";
+
 #add-item-panel {
   max-width: 800px;
   margin: auto;
@@ -61,7 +62,8 @@
       transition: var(--standard-transition);
       z-index: 0;
       background: rgb(from var(--text-color-secondary) r g b / 0.05);
-      box-shadow: inset var(--jenkins-border--subtle-shadow), inset 0 0 0 1.5px rgb(from var(--text-color-secondary) r g b / 0.05);
+      box-shadow: inset 0 0 0 var(--jenkins-border-width)
+      var(--jenkins-border-color), inset 0 0 0 1.5px rgb(from var(--text-color-secondary) r g b / 0.05);
     }
 
     svg, img {
@@ -97,11 +99,12 @@
   .categories {
     display: flex;
     flex-direction: column;
-    gap: 1.5px;
     list-style: none;
     padding: 0;
     margin: 0;
     border-radius: var(--form-input-border-radius);
+    border: var(--jenkins-border);
+    background: var(--card-background);
 
     li {
       -webkit-touch-callout: none;
@@ -113,15 +116,11 @@
       display: grid;
       grid-template-columns: auto 1fr;
       white-space: unset;
-
-      &:first-of-type {
-        border-top-left-radius: var(--form-input-border-radius);
-        border-top-right-radius: var(--form-input-border-radius);
-      }
+      border-bottom: var(--jenkins-border);
+      border-radius: 0;
 
       &:last-of-type {
-        border-bottom-left-radius: var(--form-input-border-radius);
-        border-bottom-right-radius: var(--form-input-border-radius);
+        border-bottom: none;
       }
 
       .icon {
@@ -162,12 +161,7 @@
           color: var(--background);
 
           &::before {
-            border-radius: 50%;
             box-shadow: inset var(--jenkins-border--subtle-shadow), inset 0 0 18px 18px var(--accent-color);
-          }
-
-          svg, img {
-            scale: 95%;
           }
         }
       }
