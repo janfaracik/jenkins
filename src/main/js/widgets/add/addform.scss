@@ -116,11 +116,63 @@
       display: grid;
       grid-template-columns: auto 1fr;
       white-space: unset;
-      border-bottom: var(--jenkins-border);
       border-radius: 0;
+      transition: var(--standard-transition);
+      cursor: pointer;
+
+      &:not(:last-of-type) {
+        border-bottom: var(--card-border-width) solid var(--card-border-color);
+      }
+
+      &:hover {
+        background: color-mix(in srgb, var(--text-color-secondary) 7.5%, transparent);
+      }
+
+      &:active, &:focus-visible {
+        border-bottom-color: transparent;
+        border-radius: calc(var(--form-input-border-radius) / 2);
+        background: color-mix(in srgb, var(--text-color-secondary) 15%, transparent);
+        box-shadow:
+                0 0 0 0.09375rem
+                color-mix(
+                                in sRGB,
+                                var(--text-color-secondary) 20%,
+                                var(--card-background)
+                ),
+                0 0 0 0.34375rem
+                color-mix(
+                                in sRGB,
+                                color-mix(
+                                                in sRGB,
+                                                var(--text-color-secondary) 15%,
+                                                var(--card-background)
+                                )
+                                65%,
+                                transparent
+                );
+      }
+
+      &:focus {
+        background: var(--card-background--active);
+        box-shadow: 0 0 0 0.2rem var(--text-color) !important;
+      }
+
+      &:first-of-type {
+        border-top-left-radius: calc(
+                var(--form-input-border-radius) - var(--jenkins-border-width)
+        ) !important;
+        border-top-right-radius: calc(
+                var(--form-input-border-radius) - var(--jenkins-border-width)
+        ) !important;
+      }
 
       &:last-of-type {
-        border-bottom: none;
+        border-bottom-left-radius: calc(
+                var(--form-input-border-radius) - var(--jenkins-border-width)
+        ) !important;
+        border-bottom-right-radius: calc(
+                var(--form-input-border-radius) - var(--jenkins-border-width)
+        ) !important;
       }
 
       .icon {

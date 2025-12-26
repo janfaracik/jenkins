@@ -116,7 +116,6 @@ $.when(getItems()).done(function (data) {
 
     function drawItem(elem) {
       var item = document.createElement("li");
-      item.tabIndex = 0;
       item.className = cleanClassName(elem.class);
       item.classList.add("asdareplaceme", "asdareplaceme--tertiary");
       item.setAttribute("role", "radio");
