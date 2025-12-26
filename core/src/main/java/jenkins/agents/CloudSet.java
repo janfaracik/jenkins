@@ -25,6 +25,7 @@
 package jenkins.agents;
 
 import hudson.Extension;
+import hudson.ExtensionList;
 import hudson.Functions;
 import hudson.Util;
 import hudson.model.AbstractModelObject;
@@ -32,6 +33,7 @@ import hudson.model.AutoCompletionCandidates;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Failure;
+import hudson.model.ManagementLink;
 import hudson.model.RootAction;
 import hudson.model.UpdateCenter;
 import hudson.slaves.Cloud;
@@ -101,6 +103,12 @@ public class CloudSet extends AbstractModelObject implements Describable<CloudSe
         return "/cloud/";
     }
 
+    @SuppressWarnings("unused")
+    @Restricted(DoNotUse.class) // used by jelly
+    public ManagementLink getManagementLink() {
+        return ExtensionList.lookupSingleton(CloudsLink.class);
+    }
+
     @SuppressWarnings("unused") // stapler
     @Restricted(DoNotUse.class) // stapler
     public String getCloudUrl(StaplerRequest2 request, Jenkins jenkins, Cloud cloud) {
@@ -141,7 +149,7 @@ public class CloudSet extends AbstractModelObject implements Describable<CloudSe
     @Override
     public ModelObjectWithContextMenu.ContextMenu doChildrenContextMenu(StaplerRequest2 request, StaplerResponse2 response) throws Exception {
         ModelObjectWithContextMenu.ContextMenu m = new ModelObjectWithContextMenu.ContextMenu();
-        Jenkins.get().clouds.stream().forEach(m::add);
+        Jenkins.get().clouds.forEach(m::add);
         return m;
     }
 

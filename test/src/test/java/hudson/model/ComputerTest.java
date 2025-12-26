@@ -31,6 +31,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -51,6 +52,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -63,8 +65,8 @@ import org.htmlunit.Page;
 import org.htmlunit.WebRequest;
 import org.htmlunit.html.HtmlForm;
 import org.htmlunit.xml.XmlPage;
-import org.junit.experimental.categories.Category;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
@@ -73,11 +75,10 @@ import org.jvnet.hudson.test.LogRecorder;
 import org.jvnet.hudson.test.MemoryAssert;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
 import org.jvnet.hudson.test.MockFolder;
-import org.jvnet.hudson.test.SmokeTest;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.jvnet.hudson.test.recipes.LocalData;
 
-@Category(SmokeTest.class)
+@Tag("SmokeTest")
 @WithJenkins
 class ComputerTest {
 
@@ -321,4 +322,37 @@ class ComputerTest {
         MemoryAssert.assertGC(channelRef, false);
     }
 
+    @Test
+    public void isConnectedTest() throws Exception {
+        var agent = j.createSlave();
+        var computer = agent.toComputer();
+
+        // Verify initial state: computer is not connected
+        assertThat(computer.isOnline(), is(false));
+        assertThat(computer.isConnected(), is(false));
+
+        // Connect the computer
+        computer.connect(false);
+        await("computer should be online after connect").atMost(Duration.ofSeconds(30)).until(() -> computer.isOnline(), is(true));
+        assertThat(computer.isConnected(), is(true));
+        assertThat(computer.isOffline(), is(false));
+
+        // Mark computer temporary offline
+        computer.doToggleOffline(null);
+        assertThat("temporary offline agent is still connected", computer.isConnected(), is(true));
+        assertThat("temporary offline agent is not available for scheduling", computer.isOnline(), is(false));
+        assertThat(computer.isOffline(), is(true));
+
+        // Bring it back online
+        computer.doToggleOffline(null);
+        assertThat(computer.isOnline(), is(true));
+        assertThat(computer.isConnected(), is(true)); // channel is still there.
+
+        // Disconnect the computer
+        computer.disconnect(new OfflineCause.UserCause(null, null));
+        // wait for the slave process to be killed
+        await("disconnected agent is not available for scheduling").until(() -> computer.isOnline(), is(false));
+        assertThat(computer.isConnected(), is(false));
+        assertThat(computer.isOffline(), is(true));
+    }
 }
