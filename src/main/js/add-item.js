@@ -99,7 +99,7 @@ $.when(getItems()).done(function (data) {
       $("#createItem")
         .find('input[type="radio"][name="mode"]')
         .removeAttr("checked");
-      $(".categories").find(".jenkins-button").addClass("jenkins-button--tertiary");
+      $(".categories").find(".asdareplaceme").addClass("asdareplaceme--tertiary");
       setFieldValidationStatus("items", false);
     }
 
@@ -118,7 +118,7 @@ $.when(getItems()).done(function (data) {
       var item = document.createElement("li");
       item.tabIndex = 0;
       item.className = cleanClassName(elem.class);
-      item.classList.add("jenkins-button", "jenkins-button--tertiary");
+      item.classList.add("asdareplaceme", "asdareplaceme--tertiary");
       item.setAttribute("role", "radio");
       item.setAttribute("aria-checked", "false");
 
@@ -150,7 +150,7 @@ $.when(getItems()).done(function (data) {
 
         $(this).attr("aria-checked", "true");
         $(this).find('input[type="radio"][name="mode"]').prop("checked", true);
-        $(this).removeClass("jenkins-button--tertiary");
+        $(this).removeClass("asdareplaceme--tertiary");
 
         setFieldValidationStatus("items", true);
         if (!getFieldValidationStatus("name")) {
@@ -232,7 +232,7 @@ $.when(getItems()).done(function (data) {
         $categories.append(drawItem(e));
       })
     });
-    $categories.children()[0].classList.remove("jenkins-button--tertiary");
+    $categories.children()[0].classList.remove("asdareplaceme--tertiary");
 
     // Focus
     // $("#add-item-panel").find("#name").focus();
