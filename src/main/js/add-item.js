@@ -1,3 +1,5 @@
+import { getI18n } from "@/util/i18n";
+
 const nameInput = document.querySelector(`#createItem input[name="name"]`);
 const copyFromInput = document.querySelector(`#createItem input[name="from"]`);
 const copyRadio = document.querySelector(`#createItem input[value="copy"]`);
@@ -58,22 +60,25 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    function activateValidationMessage(messageId, context, message) {
-      if (message !== undefined && message !== "") {
-        document.querySelector(context + " " + messageId).textContent =
-          "» " + message;
+    /**
+     * Shows or clears the validation message for the name input.
+     *
+     * Only updates the UI after the user has interacted with the input, which is
+     * indicated by `nameInput.dataset.dirty` being set.
+     */
+    function activateValidationMessage(message) {
+      if (!nameInput.dataset.dirty) {
+        return;
       }
-      cleanValidationMessages(context);
-      document
-        .querySelector(messageId)
-        .classList.remove("input-message-disabled");
-      refreshSubmitButtonState();
-    }
 
-    function cleanValidationMessages(context) {
-      document
-        .querySelectorAll(context + " .input-validation-message")
-        .forEach((element) => element.classList.add("input-message-disabled"));
+      updateValidationArea(
+        document.querySelector(".validation-error-area"),
+        message !== undefined && message !== ""
+          ? `<div class="error">${message}</div>`
+          : `<div/>`,
+      );
+
+      refreshSubmitButtonState();
     }
 
     function refreshSubmitButtonState() {
@@ -235,13 +240,9 @@ document.addEventListener("DOMContentLoaded", () => {
             response.text().then((data) => {
               var message = parseResponseFromCheckJobName(data);
               if (message !== "") {
-                activateValidationMessage(
-                  "#itemname-invalid",
-                  ".add-item-name",
-                  message,
-                );
+                activateValidationMessage(message);
               } else {
-                cleanValidationMessages(".add-item-name");
+                activateValidationMessage("");
                 setFieldValidationStatus("name", true);
                 refreshSubmitButtonState();
               }
@@ -250,14 +251,16 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       } else {
         setFieldValidationStatus("name", false);
-        cleanValidationMessages(".add-item-name");
-        activateValidationMessage("#itemname-required", ".add-item-name");
+        activateValidationMessage(getI18n("empty-name"));
         refreshSubmitButtonState();
       }
     }
 
     nameInput.addEventListener("blur", nameFieldEvent);
-    nameInput.addEventListener("input", nameFieldEvent);
+    nameInput.addEventListener("input", () => {
+      nameInput.dataset.dirty = "true";
+      nameFieldEvent();
+    });
 
     // Init CopyFromField
     function copyFromFieldEvent() {
@@ -268,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
         copyRadio.setAttribute("checked", true);
         setFieldValidationStatus("from", true);
         if (!getFieldValidationStatus("name")) {
-          activateValidationMessage("#itemname-required", ".add-item-name");
+          activateValidationMessage(getI18n("empty-name"));
           setTimeout(function () {
             var parentName = copyFromInput.value;
 
@@ -299,21 +302,17 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!getFormValidationStatus()) {
           event.preventDefault();
           if (!getFieldValidationStatus("name")) {
-            activateValidationMessage("#itemname-required", ".add-item-name");
+            activateValidationMessage(getI18n("empty-name"));
             nameInput.focus();
-          } else {
-            if (
-              !getFieldValidationStatus("items") &&
-              !getFieldValidationStatus("from")
-            ) {
-              activateValidationMessage("#itemtype-required", ".add-item-name");
-              nameInput.focus();
-            }
           }
         }
       });
 
     // Disable the submit button
     refreshSubmitButtonState();
+  });
+
+  copyRadio.addEventListener("change", () => {
+    copyFromInput.focus();
   });
 });

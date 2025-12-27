@@ -35,17 +35,17 @@ THE SOFTWARE.
     <l:breadcrumb title="${%NewJob(it.newPronoun)}" />
 
     <l:main-panel>
+      <template id="i18n" data-empty-name="${%ItemName.validation.required}" />
+
     <div id="add-item-panel" style="display: none;">
       <l:app-bar title="${%NewJob(it.newPronoun)}" />
 
           <form method="post" action="createItem" name="createItem" id="createItem">
             <div class="header">
-              <div class="add-item-name">
+              <div class="jenkins-form-item jenkins-!-margin-bottom-0 add-item-name">
                 <label for="name" class="jenkins-form-label">${%ItemName.label}</label>
-                <input name="name" class="jenkins-input" style="width: 100%" id="name" data-valid="false" type="text" tabindex="0" autofocus="true" />
-                <div id="itemname-required" class="input-validation-message input-message-disabled">&#187; ${%ItemName.validation.required}</div>
-                <div id="itemname-invalid" class="input-validation-message input-message-disabled"></div>
-                <div id="itemtype-required" class="input-validation-message input-message-disabled">&#187; ${%ItemType.validation.required}</div>
+                <input name="name" class="jenkins-input" style="width: 100%" id="name" data-valid="false" type="text" tabindex="0" />
+                <div class="validation-error-area" />
               </div>
             </div>
 
@@ -53,11 +53,13 @@ THE SOFTWARE.
               <div>
                 <legend class="jenkins-form-label">${%ItemType.label}</legend>
                 <div id="items" class="jenkins-japanese-breakfast categories" data-valid="false">
-                  <template id="insertion-point"></template>
+                  <template id="insertion-point">
+                    <!-- Job types need to be added above this point -->
+                  </template>
 
                   <j:if test="${!empty(app.items)}">
                     <div class="jenkins-japanese-breakfast__item">
-                      <label>
+                      <label id="duplicate-job">
                         <div class="icon">
                           <l:icon src="symbol-duplicate" />
                         </div>
