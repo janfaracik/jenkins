@@ -69,10 +69,24 @@
   }
 
   .categories {
-    li {
-      &:not(.asdareplaceme--tertiary) {
-        &::before {
-          background: color-mix(in srgb, var(--text-color-secondary) 5%, transparent);
+    .jenkins-japanese-breakfast__item {
+      display: grid;
+      gap: 0.25rem 0.875rem;
+      grid-template-columns: auto 1fr;
+
+      input {
+        display: none;
+      }
+
+      &:has(input:checked) {
+        .icon {
+          color: var(--background);
+
+          &::before {
+            box-shadow:
+              inset var(--jenkins-border--subtle-shadow),
+              inset 0 0 18px 18px var(--accent-color);
+          }
         }
       }
 
@@ -95,11 +109,14 @@
           transition: var(--standard-transition);
           z-index: 0;
           background: rgb(from var(--text-color-secondary) r g b / 0.05);
-          box-shadow: inset 0 0 0 var(--jenkins-border-width)
-          var(--jenkins-border-color), inset 0 0 0 var(--jenkins-border-width) rgb(from var(--text-color-secondary) r g b / 0.05);
+          box-shadow:
+            inset 0 0 0 var(--jenkins-border-width) var(--jenkins-border-color),
+            inset 0 0 0 var(--jenkins-border-width)
+              rgb(from var(--text-color-secondary) r g b / 0.05);
         }
 
-        svg, img {
+        svg,
+        img {
           position: relative;
           width: 1.25rem;
           height: 1.25rem;
@@ -107,19 +124,11 @@
         }
       }
 
-      label {
+      .label {
         display: block;
         font-size: var(--font-size-sm);
-        font-weight: 450;
+        font-weight: var(--font-bold-weight);
         color: var(--text-color);
-        cursor: pointer;
-
-        input {
-          position: absolute;
-          top: 24px;
-          left: 25px;
-          display: none;
-        }
       }
 
       .desc {
@@ -128,20 +137,15 @@
         padding-right: 2rem;
       }
 
-      &:hover, &:active, &:focus {
+      &:hover,
+      &:active,
+      &:focus {
         .icon::before {
           background: rgb(from var(--text-color-secondary) r g b / 0.1);
-          box-shadow: inset var(--jenkins-border--subtle-shadow), inset 0 0 0 var(--jenkins-border-width) rgb(from var(--text-color-secondary) r g b / 0.1);
-        }
-      }
-
-      &:not(.asdareplaceme--tertiary) {
-        .icon {
-          color: var(--background);
-
-          &::before {
-            box-shadow: inset var(--jenkins-border--subtle-shadow), inset 0 0 18px 18px var(--accent-color);
-          }
+          box-shadow:
+            inset var(--jenkins-border--subtle-shadow),
+            inset 0 0 0 var(--jenkins-border-width)
+              rgb(from var(--text-color-secondary) r g b / 0.1);
         }
       }
     }
