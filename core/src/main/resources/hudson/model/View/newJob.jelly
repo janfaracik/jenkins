@@ -49,30 +49,34 @@ THE SOFTWARE.
               </div>
             </div>
 
-            <div>
-              <div class="jenkins-form-label">${%ItemType.label}</div>
-              <div id="items" class="jenkins-japanese-breakfast categories" data-valid="false">
-                <j:if test="${!empty(app.items)}">
-                  <div class="jenkins-japanese-breakfast__item">
-                    <label>
-                      <div class="icon">
-                        <l:icon src="symbol-duplicate" />
-                      </div>
-                      <input type="radio" name="mode" value="copy" />
-                      <div class="label">
-                        ${%CopyOption.label}
-                      </div>
-                      <div class="desc">${%CopyOption.description}</div>
-                    </label>
+            <fieldset class="jenkins-!-display-contents">
+              <div>
+                <legend class="jenkins-form-label">${%ItemType.label}</legend>
+                <div id="items" class="jenkins-japanese-breakfast categories" data-valid="false">
+                  <template id="insertion-point"></template>
 
-                    <div class="categoryexport">
-                      <j:set var="descriptor" value="${it.descriptor}" />
-                      <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
+                  <j:if test="${!empty(app.items)}">
+                    <div class="jenkins-japanese-breakfast__item">
+                      <label>
+                        <div class="icon">
+                          <l:icon src="symbol-duplicate" />
+                        </div>
+                        <input type="radio" name="mode" value="copy" />
+                        <div class="label">
+                          ${%CopyOption.label}
+                        </div>
+                        <div class="desc">${%CopyOption.description}</div>
+                      </label>
+
+                      <div class="categoryexport">
+                        <j:set var="descriptor" value="${it.descriptor}" />
+                        <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
+                      </div>
                     </div>
-                  </div>
-                </j:if>
+                  </j:if>
+                </div>
               </div>
-            </div>
+            </fieldset>
 
             <s:bottomButtonBar>
               <st:include page="newJobButtonBar.jelly"/>

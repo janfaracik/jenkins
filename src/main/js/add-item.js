@@ -215,10 +215,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#add-item-panel").removeAttribute("style");
 
     // Render all categories
-    var $categories = document.querySelector(".categories");
+    var $categories = document.querySelector(".categories template");
     data.categories.forEach((elem) => {
       elem.items.forEach((elem) => {
-        $categories.append(drawItem(elem));
+        $categories.before(drawItem(elem));
       });
     });
 

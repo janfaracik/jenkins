@@ -71,7 +71,9 @@
       label {
         display: grid;
         gap: 0.25rem 0.875rem;
+        padding: 0.875rem;
         grid-template-columns: auto 1fr;
+        cursor: pointer;
       }
 
       label > input[type="radio"] {
@@ -139,8 +141,9 @@
 
       .categoryexport {
         display: none;
-        margin-left: 3rem;
-        margin-top: 0.75rem;
+        margin-left: 4rem;
+        margin-top: -0.25rem;
+        margin-bottom: 0.875rem;
       }
 
       &:has(input:checked) {

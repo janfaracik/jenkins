@@ -1,7 +1,6 @@
 .jenkins-japanese-breakfast {
   display: flex;
   flex-direction: column;
-  list-style: none;
   padding: 0;
   margin: 0;
   border-radius: var(--form-input-border-radius);
@@ -12,9 +11,8 @@
     -webkit-touch-callout: none;
     position: relative;
     user-select: none;
-    padding: 0.875rem;
-    align-items: start;
     display: flex;
+    align-items: stretch;
     flex-direction: column;
     white-space: unset;
     border-radius: 0;
