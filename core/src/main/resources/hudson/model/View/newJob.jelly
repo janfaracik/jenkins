@@ -40,6 +40,21 @@ THE SOFTWARE.
         <t:help href="https://www.jenkins.io/redirect/cli" />
       </l:app-bar>
 
+      <ol class="jenkins-japanese-breakfast">
+        <li class="jenkins-japanese-breakfast__item">
+          asd
+        </li>
+        <li class="jenkins-japanese-breakfast__item">
+          asd
+        </li>
+        <li class="jenkins-japanese-breakfast__item">
+          asd
+        </li>
+        <li class="jenkins-japanese-breakfast__item">
+          asd
+        </li>
+      </ol>
+
           <form method="post" action="createItem" name="createItem" id="createItem">
             <div class="header">
               <div class="add-item-name">
@@ -53,20 +68,20 @@ THE SOFTWARE.
 
             <div>
               <div class="jenkins-form-label">${%ItemType.label}</div>
-              <ul id="items" class="categories" role="radiogroup" aria-labelledby="Items" data-valid="false" />
+              <ul id="items" class="jenkins-japanese-breakfast categories" role="radiogroup" aria-labelledby="Items" data-valid="false" />
             </div>
 
-<!--            <j:if test="${!empty(app.items)}">-->
-<!--              <div class="item-copy">-->
-<!--                <p class="jenkins-form-label">${%CopyOption.description}</p>-->
-<!--                <div class="add-item-copy">-->
-<!--                  <input type="radio" name="mode" value="copy" />-->
-<!--                  <label>${%CopyOption.label}</label>-->
-<!--                  <j:set var="descriptor" value="${it.descriptor}" />-->
-<!--                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </j:if>-->
+            <j:if test="${!empty(app.items)}">
+              <div class="item-copy">
+                <p class="jenkins-form-label">${%CopyOption.description}</p>
+                <div class="add-item-copy">
+                  <input type="radio" name="mode" value="copy" />
+                  <label>${%CopyOption.label}</label>
+                  <j:set var="descriptor" value="${it.descriptor}" />
+                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
+                </div>
+              </div>
+            </j:if>
 
             <s:bottomButtonBar>
               <st:include page="newJobButtonBar.jelly"/>

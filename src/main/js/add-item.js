@@ -117,7 +117,7 @@ $.when(getItems()).done(function (data) {
     function drawItem(elem) {
       var item = document.createElement("li");
       item.className = cleanClassName(elem.class);
-      item.classList.add("asdareplaceme", "asdareplaceme--tertiary");
+      item.classList.add("jenkins-japanese-breakfast__item", "asdareplaceme", "asdareplaceme--tertiary");
       item.setAttribute("role", "radio");
       item.setAttribute("aria-checked", "false");
 
