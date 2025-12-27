@@ -40,21 +40,6 @@ THE SOFTWARE.
         <t:help href="https://www.jenkins.io/redirect/cli" />
       </l:app-bar>
 
-      <ol class="jenkins-japanese-breakfast">
-        <li class="jenkins-japanese-breakfast__item">
-          asd
-        </li>
-        <li class="jenkins-japanese-breakfast__item">
-          asd
-        </li>
-        <li class="jenkins-japanese-breakfast__item">
-          asd
-        </li>
-        <li class="jenkins-japanese-breakfast__item">
-          asd
-        </li>
-      </ol>
-
           <form method="post" action="createItem" name="createItem" id="createItem">
             <div class="header">
               <div class="add-item-name">
