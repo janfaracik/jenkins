@@ -13,6 +13,7 @@
   &__item {
     -webkit-touch-callout: none;
 
+    position: relative;
     user-select: none;
     padding: 0.875rem;
     align-items: start;
@@ -21,44 +22,59 @@
     grid-template-columns: auto 1fr;
     white-space: unset;
     border-radius: 0;
-    transition: var(--standard-transition);
     cursor: pointer;
 
     &:not(:last-of-type) {
       border-bottom: var(--card-border-width) solid var(--card-border-color);
     }
 
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      transition: var(--standard-transition);
+      background: transparent;
+      box-shadow: 0 0 0 0.09375rem transparent, 0 0 0 0.5rem transparent;
+    }
+
     &:hover {
-      background: color-mix(in srgb, var(--text-color-secondary) 7.5%, transparent);
+      &::before {
+        background: color-mix(in srgb, var(--text-color-secondary) 7.5%, transparent);
+      }
     }
 
     &:active, &:focus-visible {
-      border-bottom-color: transparent;
+      z-index: 10;
       border-radius: calc(var(--form-input-border-radius) / 2);
-      background: color-mix(in srgb, var(--text-color-secondary) 15%, transparent);
-      box-shadow:
-              0 0 0 0.09375rem
-              color-mix(
-                              in sRGB,
-                              var(--text-color-secondary) 20%,
-                              var(--card-background)
-              ),
-              0 0 0 0.34375rem
-              color-mix(
-                              in sRGB,
-                              color-mix(
-                                              in sRGB,
-                                              var(--text-color-secondary) 15%,
-                                              var(--card-background)
-                              )
-                              65%,
-                              transparent
-              );
+
+      &::before {
+        background: color-mix(in srgb, var(--text-color-secondary) 12.5%, transparent) !important;
+        box-shadow:
+                0 0 0 0.09375rem
+                color-mix(
+                                in sRGB,
+                                var(--text-color-secondary) 20%,
+                                var(--card-background)
+                ),
+                0 0 0 0.34375rem
+                color-mix(
+                                in sRGB,
+                                color-mix(
+                                                in sRGB,
+                                                var(--text-color-secondary) 15%,
+                                                var(--card-background)
+                                )
+                                65%,
+                                transparent
+                );
+      }
     }
 
     &:focus {
-      background: var(--card-background--active);
-      box-shadow: 0 0 0 0.2rem var(--text-color) !important;
+      &::before {
+        box-shadow: 0 0 0 0.2rem var(--text-color) !important;
+      }
     }
 
     &:first-of-type {
@@ -152,7 +168,9 @@
   .categories {
     li {
       &:not(.asdareplaceme--tertiary) {
-        background: color-mix(in srgb, var(--text-color-secondary) 7.5%, transparent);
+        &::before {
+          background: color-mix(in srgb, var(--text-color-secondary) 5%, transparent);
+        }
       }
 
       .icon {
@@ -175,7 +193,7 @@
           z-index: 0;
           background: rgb(from var(--text-color-secondary) r g b / 0.05);
           box-shadow: inset 0 0 0 var(--jenkins-border-width)
-          var(--jenkins-border-color), inset 0 0 0 1.5px rgb(from var(--text-color-secondary) r g b / 0.05);
+          var(--jenkins-border-color), inset 0 0 0 var(--jenkins-border-width) rgb(from var(--text-color-secondary) r g b / 0.05);
         }
 
         svg, img {
@@ -201,16 +219,17 @@
         }
       }
 
-      &:hover {
-        .icon::before {
-          box-shadow: inset var(--jenkins-border--subtle-shadow), inset 0 0 0 1.5px rgb(from var(--text-color-secondary) r g b / 0.1);
-        }
-      }
-
       .desc {
         color: var(--text-color-secondary);
         grid-column: 2;
         padding-right: 2rem;
+      }
+
+      &:hover, &:active, &:focus {
+        .icon::before {
+          background: rgb(from var(--text-color-secondary) r g b / 0.1);
+          box-shadow: inset var(--jenkins-border--subtle-shadow), inset 0 0 0 var(--jenkins-border-width) rgb(from var(--text-color-secondary) r g b / 0.1);
+        }
       }
 
       &:not(.asdareplaceme--tertiary) {
