@@ -51,20 +51,28 @@ THE SOFTWARE.
 
             <div>
               <div class="jenkins-form-label">${%ItemType.label}</div>
-              <div id="items" class="jenkins-japanese-breakfast categories" data-valid="false" />
-            </div>
+              <div id="items" class="jenkins-japanese-breakfast categories" data-valid="false">
+                <j:if test="${!empty(app.items)}">
+                  <div class="jenkins-japanese-breakfast__item">
+                    <label>
+                      <div class="icon">
+                        <l:icon src="symbol-duplicate" />
+                      </div>
+                      <input type="radio" name="mode" value="copy" />
+                      <div class="label">
+                        ${%CopyOption.label}
+                      </div>
+                      <div class="desc">${%CopyOption.description}</div>
+                    </label>
 
-            <j:if test="${!empty(app.items)}">
-              <div class="item-copy">
-                <p class="jenkins-form-label">${%CopyOption.description}</p>
-                <div class="add-item-copy">
-                  <input type="radio" name="mode" value="copy" />
-                  <label>${%CopyOption.label}</label>
-                  <j:set var="descriptor" value="${it.descriptor}" />
-                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
-                </div>
+                    <div class="categoryexport">
+                      <j:set var="descriptor" value="${it.descriptor}" />
+                      <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
+                    </div>
+                  </div>
+                </j:if>
               </div>
-            </j:if>
+            </div>
 
             <s:bottomButtonBar>
               <st:include page="newJobButtonBar.jelly"/>

@@ -115,14 +115,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Draw functions
 
     function drawItem(elem) {
-      var item = document.createElement("label");
+      var item = document.createElement("div");
       item.className =
         cleanClassName(elem.class) + " jenkins-japanese-breakfast__item";
 
-      var iconDiv = drawIcon(elem);
-      item.appendChild(iconDiv);
+      var label = item.appendChild(document.createElement("label"));
 
-      var label = item.appendChild(document.createElement("div"));
+      var iconDiv = drawIcon(elem);
+      label.appendChild(iconDiv);
 
       var radio = label.appendChild(document.createElement("input"));
       radio.type = "radio";
@@ -131,10 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       var displayName = label.appendChild(document.createElement("span"));
       displayName.className = "label";
-
       displayName.appendChild(document.createTextNode(elem.displayName));
 
-      var desc = item.appendChild(document.createElement("div"));
+      var desc = label.appendChild(document.createElement("div"));
       desc.className = "desc";
       desc.innerHTML = checkForLink(elem.description);
 
@@ -143,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
         cleanCopyFromOption();
         cleanItemSelection();
 
-        item.setAttribute("aria-checked", "true");
         radio.checked = true;
         item.classList.add("active");
 

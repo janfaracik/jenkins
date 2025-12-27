@@ -34,6 +34,7 @@
       box-shadow:
         0 0 0 0.09375rem transparent,
         0 0 0 0.5rem transparent;
+      pointer-events: none;
     }
 
     &:hover {
