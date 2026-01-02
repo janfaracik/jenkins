@@ -86,10 +86,18 @@ THE SOFTWARE.
           </j:forEach>
 
           <j:if test="${!empty(attrs.copyNames) or attrs.showCopyOption}">
-            <div class="jenkins-radio">
-              <input class="jenkins-choice-list__input mode-selection" type="radio" id="copy" name="mode" value="copy" />
-              <label class="jenkins-choice-list__label" for="copy">${attrs.copyTitle}</label>
-              <div class="jenkins-choice-list__children">
+            <div class="jenkins-choice-list__item">
+              <label>
+                <div class="jenkins-choice-list__item__icon">
+                  <l:icon src="${descriptor.iconClassName}" />
+                </div>
+                <input class="mode-selection" type="radio" id="copy" name="mode" value="copy" />
+                <label class="jenkins-choice-list__label" for="copy">${attrs.copyTitle}</label>
+                <div class="jenkins-choice-list__item__description">
+                  todo!
+                </div>
+              </label>
+              <div class="jenkins-choice-list__item__conditional">
                 <j:set var="descriptor" value="${it.descriptor}" />
                 <div class="jenkins-search">
                   <s:textbox placeholder="${%Type for suggestions}" clazz="jenkins-search__input copy-field" name="from" field="copyNewItemFrom" />
