@@ -85,6 +85,7 @@ import java.nio.channels.ClosedByInterruptException;
 import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.StandardCopyOption;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -93,7 +94,6 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -110,6 +110,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.console.WithConsoleUrl;
+import jenkins.model.FullyNamed;
+import jenkins.model.FullyNamedModelObject;
 import jenkins.model.Jenkins;
 import jenkins.model.queue.AsynchronousExecution;
 import jenkins.model.queue.CompositeCauseOfBlockage;
@@ -121,6 +123,8 @@ import jenkins.security.stapler.StaplerAccessibleType;
 import jenkins.util.AtmostOneTaskExecutor;
 import jenkins.util.Listeners;
 import jenkins.util.SystemProperties;
+import jenkins.util.ThrowingCallable;
+import jenkins.util.ThrowingRunnable;
 import jenkins.util.Timer;
 import net.jcip.annotations.GuardedBy;
 import org.jenkinsci.remoting.RoleChecker;
@@ -1273,6 +1277,22 @@ public class Queue extends ResourceController implements Saveable {
      * Some operations require to be performed with the {@link Queue} lock held. Use one of these methods rather
      * than locking directly on Queue in order to allow for future refactoring.
      * @param runnable the operation to perform.
+     * @throws T if the runnable throws an exception.
+     * @since 2.534
+     */
+    public static <T extends Throwable> void runWithLock(ThrowingRunnable<T> runnable) throws T {
+        final Jenkins jenkins = Jenkins.getInstanceOrNull();
+        // TODO confirm safe to assume non-null and use getInstance()
+        final Queue queue = jenkins == null ? null : jenkins.getQueue();
+        if (queue == null) {
+            runnable.run();
+        } else {
+            queue._runWithLock(runnable);
+        }
+    }
+
+    /**
+     * Prefer {@link #runWithLock}.
      * @since 1.592
      */
     public static void withLock(Runnable runnable) {
@@ -1295,6 +1315,21 @@ public class Queue extends ResourceController implements Saveable {
      * @param <T>      the type of exception.
      * @return the result of the callable.
      * @throws T the exception of the callable
+     * @since 2.534
+     */
+    public static <V, T extends Throwable> V callWithLock(ThrowingCallable<V, T> callable) throws T {
+        final Jenkins jenkins = Jenkins.getInstanceOrNull();
+        // TODO confirm safe to assume non-null and use getInstance()
+        final Queue queue = jenkins == null ? null : jenkins.getQueue();
+        if (queue == null) {
+            return callable.call();
+        } else {
+            return queue._callWithLock(callable);
+        }
+    }
+
+    /**
+     * Prefer {@link #callWithLock}.
      * @since 1.592
      */
     public static <V, T extends Throwable> V withLock(hudson.remoting.Callable<V, T> callable) throws T {
@@ -1309,13 +1344,7 @@ public class Queue extends ResourceController implements Saveable {
     }
 
     /**
-     * Some operations require to be performed with the {@link Queue} lock held. Use one of these methods rather
-     * than locking directly on Queue in order to allow for future refactoring.
-     *
-     * @param callable the operation to perform.
-     * @param <V>      the type of return value
-     * @return the result of the callable.
-     * @throws Exception if the callable throws an exception.
+     * Prefer {@link #callWithLock}.
      * @since 1.592
      */
     public static <V> V withLock(java.util.concurrent.Callable<V> callable) throws Exception {
@@ -1347,6 +1376,26 @@ public class Queue extends ResourceController implements Saveable {
             return queue._tryWithLock(runnable);
         }
     }
+
+    /**
+     * Invokes the supplied {@link Runnable} if the {@link Queue} lock was obtained within the given timeout.
+     *
+     * @param runnable the operation to perform.
+     * @return {@code true} if the lock was acquired within the timeout and the operation was performed.
+     * @since 2.529
+     */
+    public static boolean tryWithLock(Runnable runnable, Duration timeout) throws InterruptedException {
+        final Jenkins jenkins = Jenkins.getInstanceOrNull();
+        // TODO confirm safe to assume non-null and use getInstance()
+        final Queue queue = jenkins == null ? null : jenkins.getQueue();
+        if (queue == null) {
+            runnable.run();
+            return true;
+        } else {
+            return queue._tryWithLock(runnable, timeout);
+        }
+    }
+
     /**
      * Wraps a {@link Runnable} with the  {@link Queue} lock held.
      *
@@ -1401,6 +1450,25 @@ public class Queue extends ResourceController implements Saveable {
     /**
      * Some operations require to be performed with the {@link Queue} lock held. Use one of these methods rather
      * than locking directly on Queue in order to allow for future refactoring.
+     *
+     * @param runnable the operation to perform.
+     * @param <T>      the type of exception.
+     * @throws T the exception of the runnable
+     * @since 2.534
+     */
+    @Override
+    protected <T extends Throwable> void _runWithLock(ThrowingRunnable<T> runnable) throws T {
+        lock.lock();
+        try {
+            runnable.run();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * Some operations require to be performed with the {@link Queue} lock held. Use one of these methods rather
+     * than locking directly on Queue in order to allow for future refactoring.
      * @param runnable the operation to perform.
      * @since 1.592
      */
@@ -1431,6 +1499,47 @@ public class Queue extends ResourceController implements Saveable {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * Invokes the supplied {@link Runnable} if the {@link Queue} lock was obtained within the given timeout
+     *
+     * @param runnable the operation to perform.
+     * @return {@code true} if the lock was acquired within the timeout and the operation was performed.
+     * @since 2.529
+     */
+    protected boolean _tryWithLock(Runnable runnable, Duration timeout) throws InterruptedException {
+        if (lock.tryLock(timeout.toNanos(), TimeUnit.NANOSECONDS)) {
+            try {
+                runnable.run();
+            } finally {
+                lock.unlock();
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Some operations require to be performed with the {@link Queue} lock held. Use one of these methods rather
+     * than locking directly on Queue in order to allow for future refactoring.
+     *
+     * @param callable the operation to perform.
+     * @param <V>      the type of return value
+     * @param <T>      the type of exception.
+     * @return the result of the callable.
+     * @throws T the exception of the callable
+     * @since 2.534
+     */
+    @Override
+    protected <V, T extends Throwable> V _callWithLock(ThrowingCallable<V, T> callable) throws T {
+        lock.lock();
+        try {
+            return callable.call();
+        } finally {
+            lock.unlock();
         }
     }
 
@@ -1533,7 +1642,11 @@ public class Queue extends ResourceController implements Saveable {
                     }
                     p.isPending = false;
                     pendings.remove(p);
-                    makeBuildable(p); // TODO whatever this is for, the return value is being ignored, so this does nothing at all
+                    var r = makeBuildable(p);
+                    if (r != null) {
+                        LOGGER.fine(() -> "Executing lost runnable " + p.task.getFullDisplayName());
+                        r.run();
+                    }
                 }
             }
 
@@ -1541,7 +1654,7 @@ public class Queue extends ResourceController implements Saveable {
 
             { // blocked -> buildable
                 // copy as we'll mutate the list and we want to process in a potentially different order
-                List<BlockedItem> blockedItems = new ArrayList<>(blockedProjects.values());
+                List<BlockedItem> blockedItems = new ArrayList<>((blockedProjects));
                 // if facing a cycle of blocked tasks, ensure we process in the desired sort order
                 if (s != null) {
                     s.sortBlockedItems(blockedItems);
@@ -1568,7 +1681,13 @@ public class Queue extends ResourceController implements Saveable {
                             updateSnapshot();
                         }
                     } else {
-                        p.setCauseOfBlockage(causeOfBlockage);
+                        if (causeOfBlockage.isFatal()) {
+                            cancel(p);
+                        } else {
+                            p.leave(this);
+                            new BlockedItem(p, causeOfBlockage).enter(this);
+                            updateSnapshot();
+                        }
                     }
                 }
             }
@@ -1581,10 +1700,9 @@ public class Queue extends ResourceController implements Saveable {
                     LOGGER.log(Level.FINEST, "Finished moving all ready items from queue.");
                     break; // finished moving all ready items from queue
                 }
-
-                top.leave(this);
                 CauseOfBlockage causeOfBlockage = getCauseOfBlockageForItem(top);
                 if (causeOfBlockage == null) {
+                    top.leave(this);
                     // ready to be executed immediately
                     Runnable r = makeBuildable(new BuildableItem(top));
                     String topTaskDisplayName = LOGGER.isLoggable(Level.FINEST) ? top.task.getFullDisplayName() : null;
@@ -1596,9 +1714,14 @@ public class Queue extends ResourceController implements Saveable {
                         new BlockedItem(top, CauseOfBlockage.fromMessage(Messages._Queue_HudsonIsAboutToShutDown())).enter(this);
                     }
                 } else {
-                    // this can't be built now because another build is in progress
-                    // set this project aside.
-                    new BlockedItem(top, causeOfBlockage).enter(this);
+                    if (causeOfBlockage.isFatal()) {
+                        cancel(top);
+                    } else {
+                        top.leave(this);
+                        // this can't be built now because another build is in progress
+                        // set this project aside.
+                        new BlockedItem(top, causeOfBlockage).enter(this);
+                    }
                 }
             }
 
@@ -1621,12 +1744,16 @@ public class Queue extends ResourceController implements Saveable {
                 // one last check to make sure this build is not blocked.
                 CauseOfBlockage causeOfBlockage = getCauseOfBlockageForItem(p);
                 if (causeOfBlockage != null) {
-                    p.leave(this);
-                    new BlockedItem(p, causeOfBlockage).enter(this);
-                    LOGGER.log(Level.FINE, "Catching that {0} is blocked in the last minute", p);
-                    // JENKINS-28926 we have moved an unblocked task into the blocked state, update snapshot
-                    // so that other buildables which might have been blocked by this can see the state change
-                    updateSnapshot();
+                    if (causeOfBlockage.isFatal()) {
+                        cancel(p);
+                    } else {
+                        p.leave(this);
+                        new BlockedItem(p, causeOfBlockage).enter(this);
+                        LOGGER.log(Level.FINE, "Catching that {0} is blocked in the last minute", p);
+                        // JENKINS-28926 we have moved an unblocked task into the blocked state, update snapshot
+                        // so that other buildables which might have been blocked by this can see the state change
+                        updateSnapshot();
+                    }
                     continue;
                 }
 
@@ -1879,7 +2006,7 @@ public class Queue extends ResourceController implements Saveable {
      * design, a {@link Task} must have at least one sub-task.)
      * Most of the time, the primary subtask is the only sub task.
      */
-    public interface Task extends ModelObject, SubTask {
+    public interface Task extends FullyNamedModelObject, SubTask {
         /**
          * Returns true if the execution should be blocked
          * for temporary reasons.
@@ -1926,20 +2053,21 @@ public class Queue extends ResourceController implements Saveable {
         String getName();
 
         /**
-         * @see hudson.model.Item#getFullDisplayName()
-         */
-        String getFullDisplayName();
-
-        /**
          * Returns task-specific key which is used by the {@link LoadBalancer} to choose one particular executor
          * amongst all the free executors on all possibly suitable nodes.
          * NOTE: To be able to re-use the same node during the next run this key should not change from one run to
          * another. You probably want to compute that key based on the job's name.
          *
-         * @return by default: {@link #getFullDisplayName()}
+         * @return by default: {@link FullyNamed#getFullName()} if implements {@link FullyNamed} or {@link #getFullDisplayName()} otherwise.
          * @see hudson.model.LoadBalancer
          */
-        default String getAffinityKey() { return getFullDisplayName(); }
+        default String getAffinityKey() {
+            if (this instanceof FullyNamed fullyNamed) {
+                return fullyNamed.getFullName();
+            } else {
+                return getFullDisplayName();
+            }
+        }
 
         /**
          * Checks the permission to see if the current user can abort this executable.
@@ -2611,15 +2739,7 @@ public class Queue extends ResourceController implements Saveable {
      * {@link Item} in the {@link Queue#blockedProjects} stage.
      */
     public final class BlockedItem extends NotWaitingItem {
-        private transient CauseOfBlockage causeOfBlockage = null;
-
-        public BlockedItem(WaitingItem wi) {
-            this(wi, null);
-        }
-
-        public BlockedItem(NotWaitingItem ni) {
-            this(ni, null);
-        }
+        private final transient CauseOfBlockage causeOfBlockage;
 
         BlockedItem(WaitingItem wi, CauseOfBlockage causeOfBlockage) {
             super(wi);
@@ -2628,10 +2748,6 @@ public class Queue extends ResourceController implements Saveable {
 
         BlockedItem(NotWaitingItem ni, CauseOfBlockage causeOfBlockage) {
             super(ni);
-            this.causeOfBlockage = causeOfBlockage;
-        }
-
-        void setCauseOfBlockage(CauseOfBlockage causeOfBlockage) {
             this.causeOfBlockage = causeOfBlockage;
         }
 
@@ -2954,29 +3070,8 @@ public class Queue extends ResourceController implements Saveable {
             return get(task) != null;
         }
 
-        public T remove(Task task) {
-            Iterator<T> it = iterator();
-            while (it.hasNext()) {
-                T t = it.next();
-                if (t.task.equals(task)) {
-                    it.remove();
-                    return t;
-                }
-            }
-            return null;
-        }
-
-        public void put(Task task, T item) {
-            assert item.task.equals(task);
-            add(item);
-        }
-
-        public ItemList<T> values() {
-            return this;
-        }
-
         /**
-         * Works like {@link #remove(Task)} but also marks the {@link Item} as cancelled.
+         * Removes a task and marks the {@link Item} as cancelled.
          */
         public T cancel(Task p) {
             T x = get(p);

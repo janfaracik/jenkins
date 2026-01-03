@@ -37,6 +37,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.ExtensionList;
 import hudson.PluginManager;
 import hudson.PluginWrapper;
+import hudson.ProxyConfiguration;
 import hudson.Util;
 import hudson.lifecycle.Lifecycle;
 import hudson.model.UpdateCenter.UpdateCenterJob;
@@ -48,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -203,6 +205,27 @@ public class UpdateSite {
     }
 
     /**
+     * Opens a connection to the given URL
+     * @param src the url to connect to
+     * @return A {@code URLConnection} for the given src URL
+     * @since 2.499
+     */
+    public URLConnection connect(URL src) throws IOException {
+        return ProxyConfiguration.open(src);
+    }
+
+    /**
+     * Validate the URL of the resource before downloading it.
+     *
+     * @param src The location of the resource on the network
+     * @throws IOException if the validation fails
+     * @since 2.499
+     */
+    public void preValidate(URL src) throws IOException {
+        // no validation needed in the default setup
+    }
+
+    /**
      * Forces an update of the data file from the configured URL, irrespective of the last time the data was retrieved.
      * @return A {@code FormValidation} indicating the if the update metadata was successfully downloaded from the configured update site
      * @since 2.222
@@ -271,7 +294,29 @@ public class UpdateSite {
      */
     @Restricted(NoExternalUse.class)
     public final FormValidation verifySignatureInternal(JSONObject o) throws IOException {
-        return getJsonSignatureValidator().verifySignature(o);
+        FormValidation result = getJsonSignatureValidator(null).verifySignature(o);
+
+        if (result.kind == FormValidation.Kind.ERROR) {
+            String message = result.getMessage();
+            if (message != null) {
+//                String siteUrl = getUrl();
+                String updatedMessage;
+
+                if (message.contains("update site") && message.contains(" Path") && !message.contains(url)) {
+                    // Ensure the update site URL is included in error messages by replacing the site identifier in messages of the 'update site … Path' pattern or appending it otherwise.
+                    updatedMessage = message.replaceAll(
+                            "(update site\\s+).*?(\\s+Path)",
+                            "$1" + url + "$2"
+                    );
+                } else {
+                    // Do not alter message structure; only add URL context
+                    updatedMessage = message + " (URL: " + url + ")";
+                }
+                return FormValidation.error(updatedMessage);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -588,6 +633,9 @@ public class UpdateSite {
          */
         public final String connectionCheckUrl;
 
+        @Restricted(NoExternalUse.class)
+        public final boolean healthScoresAvailable;
+
         Data(JSONObject o) {
             this.sourceId = Util.intern((String) o.get("id"));
             JSONObject c = o.optJSONObject("core");
@@ -626,6 +674,8 @@ public class UpdateSite {
                 }
             }
 
+            boolean healthScoresAvailable = false;
+
             for (Map.Entry<String, JSONObject> e : (Set<Map.Entry<String, JSONObject>>) o.getJSONObject("plugins").entrySet()) {
                 Plugin p = new Plugin(sourceId, e.getValue());
                 // JENKINS-33308 - include implied dependencies for older plugins that may need them
@@ -639,6 +689,10 @@ public class UpdateSite {
                 }
                 plugins.put(Util.intern(e.getKey()), p);
 
+                if (p.healthScore != null) {
+                    healthScoresAvailable = true;
+                }
+
                 // compatibility with update sites that have no separate 'deprecated' top-level entry.
                 // Also do this even if there are deprecations to potentially allow limiting the top-level entry to overridden URLs.
                 if (p.hasCategory("deprecated")) {
@@ -647,6 +701,8 @@ public class UpdateSite {
                     }
                 }
             }
+
+            this.healthScoresAvailable = healthScoresAvailable;
 
             connectionCheckUrl = (String) o.get("connectionCheckUrl");
         }
@@ -1065,7 +1121,7 @@ public class UpdateSite {
          * {@code false} if it does; and {@code null} when the affected component isn't being offered, or it's a warning
          * for something other than core or a plugin.
          */
-        @SuppressFBWarnings(value = "NP_BOOLEAN_RETURN_NULL")
+        @SuppressFBWarnings(value = "NP_BOOLEAN_RETURN_NULL", justification = "TODO needs triage")
         public Boolean isFixable() {
             final Data data = UpdateSite.this.data;
             if (data == null) {
@@ -1233,6 +1289,12 @@ public class UpdateSite {
         @Restricted(NoExternalUse.class)
         public IssueTracker[] issueTrackers;
 
+        @Restricted(NoExternalUse.class)
+        public final Integer healthScore;
+
+        @Restricted(NoExternalUse.class)
+        public final String healthScoreClass;
+
         @DataBoundConstructor
         public Plugin(String sourceId, JSONObject o) {
             super(sourceId, o, UpdateSite.this.url);
@@ -1269,6 +1331,12 @@ public class UpdateSite {
             int optionalDepCount = (int) ja.stream().filter(IS_DEP_PREDICATE.and(IS_NOT_OPTIONAL.negate())).count();
             dependencies = getPresizedMutableMap(depCount);
             optionalDependencies = getPresizedMutableMap(optionalDepCount);
+            this.healthScore = o.has("health") ? o.getInt("health") : null;
+            if (healthScore != null) {
+                this.healthScoreClass = PluginWrapper.getHealthScoreClassForScore(healthScore);
+            } else {
+                this.healthScoreClass = null;
+            }
 
             for (Object jo : o.getJSONArray("dependencies")) {
                 JSONObject depObj = (JSONObject) jo;

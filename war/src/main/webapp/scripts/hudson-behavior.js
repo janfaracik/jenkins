@@ -821,16 +821,16 @@ function registerMinMaxValidator(e) {
     }
 
     if (isInteger(this.value)) {
+      const valueInt = parseInt(this.value);
+
       // Ensure the value is an integer
       if (min !== null && isInteger(min) && max !== null && isInteger(max)) {
         // Both min and max attributes are available
-
-        if (min <= max) {
+        const minInt = parseInt(min);
+        const maxInt = parseInt(max);
+        if (minInt <= maxInt) {
           // Add the validator if min <= max
-          if (
-            parseInt(min) > parseInt(this.value) ||
-            parseInt(this.value) > parseInt(max)
-          ) {
+          if (minInt > valueInt || valueInt > maxInt) {
             // The value is out of range
             updateValidationArea(
               this.targetElement,
@@ -850,7 +850,8 @@ function registerMinMaxValidator(e) {
       ) {
         // There is only 'min' available
 
-        if (parseInt(min) > parseInt(this.value)) {
+        const minInt = parseInt(min);
+        if (minInt > valueInt) {
           updateValidationArea(
             this.targetElement,
             `<div class="error">This value should be larger than ${min}</div>`,
@@ -868,7 +869,8 @@ function registerMinMaxValidator(e) {
       ) {
         // There is only 'max' available
 
-        if (parseInt(max) < parseInt(this.value)) {
+        const maxInt = parseInt(max);
+        if (maxInt < valueInt) {
           updateValidationArea(
             this.targetElement,
             `<div class="error">This value should be less than ${max}</div>`,
@@ -1101,17 +1103,25 @@ function labelAttachPreviousOnClick() {
 }
 
 function helpButtonOnClick() {
-  var tr =
-    findFollowingTR(this, "help-area", "help-sibling") ||
-    findFollowingTR(this, "help-area", "setting-help") ||
-    findFollowingTR(this, "help-area");
-  var div = tr.firstElementChild;
+  let helpArea;
+
+  // Custom condition for repeatable chunks
+  if (this.parentNode.classList.contains("repeated-chunk__header")) {
+    helpArea = this.closest(".repeated-chunk").querySelector(".help-area");
+  } else {
+    helpArea =
+      findFollowingTR(this, "help-area", "help-sibling") ||
+      findFollowingTR(this, "help-area", "setting-help") ||
+      findFollowingTR(this, "help-area");
+  }
+
+  var div = helpArea.firstElementChild;
   if (!div.classList.contains("help")) {
     div = div.nextElementSibling.firstElementChild;
   }
 
-  if (div.style.display != "block") {
-    div.style.display = "block";
+  if (helpArea.style.display !== "block") {
+    helpArea.style.display = "block";
     // make it visible
 
     fetch(this.getAttribute("helpURL")).then((rsp) => {
@@ -1145,7 +1155,7 @@ function helpButtonOnClick() {
       });
     });
   } else {
-    div.style.display = "none";
+    helpArea.style.display = "none";
     layoutUpdateCallback.call();
   }
 
@@ -1281,7 +1291,7 @@ function rowvgStartEachRow(recursive, f) {
 
   // validate required form values
   Behaviour.specify("INPUT.required", "input-required", ++p, function (e) {
-    registerRegexpValidator(e, /./, "Field is required");
+    registerRegexpValidator(e, /\S/, "Field is required");
   });
 
   // validate form values to be an integer
@@ -1731,22 +1741,35 @@ function rowvgStartEachRow(recursive, f) {
   });
 
   Behaviour.specify(
+    "DIV.jenkins-form-skeleton, DIV.jenkins-side-panel-skeleton",
+    "div-jenkins-form-skeleton",
+    ++p,
+    function (e) {
+      e.remove();
+    },
+  );
+
+  Behaviour.specify(
     "DIV.behavior-loading",
     "div-behavior-loading",
     ++p,
     function (e) {
+      console.warn(
+        ".behavior-loading is deprecated, use <l:skeleton /> instead - since TODO",
+        e,
+      );
       e.classList.add("behavior-loading--hidden");
     },
   );
 
   window.addEventListener("load", function () {
     // Add a class to the bottom bar when it's stuck to the bottom of the screen
-    const el = document.querySelector("#bottom-sticker");
+    const el = document.querySelector(".jenkins-bottom-app-bar__shadow");
     if (el) {
       const observer = new IntersectionObserver(
         ([e]) =>
           e.target.classList.toggle(
-            "bottom-sticker-inner--stuck",
+            "jenkins-bottom-app-bar__shadow--stuck",
             e.intersectionRatio < 1,
           ),
         { threshold: [1] },
@@ -1874,12 +1897,10 @@ function xor(a, b) {
 // used by editableDescription.jelly to replace the description field with a form
 // eslint-disable-next-line no-unused-vars
 function replaceDescription(initialDescription, submissionUrl) {
-  var d = document.getElementById("description");
-  let button = d.firstElementChild.nextElementSibling;
-  if (button !== null) {
-    d.firstElementChild.nextElementSibling.innerHTML =
-      "<div class='jenkins-spinner'></div>";
-  }
+  const descriptionContent = document.getElementById("description-content");
+  const descriptionEditForm = document.getElementById("description-edit-form");
+  descriptionEditForm.innerHTML = "<div class='jenkins-spinner'></div>";
+  descriptionContent.classList.add("jenkins-hidden");
   let parameters = {};
   if (initialDescription !== null && initialDescription !== "") {
     parameters["description"] = initialDescription;
@@ -1895,10 +1916,11 @@ function replaceDescription(initialDescription, submissionUrl) {
     body: objectToUrlFormEncoded(parameters),
   }).then((rsp) => {
     rsp.text().then((responseText) => {
-      d.innerHTML = responseText;
+      descriptionEditForm.innerHTML = responseText;
+      descriptionEditForm.classList.remove("jenkins-hidden");
       evalInnerHtmlScripts(responseText, function () {
-        Behaviour.applySubtree(d);
-        d.getElementsByTagName("TEXTAREA")[0].focus();
+        Behaviour.applySubtree(descriptionEditForm);
+        descriptionEditForm.getElementsByTagName("TEXTAREA")[0].focus();
       });
       layoutUpdateCallback.call();
       return false;
@@ -2614,6 +2636,16 @@ function validateButton(checkUrl, paramList, button) {
       target.innerHTML = `<div class="validation-error-area" />`;
       updateValidationArea(target.children[0], responseText);
       layoutUpdateCallback.call();
+      let json = rsp.headers.get("X-Jenkins-ValidateButton-Callback");
+      if (json != null) {
+        let callInfo = JSON.parse(json);
+        let callback = callInfo["callback"];
+        let args = callInfo["arguments"];
+        if (window[callback] && typeof window[callback] === "function") {
+          window[callback].apply(window, args);
+        }
+      }
+
       var s = rsp.headers.get("script");
       try {
         geval(s);
