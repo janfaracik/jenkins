@@ -921,16 +921,8 @@ public abstract class View extends AbstractModelObject implements AccessControll
                 }
             }
 
-//            ItemCategory ic = ItemCategory.getCategory(descriptor);
-            Category category;
-//            if (category != null) {
-//                category.getItems().add(metadata);
-//            } else {
-                List<Map<String, Serializable>> temp = new ArrayList<>();
-                temp.add(metadata);
-                category = new Category("", "", "", 0, 0, temp);
-                categories.getItems().add(category);
-//            }
+            // Workaround to avoid breaking the existing API contract
+            categories.getItems().add(new Category("", "", "", 0, 0, List.of(metadata)));
         }
         return categories;
     }
