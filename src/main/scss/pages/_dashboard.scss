@@ -77,11 +77,11 @@ $min-button-size: 2.375rem;
     display: grid;
     grid-template-columns: 1fr auto;
     gap: 1rem;
-    padding: calc(1rem - var(--card-border-width, 0));
+    padding: calc(1rem - var(--jenkins-border-width, 0));
     align-items: center;
     border-radius: 1rem;
     background: var(--card-background);
-    border: var(--card-border-width) solid var(--card-border-color);
+    border: var(--jenkins-border);
     transition: var(--standard-transition);
 
     &::before {
@@ -157,7 +157,6 @@ $min-button-size: 2.375rem;
       --link-color: var(--link-color--hover);
 
       background: var(--card-background--hover);
-      border-color: var(--card-border-color--hover);
     }
 
     &:active,
@@ -165,7 +164,6 @@ $min-button-size: 2.375rem;
       --link-color: var(--link-color--active);
 
       background: var(--card-background--active);
-      border-color: var(--card-border-color--active);
     }
   }
 }

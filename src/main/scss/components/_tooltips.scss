@@ -1,7 +1,7 @@
 .tippy-box[data-theme~="tooltip"] {
   color: var(--tooltip-color);
-  padding: 0.45rem 0.8rem;
-  border-radius: 0.66rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--form-input-border-radius);
   box-shadow: var(--tooltip-box-shadow);
   font-size: 0.75rem;
   line-height: 1.6;
@@ -24,7 +24,6 @@
 
   .jenkins-table {
     --table-background: transparent;
-    --card-border-color: transparent;
 
     margin: 0;
     width: 450px;

@@ -69,10 +69,6 @@ $icon-size: 1.125rem;
     padding-block: 0;
     color: var(--text-color-secondary) !important;
 
-    &:not(:hover, :active, :focus-visible) {
-      --jenkins-border--subtle: var(--jenkins-border);
-    }
-
     svg {
       width: $icon-size;
       height: $icon-size;
