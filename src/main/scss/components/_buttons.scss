@@ -43,6 +43,10 @@
   --button-box-shadow--focus: oklch(from var(--accent-color) l c h / 0.4);
 
   color: var(--button-color--primary) !important;
+
+  &::before {
+    border: var(--jenkins-border--subtle);
+  }
 }
 
 // Support for custom colors
