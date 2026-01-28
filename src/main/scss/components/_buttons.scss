@@ -24,6 +24,11 @@
     height: 1.125rem;
   }
 
+  &:not(.jenkins-button--tertiary) {
+    box-shadow: inset 0 10px 10px color-mix(in srgb, white 2.5%, transparent),
+                0 2px 2px color-mix(in srgb, black 2%, transparent);
+  }
+
   &:disabled {
     opacity: 0.5;
     filter: saturate(0.6);
