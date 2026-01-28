@@ -9,7 +9,7 @@
   border-radius: calc(
     var(--table-border-radius) + (var(--jenkins-border-width) * 2)
   );
-  border: calc(var(--jenkins-border-width) * 3) solid var(--table-background);
+  border: calc(var(--jenkins-border-width) * 2) solid var(--table-background);
   border-bottom-width: var(--jenkins-border-width);
   border-spacing: 0 var(--jenkins-border-width);
   background-clip: padding-box;
@@ -20,7 +20,7 @@
     &::before {
       content: "";
       position: absolute;
-      inset: -3px -3px -2px;
+      inset: -2px -2px -1px;
       border: var(--jenkins-border);
       border-radius: inherit;
       pointer-events: none;
