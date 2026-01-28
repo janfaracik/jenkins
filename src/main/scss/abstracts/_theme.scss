@@ -138,10 +138,6 @@ $semantics: (
   --jenkins-border--subtle-shadow: 0 0 0 var(--jenkins-border-width)
     var(--jenkins-border-color--subtle);
 
-  @media (resolution <= 1dppx) {
-    --jenkins-border-width: 2px;
-  }
-
   @media (prefers-contrast: more) {
     --header-border: var(--text-color);
     --focus-input-border: var(--text-color);
