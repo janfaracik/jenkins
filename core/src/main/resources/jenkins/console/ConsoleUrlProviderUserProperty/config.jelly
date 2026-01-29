@@ -3,7 +3,7 @@
     <j:if test="${descriptor.enabled}">
         <f:invisibleEntry>
           <!-- Dummy field to always have an entry in form submissions so users can delete all providers. -->
-          <f:checkbox field="unused" checked="true" />
+          <f:toggleSwitch field="unused" checked="true" />
         </f:invisibleEntry>
         <f:repeatableHeteroProperty field="providers" hasHeader="true" oneEach="true" header="${%Providers}" />
     </j:if>

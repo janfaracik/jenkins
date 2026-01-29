@@ -57,11 +57,11 @@ THE SOFTWARE.
 
         <f:section title="${%Widgets}" description="${%widgets.description}">
           <f:entry field="filterQueue">
-            <f:checkbox title="${%Filter build queue}"
+            <f:toggleSwitch title="${%Filter build queue}"
                         description="${%widgets.filterqueue.description}" />
           </f:entry>
           <f:entry field="filterExecutors">
-            <f:checkbox title="${%Filter build executors}"
+            <f:toggleSwitch title="${%Filter build executors}"
                         description="${%widgets.filterexecutors.description}" />
           </f:entry>
         </f:section>

@@ -45,7 +45,7 @@ THE SOFTWARE.
         <l:isAdmin>
           <j:if test="${app.lifecycle.canRestart()}">
             <p class="info">
-              <f:checkbox checked="${app.isQuietingDown() or it.isRestartScheduled()}" id="scheduleRestartCheckbox" name="scheduleRestart" title="${%warning}" />
+              <f:toggleSwitch checked="${app.isQuietingDown() or it.isRestartScheduled()}" id="scheduleRestartCheckbox" name="scheduleRestart" title="${%warning}" />
             </p>
           </j:if>
         </l:isAdmin>

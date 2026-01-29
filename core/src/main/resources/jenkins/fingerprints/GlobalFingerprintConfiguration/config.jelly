@@ -21,7 +21,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:section title="${%fingerprints}">
         <f:entry>
-            <f:checkbox title="${%fingerprint.clean.disable}" field="fingerprintCleanupDisabled"
+            <f:toggleSwitch title="${%fingerprint.clean.disable}" field="fingerprintCleanupDisabled"
                         default="${it.fingerprintCleanupDisabled}" />
         </f:entry>
         <j:if test="${descriptor.fingerprintStorageDescriptors.size() gt 1}">

@@ -36,7 +36,7 @@ f.section(title: _("Administrative monitors"), description: _("blurb")) {
                     .sort({ o1, o2 -> o1.getDisplayName() <=> o2.getDisplayName() })) {
                 div(style: "margin-bottom: 0.625rem") {
                     div(class: "jenkins-checkbox-help-wrapper") {
-                        f.checkbox(name: "administrativeMonitor",
+                        f.toggleSwitch(name: "administrativeMonitor",
                                 title: am.displayName,
                                 checked: am.enabled,
                                 json: am.id)

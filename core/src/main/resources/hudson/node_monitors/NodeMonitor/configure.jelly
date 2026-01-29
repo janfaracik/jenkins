@@ -10,12 +10,12 @@
     <div class="form-container">
       <j:if test="${descriptor.canTakeOffline()}">
         <f:entry title="${%Don't mark agents temporarily offline}" field="ignored">
-          <f:checkbox checked="${instance.ignored}" />
+          <f:toggleSwitch checked="${instance.ignored}" />
         </f:entry>
       </j:if>
       <j:if test="${!descriptor.canTakeOffline()}">
         <f:invisibleEntry>
-          <f:checkbox name="ignored" checked="false" />
+          <f:toggleSwitch name="ignored" checked="false" />
         </f:invisibleEntry>
       </j:if>
       <st:include page="config.jelly" class="${descriptor.clazz}" optional="true"/>

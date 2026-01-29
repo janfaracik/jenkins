@@ -1,3 +1,8 @@
+$height: 30px;
+$padding: 5px;
+$width: $height + $height;
+$switch-size: $height - $padding - $padding;
+
 .jenkins-toggle-switch {
   position: relative;
   display: inline-block;
@@ -8,7 +13,7 @@
         & + label {
           &::after {
             left: unset !important;
-            right: 5px !important;
+            right: $padding !important;
           }
         }
       }
@@ -24,20 +29,20 @@
 
       &::after {
         left: unset !important;
-        right: 25px;
+        right: $switch-size + $padding;
       }
 
       &:active,
       &:focus {
         &::after {
-          right: 20px !important;
+          right: $switch-size !important;
         }
       }
 
       .jenkins-toggle-switch__label__checked-title,
       .jenkins-toggle-switch__label__unchecked-title {
         left: unset !important;
-        right: calc(50px + 1rem) !important;
+        right: calc($width + 1rem) !important;
       }
     }
   }
@@ -62,7 +67,7 @@
   &:checked {
     & + label {
       &::after {
-        left: 25px;
+        left: $switch-size + $padding + $padding + $padding;
         mask-image: url("../images/svgs/mask-toggle-switch__checked.svg");
       }
 
@@ -76,8 +81,8 @@
         }
 
         &::after {
-          left: 20px;
-          width: 25px;
+          left: $switch-size + $padding + $padding;
+          width: $switch-size + $padding;
         }
       }
 
@@ -105,7 +110,7 @@
   justify-content: flex-start;
   margin: 0;
   cursor: pointer;
-  line-height: 30px;
+  line-height: $height;
   font-weight: var(--form-label-font-weight);
   user-select: none;
 
@@ -113,10 +118,10 @@
     display: inline-block;
     content: "";
     position: relative;
-    min-width: 50px;
-    min-height: 30px;
+    min-width: $width;
+    min-height: $height;
     background: var(--input-border);
-    border-radius: 19px;
+    border-radius: $height;
     transition: var(--standard-transition);
     margin-right: 1rem;
     box-shadow:
@@ -131,12 +136,12 @@
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 5px;
-    left: 5px;
-    width: 20px;
-    height: 20px;
+    top: $padding;
+    left: $padding;
+    width: $switch-size;
+    height: $switch-size;
     background: var(--background);
-    mask-size: 60px 60px;
+    mask-size: $height * 2;
     mask-position: center;
     border-radius: 100px;
     transition: var(--standard-transition);
@@ -159,8 +164,8 @@
     }
 
     &::after {
-      left: 5px;
-      width: 25px;
+      left: $padding;
+      width: $switch-size + $padding;
     }
   }
 
@@ -171,7 +176,7 @@
   .jenkins-toggle-switch__label__checked-title,
   .jenkins-toggle-switch__label__unchecked-title {
     position: absolute;
-    left: calc(50px + 1rem);
+    left: calc($width + 1rem);
     transition: opacity 0.4s;
     user-select: none;
   }

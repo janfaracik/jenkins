@@ -12,5 +12,5 @@ f.entry(title:_("description"), field:"description") {
 }
 
 f.entry() {
-    f.checkbox(title:_("forceExistingJobs"), field:"forceExistingJobs")
+    f.toggleSwitch(title:_("forceExistingJobs"), field:"forceExistingJobs")
 }

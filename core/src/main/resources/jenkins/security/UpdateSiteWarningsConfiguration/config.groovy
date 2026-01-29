@@ -31,7 +31,7 @@ st.adjunct(includes: "jenkins.security.UpdateSiteWarningsConfiguration.style")
 
 def printEntry(warning, title, checked) {
     f.block {
-        f.checkbox(name: warning.id,
+        f.toggleSwitch(name: warning.id,
                 title: title,
                 checked: checked,
                 class: 'hideWarnings')

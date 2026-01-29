@@ -32,22 +32,22 @@ THE SOFTWARE.
       <f:textbox />
     </f:entry>
     <f:entry field="allowEmptyArchive">
-      <f:checkbox title="${%allowEmptyArchive}" />
+      <f:toggleSwitch title="${%allowEmptyArchive}" />
     </f:entry>
     <f:entry field="onlyIfSuccessful">
-      <f:checkbox title="${%onlyIfSuccessful}" />
+      <f:toggleSwitch title="${%onlyIfSuccessful}" />
     </f:entry>
     <f:entry field="fingerprint">
-      <f:checkbox title="${%Fingerprint all archived artifacts}" />
+      <f:toggleSwitch title="${%Fingerprint all archived artifacts}" />
     </f:entry>
     <f:entry field="defaultExcludes">
-      <f:checkbox title="${%defaultExcludes}" default="true" />
+      <f:toggleSwitch title="${%defaultExcludes}" default="true" />
     </f:entry>
     <f:entry field="caseSensitive">
-      <f:checkbox title="${%caseSensitive}" default="true" />
+      <f:toggleSwitch title="${%caseSensitive}" default="true" />
     </f:entry>
     <f:entry field="followSymlinks" >
-      <f:checkbox title="${%followSymlinks}" default="false"/>
+      <f:toggleSwitch title="${%followSymlinks}" default="false"/>
     </f:entry>
   </f:advanced>
 </j:jelly>

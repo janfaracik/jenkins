@@ -29,6 +29,6 @@ THE SOFTWARE.
     <j:set var="escapeEntryTitleAndDescription" value="false"/>
     <j:set var="readOnlyMode" value="true"/>
     <div>
-      <f:checkbox title="${h.escape(it.name)}" name="value" checked="${it.value}" description="${it.formattedDescription}" />
+      <f:toggleSwitch title="${h.escape(it.name)}" name="value" checked="${it.value}" description="${it.formattedDescription}" />
     </div>
 </j:jelly>

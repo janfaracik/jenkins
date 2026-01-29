@@ -28,7 +28,7 @@ THE SOFTWARE.
     <f:textarea field="scmpoll_spec"/>
   </f:entry>
   <f:entry field="ignorePostCommitHooks">
-    <f:checkbox title="${%Ignore post-commit hooks}" />
+    <f:toggleSwitch title="${%Ignore post-commit hooks}" />
   </f:entry>
   <j:invokeStatic var="listeners" method="all" className="hudson.model.listeners.SCMPollListener"/>
   <j:forEach var="l" items="${listeners}">

@@ -29,12 +29,12 @@ THE SOFTWARE.
 <st:adjunct includes="hudson.model.ListView.configure-entries-resources" />
   <f:section title="${%Jobs}" description="${%jobs.description}">
     <f:entry field="recurse">
-      <f:checkbox title="${%Recurse in subfolders}" id="recurse" />
+      <f:toggleSwitch title="${%Recurse in subfolders}" id="recurse" />
     </f:entry>
 
     <d:taglib uri="local">
       <d:tag name="checkbox">
-        <f:checkbox name="item_${job.getRelativeNameFromGroup(it.ownerItemGroup)}"
+        <f:toggleSwitch name="item_${job.getRelativeNameFromGroup(it.ownerItemGroup)}"
                     checked="${it.jobNamesContains(job)}"
                     title="${job.displayName}"
                     tooltip="${!job.fullName.equals(job.displayName) ? job.fullName : null}"

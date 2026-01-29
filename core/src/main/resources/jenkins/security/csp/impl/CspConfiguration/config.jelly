@@ -28,7 +28,7 @@ THE SOFTWARE.
         <j:choose>
             <j:when test="${instance.isShowHeaderConfiguration()}">
                 <f:entry field="enforce">
-                    <f:checkbox title="${%Enforce Content Security Policy}"/>
+                    <f:toggleSwitch title="${%Enforce Content Security Policy}"/>
                 </f:entry>
 
                 <j:if test="${!empty(instance.advancedDescriptors)}">

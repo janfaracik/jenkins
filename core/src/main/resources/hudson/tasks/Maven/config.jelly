@@ -48,10 +48,10 @@ THE SOFTWARE.
       <f:expandableTextbox field="jvmOptions"/>
     </f:entry>
     <f:entry field="injectBuildVariables">
-      <f:checkbox title="${%Inject build variables}" checked="${it.injectBuildVariables}" />
+      <f:toggleSwitch title="${%Inject build variables}" checked="${it.injectBuildVariables}" />
     </f:entry>
     <f:entry field="usePrivateRepository">
-      <f:checkbox title="${%Use private Maven repository}" help="/plugin/maven-plugin/private-repository.html" checked="${it.usesPrivateRepository()}" />
+      <f:toggleSwitch title="${%Use private Maven repository}" help="/plugin/maven-plugin/private-repository.html" checked="${it.usesPrivateRepository()}" />
     </f:entry>
 
     <f:dropdownDescriptorSelector title="${%Settings file}"  field="settings" default="${descriptor.defaultSettingsProvider}"/>
