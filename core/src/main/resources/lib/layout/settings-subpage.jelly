@@ -44,6 +44,12 @@ THE SOFTWARE.
     <st:attribute name="header">
       Optional header for the page, falls back to a default header if not set.
     </st:attribute>
+    <st:attribute name="title">
+      TODO
+    </st:attribute>
+    <st:attribute name="description">
+      TODO
+    </st:attribute>
     <st:attribute name="includeBreadcrumb">
       <![CDATA[
       Optional breadcrumb, will add a breadcrumb for the current <code>it</code>
@@ -60,8 +66,10 @@ THE SOFTWARE.
   <l:userExperimentalFlag var="newManageJenkins" flagClassName="jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag" />
 
   <j:set var="managementLink" value="${attrs.managementLink ?: it}" />
+  <j:set var="newTitle" value="${attrs.title ?: managementLink.title}" />
+  <j:set var="description" value="${attrs.description ?: managementLink.description}" />
 
-  <l:layout title="${managementLink.displayName} - ${manageJenkinsAction.displayName}"
+  <l:layout title="${newTitle} - ${manageJenkinsAction.displayName}"
             permission="${attrs.permission}"
             permissions="${attrs.permissions}"
             type="${newManageJenkins ? 'two-column' : 'one-column'}">
@@ -70,10 +78,10 @@ THE SOFTWARE.
       <!-- Hacky - this will be improved in subsequent PRs -->
       <j:choose>
         <j:when test="${managementLink.class.name eq 'jenkins.management.ConfigureLink'}">
-          <f:breadcrumb-config-outline title="${managementLink.displayName}" />
+          <f:breadcrumb-config-outline title="${newTitle}" />
         </j:when>
         <j:otherwise>
-          <l:breadcrumb title="${managementLink.displayName}" />
+          <l:breadcrumb title="${newTitle}" />
         </j:otherwise>
       </j:choose>
     </j:if>
@@ -81,7 +89,7 @@ THE SOFTWARE.
     <j:choose>
       <j:when test="${newManageJenkins}">
         <l:side-panel>
-          <l:app-bar title="${manageJenkinsAction.displayName}" />
+          <l:app-bar title="${newTitle}" />
 
           <l:tasks>
             <l:search-bar placeholder="${%Search}" id="settings-search-bar" />
@@ -109,9 +117,9 @@ THE SOFTWARE.
           <div class="app-settings-container">
             <div class="app-settings-container__inner">
               <j:if test="${!attrs.containsKey('header')}">
-                <l:app-bar title="${managementLink.displayName}" />
+                <l:app-bar title="${newTitle}" />
                 <div class="jenkins-page-description">
-                  ${managementLink.description}
+                  ${description}
                 </div>
               </j:if>
 
@@ -146,9 +154,9 @@ THE SOFTWARE.
       <j:otherwise>
         <l:main-panel>
           <j:if test="${!attrs.containsKey('header')}">
-            <l:app-bar title="${managementLink.displayName}" />
+            <l:app-bar title="${newTitle}" />
             <div class="jenkins-page-description">
-              ${managementLink.description}
+              ${description}
             </div>
           </j:if>
 

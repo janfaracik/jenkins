@@ -28,9 +28,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:dd="/lib/layout/dropdowns">
-<l:layout title="Log" permission="${app.SYSTEM_READ}" type="one-column">
-  <!-- no need for additional breadcrumb here as we're on an index page already including breadcrumb -->
-  <l:main-panel>
+  <l:settings-subpage header="${null}" permission="${app.SYSTEM_READ}">
     <j:set var="noLogs" value="${it.logRecords.isEmpty() and it.slaveLogRecords.isEmpty()}" />
 
     <l:app-bar title="${it.displayName}">
@@ -43,7 +41,7 @@ THE SOFTWARE.
           </form>
         </j:if>
         <a class="jenkins-button" href="configure">
-          Configure
+          ${%Configure}
         </a>
       </l:isAdmin>
       <l:overflowButton>
@@ -55,7 +53,8 @@ THE SOFTWARE.
             <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
                                 href="doDelete"
                                 message="${%delete.logrecorder(it.displayName)}"
-                                post="true">
+                                post="true"
+                                destructive="true">
               <div class="jenkins-dropdown__item__icon">
                 <l:icon src="symbol-trash" />
               </div>
@@ -66,15 +65,17 @@ THE SOFTWARE.
       </l:overflowButton>
     </l:app-bar>
 
-    <j:if test="${noLogs}">
-      <l:notice title="${%No logs available}" icon="symbol-journal" />
-    </j:if>
-
-    <t:logRecords logRecords="${it.logRecords}"/>
-    <j:forEach var="entry" items="${it.slaveLogRecords.entrySet()}">
-      <h2><a href="${rootURL}/${entry.key.url}" class="model-link">${entry.key.displayName}</a></h2>
-      <t:logRecords logRecords="${entry.value}"/>
-    </j:forEach>
-  </l:main-panel>
-</l:layout>
+    <j:choose>
+      <j:when test="${noLogs}">
+        <l:notice title="${%No logs available}" icon="symbol-journal" />
+      </j:when>
+      <j:otherwise>
+        <t:logRecords logRecords="${it.logRecords}"/>
+        <j:forEach var="entry" items="${it.slaveLogRecords.entrySet()}">
+          <h2><a href="${rootURL}/${entry.key.url}" class="model-link">${entry.key.displayName}</a></h2>
+          <t:logRecords logRecords="${entry.value}"/>
+        </j:forEach>
+      </j:otherwise>
+    </j:choose>
+  </l:settings-subpage>
 </j:jelly>
