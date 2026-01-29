@@ -1,6 +1,6 @@
 $height: 30px;
 $padding: 5px;
-$width: $height + $height;
+$width: $height + $height - $padding - $padding;
 $switch-size: $height - $padding - $padding;
 
 .jenkins-toggle-switch {
@@ -67,7 +67,7 @@ $switch-size: $height - $padding - $padding;
   &:checked {
     & + label {
       &::after {
-        left: $switch-size + $padding + $padding + $padding;
+        left: $switch-size + $padding;
         mask-image: url("../images/svgs/mask-toggle-switch__checked.svg");
       }
 
@@ -81,7 +81,7 @@ $switch-size: $height - $padding - $padding;
         }
 
         &::after {
-          left: $switch-size + $padding + $padding;
+          left: $switch-size;
           width: $switch-size + $padding;
         }
       }
