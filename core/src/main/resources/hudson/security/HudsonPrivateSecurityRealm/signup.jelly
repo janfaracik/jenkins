@@ -130,7 +130,7 @@ THE SOFTWARE.
                   <label class="app-sign-in-register__form-label ${data.errors.containsKey('password1') ? 'alert' : ''}" for="password1">
                     ${%Password}
                   </label>
-                  <div class="jenkins-checkbox">
+                  <div class="jenkins-toggle-switch">
                     <input type="checkbox" id="showPassword" />
                     <label for="showPassword">${%Show}</label>
                   </div>

@@ -1,8 +1,8 @@
 @use "../abstracts/mixins";
 @use "../abstracts/theme";
 @use "../base/typography";
-@use "../form/checkbox";
 @use "../form/input";
+@use "../form/toggle-switch";
 @use "../components/buttons";
 
 @property --opacity {

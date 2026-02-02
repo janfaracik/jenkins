@@ -107,7 +107,7 @@ THE SOFTWARE.
 
                   <j:if test="${app.security.name()=='SECURED' and !app.disableRememberMe}">
                     <!-- remember me service only available for Spring Security -->
-                    <div class="jenkins-checkbox">
+                    <div class="jenkins-toggle-switch">
                       <input type="checkbox"
                            id="remember_me"
                            name="remember_me"

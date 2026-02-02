@@ -1,5 +1,5 @@
-$height: 30px;
-$padding: 5px;
+$height: 20px;
+$padding: 4px;
 $width: $height + $height - $padding - $padding;
 $switch-size: $height - $padding - $padding;
 
@@ -111,7 +111,6 @@ $switch-size: $height - $padding - $padding;
   margin: 0;
   cursor: pointer;
   line-height: $height;
-  font-weight: var(--form-label-font-weight);
   user-select: none;
 
   &::before {
