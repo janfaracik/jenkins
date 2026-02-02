@@ -83,12 +83,20 @@ Dialog.prototype.init = function () {
       this.dialog.appendChild(contents);
       behaviorShim.applySubtree(contents, true);
     }
-    if (this.options.message != null && this.dialogType !== "form") {
+    if (this.dialogType !== "form") {
       const message = createElementFromHtml(
         `<div class='jenkins-dialog__contents'/>`,
       );
-      this.dialog.appendChild(message);
-      message.innerText = this.options.message;
+      if (this.options.content != null && this.dialogType === "alert") {
+        message.appendChild(this.options.content);
+        this.dialog.appendChild(message);
+      } else if (this.options.message != null && this.dialogType !== "prompt") {
+        const message = createElementFromHtml(
+          `<div class='jenkins-dialog__contents'/>`,
+        );
+        this.dialog.appendChild(message);
+        message.innerText = this.options.message;
+      }
     }
 
     if (this.dialogType === "prompt") {
@@ -96,6 +104,14 @@ Dialog.prototype.init = function () {
           <input data-id="input" type="text" class='jenkins-input'></div>`);
       this.dialog.appendChild(inputDiv);
       this.input = inputDiv.querySelector("[data-id=input]");
+      if (this.options.message != null) {
+        const message = document.createElement("div");
+        inputDiv.insertBefore(message, this.input);
+        message.innerText = this.options.message;
+      }
+      if (this.options.promptValue) {
+        this.input.value = this.options.promptValue;
+      }
       if (!this.options.allowEmpty) {
         this.input.addEventListener("input", () => this.checkInput());
       }
@@ -155,7 +171,12 @@ Dialog.prototype.appendButtons = function () {
       this.dialog.dispatchEvent(new Event("cancel"));
     });
   }
-  if (this.dialogType === "prompt" && !this.options.allowEmpty) {
+
+  if (
+    this.dialogType === "prompt" &&
+    !this.options.allowEmpty &&
+    (this.options.promptValue == null || this.options.promptValue.trim() === "")
+  ) {
     this.ok.disabled = true;
   }
 };
@@ -167,7 +188,25 @@ Dialog.prototype.show = function () {
       "cancel",
       (e) => {
         e.preventDefault();
-        this.dialog.remove();
+
+        // Clear any hash
+        history.pushState(
+          "",
+          document.title,
+          window.location.pathname + window.location.search,
+        );
+
+        this.dialog.setAttribute("closing", "");
+
+        this.dialog.addEventListener(
+          "animationend",
+          () => {
+            this.dialog.removeAttribute("closing");
+            this.dialog.remove();
+          },
+          { once: true },
+        );
+
         cancel();
       },
       { once: true },
@@ -192,14 +231,42 @@ Dialog.prototype.show = function () {
           if (this.dialogType === "form") {
             value = new FormData(this.form);
           }
-          this.dialog.remove();
           resolve(value);
+          this.dialog.dispatchEvent(new Event("cancel"));
         },
         { once: true },
       );
     }
   });
 };
+
+function renderOnDemandDialog(dialogId) {
+  const templateId = "dialog-" + dialogId + "-template";
+
+  function render() {
+    const template = document.querySelector("#" + templateId);
+    const title = template.dataset.title;
+    const hash = template.dataset.dialogHash;
+    const content = template.content.firstElementChild.cloneNode(true);
+
+    if (hash) {
+      window.location.hash = hash;
+    }
+
+    behaviorShim.applySubtree(content, false);
+    dialog.modal(content, {
+      maxWidth: "550px",
+      title: title,
+    });
+  }
+
+  if (document.querySelector("#" + templateId)) {
+    render();
+    return;
+  }
+
+  renderOnDemand(document.querySelector("." + templateId), render);
+}
 
 function init() {
   window.dialog = {
@@ -260,6 +327,29 @@ function init() {
       return dialog.show();
     },
   };
+
+  behaviorShim.specify(
+    "[data-type='dialog-opener']",
+    "-dialog-",
+    1000,
+    (element) => {
+      element.addEventListener("click", () => {
+        renderOnDemandDialog(element.dataset.dialogId);
+      });
+    },
+  );
+
+  // Open the relevant dialog if the hash is set
+  if (window.location.hash) {
+    const element = document.querySelector(
+      ".dialog-" + window.location.hash.substring(1) + "-hash",
+    );
+    if (element) {
+      renderOnDemandDialog(
+        element.className.match(/dialog-(id\d+)-template/)[1],
+      );
+    }
+  }
 }
 
 export default { init };
