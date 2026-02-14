@@ -9,6 +9,10 @@
   margin: 0 0 var(--section-padding) 0;
   line-height: 1.66;
   text-wrap: pretty;
+
+  &:empty {
+    display: none;
+  }
 }
 
 .jenkins-app-bar + .jenkins-page-description {
