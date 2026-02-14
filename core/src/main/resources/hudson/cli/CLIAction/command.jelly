@@ -30,15 +30,15 @@ THE SOFTWARE.
     </div>
 
     <f:section title="${%Command}">
+      <j:set var="commandArgs" value="${command.name}${command.singleLineSummary}"/>
       <st:include page="example.jelly" />
 
-      <j:set var="commandArgs" value="${command.name}${command.singleLineSummary}"/>
-        <j:set var="usage" value="${command.usage}"/>
-        <j:if test="${!empty usage}">
-          <pre class="jenkins-!-margin-top-3">
-            ${command.usage}
-          </pre>
-        </j:if>
+      <j:set var="usage" value="${command.usage}"/>
+      <j:if test="${!empty usage}">
+        <pre class="jenkins-!-margin-top-3">
+          ${command.usage}
+        </pre>
+      </j:if>
     </f:section>
   </l:settings-subpage>
 </j:jelly>
