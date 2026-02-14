@@ -66,9 +66,9 @@ THE SOFTWARE.
   <l:userExperimentalFlag var="newManageJenkins" flagClassName="jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag" />
 
   <j:set var="managementLink" value="${attrs.managementLink ?: it}" />
-  <j:set var="newTitle" value="${attrs.title ?: managementLink.title}" />
+  <j:set var="newTitle" value="${attrs.title ?: managementLink.displayName}" />
   <j:set var="description" value="${attrs.description ?: managementLink.description}" />
-  
+
   <l:layout title="${newTitle} - ${manageJenkinsAction.displayName}"
             permission="${attrs.permission}"
             permissions="${attrs.permissions}"
