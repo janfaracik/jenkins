@@ -68,7 +68,7 @@ THE SOFTWARE.
   <j:set var="managementLink" value="${attrs.managementLink ?: it}" />
   <j:set var="newTitle" value="${attrs.title ?: managementLink.title}" />
   <j:set var="description" value="${attrs.description ?: managementLink.description}" />
-
+  
   <l:layout title="${newTitle} - ${manageJenkinsAction.displayName}"
             permission="${attrs.permission}"
             permissions="${attrs.permissions}"
@@ -89,7 +89,7 @@ THE SOFTWARE.
     <j:choose>
       <j:when test="${newManageJenkins}">
         <l:side-panel>
-          <l:app-bar title="${newTitle}" />
+          <l:app-bar title="${manageJenkinsAction.displayName}" />
 
           <l:tasks>
             <l:search-bar placeholder="${%Search}" id="settings-search-bar" />
