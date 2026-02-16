@@ -26,8 +26,9 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
   <st:documentation>
     A reusable container for subpages relating under Manage Jenkins.
-    <st:attribute name="from" type="hudson.model.ManagementLink" use="optional">
-      By default it will reuse the current context.
+    <st:attribute name="managementLink" type="hudson.model.ManagementLink" use="optional">
+      Specifies the object for which page details will be loaded from.
+      Defaults to the "it" object in the current context.
     </st:attribute>
     <st:attribute name="permission">
       If given, this page is only made available to users who have the specified permission.
@@ -48,12 +49,17 @@ THE SOFTWARE.
       Optional breadcrumb, will add a breadcrumb for the current <code>it</code>
       ]]>
     </st:attribute>
+    <st:attribute name="noDefer">
+      Optional, disables the deferred loading for the page.
+      This can be useful if you need to access 'request2' or do advanced JavaScript.
+      Defaults to false if not set.
+    </st:attribute>
   </st:documentation>
 
   <j:new className="hudson.model.ManageJenkinsAction" var="manageJenkinsAction" />
   <l:userExperimentalFlag var="newManageJenkins" flagClassName="jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag" />
 
-  <j:set var="managementLink" value="${attrs.from ?: it}" />
+  <j:set var="managementLink" value="${attrs.managementLink ?: it}" />
 
   <l:layout title="${managementLink.displayName} - ${manageJenkinsAction.displayName}"
             permission="${attrs.permission}"
@@ -111,21 +117,28 @@ THE SOFTWARE.
 
               <j:out value="${attrs.header}" />
 
-              <l:defer>
-                <l:defer.placeholder>
-                  <j:choose>
-                    <j:when test="${attrs.containsKey('placeholder')}">
-                      <j:out value="${attrs.placeholder}" />
-                    </j:when>
-                    <j:otherwise>
-                      <l:skeleton type="form" />
-                    </j:otherwise>
-                  </j:choose>
-                </l:defer.placeholder>
-                <l:defer.children>
+              <j:choose>
+                <j:when test="${!attrs.noDefer}">
+                  <l:defer>
+                    <l:defer.placeholder>
+                      <j:choose>
+                        <j:when test="${attrs.containsKey('placeholder')}">
+                          <j:out value="${attrs.placeholder}" />
+                        </j:when>
+                        <j:otherwise>
+                          <l:skeleton type="form" />
+                        </j:otherwise>
+                      </j:choose>
+                    </l:defer.placeholder>
+                    <l:defer.children>
+                      <d:invokeBody />
+                    </l:defer.children>
+                  </l:defer>
+                </j:when>
+                <j:otherwise>
                   <d:invokeBody />
-                </l:defer.children>
-              </l:defer>
+                </j:otherwise>
+              </j:choose>
             </div>
           </div>
         </l:main-panel>
