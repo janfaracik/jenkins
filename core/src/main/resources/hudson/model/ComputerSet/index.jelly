@@ -89,7 +89,7 @@ THE SOFTWARE.
           </td>
 
           <td>
-            <a href="../${c.url}" class="jenkins-table__link model-link inside">${c.displayName}</a>
+            <a href="../${c.url}" class="jenkins-table__link">${c.displayName}</a>
           </td>
 
           <j:forEach var="m" items="${monitors}">
@@ -105,6 +105,11 @@ THE SOFTWARE.
                 <a href="../${c.url}configure" class="jenkins-button jenkins-button--tertiary">
                   <l:icon src="symbol-settings" />
                 </a>
+                <button type="button"
+                        data-href="../${c.url}"
+                        class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link">
+                  <l:icon src="symbol-menu" />
+                </button>
               </div>
             </j:if>
           </td>
