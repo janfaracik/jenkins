@@ -25,7 +25,6 @@ THE SOFTWARE.
 <!-- This page have not existed historically so plugins might well not provide any views. -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns">
-
   <j:set var="header">
     <l:view>
       <l:app-bar title="${it.name}" icon="${it.iconClassName}">
