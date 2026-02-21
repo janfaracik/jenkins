@@ -24,21 +24,16 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
-  <l:layout permission="${app.SYSTEM_READ}" title="${%title(it.name)}">
+  <l:settings-subpage permission="${app.SYSTEM_READ}" title="${%title(it.name)}" includeBreadcrumb="true">
     <j:set var="readOnlyMode" value="${!app.hasPermission(app.ADMINISTER)}"/>
-    <st:include page="sidepanel.jelly"/>
-    <l:breadcrumb title="${%Configure}"/>
-    <l:main-panel>
-      <h1>${%title(it.name)}</h1>
-      <f:form method="post" action="configSubmit" name="config" class="jenkins-form">
-        <j:set var="instance" value="${it}"/>
-        <j:set var="descriptor" value="${instance.descriptor}"/>
+    <f:form method="post" action="configSubmit" name="config" class="jenkins-form">
+      <j:set var="instance" value="${it}"/>
+      <j:set var="descriptor" value="${instance.descriptor}"/>
 
-        <!-- main body of the configuration -->
-        <st:include it="${instance}" page="config.jelly" optional="true"/>
+      <!-- main body of the configuration -->
+      <st:include it="${instance}" page="config.jelly" optional="true"/>
 
-        <f:saveApplyBar/>
-      </f:form>
-    </l:main-panel>
-  </l:layout>
+      <f:saveApplyBar/>
+    </f:form>
+  </l:settings-subpage>
 </j:jelly>
