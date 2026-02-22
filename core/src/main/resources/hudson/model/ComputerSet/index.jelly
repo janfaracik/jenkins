@@ -41,7 +41,7 @@ THE SOFTWARE.
         </j:if>
         <j:set var="hasPermission" value="${h.hasAnyPermission(it, app.MANAGE_AND_SYSTEM_READ)}" />
         <j:if test="${hasPermission}">
-          <a class="jenkins-button" href="configure" tooltip="${%Configure Node Monitors}">
+          <a class="jenkins-button" href="configure">
             ${%Configure Monitors}
           </a>
         </j:if>
