@@ -35,11 +35,8 @@ THE SOFTWARE.
             <div class="jenkins-form">
 
               <l:isAdmin>
-                  <f:section title="${%Deploy Plugin}">
+                  <f:section title="${%Deploy Plugin}" description="${%deploytext}">
                       <f:form method="post" action="uploadPlugin" name="uploadPlugin" enctype="multipart/form-data">
-                          <div class="jenkins-description">
-                              ${%deploytext}
-                          </div>
                           <f:entry title="${%File}" field="name">
                               <f:file accept=".hpi,.jpi" />
                           </f:entry>
