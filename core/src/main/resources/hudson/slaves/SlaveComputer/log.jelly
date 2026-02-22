@@ -24,22 +24,18 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:layout title="${it.displayName} log" permissions="${it.EXTENDED_READ_AND_CONNECT}">
-    <st:include page="sidepanel.jelly" />
-    <l:breadcrumb title="${%Log}" />
-    <l:main-panel>
-      <pre id="out" />
-      <div id="spinner">
-        <l:progressAnimation />
-      </div>
-      <t:progressiveText href="logText/progressiveHtml" idref="out" spinner="spinner" />
-      <!-- TODO dubious value: INFO+ shown in logText anyway; FINE- configured in /log/*/ maybe better viewed there
-      <j:set var="logRecords" value="${it.logRecords}"/>
-      <j:if test="${!logRecords.isEmpty()}">
-        <h1>${%Log Records}</h1>
-        <t:logRecords logRecords="${logRecords}"/>
-      </j:if>
-      -->
-    </l:main-panel>
-  </l:layout>
+  <l:settings-subpage title="${it.displayName} log" permissions="${it.EXTENDED_READ_AND_CONNECT}" includeBreadcrumb="true">
+    <pre id="out" />
+    <div id="spinner">
+      <l:progressAnimation />
+    </div>
+    <t:progressiveText href="logText/progressiveHtml" idref="out" spinner="spinner" />
+    <!-- TODO dubious value: INFO+ shown in logText anyway; FINE- configured in /log/*/ maybe better viewed there
+    <j:set var="logRecords" value="${it.logRecords}"/>
+    <j:if test="${!logRecords.isEmpty()}">
+      <h1>${%Log Records}</h1>
+      <t:logRecords logRecords="${logRecords}"/>
+    </j:if>
+    -->
+  </l:settings-subpage>
 </j:jelly>

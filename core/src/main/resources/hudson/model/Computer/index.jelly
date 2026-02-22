@@ -26,7 +26,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:dd="/lib/layout/dropdowns" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
   <j:set var="header">
     <l:view>
-      <l:app-bar title="${it.caption}" icon="${it.iconClassName}">
+      <l:app-bar title="${it.displayName}" icon="${it.iconClassName}">
         <j:if test="${it.manualLaunchAllowed}">
           <st:include from="${it.launcher}" page="app-bar-controls.jelly" optional="true"/>
         </j:if>
