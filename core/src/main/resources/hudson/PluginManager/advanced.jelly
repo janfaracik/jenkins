@@ -35,8 +35,7 @@ THE SOFTWARE.
             <div class="jenkins-form">
 
               <l:isAdmin>
-                  <section class="jenkins-section jenkins-!-margin-bottom-5">
-                      <h2 class="jenkins-section__title">${%Deploy Plugin}</h2>
+                  <f:section title="${%Deploy Plugin}">
                       <f:form method="post" action="uploadPlugin" name="uploadPlugin" enctype="multipart/form-data">
                           <div class="jenkins-description">
                               ${%deploytext}
@@ -51,11 +50,10 @@ THE SOFTWARE.
                           </f:entry>
                           <f:submit value="${%Deploy}"/>
                       </f:form>
-                  </section>
+                  </f:section>
               </l:isAdmin>
 
-              <section class="jenkins-section jenkins-!-margin-bottom-5">
-                  <h2 class="jenkins-section__title">${%Update Site}</h2>
+              <f:section title="${%Update Site}">
                   <f:form method="post" action="siteConfigure" name="siteConfigure">
                       <f:entry title="${%URL}">
                           <l:isAdmin>
@@ -70,9 +68,7 @@ THE SOFTWARE.
                       </f:entry>
                       <l:isAdmin>
                           <st:adjunct includes="hudson.PluginManager._updateSite"/>
-                          <f:block>
-                              <f:submit/>
-                          </f:block>
+                          <f:submit/>
                       </l:isAdmin>
                   </f:form>
                   <j:set var="hasNonDefault" value="${false}"/>
@@ -81,11 +77,10 @@ THE SOFTWARE.
                           <j:set var="hasNonDefault" value="${true}"/>
                       </j:if>
                   </j:forEach>
-              </section>
+              </f:section>
 
               <j:if test="${hasNonDefault}">
-                  <section class="jenkins-section jenkins-!-margin-bottom-5">
-                      <h2 class="jenkins-section__title">${%Other Sites}</h2>
+                  <f:section title="${%Other Sites}">
                       <ul>
                           <j:forEach var="site" items="${app.updateCenter.sites}">
                               <j:if test="${site.id != app.updateCenter.ID_DEFAULT}">
@@ -93,7 +88,7 @@ THE SOFTWARE.
                               </j:if>
                           </j:forEach>
                       </ul>
-                  </section>
+                  </f:section>
               </j:if>
         </div>
     </l:settings-subpage>

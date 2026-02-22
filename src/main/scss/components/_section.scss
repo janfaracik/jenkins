@@ -2,8 +2,7 @@
 
 .jenkins-section {
   border-top: var(--jenkins-border);
-  padding: var(--section-padding) 0 0 0;
-  max-width: 1800px;
+  padding: var(--section-padding) 0;
 
   &:last-child {
     padding-bottom: 0;
@@ -18,8 +17,11 @@
     padding-top: 0;
   }
 
-  &--bottom-padding {
-    padding-bottom: var(--section-padding);
+  // Avoid duplicate padding
+  &:has(> :last-child.jenkins-form-item) {
+    //outline: 3px solid blue;
+    background: rgb(0 0 255 / 0.1);
+    padding-bottom: 0;
   }
 }
 
@@ -27,13 +29,14 @@
   margin: 0 0 var(--section-padding) 0;
   font-size: 1rem;
   font-weight: var(--font-bold-weight);
+  text-box: cap alphabetic;
 }
 
 .jenkins-section__description {
-  // Tweaked margin so that it appears visually centred when placed next to `.jenkins-section__title`
-  margin: -0.8125rem 0 1rem;
+  margin: 0 0 1rem;
   color: var(--text-color-secondary);
   line-height: 1.66;
+  text-box: cap alphabetic;
 }
 
 .jenkins-section__items {
