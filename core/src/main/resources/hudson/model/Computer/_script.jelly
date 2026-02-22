@@ -29,10 +29,13 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <j:set var="script" value='println System.getenv("PATH")' />
   <j:set var="script2" value='println "uname -a".execute().text' />
+  <j:new var="managementLink" className="jenkins.management.ConsoleLink" />
 
-  <t:scriptConsole scripts="${[script, script2]}">
-    <p class="jenkins-section__description">
-      ${%This execution happens in the agent JVM.}
-    </p>
-  </t:scriptConsole>
+  <l:settings-subpage managementLink="${managementLink}" includeBreadcrumb="true" header="${null}" noDefer="true">
+    <t:scriptConsole scripts="${[script, script2]}" layout="none">
+      <p class="jenkins-section__description">
+        ${%This execution happens in the agent JVM.}
+      </p>
+    </t:scriptConsole>
+  </l:settings-subpage>
 </j:jelly>
