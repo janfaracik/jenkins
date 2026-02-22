@@ -40,7 +40,7 @@ THE SOFTWARE.
                           <f:entry title="${%File}" field="name">
                               <f:file accept=".hpi,.jpi" />
                           </f:entry>
-                          <p>${%Or}</p>
+                          <p class="jenkins-description">${%Or}</p>
                           <f:entry title="${%URL}">
                               <f:textbox name="pluginUrl"
                                          class="jenkins-input validated" checkUrl="checkPluginUrl" checkDependsOn="" />
