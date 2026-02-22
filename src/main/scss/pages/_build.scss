@@ -176,8 +176,8 @@ body:has(.app-settings-container) {
     display: flex;
     flex-direction: column;
 
-    &:has(.jenkins-app-bar--sticky) {
-      max-width: 1200px;
+    &--wide {
+      max-width: 70vw;
     }
 
     // TODO - this can be moved to app-bar.scss when Manage Jenkins flag is removed
