@@ -33,7 +33,8 @@
 }
 
 .jenkins-section__description {
-  margin: 0 0 1rem;
+  // Tweaked margin so that it appears visually centred when placed next to `.jenkins-section__title`
+  margin: calc(var(--section-padding) * -0.5) 0 1rem;
   color: var(--text-color-secondary);
   line-height: 1.66;
   text-box: cap alphabetic;
