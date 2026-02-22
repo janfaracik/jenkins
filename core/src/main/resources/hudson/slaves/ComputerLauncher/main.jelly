@@ -23,13 +23,12 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <j:if test="${it.launchSupported and it.offline and !it.temporarilyOffline and it.isConnecting()}">
-    <p>
-      ${%launchingDescription}
+    <l:notice icon="symbol-status-blue-anime" title="${%launchingDescription}">
       <j:if test="${it.hasPermission(it.CONFIGURE) or it.hasPermission(it.CONNECT)}">
         <a href="log">${%See log for more details}</a>
       </j:if>
-    </p>
+    </l:notice>
   </j:if>
 </j:jelly>
