@@ -38,23 +38,13 @@ THE SOFTWARE.
 
         <!-- temporarily offline switch -->
         <j:choose>
-          <j:when test="${it.temporarilyOffline}">
-            <l:hasPermission permission="${it.CONNECT}">
-              <form method="post" action="toggleOffline">
-                <f:submit value="${%submit.temporarilyOffline}"  />
-              </form>
-              <form method="post" action="setOfflineCause">
-                <f:submit primary="false" value="${%submit.updateOfflineCause}"  />
-              </form>
-            </l:hasPermission>
-          </j:when>
-          <j:otherwise>
+          <j:when test="${!it.temporarilyOffline}">
             <l:hasPermission permission="${it.DISCONNECT}">
               <form method="post" action="markOffline">
                 <f:submit primary="false" value="${%submit.not.temporarilyOffline}"  />
               </form>
             </l:hasPermission>
-          </j:otherwise>
+          </j:when>
         </j:choose>
 
         <l:overflowButton>
@@ -72,9 +62,11 @@ THE SOFTWARE.
   </j:set>
 
   <l:settings-subpage title="${it.displayName}" header="${header}">
+    <j:set var="node" value="${it}" />
+
       <st:include page="index-top.jelly" it="${it}" />
 
-    <t:editDescriptionButton permission="${it.CONFIGURE}"/>
+<!--    <t:editDescriptionButton permission="${it.CONFIGURE}"/>-->
 
       <j:if test="${it.offlineCause!=null and it.offline and !it.connecting}">
         <st:include it="${it.offlineCause}" page="cause.jelly" />

@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <l:settings-subpage title="${%title(it.displayName)}" description="${%blurb}">
+  <l:settings-subpage title="${%title(it.displayName)}" description="${%blurb}" includeBreadcrumb="true">
     <l:hasPermission permission="${it.DISCONNECT}">
       <form method="post" action="changeOfflineCause">
         <f:textarea name="offlineMessage" value="${it.temporaryOfflineCauseReason}"/>

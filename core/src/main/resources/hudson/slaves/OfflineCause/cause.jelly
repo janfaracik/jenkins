@@ -24,12 +24,21 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
-  <div class="${it.statusClass}">
-    <div class="timestamp">
-      <i:formatDate value="${it.time}" type="both" dateStyle="medium" timeStyle="medium"/>
-    </div>
-    <div class="message">
-      <j:out value="${it}" />
-    </div>
-  </div>
+  <l:hasPermission permission="${node.CONNECT}">
+    <l:notice icon="symbol-computer-offline"
+              title="${%This node is offline}">
+      <div>
+        <i:formatDate value="${it.time}" type="both" dateStyle="medium" timeStyle="medium"/>
+        <j:out value="${it}" />
+      </div>
+      <div class="jenkins-buttons-row">
+        <form method="post" action="toggleOffline">
+          <f:submit value="${%submit.temporarilyOffline}"  />
+        </form>
+        <form method="post" action="setOfflineCause">
+          <f:submit primary="false" value="${%submit.updateOfflineCause}"  />
+        </form>
+      </div>
+    </l:notice>
+  </l:hasPermission>
 </j:jelly>
