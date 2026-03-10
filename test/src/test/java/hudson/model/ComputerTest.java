@@ -52,6 +52,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -157,6 +158,18 @@ class ComputerTest {
         var cause = new OfflineCause.IdleOfflineCause();
         computer.setOfflineCause(cause);
         assertThat(computer.getIcon(), equalTo(cause.getComputerIcon()));
+    }
+
+    @Test
+    @Issue("#26146")
+    void computerTemporaryOfflineCauseStaysOnConfigRound() throws Exception {
+        var agent = j.createSlave();
+        var computer = agent.toComputer();
+        var offlineCause = new OfflineCause.UserCause(User.getOrCreateByIdOrFullName("username"), "Initial cause");
+        computer.setTemporaryOfflineCause(offlineCause);
+        j.configRoundtrip(agent);
+        agent = (DumbSlave) j.jenkins.getNode(agent.getNodeName());
+        assertThat(agent.getTemporaryOfflineCause(), equalTo(offlineCause));
     }
 
     @Test
@@ -332,7 +345,7 @@ class ComputerTest {
 
         // Connect the computer
         computer.connect(false);
-        await("computer should be online after connect").until(() -> computer.isOnline(), is(true));
+        await("computer should be online after connect").atMost(Duration.ofSeconds(30)).until(computer::isOnline, is(true));
         assertThat(computer.isConnected(), is(true));
         assertThat(computer.isOffline(), is(false));
 
@@ -350,7 +363,7 @@ class ComputerTest {
         // Disconnect the computer
         computer.disconnect(new OfflineCause.UserCause(null, null));
         // wait for the slave process to be killed
-        await("disconnected agent is not available for scheduling").until(() -> computer.isOnline(), is(false));
+        await("disconnected agent is not available for scheduling").until(computer::isOnline, is(false));
         assertThat(computer.isConnected(), is(false));
         assertThat(computer.isOffline(), is(true));
     }

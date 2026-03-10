@@ -336,6 +336,13 @@ $table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
     }
   }
 
+  .jenkins-badge {
+    padding: 0.125rem 0.625rem;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
+  }
+
+  // Deprecated - use .jenkins-badge instead
   &__badge {
     @include mixins.item;
 

@@ -46,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.ExtensionList;
 import hudson.Functions;
@@ -89,8 +90,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -99,13 +99,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CancellationException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.BlockedBecauseOfBuildInProgress;
 import jenkins.model.Jenkins;
@@ -125,7 +129,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.LogRecorder;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
 import org.jvnet.hudson.test.MockQueueItemAuthenticator;
 import org.jvnet.hudson.test.SequenceLock;
@@ -142,8 +145,6 @@ import org.springframework.security.core.Authentication;
  */
 @WithJenkins
 public class QueueTest {
-
-    private final LogRecorder logging = new LogRecorder().record(Queue.class, Level.FINE);
 
     private JenkinsRule r;
 
@@ -165,8 +166,6 @@ public class QueueTest {
         FreeStyleProject testProject = r.createFreeStyleProject("test");
         assertNotNull(testProject.scheduleBuild2(0, new UserIdCause()));
         q.save();
-
-        System.out.println(Files.readString(r.jenkins.getRootDir().toPath().resolve("queue.xml"), StandardCharsets.UTF_8));
 
         assertEquals(1, q.getItems().length);
         q.clear();
@@ -220,8 +219,6 @@ public class QueueTest {
         FreeStyleProject testProject = r.createFreeStyleProject("test");
         assertNotNull(testProject.scheduleBuild2(0, new UserIdCause()));
         q.save();
-
-        System.out.println(Files.readString(r.jenkins.getRootDir().toPath().resolve("queue.xml"), StandardCharsets.UTF_8));
 
         assertEquals(1, q.getItems().length);
         q.clear();
@@ -365,7 +362,6 @@ public class QueueTest {
                         Started by remote host 4.3.2.1 with note: test
                         Started by remote host 1.2.3.4 with note: foo"""),
                    "Build page should combine duplicates and show counts: " + buildPage);
-        System.out.println(new XmlFile(new File(build.getRootDir(), "build.xml")).asString());
     }
 
     @Issue("JENKINS-8790")
@@ -449,6 +445,98 @@ public class QueueTest {
             assertThat(r.jenkins.getQueue().getPendingItems(), contains(item1));
             assertTrue(item2.isBlocked());
         });
+    }
+
+    @Test
+    void tryWithTimeoutSuccessfullyAcquired() throws InterruptedException, ExecutionException {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            final CountDownLatch task1Started =  new CountDownLatch(1);
+            final CountDownLatch task1Release = new CountDownLatch(1);
+
+            Future<Void> task1 = executor.submit(Queue.wrapWithLock(() -> {
+                task1Started.countDown();
+                try {
+                    task1Release.await();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                return null;
+            }));
+
+            // Wait for the first task to be started to ensure it is running and has the lock
+            task1Started.await();
+
+            // Create a task that will need to wait until the first task is complete that will fail to acquire.
+            final AtomicBoolean task2Result = new AtomicBoolean(false);
+            boolean acquired = Queue.tryWithLock(() -> task2Result.set(true), Duration.ofMillis(10));
+            assertFalse(acquired);
+            assertFalse(task2Result.get());
+
+            // Now release the first task and wait (with a long timeout) and we should succeed at getting the lock.
+            final AtomicBoolean task3Result = new AtomicBoolean(false);
+            task1Release.countDown();
+            acquired = Queue.tryWithLock(() -> task3Result.set(true), Duration.ofSeconds(30));
+
+            // First task should complete
+            task1.get();
+
+            // Task 2 should have acquired and completed
+            assertTrue(acquired);
+            assertTrue(task3Result.get());
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    void tryWithTimeoutFailedToAcquire() throws InterruptedException, ExecutionException {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            // Submit one task that will block indefinitely until released
+            final CountDownLatch task1Started =  new CountDownLatch(1);
+            final CountDownLatch task1Release = new CountDownLatch(1);
+            Future<Void> task1 = executor.submit(Queue.wrapWithLock(() -> {
+                task1Started.countDown();
+                try {
+                    task1Release.await();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                return null;
+            }));
+
+            // Wait for task 1 to start
+            task1Started.await();
+
+            // Try to acquire lock with 50ms timeout, expecting that it cannot be acquired
+            final AtomicBoolean task2Complete = new AtomicBoolean(false);
+            boolean result = Queue.tryWithLock(() -> task2Complete.set(true), Duration.ofMillis(50));
+
+            // Results should indicate the task did not run
+            assertFalse(result);
+            assertFalse(task2Complete.get());
+
+            // Now release the first task and wait for it to finish
+            task1Release.countDown();
+            task1.get();
+
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    void tryWithTimeoutImmediatelyAcquired() throws InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        try {
+            final AtomicBoolean taskComplete = new AtomicBoolean(false);
+            boolean result = Queue.tryWithLock(() -> taskComplete.set(true), Duration.ofMillis(1));
+            assertTrue(result);
+            assertTrue(taskComplete.get());
+        } finally {
+            executor.shutdownNow();
+        }
     }
 
     @Issue("JENKINS-27256")
@@ -538,6 +626,45 @@ public class QueueTest {
             return super.canRun(item);
         }
 
+    }
+
+    @TestExtension("killAllQueueItems")
+    public static class KillAllItems extends QueueTaskDispatcher {
+        @CheckForNull
+        @Override
+        public CauseOfBlockage canRun(Queue.Item item) {
+            return new Cancelled();
+        }
+    }
+
+    @Test
+    void killAllQueueItems() throws IOException {
+        queueItemKiller();
+    }
+
+    @TestExtension("killBlockedItem")
+    public static class KillBlockedItems extends QueueTaskDispatcher {
+        @CheckForNull
+        @Override
+        public CauseOfBlockage canRun(Queue.Item item) {
+            return item instanceof BlockedItem ? new Cancelled() : new CauseOfBlockage() {
+                @Override
+                public String getShortDescription() {
+                    return "blocked by " + this.getClass().getSimpleName();
+                }
+            };
+        }
+    }
+
+    @Test
+    void killBlockedItem() throws IOException {
+        queueItemKiller();
+    }
+
+    private void queueItemKiller() throws IOException {
+        FreeStyleProject trigger = r.createFreeStyleProject();
+        var buildFuture = trigger.scheduleBuild2(0, new UserIdCause());
+        await().until(() -> buildFuture.getStartCondition().isCancelled());
     }
 
     private void waitUntilWaitingListIsEmpty(Queue q) throws InterruptedException {
@@ -887,7 +1014,7 @@ public class QueueTest {
         project1.scheduleBuild2(0);
         QueueTaskFuture<FreeStyleBuild> v = project2.scheduleBuild2(0);
         projectError.scheduleBuild2(0);
-        Executor e = r.jenkins.toComputer().getExecutors().get(0);
+        Executor e = r.jenkins.toComputer().getExecutors().getFirst();
         Thread.sleep(2000);
         while (project2.getLastBuild() == null) {
              if (!e.isAlive()) {
@@ -1053,7 +1180,7 @@ public class QueueTest {
         //james has DISCOVER permission on the project and will only be able to see the task name.
         List projects = p3.getByXPath("/queue/discoverableItem/task/name/text()");
         assertEquals(1, projects.size());
-        assertEquals("project", projects.get(0).toString());
+        assertEquals("project", projects.getFirst().toString());
 
         // Also check individual item exports.
         String url = project.getQueueItem().getUrl() + "api/xml";
@@ -1092,12 +1219,27 @@ public class QueueTest {
         queue.maintain();
 
         assertEquals(1, r.jenkins.getQueue().getBlockedItems().size());
-        CauseOfBlockage actual = r.jenkins.getQueue().getBlockedItems().get(0).getCauseOfBlockage();
+        CauseOfBlockage actual = r.jenkins.getQueue().getBlockedItems().getFirst().getCauseOfBlockage();
         CauseOfBlockage expected = new BlockedBecauseOfBuildInProgress(t1.getFirstBuild());
 
         assertEquals(expected.getShortDescription(), actual.getShortDescription());
-        Queue.getInstance().doCancelItem(r.jenkins.getQueue().getBlockedItems().get(0).getId());
-        r.assertBuildStatusSuccess(r.waitForCompletion(build));
+        Queue.getInstance().doCancelItem(r.jenkins.getQueue().getBlockedItems().getFirst().getId());
+
+        build.doStop(); // Stop build 1 early
+        r.waitForCompletion(build);
+        build.delete(); // Delete build 1
+
+        // Stop and delete build 2 if it is running.  Seen running on slower Windows computers
+        if (t1.isBuilding()) {
+            FreeStyleBuild build2 = t1.getLastBuild();
+            build2.doStop();
+            r.waitForCompletion(build2);
+            build2.delete();
+        }
+
+        assertFalse(t1.isBuilding(), "Job unexpectedly building");
+        assertNull(t1.getQueueItem(), "Job unexpectedly has non-null entry in queue " + t1.getQueueItem());
+        assertFalse(t1.isInQueue(), "Job unexpectedly in queue");
     }
 
     @Test
@@ -1383,7 +1525,7 @@ public class QueueTest {
         var computer = onlineSlave.toComputer();
         Timer.get().execute(() -> {
             // Simulate a computer failure just after the executor is created
-            while (computer.getExecutors().get(0).getStartTime() == 0) {
+            while (computer.getExecutors().getFirst().getStartTime() == 0) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -1400,5 +1542,20 @@ public class QueueTest {
         r.waitOnline(onlineSlave);
         r.assertBuildStatusSuccess(f);
         assertTrue(r.jenkins.getQueue().isEmpty());
+        // clean up
+        computer.disconnect(null).get();
+        r.jenkins.removeNode(onlineSlave);
+    }
+
+    private static class Cancelled extends CauseOfBlockage {
+        @Override
+        public String getShortDescription() {
+            return "Killed by QueueItemKiller";
+        }
+
+        @Override
+        public boolean isFatal() {
+            return true;
+        }
     }
 }

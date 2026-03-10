@@ -13,6 +13,7 @@ let _defaults = {
   hideCloseButton: false,
   allowEmpty: false,
   submitButton: false,
+  preventCloseOnOutsideClick: false,
 };
 
 let _typeClassMap = {
@@ -39,11 +40,12 @@ Dialog.prototype.init = function () {
   this.dialog.style.minWidth = this.options.minWidth;
   document.body.appendChild(this.dialog);
 
-  if (this.options.title != null) {
-    const title = createElementFromHtml(`<div class='jenkins-dialog__title'/>`);
-    this.dialog.appendChild(title);
-    title.innerText = this.options.title;
-  }
+  // Append title element
+  const title = createElementFromHtml(
+    `<div class='jenkins-dialog__title'><span></span></div>`,
+  );
+  this.dialog.appendChild(title);
+  title.querySelector("span").innerText = this.options.title;
 
   if (this.dialogType === "modal") {
     if (this.options.content != null) {
@@ -55,22 +57,24 @@ Dialog.prototype.init = function () {
     }
     if (this.options.hideCloseButton !== true) {
       const closeButton = createElementFromHtml(`
-          <button class="jenkins-dialog__close-button jenkins-button">
+          <button class="jenkins-dialog__title__button jenkins-dialog__title__close-button jenkins-button">
             <span class="jenkins-visually-hidden">Close</span>
             ${CLOSE}
           </button>
         `);
-      this.dialog.appendChild(closeButton);
+      title.append(closeButton);
       closeButton.addEventListener("click", () =>
         this.dialog.dispatchEvent(new Event("cancel")),
       );
     }
-    this.dialog.addEventListener("click", function (e) {
-      if (e.target !== e.currentTarget) {
-        return;
-      }
-      this.dispatchEvent(new Event("cancel"));
-    });
+    if (!this.options.preventCloseOnOutsideClick) {
+      this.dialog.addEventListener("click", function (e) {
+        if (e.target !== e.currentTarget) {
+          return;
+        }
+        this.dispatchEvent(new Event("cancel"));
+      });
+    }
     this.ok = null;
   } else {
     this.form = null;
@@ -189,6 +193,13 @@ Dialog.prototype.show = function () {
       (e) => {
         e.preventDefault();
 
+        // Clear any hash
+        history.pushState(
+          "",
+          document.title,
+          window.location.pathname + window.location.search,
+        );
+
         this.dialog.setAttribute("closing", "");
 
         this.dialog.addEventListener(
@@ -232,6 +243,34 @@ Dialog.prototype.show = function () {
     }
   });
 };
+
+function renderOnDemandDialog(dialogId) {
+  const templateId = "dialog-" + dialogId + "-template";
+
+  function render() {
+    const template = document.querySelector("#" + templateId);
+    const title = template.dataset.title;
+    const hash = template.dataset.dialogHash;
+    const content = template.content.firstElementChild.cloneNode(true);
+
+    if (hash) {
+      window.location.hash = hash;
+    }
+
+    behaviorShim.applySubtree(content, false);
+    dialog.modal(content, {
+      maxWidth: "550px",
+      title: title,
+    });
+  }
+
+  if (document.querySelector("#" + templateId)) {
+    render();
+    return;
+  }
+
+  renderOnDemand(document.querySelector("." + templateId), render);
+}
 
 function init() {
   window.dialog = {
@@ -292,6 +331,29 @@ function init() {
       return dialog.show();
     },
   };
+
+  behaviorShim.specify(
+    "[data-type='dialog-opener']",
+    "-dialog-",
+    1000,
+    (element) => {
+      element.addEventListener("click", () => {
+        renderOnDemandDialog(element.dataset.dialogId);
+      });
+    },
+  );
+
+  // Open the relevant dialog if the hash is set
+  if (window.location.hash) {
+    const element = document.querySelector(
+      ".dialog-" + window.location.hash.substring(1) + "-hash",
+    );
+    if (element) {
+      renderOnDemandDialog(
+        element.className.match(/dialog-(id\d+)-template/)[1],
+      );
+    }
+  }
 }
 
 export default { init };
