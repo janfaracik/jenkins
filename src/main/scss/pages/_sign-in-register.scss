@@ -24,9 +24,12 @@
   justify-content: center;
   overflow: hidden;
 
-  & > div {
-    width: 100%;
-    height: 100%;
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-right: var(--jenkins-border--subtle);
   }
 
   @media (width < 992px) {

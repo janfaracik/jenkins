@@ -5,9 +5,18 @@
   justify-content: center;
   pointer-events: none;
   margin-bottom: var(--section-padding);
-  height: 250px;
+  height: 240px;
   border-radius: var(--form-input-border-radius);
   overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border: var(--jenkins-border--subtle);
+    border-radius: inherit;
+  }
 }
 
 .app-about-heading {
