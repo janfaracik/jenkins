@@ -23,7 +23,5 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
-  <section class="app-sign-in-register__branding">
-    <l:branding />
-  </section>
+  <l:branding clazz="app-sign-in-register__branding" />
 </j:jelly>

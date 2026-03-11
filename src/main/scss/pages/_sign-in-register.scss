@@ -19,28 +19,16 @@
   bottom: 0;
   left: 0;
   width: 40vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  border-radius: 0;
+
+  &::after {
+    border-top: none;
+    border-left: none;
+    border-bottom: none;
+  }
 
   @media (width < 992px) {
     display: none;
-  }
-
-  &::after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    border-right: var(--jenkins-border--subtle);
-  }
-
-  img {
-    min-height: 15rem;
-    height: 25vh;
-    max-height: 30rem;
-    z-index: 1;
   }
 }
 

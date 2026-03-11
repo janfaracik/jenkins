@@ -1,24 +1,3 @@
-.app-about-branding {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  margin-bottom: var(--section-padding);
-  height: 230px;
-  border-radius: var(--form-input-border-radius);
-  overflow: hidden;
-
-  &::after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    inset: 0;
-    border: var(--jenkins-border--subtle);
-    border-radius: inherit;
-  }
-}
-
 .app-about-heading {
   font-weight: 600;
   font-family: Georgia, serif;
@@ -31,4 +10,9 @@
   font-weight: var(--font-bold-weight);
   color: var(--text-color-secondary);
   margin: 0;
+}
+
+.app-about-branding {
+  height: 230px;
+  margin-bottom: var(--section-padding);
 }
