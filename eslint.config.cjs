@@ -19,7 +19,6 @@ module.exports = [
       ".pnp.cjs",
       ".pnp.loader.mjs",
       "src/main/js/plugin-setup-wizard/bootstrap-detached.js",
-      "war/src/main/webapp/scripts/yui/*",
     ],
   },
   {
@@ -78,6 +77,7 @@ module.exports = [
         Utilities: "readonly",
         UTILITIES_VERSION: "writeable",
         YAHOO: "readonly",
+        updateValidationArea: "readonly",
       },
     },
   },
