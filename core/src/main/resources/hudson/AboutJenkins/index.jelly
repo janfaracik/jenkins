@@ -50,8 +50,7 @@ THE SOFTWARE.
     <script src="${resURL}/jsbundles/section-to-tabs.js" type="text/javascript" defer="true" />
 
     <div class="app-about-branding">
-      <div class="app-about-branding__aurora"></div>
-      <img src="${imagesURL}/svgs/logo.svg" alt="${%logo}" />
+      <l:branding />
     </div>
 
     <p class="jenkins-page-description jenkins-!-text-color">${%blurb}</p>
