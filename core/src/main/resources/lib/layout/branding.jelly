@@ -7,7 +7,7 @@
   </st:documentation>
 
   <div class="app-branding ${attrs.clazz}">
-    <div class="idk">
+    <div class="app-branding__conic">
       <img src="${imagesURL}/svgs/logo.svg" alt="${%Jenkins illustration}" />
     </div>
   </div>

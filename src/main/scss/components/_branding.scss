@@ -6,7 +6,6 @@
   overflow: hidden;
   transition: var(--standard-transition);
   z-index: 0;
-  pointer-events: none;
   border-radius: var(--form-input-border-radius);
 
   &::before, &::after {
@@ -17,11 +16,14 @@
   }
 
   &::before {
+    background-color: color-mix(in sRGB, var(--text-color-secondary) 20%, transparent);
     background:
-            radial-gradient(circle at 20% 30%, var(--light-purple) 0%, transparent 65%),
-            radial-gradient(circle at 75% 20%, var(--light-orange) 0%, transparent 65%),
-            radial-gradient(circle at 30% 75%, var(--light-blue) 0%, transparent 60%),
-            radial-gradient(circle at 80% 70%, var(--light-pink) 0%, transparent 65%);
+            radial-gradient(ellipse 85% 65% at 20% 25%, var(--light-orange) 0%, transparent 78%),
+            radial-gradient(ellipse 80% 60% at 80% 20%, var(--light-purple) 0%, transparent 80%),
+            radial-gradient(ellipse 78% 58% at 28% 75%, var(--light-blue) 0%, transparent 78%),
+            radial-gradient(ellipse 80% 60% at 78% 72%, var(--light-pink) 0%, transparent 80%),
+            radial-gradient(ellipse 90% 70% at 50% 50%, var(--light-cyan) 0%, transparent 84%);
+    inset: -100px;
     opacity: 0.5;
   }
 
@@ -29,7 +31,7 @@
     border: var(--jenkins-border--subtle);
   }
 
-  .idk {
+  .app-branding__conic {
     position: absolute;
     inset: 0;
     display: flex;
@@ -41,9 +43,8 @@
       content: "";
       position: absolute;
       inset: 0;
-      opacity: 0.5;
       flex: 1;
-      backdrop-filter: invert(3%) blur(50px);
+      backdrop-filter: invert(1%) blur(60px);
       mask-image: repeating-conic-gradient(
                       from 0deg,
                       var(--background) 0deg,
