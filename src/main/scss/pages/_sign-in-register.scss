@@ -24,16 +24,16 @@
   justify-content: center;
   overflow: hidden;
 
+  @media (width < 992px) {
+    display: none;
+  }
+
   &::after {
     content: "";
     position: absolute;
     z-index: 1;
     inset: 0;
     border-right: var(--jenkins-border--subtle);
-  }
-
-  @media (width < 992px) {
-    display: none;
   }
 
   img {
