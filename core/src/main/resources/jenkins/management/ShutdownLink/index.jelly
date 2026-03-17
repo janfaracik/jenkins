@@ -26,7 +26,11 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <l:settings-subpage>
     <div class="churchbell">
-      <button class="jenkins-button">
+      <l:confirmationLink href="${rootURL}/reload"
+                          post="true"
+                          title="Are you sure you want to reload configuration from disk?"
+                          message="This will discard all the loaded data in memory and reload everything from the file system."
+                          class="jenkins-button">
         <l:icon src="symbol-reload" />
         <div>
           Reload Configuration from Disk
@@ -35,7 +39,7 @@ THE SOFTWARE.
         <div>
           Discard all the loaded data in memory and reload everything from file system. Useful when you modified config files directly on disk.
         </div>
-      </button>
+      </l:confirmationLink>
       <button class="jenkins-button">
         <l:icon src="symbol-power" />
         <div>
