@@ -147,7 +147,6 @@ THE SOFTWARE.
       </j:forEach>
     </j:if>
 
-    <!-- Shared Vite chunks are loaded automatically through the module graph. -->
     <script src="${resURL}/jsbundles/sortable-drag-drop.js" type="module"/>
     <script src="${resURL}/jsbundles/app.js" type="module" />
   </head>
