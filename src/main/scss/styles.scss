@@ -13,7 +13,7 @@
     display: grid;
     grid-template-columns: auto 1fr;
     text-align: left;
-    padding: 1rem;
+    padding: 1rem 1rem 1.125rem;
     gap: 0.875rem 0.75rem;
     white-space: wrap;
 
@@ -42,8 +42,10 @@
       }
     }
 
-    &:hover, &:focus-visible {
+    &:hover,
+    &:focus-visible {
       & > div:first-of-type svg {
+        color: var(--text-color);
         translate: 2px 0;
         opacity: 1;
       }
