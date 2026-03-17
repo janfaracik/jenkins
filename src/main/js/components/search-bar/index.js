@@ -8,7 +8,6 @@ function init() {
   const searchBarInputs = document.querySelectorAll(".jenkins-search__input");
 
   Array.from(searchBarInputs)
-    .filter((searchBar) => searchBar.suggestions)
     .forEach((searchBar) => {
       const searchWrapper = searchBar.parentElement.parentElement;
       const searchResultsContainer = createElementFromHtml(
@@ -21,6 +20,10 @@ function init() {
       searchResultsContainer.appendChild(searchResults);
 
       searchBar.addEventListener("input", () => {
+        if (!searchBar.suggestions) {
+          return;
+        }
+
         const query = searchBar.value.toLowerCase();
 
         // Hide the suggestions if the search query is empty
