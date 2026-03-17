@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2023, CloudBees Inc.
+Copyright (c) 2026, Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +22,30 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
-<!--
-  Entrance to the configuration page
--->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:t="/lib/hudson">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <l:settings-subpage>
-    Hello world :0
+    <div class="churchbell">
+      <button class="jenkins-button">
+        <l:icon src="symbol-reload" />
+        <div>
+          Reload Configuration from Disk
+          <l:icon src="symbol-chevron-forward" />
+        </div>
+        <div>
+          Discard all the loaded data in memory and reload everything from file system. Useful when you modified config files directly on disk.
+        </div>
+      </button>
+      <button class="jenkins-button">
+        <l:icon src="symbol-power" />
+        <div>
+          Prepare for shutdown
+          <l:icon src="symbol-chevron-forward" />
+        </div>
+        <div>
+          Stops executing new builds, so that the system can be eventually shut down safely.
+        </div>
+      </button>
+    </div>
   </l:settings-subpage>
 </j:jelly>

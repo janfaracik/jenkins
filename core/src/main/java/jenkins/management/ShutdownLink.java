@@ -58,7 +58,8 @@ public class ShutdownLink extends ManagementLink {
 
     @Override
     public String getDescription() {
-        return Jenkins.get().isQuietingDown() ? Messages.ShutdownLink_ShuttingDownInProgressDescription() : Messages.ShutdownLink_Description();
+        return "Maintenance tasks for this Jenkins controller.";
+//        return Jenkins.get().isQuietingDown() ? Messages.ShutdownLink_ShuttingDownInProgressDescription() : Messages.ShutdownLink_Description();
     }
 
     @Override
