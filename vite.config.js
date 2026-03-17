@@ -14,6 +14,7 @@ const sourceRoots = {
 };
 const fromJs = (source) => ({ root: "js", source });
 const fromScss = (source) => ({ root: "scss", source });
+const jenkinsRuntimeAssetPath = /^(?:\.\.\/)+images\//;
 
 const bundles = [
   {
@@ -96,6 +97,10 @@ const templateHelpers = {
   hasDependencies: true,
 };
 
+function isJenkinsRuntimeAssetPath(source) {
+  return jenkinsRuntimeAssetPath.test(source);
+}
+
 /**
  * Vite/Rollup plugin that turns .hbs files into runtime Handlebars template modules.
  *
@@ -132,9 +137,10 @@ function handlebarsTemplatesPlugin() {
 /**
  * Vite/Rollup plugin that preserves Jenkins-relative image URLs in CSS.
  *
- * Rewrites url("../images/...") to a temporary placeholder before asset
- * processing so the bundler does not fingerprint, inline, or relocate those
- * files, then restores the original url(...) in emitted CSS.
+ * Rewrites relative url("../../images/...") references to a temporary
+ * placeholder before asset processing so the bundler does not fingerprint,
+ * inline, or relocate those files, then restores the original url(...) in
+ * emitted CSS.
  */
 function preserveJenkinsCssAssetsPlugin() {
   return {
@@ -146,7 +152,7 @@ function preserveJenkinsCssAssetsPlugin() {
       }
 
       const nextSource = source.replace(
-        /url\((['"]?)(\.\.\/images\/[^'")]+)\1\)/g,
+        /url\((['"]?)((?:\.\.\/)+images\/[^'")]+)\1\)/g,
         (_match, _quote, assetPath) => `jenkins-asset("${assetPath}")`,
       );
 
@@ -196,6 +202,9 @@ export default defineConfig(() => ({
     manifest: false,
     outDir: resolveFromRoot("war/src/main/webapp/jsbundles"),
     rollupOptions: {
+      external(source) {
+        return typeof source === "string" && isJenkinsRuntimeAssetPath(source);
+      },
       input,
       output: {
         assetFileNames(assetInfo) {
