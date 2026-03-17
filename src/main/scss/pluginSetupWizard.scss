@@ -441,7 +441,7 @@
             left: 1px;
             width: 14px;
             height: 14px;
-            mask-image: url("../images/svgs/setupWizard/external-link.svg");
+            mask-image: url("../../images/svgs/setupWizard/external-link.svg");
             mask-size: contain;
             mask-position: center;
             background: $badge-color;
@@ -478,7 +478,7 @@
                 margin: -2px -2px 0 1px;
                 background: $badge-color;
                 vertical-align: middle;
-                mask-image: url("../images/svgs/setupWizard/chevron-right.svg");
+                mask-image: url("../../images/svgs/setupWizard/chevron-right.svg");
                 mask-size: contain;
                 mask-position: center;
               }
@@ -527,7 +527,7 @@
                 width: 12px;
                 height: 12px;
                 background: currentColor;
-                mask-image: url("../images/svgs/setupWizard/external-link.svg");
+                mask-image: url("../../images/svgs/setupWizard/external-link.svg");
                 mask-size: contain;
                 mask-position: center;
               }
@@ -730,7 +730,7 @@
         height: 16px;
         position: absolute;
         left: 5px;
-        mask-image: url("../images/svgs/setupWizard/circle.svg");
+        mask-image: url("../../images/svgs/setupWizard/circle.svg");
         mask-size: contain;
         mask-position: center;
         background: rgb(0 0 0 / 0.1);
@@ -739,7 +739,7 @@
       &.installing {
         &::before {
           background: rgb(0 60 100 / 0.33);
-          mask-image: url("../images/svgs/setupWizard/progress.svg");
+          mask-image: url("../../images/svgs/setupWizard/progress.svg");
           mask-size: contain;
           mask-position: center;
 
@@ -752,7 +752,7 @@
 
         &::before {
           background: #3c763d;
-          mask-image: url("../images/svgs/setupWizard/check.svg");
+          mask-image: url("../../images/svgs/setupWizard/check.svg");
           mask-size: contain;
           mask-position: center;
 
@@ -765,7 +765,7 @@
 
         &::before {
           background: #a94442;
-          mask-image: url("../images/svgs/setupWizard/close.svg");
+          mask-image: url("../../images/svgs/setupWizard/close.svg");
           mask-size: contain;
           mask-position: center;
 

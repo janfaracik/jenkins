@@ -13,7 +13,7 @@
     "dev": "vite build --config vite.config.js --mode development",
     "prod": "vite build --config vite.config.js --mode production",
     "build": "yarn prod",
-    "start": "vite build --config vite.config.js --mode development --watch",
+    "start": "yarn dev --watch",
     "lint:js": "eslint . && prettier --check .",
     "lint:js-ci": "eslint . -f checkstyle -o target/eslint-warnings.xml",
     "lint:css": "stylelint src/main/scss",
