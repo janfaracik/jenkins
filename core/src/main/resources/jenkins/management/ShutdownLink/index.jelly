@@ -23,9 +23,36 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
   <l:settings-subpage>
+
+    <f:form method="post" name="prepareShutdown" action="prepare">
+      <f:entry title="${%ShutDownReason_title}">
+        <f:textbox name="parameter.shutdownReason" value="${app.quietDownReason ?: null}" />
+      </f:entry>
+
+      <f:submit
+          value="${app.isQuietingDown() ? 'Update shutdown reason' : 'Shutdown'}"
+          clazz="${app.isQuietingDown() ? null : 'jenkins-!-destructive-color'}" />
+    </f:form>
+
+    <j:if test="${app.isQuietingDown()}">
+      <f:form method="post" name="cancelShutdown" action="cancel">
+        <f:submit value="Cancel shutdown" />
+      </f:form>
+    </j:if>
+
     <div class="churchbell">
+      <button class="jenkins-button">
+        <l:icon src="symbol-power" />
+        <div>
+          Prepare for shutdown
+          <l:icon src="symbol-chevron-forward" />
+        </div>
+        <div>
+          Stops executing new builds, so that the system can be eventually shut down safely.
+        </div>
+      </button>
       <l:confirmationLink href="${rootURL}/reload"
                           post="true"
                           title="Are you sure you want to reload configuration from disk?"
@@ -40,16 +67,6 @@ THE SOFTWARE.
           Discard all the loaded data in memory and reload everything from file system. Useful when you modified config files directly on disk.
         </div>
       </l:confirmationLink>
-      <button class="jenkins-button">
-        <l:icon src="symbol-power" />
-        <div>
-          Prepare for shutdown
-          <l:icon src="symbol-chevron-forward" />
-        </div>
-        <div>
-          Stops executing new builds, so that the system can be eventually shut down safely.
-        </div>
-      </button>
     </div>
   </l:settings-subpage>
 </j:jelly>
