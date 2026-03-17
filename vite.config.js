@@ -63,6 +63,13 @@ const templateHelpers = {
   hasDependencies: true,
 };
 
+/**
+ * Vite/Rollup plugin that turns .hbs files into runtime Handlebars template modules.
+ *
+ * Precompiles each template at build time, imports the Handlebars runtime and
+ * Jenkins helper registration, then exports a callable template function so
+ * templates can be rendered without compiling in the browser.
+ */
 function handlebarsTemplatesPlugin() {
   return {
     name: "jenkins-handlebars-templates",
@@ -89,6 +96,14 @@ function handlebarsTemplatesPlugin() {
   };
 }
 
+/**
+ * Vite/Rollup plugin that preserves Jenkins-relative image URLs in CSS.
+ *
+ * Rewrites url("../images/...") to a temporary placeholder before asset
+ * processing so the bundler does not fingerprint, inline, or relocate those
+ * files, then restores the original url(...) in emitted CSS. Also removes JS
+ * chunks generated for CSS-only entries.
+ */
 function preserveJenkinsCssAssetsPlugin() {
   return {
     name: "preserve-jenkins-css-assets",
@@ -134,7 +149,7 @@ function preserveJenkinsCssAssetsPlugin() {
   };
 }
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   appType: "custom",
   base: "./",
   publicDir: false,
