@@ -6,47 +6,80 @@ import { defineConfig } from "vite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const resolveFromRoot = (...segments) => path.resolve(__dirname, ...segments);
-
-const input = {
-  pluginSetupWizard: resolveFromRoot(
-    "src/main/js/entries/pluginSetupWizard.js",
-  ),
-  "plugin-manager-ui": resolveFromRoot("src/main/js/plugin-manager-ui.js"),
-  "add-item": resolveFromRoot("src/main/js/entries/add-item.js"),
-  "pages/computer-set": resolveFromRoot("src/main/js/pages/computer-set"),
-  "pages/dashboard": resolveFromRoot("src/main/js/pages/dashboard"),
-  "pages/manage-jenkins/system-information": resolveFromRoot(
-    "src/main/js/pages/manage-jenkins/system-information",
-  ),
-  app: resolveFromRoot("src/main/js/app.js"),
-  header: resolveFromRoot("src/main/js/components/header/index.js"),
-  "pages/cloud-set": resolveFromRoot("src/main/js/entries/pages/cloud-set.js"),
-  "pages/manage-jenkins": resolveFromRoot("src/main/js/pages/manage-jenkins"),
-  "pages/register": resolveFromRoot("src/main/js/pages/register"),
-  "keyboard-shortcuts": resolveFromRoot("src/main/js/keyboard-shortcuts.js"),
-  "sortable-drag-drop": resolveFromRoot("src/main/js/sortable-drag-drop.js"),
-  "section-to-sidebar-items": resolveFromRoot(
-    "src/main/js/section-to-sidebar-items.js",
-  ),
-  "section-to-tabs": resolveFromRoot("src/main/js/section-to-tabs.js"),
-  "components/row-selection-controller": resolveFromRoot(
-    "src/main/js/components/row-selection-controller",
-  ),
-  "pages/project/builds-card": resolveFromRoot(
-    "src/main/js/pages/project/builds-card.js",
-  ),
-  "simple-page": resolveFromRoot("src/main/js/entries/simple-page.js"),
-  styles: resolveFromRoot("src/main/js/entries/styles.js"),
+const resolveFromMain = (...segments) =>
+  resolveFromRoot("src/main", ...segments);
+const sourceRoots = {
+  js: resolveFromMain("js"),
+  scss: resolveFromMain("scss"),
 };
+const fromJs = (source) => ({ root: "js", source });
+const fromScss = (source) => ({ root: "scss", source });
 
-const cssOnlyEntries = new Set(["styles.js", "simple-page.js"]);
-const cssAssetNames = new Map([
-  ["add-item.css", "add-item.css"],
-  ["cloud-set.css", "pages/cloud-set.css"],
-  ["pluginSetupWizard.css", "pluginSetupWizard.css"],
-  ["simple-page.css", "simple-page.css"],
-  ["styles.css", "styles.css"],
-]);
+const bundles = [
+  {
+    name: "pluginSetupWizard",
+    script: "pluginSetupWizard.js",
+    style: fromScss("pluginSetupWizard.scss"),
+  },
+  { name: "plugin-manager-ui", script: "plugin-manager-ui.js" },
+  {
+    name: "add-item",
+    script: "add-item.js",
+    style: fromJs("add-item.scss"),
+  },
+  { name: "pages/computer-set", script: "pages/computer-set" },
+  { name: "pages/dashboard", script: "pages/dashboard" },
+  {
+    name: "pages/manage-jenkins/system-information",
+    script: "pages/manage-jenkins/system-information",
+  },
+  { name: "app", script: "app.js" },
+  { name: "header", script: "components/header/index.js" },
+  {
+    name: "pages/cloud-set",
+    script: "pages/cloud-set",
+    style: fromJs("pages/cloud-set/index.scss"),
+  },
+  { name: "pages/manage-jenkins", script: "pages/manage-jenkins" },
+  { name: "pages/register", script: "pages/register" },
+  { name: "keyboard-shortcuts", script: "keyboard-shortcuts.js" },
+  { name: "sortable-drag-drop", script: "sortable-drag-drop.js" },
+  {
+    name: "section-to-sidebar-items",
+    script: "section-to-sidebar-items.js",
+  },
+  { name: "section-to-tabs", script: "section-to-tabs.js" },
+  {
+    name: "components/row-selection-controller",
+    script: "components/row-selection-controller",
+  },
+  {
+    name: "pages/project/builds-card",
+    script: "pages/project/builds-card.js",
+  },
+  { name: "simple-page", style: fromScss("simple-page.scss") },
+  { name: "styles", style: fromScss("styles.scss") },
+];
+
+function resolveSource({ root, source }) {
+  return path.resolve(sourceRoots[root], source);
+}
+
+const input = Object.fromEntries(
+  bundles.flatMap(({ name, script, style }) => [
+    ...(script ? [[name, resolveSource(fromJs(script))]] : []),
+    ...(style ? [[`__css/${name}`, resolveSource(style)]] : []),
+  ]),
+);
+
+const cssAssetNames = new Map(
+  bundles
+    .filter(({ style }) => style)
+    .map(({ name, style }) => [
+      resolveSource(style).split(path.sep).join("/"),
+      `${name}.css`,
+    ]),
+);
 
 const templateHelpers = {
   id: true,
@@ -101,8 +134,7 @@ function handlebarsTemplatesPlugin() {
  *
  * Rewrites url("../images/...") to a temporary placeholder before asset
  * processing so the bundler does not fingerprint, inline, or relocate those
- * files, then restores the original url(...) in emitted CSS. Also removes JS
- * chunks generated for CSS-only entries.
+ * files, then restores the original url(...) in emitted CSS.
  */
 function preserveJenkinsCssAssetsPlugin() {
   return {
@@ -128,13 +160,6 @@ function preserveJenkinsCssAssetsPlugin() {
       };
     },
     generateBundle(_options, bundle) {
-      for (const [fileName, chunk] of Object.entries(bundle)) {
-        if (chunk.type === "chunk" && cssOnlyEntries.has(fileName)) {
-          delete bundle[fileName];
-          delete bundle[`${fileName}.map`];
-        }
-      }
-
       for (const asset of Object.values(bundle)) {
         if (asset.type !== "asset" || !asset.fileName.endsWith(".css")) {
           continue;
@@ -158,7 +183,7 @@ export default defineConfig(() => ({
     alias: [
       {
         find: "@",
-        replacement: resolveFromRoot("src/main/js"),
+        replacement: sourceRoots.js,
       },
       {
         find: /^handlebars$/,
@@ -174,12 +199,14 @@ export default defineConfig(() => ({
       input,
       output: {
         assetFileNames(assetInfo) {
-          const assetName = path.basename(
-            assetInfo.names?.[0] || assetInfo.name || "",
-          );
+          for (const fileName of assetInfo.originalFileNames || []) {
+            const cssAssetName = cssAssetNames.get(
+              path.resolve(fileName).split(path.sep).join("/"),
+            );
 
-          if (cssAssetNames.has(assetName)) {
-            return cssAssetNames.get(assetName);
+            if (cssAssetName) {
+              return cssAssetName;
+            }
           }
 
           return "assets/[name]-[hash][extname]";
