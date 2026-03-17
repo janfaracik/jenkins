@@ -77,7 +77,7 @@ On one terminal, start a development server that will not process frontend asset
 MAVEN_OPTS='--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED' mvn -pl war jetty:run -Dskip.yarn
 ```
 
-Open another terminal and start a [webpack](https://webpack.js.org/) dev server, after [optionally adding Node and Yarn to your path](#running-the-yarn-frontend-build):
+Open another terminal and start the Vite build watcher, after [optionally adding Node and Yarn to your path](#running-the-yarn-frontend-build):
 
 ```sh
 yarn start

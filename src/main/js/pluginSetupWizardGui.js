@@ -128,7 +128,7 @@ var createPluginSetupWizard = function (appendTarget) {
   // wrap calls with this method to handle generic errors returned by the plugin manager
   var handleGenericError = function (success) {
     return function () {
-      // Workaround for webpack passing null context to anonymous functions
+      // Some callback sites invoke these handlers without a bound context.
       var self = this || window;
 
       if (self.isError) {

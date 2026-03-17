@@ -1,7 +1,7 @@
 /*
  * Some internal jQuery extensions.
  *
- * After migrating to webpack it modifies the provided version of jquery
+ * Bundling jQuery as a module means this extends the imported instance.
  */
 import $ from "jquery";
 import windowHandle from "window-handle";
