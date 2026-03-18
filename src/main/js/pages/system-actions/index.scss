@@ -19,14 +19,19 @@
 .BANA {
   border-radius: var(--form-input-border-radius);
   background: color-mix(in srgb, var(--destructive-color) 4%, transparent);
-  border: var(--jenkins-border-width) solid color-mix(in srgb, var(--destructive-color) 30%, transparent);
+  box-shadow: inset 0 0 0 var(--jenkins-border-width) color-mix(in srgb, var(--destructive-color) 30%, transparent);
   color: var(--destructive-color);
+
+  & > div:nth-of-type(2) {
+    color: color-mix(in srgb, var(--destructive-color), var(--text-color-secondary)) !important;
+  }
 }
 
 .JUSTAFRIEND {
   display: grid;
   grid-template-columns: auto 1fr;
   text-align: left;
+  align-items: center;
   padding: 1rem 1rem 1.125rem;
   gap: 0.875rem 0.75rem;
   white-space: wrap;

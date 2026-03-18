@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <l:settings-subpage>
     <link rel="stylesheet" href="${resURL}/jsbundles/pages/system-actions.css" type="text/css" />
 
@@ -35,9 +35,11 @@ THE SOFTWARE.
           <div>
             ${%Jenkins is preparing to shutdown}
           </div>
-          <div>
-            '${app.getQuietDownReason()}'
-          </div>
+          <j:if test="${app.getQuietDownReason() != null}">
+            <div>
+              '${app.getQuietDownReason()}'
+            </div>
+          </j:if>
           <div class="jenkins-buttons-row">
             <button class="jenkins-button"
                     data-type="dialog-opener"
