@@ -30,7 +30,7 @@ THE SOFTWARE.
     <section class="app-system-actions__buttons">
       <j:if test="${app.isQuietingDown()}">
 
-        <div class="JUSTAFRIEND BANA">
+        <div class="app-system-actions__shutting-down app-system-actions__group">
           <l:icon src="symbol-power" />
           <div>
             ${%Jenkins is preparing to shutdown}
@@ -62,7 +62,7 @@ THE SOFTWARE.
       </j:if>
 
       <j:if test="${!app.isQuietingDown()}">
-        <button class="jenkins-button JUSTAFRIEND"
+        <button class="jenkins-button app-system-actions__group"
                 data-type="dialog-opener"
                 data-dialog-url="prepareForShutdownDialog">
           <l:icon src="symbol-power" />
@@ -80,7 +80,8 @@ THE SOFTWARE.
                           post="true"
                           title="Are you sure you want to reload configuration from disk?"
                           message="This will discard all the loaded data in memory and reload everything from the file system."
-                          class="jenkins-button JUSTAFRIEND">
+                          destructive="true"
+                          class="jenkins-button app-system-actions__group">
         <l:icon src="symbol-reload" />
         <div>
           ${%Reload Configuration from Disk}

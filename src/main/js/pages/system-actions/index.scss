@@ -16,7 +16,7 @@
   }
 }
 
-.BANA {
+.app-system-actions__shutting-down {
   border-radius: var(--form-input-border-radius);
   background: color-mix(in srgb, var(--destructive-color) 4%, transparent);
   box-shadow: inset 0 0 0 var(--jenkins-border-width) color-mix(in srgb, var(--destructive-color) 30%, transparent);
@@ -27,7 +27,7 @@
   }
 }
 
-.JUSTAFRIEND {
+.app-system-actions__group {
   display: grid;
   grid-template-columns: auto 1fr;
   text-align: left;
