@@ -33,7 +33,7 @@ THE SOFTWARE.
       </f:entry>
 
       <f:bottomButtonBar borderless="true">
-        <button class="jenkins-button">${%Cancel}</button>
+        <button class="jenkins-button" type="button" data-id="cancel">${%Cancel}</button>
         <f:submit value="${%Prepare for shutdown}" clazz="jenkins-!-destructive-color" />
       </f:bottomButtonBar>
     </f:form>

@@ -500,6 +500,8 @@ function renderWizardForm({
 
   recreateScripts(form);
   focusAutofocusField(form);
+  wireCancelButton(form);
+
   return form;
 }
 
@@ -511,6 +513,14 @@ function focusAutofocusField(form) {
   if (autofocusField != null) {
     autofocusField.focus();
   }
+}
+
+function wireCancelButton(form) {
+  const dialog = form.closest("dialog");
+  form.querySelector("[data-id=cancel]")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    dialog?.dispatchEvent(new Event("cancel"));
+  });
 }
 
 function navigateToNextPage(url, params) {
