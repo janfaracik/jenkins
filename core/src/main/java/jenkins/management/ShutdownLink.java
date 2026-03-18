@@ -53,13 +53,11 @@ public class ShutdownLink extends ManagementLink {
     @Override
     public String getDisplayName() {
         return "System Actions";
-//        return Jenkins.get().isQuietingDown() ? Messages.ShutdownLink_DisplayName_update() : Messages.ShutdownLink_DisplayName_prepare();
     }
 
     @Override
     public String getDescription() {
-        return "Maintenance tasks for this Jenkins controller.";
-//        return Jenkins.get().isQuietingDown() ? Messages.ShutdownLink_ShuttingDownInProgressDescription() : Messages.ShutdownLink_Description();
+        return "Maintenance tasks for Jenkins.";
     }
 
     @Override
@@ -71,27 +69,7 @@ public class ShutdownLink extends ManagementLink {
     public synchronized void doPrepare(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException, InterruptedException {
         Jenkins.get().checkPermission(Jenkins.MANAGE);
 
-        System.out.println("➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️");
-        System.out.println("➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️");
-        LOGGER.info("doPrepare called");
-        LOGGER.info("method=" + req.getMethod());
-        LOGGER.info("contentType=" + req.getContentType());
-        LOGGER.info("uri=" + req.getRequestURI());
-        LOGGER.info("queryString=" + req.getQueryString());
-        LOGGER.info("shutdownReason param=" + req.getParameter("shutdownReason"));
-        LOGGER.info("shutdownReason param=" + req.getParameter("parameter.shutdownReason"));
-        LOGGER.info("submit param=" + req.getParameter("Submit"));
-        System.out.println("➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️");
-        System.out.println("➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️➡️️️️️");
-
         JSONObject submittedForm = req.getSubmittedForm();
-
-        System.out.println("Submitted form");
-        System.out.println("Submitted form");
-        System.out.println(submittedForm);
-        System.out.println("Submitted form");
-        System.out.println("Submitted form");
-
         String inputReason = submittedForm.getString("shutdownReason");
         String shutdownReason = inputReason.isEmpty() ? null : inputReason;
         LOGGER.log(Level.FINE, "Shutdown requested by user {0}", Jenkins.getAuthentication().getName());
