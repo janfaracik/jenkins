@@ -33,7 +33,7 @@ THE SOFTWARE.
         <div class="app-system-actions__shutting-down app-system-actions__group">
           <l:icon src="symbol-power" />
           <div>
-            ${%Jenkins is preparing to shutdown}
+            ${%Jenkins is preparing for shutdown}
           </div>
           <j:if test="${app.getQuietDownReason() != null}">
             <div>
