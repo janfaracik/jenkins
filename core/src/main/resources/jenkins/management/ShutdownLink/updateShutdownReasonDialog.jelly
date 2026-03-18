@@ -29,7 +29,7 @@ THE SOFTWARE.
   <l:ajax>
     <f:form method="post" name="prepareShutdown" action="prepare">
       <f:entry title="${%ShutDownReason}">
-        <f:textbox name="parameter.shutdownReason" value="${app.quietDownReason}" autofocus="true" />
+        <f:textbox name="shutdownReason" value="${app.quietDownReason}" autofocus="true" />
       </f:entry>
 
       <f:bottomButtonBar borderless="true">
