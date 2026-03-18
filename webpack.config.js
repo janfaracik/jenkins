@@ -34,6 +34,9 @@ module.exports = (env, argv) => ({
       path.join(__dirname, "src/main/js/pages/cloud-set/index.js"),
       path.join(__dirname, "src/main/js/pages/cloud-set/index.scss"),
     ],
+    "pages/system-actions": [
+      path.join(__dirname, "src/main/js/pages/system-actions/index.scss"),
+    ],
     "pages/manage-jenkins": [
       path.join(__dirname, "src/main/js/pages/manage-jenkins"),
     ],

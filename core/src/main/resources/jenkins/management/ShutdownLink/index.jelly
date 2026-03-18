@@ -25,26 +25,28 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:f="/lib/form">
   <l:settings-subpage>
+    <link rel="stylesheet" href="${resURL}/jsbundles/pages/system-actions.css" type="text/css" />
+
     <j:if test="${app.isQuietingDown()}">
       <f:section title="Jenkins is preparing to shutdown">
-        <div class="churchbell">
-          <form method="post" name="cancelShutdown" action="cancel" class="jenkins-!-display-contents">
-            <button class="jenkins-button">
-              <l:icon src="symbol-edit" />
-              <div>
-                Update shutdown reason
-                <l:icon src="symbol-chevron-forward" />
-              </div>
-              <j:if test="${app.getQuietDownReason() != null}">
-                <div>${app.getQuietDownReason()}</div>
-              </j:if>
-            </button>
-          </form>
+        <div class="app-system-actions__buttons">
+          <button class="jenkins-button"
+                  data-type="dialog-opener"
+                  data-dialog-url="updateShutdownReasonDialog">
+            <l:icon src="symbol-edit" />
+            <div>
+              %{%Update shutdown reason}
+              <l:icon src="symbol-chevron-forward" />
+            </div>
+            <j:if test="${app.getQuietDownReason() != null}">
+              <div>${app.getQuietDownReason()}</div>
+            </j:if>
+          </button>
           <form method="post" name="cancelShutdown" action="cancel" class="jenkins-!-display-contents">
             <button class="jenkins-button">
               <l:icon src="symbol-close-circle" />
               <div>
-                Cancel shutdown
+                ${%Cancel shutdown}
                 <l:icon src="symbol-chevron-forward" />
               </div>
             </button>
@@ -53,12 +55,14 @@ THE SOFTWARE.
       </f:section>
     </j:if>
 
-    <section class="${app.isQuietingDown() ? 'jenkins-section churchbell' : 'churchbell'}">
+    <section class="${app.isQuietingDown() ? 'jenkins-section app-system-actions__buttons' : 'app-system-actions__buttons'}">
       <j:if test="${!app.isQuietingDown()}">
-        <button class="jenkins-button">
+        <button class="jenkins-button"
+                data-type="dialog-opener"
+                data-dialog-url="prepareForShutdownDialog">
           <l:icon src="symbol-power" />
           <div>
-            Prepare for shutdown
+            ${%Prepare for shutdown}
             <l:icon src="symbol-chevron-forward" />
           </div>
           <div>
@@ -73,7 +77,7 @@ THE SOFTWARE.
                           class="jenkins-button">
         <l:icon src="symbol-reload" />
         <div>
-          Reload Configuration from Disk
+          ${%Reload Configuration from Disk}
           <l:icon src="symbol-chevron-forward" />
         </div>
         <div>
