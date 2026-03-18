@@ -34,7 +34,7 @@ THE SOFTWARE.
 
       <f:bottomButtonBar borderless="true">
         <button class="jenkins-button">${%Cancel}</button>
-        <f:submit value="${%Update}" />
+        <f:submit value="${%Update}" clazz="jenkins-!-destructive-color" />
       </f:bottomButtonBar>
     </f:form>
   </l:ajax>

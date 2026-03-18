@@ -35,12 +35,9 @@ THE SOFTWARE.
                   data-dialog-url="updateShutdownReasonDialog">
             <l:icon src="symbol-edit" />
             <div>
-              %{%Update shutdown reason}
+              ${%Update shutdown reason}
               <l:icon src="symbol-chevron-forward" />
             </div>
-            <j:if test="${app.getQuietDownReason() != null}">
-              <div>${app.getQuietDownReason()}</div>
-            </j:if>
           </button>
           <form method="post" name="cancelShutdown" action="cancel" class="jenkins-!-display-contents">
             <button class="jenkins-button">

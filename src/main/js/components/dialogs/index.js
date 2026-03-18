@@ -405,9 +405,14 @@ function resolveWizardFormAction(form, baseUrl) {
 
 function submitWizardForm(form) {
   fetch(form.action, {
-    method: form.method.toUpperCase(),
-    headers: crumb.wrap({}),
-    body: new FormData(form),
+    method: "POST",
+    headers: {
+      ...crumb.wrap({}),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      json: JSON.stringify(Object.fromEntries(new FormData(form))),
+    }),
   }).then((rsp) => {
     if (rsp.redirected) {
       window.location.assign(rsp.url);
