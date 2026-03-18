@@ -27,34 +27,40 @@ THE SOFTWARE.
   <l:settings-subpage>
     <link rel="stylesheet" href="${resURL}/jsbundles/pages/system-actions.css" type="text/css" />
 
-    <j:if test="${app.isQuietingDown()}">
-      <f:section title="Jenkins is preparing to shutdown">
-        <div class="app-system-actions__buttons">
-          <button class="jenkins-button"
-                  data-type="dialog-opener"
-                  data-dialog-url="updateShutdownReasonDialog">
-            <l:icon src="symbol-edit" />
-            <div>
-              ${%Update shutdown reason}
-              <l:icon src="symbol-chevron-forward" />
-            </div>
-          </button>
-          <form method="post" name="cancelShutdown" action="cancel" class="jenkins-!-display-contents">
-            <button class="jenkins-button">
-              <l:icon src="symbol-close-circle" />
+    <section class="app-system-actions__buttons">
+      <j:if test="${app.isQuietingDown()}">
+
+        <div class="JUSTAFRIEND BANA">
+          <l:icon src="symbol-power" />
+          <div>
+            ${%Jenkins is preparing to shutdown}
+          </div>
+          <div>
+            '${app.getQuietDownReason()}'
+          </div>
+          <div class="jenkins-buttons-row">
+            <button class="jenkins-button"
+                    data-type="dialog-opener"
+                    data-dialog-url="updateShutdownReasonDialog">
+              <l:icon src="symbol-edit" />
               <div>
-                ${%Cancel shutdown}
-                <l:icon src="symbol-chevron-forward" />
+                ${%Update shutdown reason}
               </div>
             </button>
-          </form>
+            <form method="post" name="cancelShutdown" action="cancel" class="jenkins-!-display-contents">
+              <button class="jenkins-button">
+                <l:icon src="symbol-close-circle" />
+                <div>
+                  ${%Cancel shutdown}
+                </div>
+              </button>
+            </form>
+          </div>
         </div>
-      </f:section>
-    </j:if>
+      </j:if>
 
-    <section class="${app.isQuietingDown() ? 'jenkins-section app-system-actions__buttons' : 'app-system-actions__buttons'}">
       <j:if test="${!app.isQuietingDown()}">
-        <button class="jenkins-button"
+        <button class="jenkins-button JUSTAFRIEND"
                 data-type="dialog-opener"
                 data-dialog-url="prepareForShutdownDialog">
           <l:icon src="symbol-power" />
@@ -67,11 +73,12 @@ THE SOFTWARE.
           </div>
         </button>
       </j:if>
+
       <l:confirmationLink href="${rootURL}/reload"
                           post="true"
                           title="Are you sure you want to reload configuration from disk?"
                           message="This will discard all the loaded data in memory and reload everything from the file system."
-                          class="jenkins-button">
+                          class="jenkins-button JUSTAFRIEND">
         <l:icon src="symbol-reload" />
         <div>
           ${%Reload Configuration from Disk}
