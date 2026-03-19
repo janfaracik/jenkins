@@ -81,10 +81,11 @@ THE SOFTWARE.
                           title="Are you sure you want to reload configuration from disk?"
                           message="This will discard all the loaded data in memory and reload everything from the file system."
                           destructive="true"
-                          class="jenkins-button app-system-actions__group">
+                          class="jenkins-button app-system-actions__group"
+                          okText="${%Reload}">
         <l:icon src="symbol-reload" />
         <div>
-          ${%Reload Configuration from Disk}
+          ${%Reload configuration from disk}
           <l:icon src="symbol-chevron-forward" />
         </div>
         <div>
