@@ -91,7 +91,7 @@ Dialog.prototype.init = function () {
         content.appendChild(this.options.content);
       } else if (this.options.message != null && this.dialogType !== "prompt") {
         const messageContents = createElementFromHtml(
-          `<div class="jenkins-form-item jenkins-!-text-color-secondary" />`,
+          `<div class="jenkins-form-item jenkins-!-text-color-secondary" style="line-height: 1.66" />`,
         );
         content.appendChild(messageContents);
         messageContents.innerText = this.options.message;
