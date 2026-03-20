@@ -24,7 +24,7 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-  <st:setHeader name="X-Wizard-Title" value="${%Prepare for shutdown}" />
+  <st:setHeader name="X-Dialog-Title" value="${%Prepare for shutdown}" />
 
   <l:ajax>
     <f:form method="post" name="prepareShutdown" action="prepare">

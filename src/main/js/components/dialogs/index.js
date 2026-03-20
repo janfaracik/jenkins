@@ -424,7 +424,7 @@ function submitWizardForm(form) {
       const replacementForm = renderWizardForm({
         responseText,
         requestUrl: rsp.url,
-        titleText: rsp.headers.get("X-Wizard-Title"),
+        titleText: rsp.headers.get("X-Dialog-Title"),
         replaceExistingForm: form,
       });
 
@@ -536,7 +536,7 @@ function navigateToNextPage(url, params) {
         const form = renderWizardForm({
           responseText,
           requestUrl: rsp.url,
-          titleText: rsp.headers.get("X-Wizard-Title"),
+          titleText: rsp.headers.get("X-Dialog-Title"),
           hideExistingForms: true,
         });
 
