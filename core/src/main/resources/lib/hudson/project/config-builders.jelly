@@ -30,9 +30,11 @@ THE SOFTWARE.
   <f:section title="${%Build Steps}"
              description="${%description}"
              icon="symbol-build-steps">
-    <f:hetero-list name="builder" hasHeader="true"
-                   descriptors="${h.getBuilderDescriptors(it)}"
-                   items="${it.builders}"
-                   addCaption="${%Add build step}"/>
+    <f:entry>
+      <f:hetero-list name="builder" hasHeader="true"
+                     descriptors="${h.getBuilderDescriptors(it)}"
+                     items="${it.builders}"
+                     addCaption="${%Add build step}"/>
+    </f:entry>
   </f:section>
 </j:jelly>
