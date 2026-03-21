@@ -1,5 +1,35 @@
 $jenkins-dialog-padding: 1.25rem;
 
+@property --top-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --bottom-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes scrollfade {
+  0% {
+    --top-fade: 0;
+    --bottom-fade: #{$jenkins-dialog-padding};
+  }
+
+  10%,
+  90% {
+    --top-fade: #{$jenkins-dialog-padding};
+    --bottom-fade: #{$jenkins-dialog-padding};
+  }
+
+  100% {
+    --top-fade: #{$jenkins-dialog-padding};
+    --bottom-fade: 0;
+  }
+}
+
 .jenkins-dialog {
   --background: var(--dialog-background);
   --section-padding: #{$jenkins-dialog-padding};
@@ -44,6 +74,8 @@ $jenkins-dialog-padding: 1.25rem;
       width: 2rem;
       min-height: 2rem;
       border-radius: 100%;
+      flex-shrink: 0;
+      align-self: start;
     }
 
     &__close-button {
@@ -54,37 +86,34 @@ $jenkins-dialog-padding: 1.25rem;
   &__contents {
     overflow-y: auto;
     overflow-wrap: break-word;
-    padding: 0 $jenkins-dialog-padding;
+    margin-top: -0.25rem;
+    padding: 0.25rem $jenkins-dialog-padding $jenkins-dialog-padding;
     max-height: 75vh;
-    color: var(--text-color-secondary);
-
-    &--modal {
-      padding-bottom: $jenkins-dialog-padding;
-      color: var(--text-color);
-    }
+    mask: linear-gradient(
+      to bottom,
+      #0000,
+      #ffff var(--top-fade) calc(100% - var(--bottom-fade)),
+      #0000
+    );
+    animation: scrollfade;
+    animation-timeline: --scrollfade;
+    scroll-timeline: --scrollfade y;
 
     .jenkins-dialog__buttons {
       padding-inline: 0;
     }
-  }
 
-  &__input {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 0 $jenkins-dialog-padding;
-    color: var(--text-color-secondary);
-  }
+    &:has(#bottom-sticker) {
+      padding-bottom: 0;
+    }
 
-  &__buttons {
-    display: flex;
-    padding: $jenkins-dialog-padding;
-    justify-content: right;
-    flex-direction: row-reverse;
-    gap: 1.25rem;
+    .bottom-sticker-inner {
+      display: flex;
+      justify-content: stretch;
 
-    .jenkins-button {
-      min-width: 100px;
+      .jenkins-button {
+        width: 100%;
+      }
     }
   }
 
