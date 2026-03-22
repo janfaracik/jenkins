@@ -146,6 +146,7 @@ body:has(.app-settings-container) {
     var(--text-color-secondary) 2%,
     var(--background)
   );
+  --side-panel-width: 310px;
 
   background: linear-gradient(var(--top), var(--bottom));
   background-attachment: fixed;
