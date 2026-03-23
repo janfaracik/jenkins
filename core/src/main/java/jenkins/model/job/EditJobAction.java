@@ -1,0 +1,47 @@
+package jenkins.model.job;
+
+import hudson.Extension;
+import hudson.model.Action;
+import hudson.model.Job;
+import java.util.Collection;
+import java.util.Set;
+import jenkins.model.TransientActionFactory;
+import jenkins.model.menu.Group;
+
+@Extension
+public class EditJobAction extends TransientActionFactory<Job> {
+
+    @Override
+    public Class<Job> type() {
+        return Job.class;
+    }
+
+    @Override
+    public Collection<? extends Action> createFor(Job target) {
+        if (!target.hasPermission(Job.CONFIGURE)) {
+            return Set.of();
+        }
+
+        return Set.of(new Action() {
+            @Override
+            public String getDisplayName() {
+                return target.hasPermission(Job.CONFIGURE) ? "Configure" : "View Configuration";
+            }
+
+            @Override
+            public String getIconFileName() {
+                return "symbol-edit";
+            }
+
+            @Override
+            public Group getGroup() {
+                return Group.IN_APP_BAR;
+            }
+
+            @Override
+            public String getUrlName() {
+                return "configure";
+            }
+        });
+    }
+}
