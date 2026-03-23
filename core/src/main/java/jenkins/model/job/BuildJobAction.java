@@ -44,7 +44,7 @@ public class BuildJobAction extends TransientActionFactory<ParameterizedJobMixIn
 
             @Override
             public String getUrlName() {
-                return "configure";
+                return "build";
             }
 
             @Override
