@@ -44,7 +44,7 @@ THE SOFTWARE.
     </st:attribute>
   </st:documentation>
 
-  <j:if test="${attrs.header != null}">
+  <j:if test="${attrs.title != null}">
     <h1>${title}</h1>
   </j:if>
 
