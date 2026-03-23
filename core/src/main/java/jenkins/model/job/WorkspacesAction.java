@@ -1,23 +1,23 @@
 package jenkins.model.job;
 
 import hudson.Extension;
+import hudson.model.AbstractProject;
 import hudson.model.Action;
-import hudson.model.Job;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
 
 @Extension
-public class WorkspacesAction extends TransientActionFactory<Job> {
+public class WorkspacesAction extends TransientActionFactory<AbstractProject> {
 
     @Override
-    public Class<Job> type() {
-        return Job.class;
+    public Class<AbstractProject> type() {
+        return AbstractProject.class;
     }
 
     @Override
-    public Collection<? extends Action> createFor(Job target) {
-        if (!target.hasPermission(Job.WORKSPACE)) {
+    public Collection<? extends Action> createFor(AbstractProject target) {
+        if (!target.hasPermission(AbstractProject.WORKSPACE)) {
             return Set.of();
         }
 
