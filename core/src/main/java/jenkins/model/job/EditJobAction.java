@@ -18,7 +18,7 @@ public class EditJobAction extends TransientActionFactory<Job> {
 
     @Override
     public Collection<? extends Action> createFor(Job target) {
-        if (!target.hasPermission(Job.CONFIGURE)) {
+        if (!target.hasPermission(Job.CONFIGURE) && !target.hasPermission(Job.EXTENDED_READ)) {
             return Set.of();
         }
 
