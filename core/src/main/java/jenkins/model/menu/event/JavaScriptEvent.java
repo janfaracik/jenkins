@@ -19,9 +19,23 @@ public final class JavaScriptEvent implements Event {
 
     private final String javascriptUrl;
 
+    private JavaScriptEvent(Map<String, String> attributes) {
+        this.attributes = attributes;
+        this.javascriptUrl = null;
+    }
+
     private JavaScriptEvent(Map<String, String> attributes, String javascriptUrl) {
         this.attributes = attributes;
         this.javascriptUrl = javascriptUrl;
+    }
+
+    /**
+     * Create a JavaScriptEvent.
+     * @param attributes attributes to add to the element as data-attributes.
+     * @return the event
+     */
+    public static JavaScriptEvent of(Map<String, String> attributes) {
+        return new JavaScriptEvent(attributes);
     }
 
     /**

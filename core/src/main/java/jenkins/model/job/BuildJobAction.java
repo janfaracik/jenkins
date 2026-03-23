@@ -55,10 +55,10 @@ public class BuildJobAction extends TransientActionFactory<Job> {
             @Override
             public Event getEvent() {
                 if (isParameterized()) {
-                    return JavaScriptEvent.of(Map.of("data-type", "dialog-opener"), "");
+                    return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", "parametersDialog"));
                 }
 
-                return JavaScriptEvent.of(Map.of("data-type", "build-now"), "");
+                return JavaScriptEvent.of(Map.of("type", "build-now"), "");
             }
 
             @Override

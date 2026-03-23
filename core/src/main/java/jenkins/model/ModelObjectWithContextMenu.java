@@ -290,8 +290,8 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         }
 
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest2 request, StaplerResponse2 response, String view) throws JellyException, IOException {
-            // Only Runs support getAppBarActions currently
-            if (self instanceof Run) {
+            // Only Jobs and Runs support getAppBarActions currently
+            if (self instanceof Run || self instanceof Job<?,?>) {
                 this.addAll(((Actionable) self).getAppBarActions());
                 return this;
             }
