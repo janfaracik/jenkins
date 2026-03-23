@@ -181,6 +181,7 @@ import org.apache.commons.jexl.parser.ASTSizeFunction;
 import org.apache.commons.jexl.util.Introspector;
 import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconSpec;
 import org.jvnet.tiger_types.Types;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
@@ -2669,7 +2670,7 @@ public class Functions {
         ModelObjectWithContextMenu.ContextMenu contextMenu = new ModelObjectWithContextMenu.ContextMenu();
         contextMenu.addAll(actions
                 .stream()
-                .filter(action -> action.getIconFileName() != null)
+                .filter(action -> action.getIconFileName() != null || (((IconSpec) action).getIconClassName() != null))
                 .toList());
         JSONObject jsonObject = JSONObject.fromObject(contextMenu);
         jsonObject.put("url", Util.ensureEndsWith(baseUrl, "/"));
