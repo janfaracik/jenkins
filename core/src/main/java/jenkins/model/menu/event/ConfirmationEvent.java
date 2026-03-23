@@ -28,6 +28,15 @@ public final class ConfirmationEvent implements Event {
     /**
      * Created a confirmation event.
      * @param title title of the dialog
+     * @param postTo url that it should be submitted to, e.g. deleteItem
+     */
+    public static ConfirmationEvent of(String title, String postTo) {
+        return new ConfirmationEvent(title, null, postTo);
+    }
+
+    /**
+     * Created a confirmation event.
+     * @param title title of the dialog
      * @param description additional contextual information about what is being confirmed.
      * @param postTo url that it should be submitted to, e.g. deleteItem
      */

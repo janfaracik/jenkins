@@ -10,7 +10,6 @@ import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.ConfirmationEvent;
 import jenkins.model.menu.event.Event;
-import jenkins.model.run.Messages;
 
 @Extension
 public class DeleteJobAction extends TransientActionFactory<Job> {
@@ -29,7 +28,7 @@ public class DeleteJobAction extends TransientActionFactory<Job> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return Messages.DeleteRunFactory_Delete();
+                return "Delete job";
             }
 
             @Override
@@ -49,7 +48,7 @@ public class DeleteJobAction extends TransientActionFactory<Job> {
 
             @Override
             public Event getEvent() {
-                return ConfirmationEvent.of(Messages.DeleteRunFactory_DeleteDialog_Title(), Messages.DeleteRunFactory_DeleteDialog_Description(),  "doDelete");
+                return ConfirmationEvent.of("Are you sure you want to delete this job?", "doDelete");
             }
 
             @Override

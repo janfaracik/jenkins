@@ -2,7 +2,6 @@ package jenkins.model.job;
 
 import hudson.Extension;
 import hudson.model.Action;
-import hudson.model.Job;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -14,27 +13,23 @@ import jenkins.model.menu.event.Event;
 import jenkins.model.menu.event.JavaScriptEvent;
 
 @Extension
-public class BuildJobAction extends TransientActionFactory<Job> {
+public class BuildJobAction extends TransientActionFactory<ParameterizedJobMixIn.ParameterizedJob> {
 
     @Override
-    public Class<Job> type() {
-        return Job.class;
+    public Class<ParameterizedJobMixIn.ParameterizedJob> type() {
+        return ParameterizedJobMixIn.ParameterizedJob.class;
     }
 
     @Override
-    public Collection<? extends Action> createFor(Job target) {
-        if (!target.hasPermission(Job.BUILD)) {
+    public Collection<? extends Action> createFor(ParameterizedJobMixIn.ParameterizedJob target) {
+        if (!target.isBuildable()) {
             return Set.of();
         }
 
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                if (isParameterized()) {
-                    return "Build with Parameters";
-                }
-
-                return "Build";
+                return target.getBuildNowText();
             }
 
             @Override
@@ -58,7 +53,7 @@ public class BuildJobAction extends TransientActionFactory<Job> {
                     return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", "parametersDialog"));
                 }
 
-                return JavaScriptEvent.of(Map.of("type", "build-now"), "");
+                return JavaScriptEvent.of(Map.of("type", "build-now", "href", "build", "buildSuccess", "Build scheduled", "buildFailure", "Failed to schedule build. Reload the page and try again."), "jsbundles/pages/project/build.js");
             }
 
             @Override
@@ -67,11 +62,7 @@ public class BuildJobAction extends TransientActionFactory<Job> {
             }
 
             private boolean isParameterized() {
-                if (target instanceof ParameterizedJobMixIn.ParameterizedJob<?,?> paramJob) {
-                    return paramJob.isParameterized();
-                }
-
-                return false;
+                return target.isParameterized();
             }
         });
     }
