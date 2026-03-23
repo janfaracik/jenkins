@@ -236,7 +236,7 @@ $semantics: (
   --card-background--active: transparent;
 
   // Deprecated
-  --card-border-color: var(--jenkins-border-color);
+  --card-border-color: var(--jenkins-border-color) !important; // Remove this
   --card-border-width: var(--jenkins-border-width);
 
   // Tab bar

@@ -92,7 +92,7 @@ $border-radius: 19px;
   display: inline-flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 0.1875rem;
 
   @media (width <= 1200px) {
     justify-content: start;
@@ -110,8 +110,9 @@ $border-radius: 19px;
 
   &:hover::before {
     opacity: 1;
-    inset: -4px;
+    inset: -0.25rem;
     background: var(--card-background);
+    box-shadow: var(--control-shadow);
   }
 
   a {
