@@ -293,7 +293,10 @@ public interface ModelObjectWithContextMenu extends ModelObject {
             // Only Jobs and Runs support getAppBarActions currently
             if (self instanceof Run || self instanceof Job<?,?>) {
                 this.addAll(((Actionable) self).getAppBarActions().stream()
-                        .filter(action -> action.getIconFileName() != null || (((IconSpec) action).getIconClassName() != null)).toList());
+                        .filter(action ->
+                                action.getIconFileName() != null
+                                        || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
+                        ).toList());
                 return this;
             }
 

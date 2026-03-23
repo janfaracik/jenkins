@@ -2670,7 +2670,10 @@ public class Functions {
         ModelObjectWithContextMenu.ContextMenu contextMenu = new ModelObjectWithContextMenu.ContextMenu();
         contextMenu.addAll(actions
                 .stream()
-                .filter(action -> action.getIconFileName() != null || (((IconSpec) action).getIconClassName() != null))
+                .filter(action ->
+                        action.getIconFileName() != null
+                                || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
+                )
                 .toList());
         JSONObject jsonObject = JSONObject.fromObject(contextMenu);
         jsonObject.put("url", Util.ensureEndsWith(baseUrl, "/"));
