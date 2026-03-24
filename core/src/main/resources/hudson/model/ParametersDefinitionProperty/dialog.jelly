@@ -28,9 +28,6 @@ THE SOFTWARE.
 
   <l:ajax>
     <j:set var="delay" value="${request2.getParameter('delay')}" />
-
-    <!--  todo - remove the ../ but still keep it working...-->
-
     <f:form method="post" action="../build${empty(delay)?'':'?delay='+delay}" name="parameters" class="jenkins-form">
       <j:forEach var="parameterDefinition" items="${it.parameterDefinitions}">
         <j:set var="escapeEntryTitleAndDescription" value="true"/> <!-- SECURITY-353 defense unless overridden -->

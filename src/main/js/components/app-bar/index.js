@@ -24,7 +24,6 @@ function init() {
         button,
         element,
       );
-      // TODO - Validate this is needed, currently needed for build with params
       behaviorShim.applySubtree(button, true);
     });
 
