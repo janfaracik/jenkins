@@ -1097,7 +1097,7 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         while (candidates.size() < 3) {
             if (fallbackCandidates.isEmpty())
                 break;
-            RunT run = fallbackCandidates.remove(0);
+            RunT run = fallbackCandidates.removeFirst();
             candidates.add(run);
         }
 
@@ -1273,7 +1273,7 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
      */
     public HealthReport getBuildHealth() {
         List<HealthReport> reports = getBuildHealthReports();
-        return reports.isEmpty() ? new HealthReport() : reports.get(0);
+        return reports.isEmpty() ? new HealthReport() : reports.getFirst();
     }
 
     @Exported(name = "healthReport")
