@@ -1,5 +1,9 @@
 import behaviorShim from "@/util/behavior-shim";
 
+/**
+ * Attaches click behavior to "Build Now" buttons to trigger a POST
+ * request and show a success or error notification.
+ */
 behaviorShim.specify(
   "button[data-type='build-now']",
   "button-build-now",
