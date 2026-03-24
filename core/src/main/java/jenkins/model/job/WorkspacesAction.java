@@ -24,7 +24,7 @@ public class WorkspacesAction extends TransientActionFactory<AbstractProject> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Workspace";
+                return Messages.WorkspacesAction_Title();
             }
 
             @Override

@@ -9,6 +9,7 @@ import jenkins.model.ParameterizedJobMixIn;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
+import jenkins.model.menu.event.DialogEvent;
 import jenkins.model.menu.event.Event;
 import jenkins.model.menu.event.JavaScriptEvent;
 
@@ -50,10 +51,10 @@ public class BuildJobAction extends TransientActionFactory<ParameterizedJobMixIn
             @Override
             public Event getEvent() {
                 if (isParameterized()) {
-                    return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", "parametersDefinitionProperty/dialog"), "");
+                    return DialogEvent.of("parametersDefinitionProperty/dialog");
                 }
 
-                return JavaScriptEvent.of(Map.of("type", "build-now", "href", "build", "buildSuccess", "Build scheduled", "buildFailure", "Failed to schedule build. Reload the page and try again."), "jsbundles/pages/project/build.js");
+                return JavaScriptEvent.of(Map.of("type", "build-now", "href", "build", "buildSuccess", Messages.BuildJobAction_BuildSuccess(), "buildFailure", Messages.BuildJobAction_BuildFailure()), "jsbundles/pages/project/build.js");
             }
 
             @Override

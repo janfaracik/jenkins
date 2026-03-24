@@ -9,7 +9,7 @@ import jenkins.model.TransientActionFactory;
 import jenkins.model.menu.Group;
 
 @Extension
-public class EditJobAction extends TransientActionFactory<Job> {
+public class ConfigureJobAction extends TransientActionFactory<Job> {
 
     @Override
     public Class<Job> type() {
@@ -25,7 +25,7 @@ public class EditJobAction extends TransientActionFactory<Job> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return target.hasPermission(Job.CONFIGURE) ? "Configure" : "View Configuration";
+                return target.hasPermission(Job.CONFIGURE) ? Messages.ConfigureJobAction_Title() : Messages.ConfigureJobAction_ViewConfiguration();
             }
 
             @Override

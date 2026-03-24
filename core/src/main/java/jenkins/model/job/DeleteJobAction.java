@@ -28,7 +28,7 @@ public class DeleteJobAction extends TransientActionFactory<Job> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Delete job";
+                return Messages.DeleteJobAction_Delete();
             }
 
             @Override
@@ -48,7 +48,7 @@ public class DeleteJobAction extends TransientActionFactory<Job> {
 
             @Override
             public Event getEvent() {
-                return ConfirmationEvent.of("Are you sure you want to delete this job?", "doDelete");
+                return ConfirmationEvent.of(Messages.DeleteJobAction_DeleteDialog_Title(), "doDelete");
             }
 
             @Override
