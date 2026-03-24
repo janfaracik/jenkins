@@ -397,8 +397,14 @@ function resolveWizardFormAction(form, baseUrl) {
 function submitWizardForm(form) {
   fetch(form.action, {
     method: form.method.toUpperCase(),
-    headers: crumb.wrap({}),
-    body: new FormData(form),
+    headers: {
+      ...crumb.wrap({}),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    // todo - body params arent sending? this also breaks the user creation dialog
+    body: new URLSearchParams({
+      json: JSON.stringify(Object.fromEntries(new FormData(form))),
+    }),
   }).then((rsp) => {
     if (rsp.redirected) {
       window.location.assign(rsp.url);
