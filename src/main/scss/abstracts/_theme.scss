@@ -118,7 +118,7 @@ $semantics: (
   --jenkins-border-color: color-mix(
     in sRGB,
     var(--text-color-secondary) 20%,
-    var(--background)
+    var(--card-background)
   );
   --jenkins-border-color--subtle: color-mix(
     in sRGB,
