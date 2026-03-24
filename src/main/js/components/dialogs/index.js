@@ -484,7 +484,17 @@ function renderWizardForm({
   }
 
   recreateScripts(form);
+  wireCancelButton(form);
+
   return form;
+}
+
+function wireCancelButton(form) {
+  const dialog = form.closest("dialog");
+  form.querySelector("[data-id=cancel]")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    dialog?.dispatchEvent(new Event("cancel"));
+  });
 }
 
 function navigateToNextPage(url) {

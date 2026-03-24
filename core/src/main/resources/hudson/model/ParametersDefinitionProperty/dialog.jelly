@@ -51,7 +51,7 @@ THE SOFTWARE.
          -->
         <input type="hidden" name="statusCode" value="303" />
         <input type="hidden" name="redirectTo" value="." />
-        <button type="button" class="jenkins-button">
+        <button type="button" class="jenkins-button" data-id="cancel">
           ${%Cancel}
         </button>
         <button class="jenkins-button jenkins-button--primary jenkins-!-build-color">
