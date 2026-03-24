@@ -19,10 +19,13 @@ function init() {
         item.icon = null;
         item.iconXml = null;
       }
+      const button = Templates.menuItem(item, "jenkins-button", template.url);
       element.parentNode.insertBefore(
-        Templates.menuItem(item, "jenkins-button", template.url),
+        button,
         element,
       );
+      // TODO - Validate this is needed, currently needed for build with params
+      behaviorShim.applySubtree(button, true);
     });
 
     // Add any additional items as an overflow menu

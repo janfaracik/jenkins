@@ -46,13 +46,13 @@ THE SOFTWARE.
        -->
       <input type="hidden" name="statusCode" value="303" />
       <input type="hidden" name="redirectTo" value="." />
+      <a href="./" class="jenkins-button">
+        ${%Cancel}
+      </a>
       <button class="jenkins-button jenkins-button--primary jenkins-!-build-color">
         <l:icon src="symbol-play" />
         ${it.buildButtonText}
       </button>
-      <a href="./" class="jenkins-button">
-        ${%Cancel}
-      </a>
     </f:bottomButtonBar>
   </f:form>
 </j:jelly>

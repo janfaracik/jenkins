@@ -50,7 +50,7 @@ public class BuildJobAction extends TransientActionFactory<ParameterizedJobMixIn
             @Override
             public Event getEvent() {
                 if (isParameterized()) {
-                    return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", "parametersDialog"));
+                    return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", "parametersDefinitionProperty/dialog"), "");
                 }
 
                 return JavaScriptEvent.of(Map.of("type", "build-now", "href", "build", "buildSuccess", "Build scheduled", "buildFailure", "Failed to schedule build. Reload the page and try again."), "jsbundles/pages/project/build.js");
