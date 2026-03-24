@@ -100,6 +100,7 @@ import org.htmlunit.Page;
 import org.htmlunit.TextPage;
 import org.htmlunit.WebRequest;
 import org.htmlunit.WebResponse;
+import org.htmlunit.html.HtmlAnchor;
 import org.htmlunit.html.HtmlForm;
 import org.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -795,11 +796,27 @@ public class JenkinsTest {
     }
 
     @Test
-    void rootPageUsesForYouView() throws Exception {
-        assertEquals(ForYouView.DEFAULT_VIEW_NAME, j.jenkins.getPrimaryView().getViewName());
-        assertNotNull(j.jenkins.getView(AllView.DEFAULT_VIEW_NAME));
-        assertNotNull(j.jenkins.getView(ForYouView.DEFAULT_VIEW_NAME));
-        assertThat(j.createWebClient().goTo("").asNormalizedText(), containsString("Nothing to show here yet"));
+    void anonymousRootPageFallsBackToAllView() throws Exception {
+        assertThat(j.createWebClient().goTo("").asNormalizedText(), containsString("Welcome to Jenkins!"));
+    }
+
+    @Test
+    void signedInRootPageShowsRecentJobsInForYouView() throws Exception {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        FullControlOnceLoggedInAuthorizationStrategy authorizationStrategy = new FullControlOnceLoggedInAuthorizationStrategy();
+        authorizationStrategy.setAllowAnonymousRead(true);
+        j.jenkins.setAuthorizationStrategy(authorizationStrategy);
+
+        WebClient wc = j.createWebClient().login("alice");
+        for (int i = 0; i < 6; i++) {
+            FreeStyleProject project = j.createFreeStyleProject("job" + i);
+            wc.goTo(project.getUrl());
+        }
+
+        HtmlPage page = wc.goTo("");
+        List<HtmlAnchor> recentJobs = page.getByXPath("//ul[@id='for-you-recent-jobs']/li/a");
+        assertEquals(List.of("job5", "job4", "job3", "job2", "job1"),
+                recentJobs.stream().map(HtmlAnchor::asNormalizedText).toList());
     }
 
     private static File newFolder(File root, String... subDirs) throws IOException {

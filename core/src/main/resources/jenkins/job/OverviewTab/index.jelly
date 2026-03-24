@@ -26,6 +26,7 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:dd="/lib/layout/dropdowns">
   <l:job-subpage>
     <j:set var="it" value="${it.object}" />
+    <j:set var="recordedView" value="${it.recordCurrentUserView()}" />
 
     <l:app-bar title="Overview">
       <l:details-bar it="${it}">

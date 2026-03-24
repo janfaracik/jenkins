@@ -133,8 +133,8 @@ class ApiTest {
     @Test
     void unwrappedOneItem() throws Exception {
         Page page = j.createWebClient().goTo("api/xml?xpath=/hudson/view[name='"
-                + ForYouView.DEFAULT_VIEW_NAME + "']/name", "application/xml");
-        assertEquals("<name>" + ForYouView.DEFAULT_VIEW_NAME + "</name>", page.getWebResponse().getContentAsString());
+                + AllView.DEFAULT_VIEW_NAME + "']/name", "application/xml");
+        assertEquals("<name>" + AllView.DEFAULT_VIEW_NAME + "</name>", page.getWebResponse().getContentAsString());
     }
 
     @Test

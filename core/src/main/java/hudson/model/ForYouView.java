@@ -28,11 +28,13 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.Util;
 import hudson.model.Descriptor.FormException;
+import hudson.security.ACL;
 import io.jenkins.servlet.ServletExceptionWrapper;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
@@ -75,6 +77,26 @@ public class ForYouView extends View {
     @Override
     public String getIconFileName() {
         return "symbol-overview";
+    }
+
+    @Override
+    public ACL getACL() {
+        ACL base = super.getACL();
+        return ACL.lambda2((authentication, permission) -> {
+            if (permission == View.READ && ACL.isAnonymous2(authentication)) {
+                return false;
+            }
+            return base.hasPermission2(authentication, permission);
+        });
+    }
+
+    public List<Job<?, ?>> getRecentJobs() {
+        User user = User.current();
+        if (user == null) {
+            return Collections.emptyList();
+        }
+        RecentJobsUserProperty property = user.getProperty(RecentJobsUserProperty.class);
+        return property != null ? property.getRecentJobs() : Collections.emptyList();
     }
 
     @RequirePOST

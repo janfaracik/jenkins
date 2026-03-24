@@ -1923,7 +1923,14 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
     @Exported
     @Override
     public View getPrimaryView() {
-        return viewGroupMixIn.getPrimaryView();
+        View primaryView = viewGroupMixIn.getPrimaryView();
+        if (primaryView instanceof ForYouView && ACL.isAnonymous2(Jenkins.getAuthentication2())) {
+            View allView = viewGroupMixIn.getView(AllView.DEFAULT_VIEW_NAME);
+            if (allView != null) {
+                return allView;
+            }
+        }
+        return primaryView;
      }
 
     public void setPrimaryView(@NonNull View v) {

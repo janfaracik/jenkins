@@ -203,6 +203,14 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         super(parent, name);
     }
 
+    /**
+     * Records that the current user viewed this job.
+     */
+    public boolean recordCurrentUserView() {
+        RecentJobsUserProperty.recordCurrentUser(this);
+        return true;
+    }
+
     @Override
     public synchronized void save() throws IOException {
         super.save();

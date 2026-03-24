@@ -24,8 +24,17 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core">
-  <div class="empty-state-block">
-    <h1>${%title}</h1>
-    <p>${%description}</p>
-  </div>
+  <j:choose>
+    <j:when test="${it.recentJobs.isEmpty()}">
+      <p>${%empty}</p>
+    </j:when>
+    <j:otherwise>
+      <p>${%title}</p>
+      <ul id="for-you-recent-jobs">
+        <j:forEach var="job" items="${it.recentJobs}">
+          <li><a href="${rootURL}/${job.url}">${job.fullDisplayName}</a></li>
+        </j:forEach>
+      </ul>
+    </j:otherwise>
+  </j:choose>
 </j:jelly>
