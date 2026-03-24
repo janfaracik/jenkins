@@ -41,7 +41,7 @@ public class BuildHistoryAction extends TransientActionFactory<View> {
 
             @Override
             public String getUrlName() {
-                return "buildHistory";
+                return "builds";
             }
         });
     }
