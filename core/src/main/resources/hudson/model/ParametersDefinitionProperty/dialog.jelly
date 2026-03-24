@@ -23,10 +23,42 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:l="/lib/layout">
   <st:setHeader name="X-Dialog-Title" value="${it.owner.buildNowText}" />
 
   <l:ajax>
-    <st:include page="contents.jelly" />
+    <j:set var="delay" value="${request2.getParameter('delay')}" />
+
+    <!--  todo - remove the ../ but still keep it working...-->
+
+    <f:form method="post" action="../build${empty(delay)?'':'?delay='+delay}" name="parameters" class="jenkins-form">
+      <j:forEach var="parameterDefinition" items="${it.parameterDefinitions}">
+        <j:set var="escapeEntryTitleAndDescription" value="true"/> <!-- SECURITY-353 defense unless overridden -->
+        <tbody>
+          <st:include it="${parameterDefinition}"
+                      page="${parameterDefinition.descriptor.valuePage}" />
+        </tbody>
+      </j:forEach>
+      <f:bottomButtonBar>
+        <!--
+          When used from the UI, use 303 redirect and send back to the job top page.
+          When neither of those options are given, we'll report "201 Created".
+
+          We can't use XHR for submitting this as there might be file parameters,
+          and submitting to IFRAME won't work either because 201 can't have HTML response.
+
+          So I think all we can do is this somewhat clunky workaround.
+         -->
+        <input type="hidden" name="statusCode" value="303" />
+        <input type="hidden" name="redirectTo" value="." />
+        <button type="button" class="jenkins-button">
+          ${%Cancel}
+        </button>
+        <button class="jenkins-button jenkins-button--primary jenkins-!-build-color">
+          <l:icon src="symbol-play" />
+          ${it.buildButtonText}
+        </button>
+      </f:bottomButtonBar>
+    </f:form>
   </l:ajax>
 </j:jelly>

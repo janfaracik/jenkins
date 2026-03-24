@@ -25,10 +25,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:f="/lib/form" xmlns:l="/lib/layout">
   <j:set var="delay" value="${request2.getParameter('delay')}" />
-
-<!--  todo - remove the ../ but still keep it working...-->
-  
-  <f:form method="post" action="../build${empty(delay)?'':'?delay='+delay}" name="parameters"
+  <f:form method="post" action="build${empty(delay)?'':'?delay='+delay}" name="parameters"
           tableClass="parameters" class="jenkins-form">
     <j:forEach var="parameterDefinition" items="${it.parameterDefinitions}">
       <j:set var="escapeEntryTitleAndDescription" value="true"/> <!-- SECURITY-353 defense unless overridden -->
@@ -49,13 +46,13 @@ THE SOFTWARE.
        -->
       <input type="hidden" name="statusCode" value="303" />
       <input type="hidden" name="redirectTo" value="." />
-      <a href="./" class="jenkins-button">
-        ${%Cancel}
-      </a>
       <button class="jenkins-button jenkins-button--primary jenkins-!-build-color">
         <l:icon src="symbol-play" />
         ${it.buildButtonText}
       </button>
+      <a href="./" class="jenkins-button">
+        ${%Cancel}
+      </a>
     </f:bottomButtonBar>
   </f:form>
 </j:jelly>
