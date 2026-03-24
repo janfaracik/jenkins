@@ -112,7 +112,8 @@ class ApiTest {
     @Test
     @Issue("JENKINS-3267")
     void wrappedOneItem() throws Exception {
-        Page page = j.createWebClient().goTo("api/xml?wrapper=root&xpath=/hudson/view/name", "application/xml");
+        Page page = j.createWebClient().goTo("api/xml?wrapper=root&xpath=/hudson/view[name='"
+                + AllView.DEFAULT_VIEW_NAME + "']/name", "application/xml");
         assertEquals("<root><name>" + AllView.DEFAULT_VIEW_NAME + "</name></root>", page.getWebResponse().getContentAsString());
     }
 
@@ -131,8 +132,9 @@ class ApiTest {
 
     @Test
     void unwrappedOneItem() throws Exception {
-        Page page = j.createWebClient().goTo("api/xml?xpath=/hudson/view/name", "application/xml");
-        assertEquals("<name>" + AllView.DEFAULT_VIEW_NAME + "</name>", page.getWebResponse().getContentAsString());
+        Page page = j.createWebClient().goTo("api/xml?xpath=/hudson/view[name='"
+                + ForYouView.DEFAULT_VIEW_NAME + "']/name", "application/xml");
+        assertEquals("<name>" + ForYouView.DEFAULT_VIEW_NAME + "</name>", page.getWebResponse().getContentAsString());
     }
 
     @Test

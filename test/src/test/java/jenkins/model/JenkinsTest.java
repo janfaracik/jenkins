@@ -51,6 +51,7 @@ import hudson.init.Initializer;
 import hudson.model.AllView;
 import hudson.model.Computer;
 import hudson.model.Failure;
+import hudson.model.ForYouView;
 import hudson.model.FreeStyleProject;
 import hudson.model.InvisibleAction;
 import hudson.model.Label;
@@ -784,13 +785,21 @@ public class JenkinsTest {
 
     @Test
     void reloadViews() throws Exception {
-        assertThat(j.jenkins.getPrimaryView(), isA(AllView.class));
-        assertThat(j.jenkins.getViews(), contains(isA(AllView.class)));
+        assertThat(j.jenkins.getPrimaryView(), isA(ForYouView.class));
+        assertThat(j.jenkins.getViews(), contains(isA(AllView.class), isA(ForYouView.class)));
         Files.writeString(j.jenkins.getConfigFile().getFile().toPath(), "<broken");
         assertThrows(ReactorException.class, j.jenkins::reload);
         j.createWebClient().goTo("manage/");
-        assertThat(j.jenkins.getPrimaryView(), isA(AllView.class));
-        assertThat(j.jenkins.getViews(), contains(isA(AllView.class)));
+        assertThat(j.jenkins.getPrimaryView(), isA(ForYouView.class));
+        assertThat(j.jenkins.getViews(), contains(isA(AllView.class), isA(ForYouView.class)));
+    }
+
+    @Test
+    void rootPageUsesForYouView() throws Exception {
+        assertEquals(ForYouView.DEFAULT_VIEW_NAME, j.jenkins.getPrimaryView().getViewName());
+        assertNotNull(j.jenkins.getView(AllView.DEFAULT_VIEW_NAME));
+        assertNotNull(j.jenkins.getView(ForYouView.DEFAULT_VIEW_NAME));
+        assertThat(j.createWebClient().goTo("").asNormalizedText(), containsString("Nothing to show here yet"));
     }
 
     private static File newFolder(File root, String... subDirs) throws IOException {

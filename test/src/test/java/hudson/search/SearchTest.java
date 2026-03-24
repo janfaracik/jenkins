@@ -373,7 +373,7 @@ public class SearchTest {
         j.jenkins.addView(new ListView("foo", j.jenkins));
 
         // SYSTEM can see all the views
-        assertEquals(2, Jenkins.get().getViews().size(), "two views exist");
+        assertEquals(3, Jenkins.get().getViews().size(), "three views exist");
         List<SearchItem> results = new ArrayList<>();
         j.jenkins.getSearchIndex().suggest("foo", results);
         assertEquals(1, results.size(), "nonempty results list");

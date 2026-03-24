@@ -103,6 +103,7 @@ import hudson.model.Failure;
 import hudson.model.Fingerprint;
 import hudson.model.FingerprintCleanupThread;
 import hudson.model.FingerprintMap;
+import hudson.model.ForYouView;
 import hudson.model.Hudson;
 import hudson.model.Item;
 import hudson.model.ItemGroup;
@@ -3364,15 +3365,20 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
                 throw x;
             }
         }
-        // initialize views by inserting the default view if necessary
+        // initialize views by inserting the default views if necessary.
         // this is both for clean Jenkins and for backward compatibility.
         if (views.isEmpty() || primaryView == null) {
-            View v = new AllView(AllView.DEFAULT_VIEW_NAME);
-            setViewOwner(v);
-            views.addFirst(v);
-            primaryView = v.getViewName();
+            ensureAllView();
         }
-        primaryView = AllView.migrateLegacyPrimaryAllViewLocalizedName(views, primaryView);
+        if (primaryView != null) {
+            primaryView = AllView.migrateLegacyPrimaryAllViewLocalizedName(views, primaryView);
+        }
+        String forYouViewName = ensureForYouView();
+        if (primaryView == null) {
+            primaryView = forYouViewName != null ? forYouViewName : views.getFirst().getViewName();
+        } else if (AllView.DEFAULT_VIEW_NAME.equals(primaryView) && forYouViewName != null) {
+            primaryView = forYouViewName;
+        }
         clouds.setOwner(this);
         configLoaded = true;
         try {
@@ -3383,6 +3389,40 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
             throw new IOException(invalidBuildsDir);
         }
         updateComputers(this);
+    }
+
+    @CheckForNull
+    private String ensureForYouView() {
+        for (View view : views) {
+            if (view instanceof ForYouView) {
+                return view.getViewName();
+            }
+        }
+        for (View view : views) {
+            if (ForYouView.DEFAULT_VIEW_NAME.equals(view.getViewName())) {
+                return null;
+            }
+        }
+        View view = new ForYouView(ForYouView.DEFAULT_VIEW_NAME);
+        setViewOwner(view);
+        views.addFirst(view);
+        return view.getViewName();
+    }
+
+    private void ensureAllView() {
+        for (View view : views) {
+            if (view instanceof AllView) {
+                return;
+            }
+        }
+        for (View view : views) {
+            if (AllView.DEFAULT_VIEW_NAME.equals(view.getViewName())) {
+                return;
+            }
+        }
+        View view = new AllView(AllView.DEFAULT_VIEW_NAME);
+        setViewOwner(view);
+        views.add(view);
     }
 
     private void setBuildsAndWorkspacesDir() throws IOException, InvalidBuildsDir {
