@@ -145,7 +145,7 @@ import org.xml.sax.SAXException;
  * @see ViewGroup
  */
 @ExportedBean
-public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets, Badgeable {
+public abstract class View extends Actionable implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets, Badgeable {
 
     /**
      * Container of this view. Set right after the construction
