@@ -35,6 +35,11 @@ THE SOFTWARE.
           <li><a href="${rootURL}/${job.url}">${job.fullDisplayName}</a></li>
         </j:forEach>
       </ul>
+
+      <h1>recent viewed jobs</h1>
+      <h1>favourited jobs/runs</h1>
+      <h1>builds in progress</h1>
+      <h1>builds that failed</h1>
     </j:otherwise>
   </j:choose>
 </j:jelly>
