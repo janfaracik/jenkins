@@ -20,10 +20,7 @@ function init() {
         item.iconXml = null;
       }
       const button = Templates.menuItem(item, "jenkins-button", template.url);
-      element.parentNode.insertBefore(
-        button,
-        element,
-      );
+      element.parentNode.insertBefore(button, element);
       behaviorShim.applySubtree(button, true);
     });
 
