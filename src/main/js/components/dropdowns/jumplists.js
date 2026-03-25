@@ -200,7 +200,7 @@ function mapChildrenItemsToDropdownItems(items) {
     if (item.type === "HEADER") {
       return {
         type: "HEADER",
-        label: item.displayName,
+        displayName: item.displayName,
       };
     }
 
