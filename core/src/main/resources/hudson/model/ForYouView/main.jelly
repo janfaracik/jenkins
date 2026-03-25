@@ -85,20 +85,7 @@ THE SOFTWARE.
                   </div>
                 </a>
                 <div class="jenkins-jobs-list__item__actions">
-                  <l:actions it="${job}" compact="true" />
-<!--                  <button class="jenkins-button jenkins-button&#45;&#45;tertiary jenkins-!-success-color"-->
-<!--                          tooltip="Build Now" href="configure">-->
-<!--                    <l:icon src="symbol-play" />-->
-<!--                  </button>-->
-<!--                  <button class="jenkins-button jenkins-button&#45;&#45;tertiary"-->
-<!--                          tooltip="Configure" href="configure">-->
-<!--                    <l:icon src="symbol-settings" />-->
-<!--                  </button>-->
-<!--                  <button class="jenkins-button jenkins-button&#45;&#45;tertiary jenkins-jumplist-link"-->
-<!--                          tooltip="More actions"-->
-<!--                          data-href="${job.url}">-->
-<!--                    <l:icon src="symbol-menu" />-->
-<!--                  </button>-->
+                  <l:actions it="${job}" compact="true" url="${job.url}" />
                 </div>
               </div>
             </j:forEach>

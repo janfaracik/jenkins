@@ -30,7 +30,7 @@ public class ConfigureJobAction extends TransientActionFactory<Job> {
 
             @Override
             public String getIconFileName() {
-                return "symbol-edit";
+                return "symbol-settings";
             }
 
             @Override
