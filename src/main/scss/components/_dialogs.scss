@@ -1,35 +1,5 @@
 $jenkins-dialog-padding: 1.25rem;
 
-@property --top-fade {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0;
-}
-
-@property --bottom-fade {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0;
-}
-
-@keyframes scrollfade {
-  0% {
-    --top-fade: 0;
-    --bottom-fade: #{$jenkins-dialog-padding};
-  }
-
-  10%,
-  90% {
-    --top-fade: #{$jenkins-dialog-padding};
-    --bottom-fade: #{$jenkins-dialog-padding};
-  }
-
-  100% {
-    --top-fade: #{$jenkins-dialog-padding};
-    --bottom-fade: 0;
-  }
-}
-
 .jenkins-dialog {
   --background: var(--dialog-background);
   --section-padding: #{$jenkins-dialog-padding};
@@ -86,18 +56,8 @@ $jenkins-dialog-padding: 1.25rem;
   &__contents {
     overflow-y: auto;
     overflow-wrap: break-word;
-    margin-top: -0.25rem;
-    padding: 0.25rem $jenkins-dialog-padding $jenkins-dialog-padding;
+    padding: 0 $jenkins-dialog-padding $jenkins-dialog-padding;
     max-height: 75vh;
-    mask: linear-gradient(
-      to bottom,
-      #0000,
-      #ffff var(--top-fade) calc(100% - var(--bottom-fade)),
-      #0000
-    );
-    animation: scrollfade;
-    animation-timeline: --scrollfade;
-    scroll-timeline: --scrollfade y;
 
     .jenkins-dialog__buttons {
       padding-inline: 0;
