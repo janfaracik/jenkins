@@ -393,8 +393,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
 
         private Semantic semantic;
 
-        private String message;
-
         /**
          * The type of menu item
          * @since 2.340
@@ -439,8 +437,9 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         }
 
         @Exported
+        @Deprecated
         public String getMessage() {
-            return message;
+            return null;
         }
 
         public MenuItem() {
