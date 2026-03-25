@@ -11,7 +11,7 @@
 }
 
 .app-build__grid {
-  gap: calc(var(--section-padding) / 2);
+  gap: calc(var(--section-padding) / 1.5);
   margin-bottom: calc(var(--section-padding) * -0.5);
 
   & > * {
@@ -140,12 +140,13 @@
 
 body:has(.app-build-bar),
 body:has(.app-settings-container) {
-  --top: color-mix(in sRGB, var(--text-color-secondary) 4%, var(--background));
+  --top: color-mix(in sRGB, var(--text-color-secondary) 3%, var(--background));
   --bottom: color-mix(
     in sRGB,
     var(--text-color-secondary) 2%,
     var(--background)
   );
+  --side-panel-width: 310px;
 
   background: linear-gradient(var(--top), var(--bottom));
   background-attachment: fixed;
@@ -230,7 +231,7 @@ body:has(.app-settings-container) {
     position: absolute;
     inset: -1000px calc(var(--section-padding) * -1) 0;
     background-color: var(--background);
-    border-bottom: var(--jenkins-border-width) solid var(--card-border-color);
+    border-bottom: var(--jenkins-border);
     z-index: -1;
   }
 
@@ -330,6 +331,7 @@ body:has(.app-settings-container) {
   margin-inline: calc(var(--section-padding) * -1);
 
   .jenkins-app-bar {
+    min-height: 2.5rem;
     margin-block: 1.0625rem;
   }
 }

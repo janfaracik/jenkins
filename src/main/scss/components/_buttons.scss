@@ -24,9 +24,14 @@
     height: 1.125rem;
   }
 
+  &:not(.jenkins-button--tertiary) {
+    box-shadow: inset 0 10px 10px color-mix(in srgb, white 1.5%, transparent),
+                var(--control-shadow);
+  }
+
   &:disabled {
-    opacity: 0.5;
-    filter: saturate(0.6);
+    opacity: 0.4;
+    filter: saturate(0.5);
     cursor: not-allowed;
   }
 }
@@ -38,6 +43,10 @@
   --button-box-shadow--focus: oklch(from var(--accent-color) l c h / 0.4);
 
   color: var(--button-color--primary) !important;
+
+  &::before {
+    border: var(--jenkins-border--subtle);
+  }
 }
 
 // Support for custom colors

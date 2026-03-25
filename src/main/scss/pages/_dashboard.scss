@@ -78,7 +78,16 @@ $min-button-size: 2.375rem;
 
     display: grid;
     grid-template-columns: 1fr auto;
+//<<<<<<< HEAD
     align-items: center;
+//=======
+//    gap: 1rem;
+//    padding: calc(1rem - var(--jenkins-border-width, 0));
+//    align-items: center;
+//    border-radius: 1rem;
+//    background: var(--card-background);
+//    border: var(--jenkins-border);
+//>>>>>>> refine-ui-2
     transition: var(--standard-transition);
     box-shadow:
             0 0 0 0 transparent,
