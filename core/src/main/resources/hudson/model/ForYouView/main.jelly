@@ -74,15 +74,13 @@ THE SOFTWARE.
                   </div>
                   <div class="jenkins-jobs-list__item__details__text">
                     <p class="jenkins-jobs-list__item__label">
+                      <j:forEach var="parent" items="${it.getParentRecursively(job)}" varStatus="loop">
+                        ${parent.name()}<l:icon src="symbol-slash" />
+                      </j:forEach>
                       ${job.displayName}
                     </p>
                     <div class="jenkins-jobs-list__item__description">
-                      <div class="db-blackstar">
-                        <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
-                          ${parent.name()}<j:if test="${!loop.last}"> / </j:if>
-                        </j:forEach>
-                      </div>
-                      <l:details-bar it="${build}" />
+                      <l:details-bar it="${job}" />
                     </div>
                   </div>
                 </a>

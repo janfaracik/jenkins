@@ -208,7 +208,7 @@ public class ForYouView extends View {
         // noop
     }
 
-    @Extension
+    @Extension(ordinal = Integer.MAX_VALUE)
     @Symbol("forYou")
     public static final class DescriptorImpl extends ViewDescriptor {
         @Override
