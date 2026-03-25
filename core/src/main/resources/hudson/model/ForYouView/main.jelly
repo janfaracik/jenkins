@@ -32,7 +32,7 @@ THE SOFTWARE.
       <div class="home">
         <l:app-bar title="For You" icon="${h.getUserAvatar(it.user, '64x64')}" />
 
-        <f:section title="Jenkins Intelligence">
+        <f:section title="Builds">
           <div class="jenkins-jobs-list">
             <j:forEach var="build" items="${it.buildsThatNeedAttention}">
               <div class="jenkins-jobs-list__item">
@@ -42,14 +42,12 @@ THE SOFTWARE.
                   </div>
                   <div class="jenkins-jobs-list__item__details__text">
                     <p class="jenkins-jobs-list__item__label">
+                      <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
+                        ${parent.name()}<l:icon src="symbol-slash" />
+                      </j:forEach>
                       ${build.displayName}
                     </p>
                     <div class="jenkins-jobs-list__item__description">
-                      <div class="db-blackstar">
-                        <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
-                          ${parent.name()}<j:if test="${!loop.last}"> / </j:if>
-                        </j:forEach>
-                      </div>
                       <l:details-bar it="${build}" />
                     </div>
                   </div>
@@ -70,7 +68,7 @@ THE SOFTWARE.
           <div class="jenkins-jobs-list">
             <j:forEach var="job" items="${it.recentJobs}">
               <div class="jenkins-jobs-list__item">
-                <div class="jenkins-jobs-list__item__details" href="${job.url}">
+                <a class="jenkins-jobs-list__item__details" href="${job.url}">
                   <div class="jenkins-jobs-list__item__icons">
                     <l:icon src="symbol-status-${job.iconColor.iconName}" alt="${job.iconColor.description}" />
                   </div>
@@ -87,7 +85,7 @@ THE SOFTWARE.
                       <l:details-bar it="${build}" />
                     </div>
                   </div>
-                </div>
+                </a>
                 <div class="jenkins-jobs-list__item__actions">
                   <button class="jenkins-button jenkins-button--tertiary jenkins-!-success-color"
                           tooltip="Build Now" href="configure">
