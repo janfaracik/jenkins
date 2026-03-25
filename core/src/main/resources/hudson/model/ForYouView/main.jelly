@@ -53,11 +53,7 @@ THE SOFTWARE.
                   </div>
                 </div>
                 <div class="jenkins-jobs-list__item__actions">
-                  <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
-                          tooltip="More actions"
-                          data-href="${build.url}">
-                    <l:icon src="symbol-menu" />
-                  </button>
+                  <l:actions it="${build}" compact="true" url="${build.url}" />
                 </div>
               </div>
             </j:forEach>
