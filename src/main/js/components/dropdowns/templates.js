@@ -145,6 +145,8 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
   let clazz =
     type +
     " " +
+    (itemOptions.compact ? 'jenkins-button--tertiary' : '') +
+    " " +
     itemOptions.clazz +
     (itemOptions.semantic
       ? " jenkins-!-" + itemOptions.semantic.toLowerCase() + "-color"
@@ -188,6 +190,10 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
     itemOptions.event && itemOptions.event.type === "GET" ? "a" : "button";
   const url = tag === "a" ? context + xmlEscape(itemOptions.event.url) : null;
 
+  if (itemOptions.compact) {
+    itemOptions.tooltip = label;
+  }
+
   const item = createElementFromHtml(`
       <${tag}
         ${optionalVals({
@@ -197,7 +203,7 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
           "data-html-tooltip": itemOptions.tooltip,
         })}>
           ${icon(itemOptions)}
-          ${label}
+          ${itemOptions.compact ? '' : label}
           ${badge(itemOptions)}
           ${
             itemOptions.event &&
