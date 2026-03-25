@@ -9,8 +9,18 @@
   margin-inline: auto;
   margin-top: calc(var(--section-padding) * -0.5);
 
+  .jenkins-app-bar .jenkins-app-bar__content > img {
+    width: 2rem;
+    height: 2rem;
+    margin-left: 0;
+  }
+
   .jenkins-section {
     margin-bottom: calc(var(--section-padding) * 0.5);
+
+    &__title {
+      margin-bottom: calc(var(--section-padding) * 0.5);
+    }
 
     &:not(:first-of-type) {
       border: none;

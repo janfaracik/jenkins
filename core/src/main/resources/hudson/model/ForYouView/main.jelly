@@ -30,7 +30,7 @@ THE SOFTWARE.
     </j:when>
     <j:otherwise>
       <div class="home">
-        <l:app-bar title="For You" icon="${h.getUserAvatar(user, '64x64')}" />
+        <l:app-bar title="For You" icon="${h.getUserAvatar(it.user, '64x64')}" />
 
         <f:section title="Jenkins Intelligence">
           <div class="jenkins-jobs-list">
@@ -89,6 +89,14 @@ THE SOFTWARE.
                   </div>
                 </div>
                 <div class="jenkins-jobs-list__item__actions">
+                  <button class="jenkins-button jenkins-button--tertiary jenkins-!-success-color"
+                          tooltip="Build Now" href="configure">
+                    <l:icon src="symbol-play" />
+                  </button>
+                  <button class="jenkins-button jenkins-button--tertiary"
+                          tooltip="Configure" href="configure">
+                    <l:icon src="symbol-settings" />
+                  </button>
                   <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
                           tooltip="More actions"
                           data-href="${job.url}">
@@ -100,11 +108,6 @@ THE SOFTWARE.
           </div>
         </f:section>
       </div>
-
-<!--      <h1>recent viewed jobs</h1>-->
-<!--      <h1>favourited jobs/runs</h1>-->
-<!--      <h1>builds in progress</h1>-->
-<!--      <h1>builds that failed</h1>-->
     </j:otherwise>
   </j:choose>
 </j:jelly>

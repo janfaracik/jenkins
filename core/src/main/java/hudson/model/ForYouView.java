@@ -102,6 +102,10 @@ public class ForYouView extends View {
         return property != null ? property.getRecentJobs() : Collections.emptyList();
     }
 
+    public User getUser() {
+        return User.current();
+    }
+
     public record Breadcrumb(String name, String url) {}
 
     public List<Breadcrumb> getParentRecursively(Run<?, ?> run) {
