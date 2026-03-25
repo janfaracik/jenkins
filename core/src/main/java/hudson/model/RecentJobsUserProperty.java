@@ -44,7 +44,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
 public class RecentJobsUserProperty extends UserProperty {
 
     private static final Logger LOGGER = Logger.getLogger(RecentJobsUserProperty.class.getName());
-    private static final int MAX_RECENT_JOBS = 5;
+    private static final int MAX_RECENT_JOBS = 10;
 
     private List<String> recentJobFullNames = new ArrayList<>();
 
