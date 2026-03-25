@@ -291,7 +291,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
 
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest2 request, StaplerResponse2 response, String view) throws JellyException, IOException {
             // Only Jobs and Runs support getAppBarActions currently
-            if (self instanceof Run || self instanceof Job<?,?>) {
+            if (self instanceof Run || self instanceof Job<?, ?>) {
                 this.addAll(((Actionable) self).getAppBarActions().stream()
                         .filter(action ->
                                 action.getIconFileName() != null
