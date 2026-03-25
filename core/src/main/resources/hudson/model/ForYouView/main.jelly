@@ -29,58 +29,77 @@ THE SOFTWARE.
       <p>${%empty}</p>
     </j:when>
     <j:otherwise>
-      <f:section title="Jenkins Intelligence">
-        <j:forEach var="build" items="${it.buildsThatNeedAttention}">
-<!--          <a href="${build.url}">-->
-<!--            <l:icon src="symbol-status-${build.iconColor.iconName}" class="icon-sm" />-->
-<!--            ${build}-->
-<!--          </a>-->
+      <div class="home">
+        <l:app-bar title="For You" icon="${h.getUserAvatar(user, '64x64')}" />
 
-
-        </j:forEach>
-
-        <div class="jenkins-jobs-list">
-          <j:forEach var="build" items="${it.buildsThatNeedAttention}">
-            <div class="jenkins-jobs-list__item">
-              <a class="jenkins-jobs-list__item__details" href="${build.url}">
-                <div class="jenkins-jobs-list__item__icons">
-                  <l:icon src="symbol-status-${build.iconColor.iconName}" alt="${build.iconColor.description}" />
-                </div>
-                <div class="jenkins-jobs-list__item__details__text">
-                  <p class="jenkins-jobs-list__item__label">
-                    ${build.displayName}
-                  </p>
-                  <div class="jenkins-jobs-list__item__description">
-                    <div class="db-blackstar">
-                      <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
-                        ${parent.name()}<j:if test="${!loop.last}"> / </j:if>
-                      </j:forEach>
+        <f:section title="Jenkins Intelligence">
+          <div class="jenkins-jobs-list">
+            <j:forEach var="build" items="${it.buildsThatNeedAttention}">
+              <div class="jenkins-jobs-list__item">
+                <div class="jenkins-jobs-list__item__details" href="${build.url}">
+                  <div class="jenkins-jobs-list__item__icons">
+                    <l:icon src="symbol-status-${build.iconColor.iconName}" alt="${build.iconColor.description}" />
+                  </div>
+                  <div class="jenkins-jobs-list__item__details__text">
+                    <p class="jenkins-jobs-list__item__label">
+                      ${build.displayName}
+                    </p>
+                    <div class="jenkins-jobs-list__item__description">
+                      <div class="db-blackstar">
+                        <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
+                          ${parent.name()}<j:if test="${!loop.last}"> / </j:if>
+                        </j:forEach>
+                      </div>
+                      <l:details-bar it="${build}" />
                     </div>
                   </div>
                 </div>
-              </a>
-              <div class="jenkins-jobs-list__item__actions">
-                <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
-                        tooltip="More actions"
-                        data-href="${build.url}">
-                  <l:icon src="symbol-menu" />
-                </button>
+                <div class="jenkins-jobs-list__item__actions">
+                  <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
+                          tooltip="More actions"
+                          data-href="${build.url}">
+                    <l:icon src="symbol-menu" />
+                  </button>
+                </div>
               </div>
-            </div>
-          </j:forEach>
-        </div>
-      </f:section>
+            </j:forEach>
+          </div>
+        </f:section>
 
-      <br />
-      <br />
-
-      <l:card title="${%title}">
-        <ul id="for-you-recent-jobs">
-          <j:forEach var="job" items="${it.recentJobs}">
-            <li><a href="${rootURL}/${job.url}">${job.fullDisplayName}</a></li>
-          </j:forEach>
-        </ul>
-      </l:card>
+        <f:section title="${%title}">
+          <div class="jenkins-jobs-list">
+            <j:forEach var="job" items="${it.recentJobs}">
+              <div class="jenkins-jobs-list__item">
+                <div class="jenkins-jobs-list__item__details" href="${job.url}">
+                  <div class="jenkins-jobs-list__item__icons">
+                    <l:icon src="symbol-status-${job.iconColor.iconName}" alt="${job.iconColor.description}" />
+                  </div>
+                  <div class="jenkins-jobs-list__item__details__text">
+                    <p class="jenkins-jobs-list__item__label">
+                      ${job.displayName}
+                    </p>
+                    <div class="jenkins-jobs-list__item__description">
+                      <div class="db-blackstar">
+                        <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
+                          ${parent.name()}<j:if test="${!loop.last}"> / </j:if>
+                        </j:forEach>
+                      </div>
+                      <l:details-bar it="${build}" />
+                    </div>
+                  </div>
+                </div>
+                <div class="jenkins-jobs-list__item__actions">
+                  <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
+                          tooltip="More actions"
+                          data-href="${job.url}">
+                    <l:icon src="symbol-menu" />
+                  </button>
+                </div>
+              </div>
+            </j:forEach>
+          </div>
+        </f:section>
+      </div>
 
 <!--      <h1>recent viewed jobs</h1>-->
 <!--      <h1>favourited jobs/runs</h1>-->

@@ -3,3 +3,17 @@
 @use "components";
 @use "form";
 @use "pages";
+
+.home {
+  max-width: 1200px;
+  margin-inline: auto;
+  margin-top: calc(var(--section-padding) * -0.5);
+
+  .jenkins-section {
+    margin-bottom: calc(var(--section-padding) * 0.5);
+
+    &:not(:first-of-type) {
+      border: none;
+    }
+  }
+}
