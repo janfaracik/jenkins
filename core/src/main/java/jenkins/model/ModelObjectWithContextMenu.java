@@ -374,7 +374,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          * @since 1.504
          */
         @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public boolean post;
 
         /**
@@ -382,7 +381,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          * @since 1.512
          */
         @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public boolean requiresConfirmation;
 
         private Badge badge;
