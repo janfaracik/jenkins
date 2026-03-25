@@ -108,6 +108,26 @@ public class ForYouView extends View {
 
     public record Breadcrumb(String name, String url) {}
 
+    public List<Breadcrumb> getParentRecursivelyJob(Item job) {
+        List<Breadcrumb> parents = new ArrayList<>();
+
+        ItemGroup<?> parent = job.getParent();
+        Item current = (parent instanceof Item parentItem) ? parentItem : null;
+
+        while (current != null) {
+            parents.add(new Breadcrumb(
+                    current.getDisplayName(),
+                    current.getUrl()
+            ));
+
+            ItemGroup<?> nextParent = current.getParent();
+            current = (nextParent instanceof Item parentItem) ? parentItem : null;
+        }
+
+        Collections.reverse(parents);
+        return parents;
+    }
+
     public List<Breadcrumb> getParentRecursively(Run<?, ?> run) {
         List<Breadcrumb> parents = new ArrayList<>();
 
@@ -131,10 +151,10 @@ public class ForYouView extends View {
     }
 
     public List<Run<?, ?>> getBuildsThatNeedAttention() {
-        long oneDayAgo = System.currentTimeMillis() - 24L * 60 * 60 * 1000;
+        long twoDaysAgo = System.currentTimeMillis() - 48L * 60 * 60 * 1000;
 
         return getRecentJobs().stream()
-                .flatMap(job -> getBuildsThatNeedAttention(job, oneDayAgo))
+                .flatMap(job -> getBuildsThatNeedAttention(job, twoDaysAgo))
                 .sorted(
                         Comparator
                                 .comparingInt((Run<?, ?> run) -> {
@@ -150,7 +170,6 @@ public class ForYouView extends View {
             Job<JobT, RunT> job, long oneDayAgo) {
         List<RunT> builds = job.getBuilds().stream()
                 .filter(run -> run.getTimeInMillis() >= oneDayAgo)
-                .sorted()
                 .toList();
 
         Stream<Run<?, ?>> runningBuild = builds.stream()

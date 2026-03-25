@@ -36,17 +36,17 @@ THE SOFTWARE.
           <div class="jenkins-jobs-list">
             <j:forEach var="build" items="${it.buildsThatNeedAttention}">
               <div class="jenkins-jobs-list__item">
-                <div class="jenkins-jobs-list__item__details" href="${build.url}">
+                <div class="jenkins-jobs-list__item__details">
                   <div class="jenkins-jobs-list__item__icons">
                     <l:icon src="symbol-status-${build.iconColor.iconName}" alt="${build.iconColor.description}" />
                   </div>
                   <div class="jenkins-jobs-list__item__details__text">
-                    <p class="jenkins-jobs-list__item__label">
+                    <a class="jenkins-jobs-list__item__label" href="${build.url}">
                       <j:forEach var="parent" items="${it.getParentRecursively(build)}" varStatus="loop">
                         ${parent.name()}<l:icon src="symbol-slash" />
                       </j:forEach>
                       ${build.displayName}
-                    </p>
+                    </a>
                     <div class="jenkins-jobs-list__item__description">
                       <l:details-bar it="${build}" />
                     </div>
@@ -74,7 +74,7 @@ THE SOFTWARE.
                   </div>
                   <div class="jenkins-jobs-list__item__details__text">
                     <p class="jenkins-jobs-list__item__label">
-                      <j:forEach var="parent" items="${it.getParentRecursively(job)}" varStatus="loop">
+                      <j:forEach var="parent" items="${it.getParentRecursivelyJob(job)}" varStatus="loop">
                         ${parent.name()}<l:icon src="symbol-slash" />
                       </j:forEach>
                       ${job.displayName}
