@@ -137,6 +137,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
                     .withDisplayName(action.getDisplayName());
 
             menuItem.semantic = action.getSemantic();
+            menuItem.description = action.getDescription();
             menuItem.group = action.getGroup();
             menuItem.event = action.getEvent();
 
@@ -389,6 +390,8 @@ public interface ModelObjectWithContextMenu extends ModelObject {
 
         private Badge badge;
 
+        private String description;
+
         private Group group;
 
         private Event event;
@@ -421,6 +424,11 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         @Exported
         public Badge getBadge() {
             return badge;
+        }
+
+        @Exported
+        public String getDescription() {
+            return description;
         }
 
         @Exported(inline = true)
