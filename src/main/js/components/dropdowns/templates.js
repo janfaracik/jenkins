@@ -157,36 +157,45 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
 
   // If submenu
   if (itemOptions.event && itemOptions.event.event) {
-    const wrapper = createElementFromHtml(
-      `<div class="jenkins-split-button"></div>`,
-    );
-    wrapper.appendChild(
-      menuItem(
-        Object.assign({}, dropdownItem, { event: dropdownItem.event.event }),
-        "jenkins-button",
-        context,
-      ),
-    );
+    if (type === "jenkins-button") {
+      const wrapper = createElementFromHtml(
+        `<div class="jenkins-split-button"></div>`,
+      );
+      wrapper.appendChild(
+        menuItem(
+          Object.assign({}, dropdownItem, { event: dropdownItem.event.event }),
+          type,
+          context,
+        ),
+      );
 
-    const button = createElementFromHtml(
-      `<button class="${clazz}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 184l144 144 144-144"/></svg></button>`,
-    );
-    Utils.generateDropdown(
-      button,
-      (instance) => {
-        instance.setContent(
-          Utils.generateDropdownItems(dropdownItem.subMenu.items),
-        );
-        instance.loaded = true;
-      },
-      false,
-      {
-        appendTo: "parent",
-      },
-    );
-    wrapper.appendChild(button);
+      const button = createElementFromHtml(
+        `<button class="${clazz}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M112 184l144 144 144-144"/></svg></button>`,
+      );
+      Utils.generateDropdown(
+        button,
+        (instance) => {
+          instance.setContent(
+            Utils.generateDropdownItems(dropdownItem.subMenu.items),
+          );
+          instance.loaded = true;
+        },
+        false,
+        {
+          appendTo: "parent",
+        },
+      );
+      wrapper.appendChild(button);
 
-    return wrapper;
+      return wrapper;
+    } else {
+      // console.log("Else!")
+      // console.log(
+      //   Object.assign({}, dropdownItem, { event: dropdownItem.event.event }),
+      // );
+      // itemOptions = itemOptions.event.ev;
+      // TODO - do nothing?
+    }
   }
 
   const tag =

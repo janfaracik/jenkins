@@ -112,17 +112,17 @@ function generateDropdownItems(items, compact = false, context = "") {
         context,
       );
 
-      if (item.event && item.event.actions != null) {
-        tippy(
-          menuItem,
-          Object.assign({}, Templates.dropdown(), {
-            content: generateDropdownItems(item.event.actions),
-            trigger: "mouseenter",
-            placement: "right-start",
-            offset: [-8, 0],
-          }),
-        );
-      }
+      // if (item.event && item.event.actions != null) {
+      //   tippy(
+      //     menuItem,
+      //     Object.assign({}, Templates.dropdown(), {
+      //       content: generateDropdownItems(item.event.actions),
+      //       trigger: "mouseenter",
+      //       placement: "right-start",
+      //       offset: [-8, 0],
+      //     }),
+      //   );
+      // }
 
       return menuItem;
     })
