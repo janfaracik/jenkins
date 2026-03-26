@@ -189,6 +189,7 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
 
       return wrapper;
     } else {
+      // Split buttons are fiddly in dropdown menus, so just show the top level button
       dropdownItem.event = dropdownItem.event.event;
     }
   }

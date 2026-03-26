@@ -36,7 +36,7 @@ public final class SplitButtonEvent implements Event {
         return new SplitButtonEvent(event, actions);
     }
 
-    @Exported
+    @Exported(inline = true)
     public Event getEvent() {
         return event;
     }
