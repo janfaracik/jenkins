@@ -12,7 +12,9 @@ function init() {
     1000,
     (element) => {
       const template = JSON.parse(element.nextSibling.content.textContent);
-      const topLevelActions = Utils.mapChildrenItemsToDropdownItems(template.items);
+      const topLevelActions = Utils.mapChildrenItemsToDropdownItems(
+        template.items,
+      );
 
       // Append top-level items next to the overflow menu
       topLevelActions.forEach((item, index) => {

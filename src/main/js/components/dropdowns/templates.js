@@ -189,12 +189,7 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
 
       return wrapper;
     } else {
-      // console.log("Else!")
-      // console.log(
-      //   Object.assign({}, dropdownItem, { event: dropdownItem.event.event }),
-      // );
-      // itemOptions = itemOptions.event.ev;
-      // TODO - do nothing?
+      dropdownItem.event = dropdownItem.event.event;
     }
   }
 
@@ -226,6 +221,8 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
           ${description}
           ${badge(itemOptions)}
           ${
+            itemOptions.event._class !==
+              "jenkins.model.menu.event.SplitButtonEvent" &&
             itemOptions.event &&
             itemOptions.event.actions &&
             type === "jenkins-dropdown__item"
