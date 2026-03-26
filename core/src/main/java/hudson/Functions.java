@@ -170,6 +170,7 @@ import jenkins.model.SimplePageDecorator;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DetailGroup;
+import jenkins.model.menu.Group;
 import jenkins.telemetry.impl.PasswordMasking;
 import jenkins.util.SystemProperties;
 import net.sf.json.JSONObject;
@@ -2673,7 +2674,7 @@ public class Functions {
                 .filter(action ->
                         action.getIconFileName() != null
                                 || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
-                )
+                ).filter(action -> action.getGroup().getOrder() < Group.FIRST_IN_MENU.getOrder())
                 .toList());
         JSONObject jsonObject = JSONObject.fromObject(contextMenu);
         jsonObject.put("url", Util.ensureEndsWith(baseUrl, "/"));

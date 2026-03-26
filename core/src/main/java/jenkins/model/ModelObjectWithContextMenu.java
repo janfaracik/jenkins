@@ -292,12 +292,17 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest2 request, StaplerResponse2 response, String view) throws JellyException, IOException {
             // Only Jobs and Runs support getAppBarActions currently
             if (self instanceof Run || self instanceof Job<?, ?>) {
-                this.addAll(((Actionable) self).getAppBarActions().stream()
+                boolean menuOnly = Boolean.parseBoolean(request.getParameter("menu-only"));
+
+                List<Action> actions = ((Actionable) self).getAppBarActions().stream()
                         .filter(action ->
                                 action.getIconFileName() != null
                                         || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
-                        ).toList());
-                return this;
+                        )
+                        .filter(action -> !menuOnly || action.getGroup().getOrder() >= Group.FIRST_IN_MENU.getOrder())
+                        .toList();
+
+                return new ModelObjectWithContextMenu.ContextMenu().addAll(actions);
             }
 
             WebApp webApp = WebApp.getCurrent();
