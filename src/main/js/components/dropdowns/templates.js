@@ -222,10 +222,7 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
           ${description}
           ${badge(itemOptions)}
           ${
-            itemOptions.event._class !==
-              "jenkins.model.menu.event.SplitButtonEvent" &&
-            itemOptions.event &&
-            itemOptions.event.actions &&
+            Utils.isDropdownMenu(itemOptions.event) &&
             type === "jenkins-dropdown__item"
               ? `<span class="jenkins-dropdown__item__chevron"></span>`
               : ``
