@@ -6,6 +6,7 @@ import hudson.model.Job;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.ConfirmationEvent;
@@ -21,6 +22,13 @@ public class DeleteJobAction extends TransientActionFactory<Job> {
 
     @Override
     public Collection<? extends Action> createFor(Job target) {
+        Boolean newJobPageEnabled = new NewJobPageUserExperimentalFlag().getFlagValue();
+
+        // This condition can be removed when the flag has been removed
+        if (!newJobPageEnabled) {
+            return Set.of();
+        }
+
         if (!target.hasPermission(Job.DELETE)) {
             return Set.of();
         }

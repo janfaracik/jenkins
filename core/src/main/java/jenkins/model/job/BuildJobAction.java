@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import jenkins.model.ParameterizedJobMixIn;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.DialogEvent;
@@ -23,6 +24,13 @@ public class BuildJobAction extends TransientActionFactory<ParameterizedJobMixIn
 
     @Override
     public Collection<? extends Action> createFor(ParameterizedJobMixIn.ParameterizedJob target) {
+        Boolean newJobPageEnabled = new NewJobPageUserExperimentalFlag().getFlagValue();
+
+        // This condition can be removed when the flag has been removed
+        if (!newJobPageEnabled) {
+            return Set.of();
+        }
+
         if (!target.isBuildable()) {
             return Set.of();
         }

@@ -6,6 +6,7 @@ import hudson.model.Action;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 
 @Extension
 public class WorkspacesAction extends TransientActionFactory<AbstractProject> {
@@ -17,6 +18,13 @@ public class WorkspacesAction extends TransientActionFactory<AbstractProject> {
 
     @Override
     public Collection<? extends Action> createFor(AbstractProject target) {
+        Boolean newJobPageEnabled = new NewJobPageUserExperimentalFlag().getFlagValue();
+
+        // This condition can be removed when the flag has been removed
+        if (!newJobPageEnabled) {
+            return Set.of();
+        }
+
         if (!target.hasPermission(AbstractProject.WORKSPACE)) {
             return Set.of();
         }
