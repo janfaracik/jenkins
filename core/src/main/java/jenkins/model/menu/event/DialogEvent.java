@@ -5,15 +5,14 @@ import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.Beta;
 import org.kohsuke.stapler.export.ExportedBean;
 
-/**
- * TODO
- */
 @ExportedBean
 @Restricted(Beta.class)
-public final class DialogEvent implements Event {
+public final class DialogEvent {
 
     /**
-     * TODO - finalise this API
+     * Create a DialogEvent.
+     * @param url the url of the dialog to load.
+     * @return the event
      */
     public static JavaScriptEvent of(String url) {
         return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", url), "");
