@@ -1,7 +1,6 @@
 package jenkins.model.menu.event;
 
 import java.util.Map;
-import jenkins.model.Jenkins;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.Beta;
 import org.kohsuke.stapler.export.Exported;
@@ -27,12 +26,11 @@ public final class JavaScriptEvent implements Event {
     /**
      * Create a JavaScriptEvent.
      * @param attributes attributes to add to the element as data-attributes.
-     * @param javascriptUrl the script to load relative from the jenkins root url.
+     * @param javascriptUrl the script to load relative from Jenkins resources url.
      * @return the event
      */
     public static JavaScriptEvent of(Map<String, String> attributes, String javascriptUrl) {
-        Jenkins jenkins = Jenkins.get();
-        return new JavaScriptEvent(attributes, jenkins.getRootUrl() + javascriptUrl);
+        return new JavaScriptEvent(attributes, javascriptUrl);
     }
 
     /**

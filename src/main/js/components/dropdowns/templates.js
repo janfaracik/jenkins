@@ -74,7 +74,7 @@ function loadScriptIfNotLoaded(url, item) {
 
   if (!existingScript) {
     const script = document.createElement("script");
-    script.src = url;
+    script.src = document.head.getAttribute("data-resurl") + "/" + url;
 
     script.addEventListener("load", () => {
       behaviorShim.applySubtree(item, true);
