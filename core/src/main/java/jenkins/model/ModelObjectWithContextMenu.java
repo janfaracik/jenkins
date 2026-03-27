@@ -10,6 +10,7 @@ import hudson.model.Job;
 import hudson.model.ModelObject;
 import hudson.model.Node;
 import hudson.model.Run;
+import hudson.model.View;
 import hudson.slaves.Cloud;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
@@ -296,8 +297,8 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         }
 
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest2 request, StaplerResponse2 response, String view) throws JellyException, IOException {
-            // Only Jobs and Runs support getAppBarActions currently
-            if (self instanceof Job<?, ?> || self instanceof Run) {
+            // Only Jobs, Runs, and Views support getAppBarActions currently
+            if (self instanceof Job<?, ?> || self instanceof Run || self instanceof View) {
                 boolean menuOnly = Boolean.parseBoolean(request.getParameter("menu-only"));
 
                 List<Action> actions = ((Actionable) self).getAppBarActions().stream()
