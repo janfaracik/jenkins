@@ -47,7 +47,6 @@ THE SOFTWARE.
         <div class="jenkins-jobs-list__item__details__text">
           <p class="jenkins-jobs-list__item__label">${build.displayName}</p>
           <div class="jenkins-jobs-list__item__description">
-
             <l:details-bar it="${build}" />
 
             <j:if test="${!empty build.truncatedDescription}">
@@ -66,7 +65,9 @@ THE SOFTWARE.
           </div>
         </div>
       </div>
-
+      <div>
+        plugins go here!
+      </div>
       <div class="jenkins-jobs-list__item__actions">
         <l:actions it="${build}" url="${rootURL}/${build.url}" compact="true" />
       </div>

@@ -74,7 +74,7 @@
 
 .app-build-item {
   display: grid;
-  grid-template-columns: auto 35vw auto 1fr auto;
+  grid-template-columns: auto 1fr auto;
 
   &__icon {
     margin: 0.75rem 0 0 0.875rem;
