@@ -38,7 +38,7 @@ public class RenameAction implements Action {
 
     @Override
     public String getIconFileName() {
-        return "notepad.png";
+        return "symbol-edit";
     }
 
     @Override

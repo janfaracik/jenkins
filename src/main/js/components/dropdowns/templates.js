@@ -256,6 +256,9 @@ function tryLoadScripts(element, opt, context) {
   }
   element.dataset["baseUrl"] = context;
 
+  // todo - refine this
+  element.dataset.dialogUrl = context + element.dataset.dialogUrl;
+
   loadScriptIfNotLoaded(opt.event.javascriptUrl, element);
 }
 
