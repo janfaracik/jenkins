@@ -37,7 +37,7 @@ public class DeleteViewAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Delete view";
+                return "Delete View";
             }
 
             @Override
@@ -57,7 +57,7 @@ public class DeleteViewAction extends TransientActionFactory<View> {
 
             @Override
             public Event getEvent() {
-                return ConfirmationEvent.of(Messages.DeleteRunFactory_DeleteDialog_Title(), null,"doDelete");
+                return ConfirmationEvent.of("Are you sure you want to delete this view?", null,"doDelete");
             }
 
             @Override

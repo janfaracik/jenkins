@@ -32,7 +32,7 @@ public class RssAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Atom feed";
+                return "Atom Feed";
             }
 
             @Override
@@ -55,7 +55,7 @@ public class RssAction extends TransientActionFactory<View> {
                 return DropdownEvent.of(List.of(new Action() {
                     @Override
                     public String getIconFileName() {
-                        return "symbol-list-circle";
+                        return "symbol-list";
                     }
 
                     @Override
@@ -67,22 +67,7 @@ public class RssAction extends TransientActionFactory<View> {
                     public String getUrlName() {
                         return "rssAll";
                     }
-                },new Action() {
-                    @Override
-                    public String getIconFileName() {
-                        return "symbol-close-circle";
-                    }
-
-                    @Override
-                    public String getDisplayName() {
-                        return "Failures";
-                    }
-
-                    @Override
-                    public String getUrlName() {
-                        return "rssFailed";
-                    }
-                },new Action() {
+                }, new Action() {
                     @Override
                     public String getIconFileName() {
                         return "symbol-clock";
@@ -96,6 +81,21 @@ public class RssAction extends TransientActionFactory<View> {
                     @Override
                     public String getUrlName() {
                         return "rssLatest";
+                    }
+                }, new Action() {
+                    @Override
+                    public String getIconFileName() {
+                        return "symbol-close-circle";
+                    }
+
+                    @Override
+                    public String getDisplayName() {
+                        return "Failures";
+                    }
+
+                    @Override
+                    public String getUrlName() {
+                        return "rssFailed";
                     }
                 }));
             }
