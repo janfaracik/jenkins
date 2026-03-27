@@ -32,12 +32,12 @@ public class RssAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "RSS";
+                return "Atom feed";
             }
 
             @Override
             public String getIconFileName() {
-                return "symbol-information-circle";
+                return "symbol-rss";
             }
 
             @Override
@@ -55,17 +55,47 @@ public class RssAction extends TransientActionFactory<View> {
                 return DropdownEvent.of(List.of(new Action() {
                     @Override
                     public String getIconFileName() {
-                        return "symbol-information-circle";
+                        return "symbol-rss";
                     }
 
                     @Override
                     public String getDisplayName() {
-                        return "rsss";
+                        return "All";
                     }
 
                     @Override
                     public String getUrlName() {
-                        return "rsssss";
+                        return "rssAll";
+                    }
+                },new Action() {
+                    @Override
+                    public String getIconFileName() {
+                        return "symbol-rss";
+                    }
+
+                    @Override
+                    public String getDisplayName() {
+                        return "Failures";
+                    }
+
+                    @Override
+                    public String getUrlName() {
+                        return "rssFailed";
+                    }
+                },new Action() {
+                    @Override
+                    public String getIconFileName() {
+                        return "symbol-rss";
+                    }
+
+                    @Override
+                    public String getDisplayName() {
+                        return "Latest builds";
+                    }
+
+                    @Override
+                    public String getUrlName() {
+                        return "rssLatest";
                     }
                 }));
             }
