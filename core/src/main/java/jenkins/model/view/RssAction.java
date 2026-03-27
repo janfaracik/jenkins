@@ -55,7 +55,7 @@ public class RssAction extends TransientActionFactory<View> {
                 return DropdownEvent.of(List.of(new Action() {
                     @Override
                     public String getIconFileName() {
-                        return "symbol-rss";
+                        return "symbol-list-circle";
                     }
 
                     @Override
@@ -70,7 +70,7 @@ public class RssAction extends TransientActionFactory<View> {
                 },new Action() {
                     @Override
                     public String getIconFileName() {
-                        return "symbol-rss";
+                        return "symbol-close-circle";
                     }
 
                     @Override
@@ -85,7 +85,7 @@ public class RssAction extends TransientActionFactory<View> {
                 },new Action() {
                     @Override
                     public String getIconFileName() {
-                        return "symbol-rss";
+                        return "symbol-clock";
                     }
 
                     @Override
