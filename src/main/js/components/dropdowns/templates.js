@@ -216,7 +216,6 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
         })}>
           ${icon(itemOptions)}
           ${label}
-          ${description}
           ${badge(itemOptions)}
           ${
             Utils.isDropdownMenu(itemOptions.event) &&
