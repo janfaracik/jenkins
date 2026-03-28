@@ -28,10 +28,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
   <j:set target="${it}" property="nextBuildNumberToFetch" value="${it.nextBuildNumber}" />
-
-  <div class="app-temp-list">
-    <j:forEach var="pageEntry" items="${it.runs}">
-      <st:include page="/hudson/widgets/HistoryWidget/entry-new.jelly" />
-    </j:forEach>
-  </div>
+  <j:forEach var="pageEntry" items="${it.runs}">
+    <st:include page="/hudson/widgets/HistoryWidget/entry-new.jelly" />
+  </j:forEach>
 </j:jelly>
