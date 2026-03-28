@@ -177,9 +177,22 @@ $min-button-size: 2.375rem;
 
     &__actions {
       display: flex;
-      align-items: center;
+      justify-content: start;
       gap: var(--jenkins-border-width);
       padding-right: 0.875rem;
+
+      & > .jenkins-split-button {
+        gap: 1px;
+
+        & > :first-child {
+          padding: 0 0 0 0.375rem;
+          width: 32px;
+        }
+
+        & > :last-child {
+          padding: 0 0.375rem 0 2px;
+        }
+      }
 
       & > .jenkins-button {
         padding: 0;
