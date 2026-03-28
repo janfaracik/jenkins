@@ -43,6 +43,7 @@ import java.util.List;
 import jenkins.model.HistoricalBuild;
 import jenkins.util.SystemProperties;
 import jenkins.widgets.HistoryPageEntry;
+import jenkins.widgets.HistoryPageEntryDecorator;
 import jenkins.widgets.HistoryPageFilter;
 import jenkins.widgets.WidgetFactory;
 import org.jenkinsci.Symbol;
@@ -134,6 +135,18 @@ public class HistoryWidget<O extends ModelObject, T> extends Widget {
 
     public String getFirstTransientBuildKey() {
         return firstTransientBuildKey;
+    }
+
+    @Restricted(DoNotUse.class)
+    public @NonNull List<HistoryPageEntryDecorator.EntryContext> getEntryDecorators(@NonNull HistoryPageEntry<HistoricalBuild> pageEntry) {
+        List<HistoryPageEntryDecorator.EntryContext> entryDecorators = new ArrayList<>();
+        HistoricalBuild build = pageEntry.getEntry();
+        for (HistoryPageEntryDecorator decorator : HistoryPageEntryDecorator.all()) {
+            if (decorator.isApplicable(this, build)) {
+                entryDecorators.add(new HistoryPageEntryDecorator.EntryContext(decorator, this, pageEntry));
+            }
+        }
+        return entryDecorators;
     }
 
     /**

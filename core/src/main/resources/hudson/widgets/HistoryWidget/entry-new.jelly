@@ -65,11 +65,18 @@ THE SOFTWARE.
           </div>
         </div>
       </div>
-      <div>
-        plugins go here!
-      </div>
-      <div class="jenkins-jobs-list__item__actions">
-        <l:actions it="${build}" url="${rootURL}/${build.url}" compact="true" />
+      <j:set var="entryDecorators" value="${it.widget.getEntryDecorators(pageEntry)}" />
+      <div class="app-build-item__supplementary">
+        <j:if test="${!empty(entryDecorators)}">
+          <div class="app-build-item__extensions">
+            <j:forEach var="entryDecorator" items="${entryDecorators}">
+              <st:include from="${entryDecorator.decorator}" it="${entryDecorator}" page="entry.jelly" optional="true" />
+            </j:forEach>
+          </div>
+        </j:if>
+        <div class="jenkins-jobs-list__item__actions">
+          <l:actions it="${build}" url="${rootURL}/${build.url}" compact="true" />
+        </div>
       </div>
     </div>
   </div>
