@@ -40,7 +40,7 @@ THE SOFTWARE.
        data-page-entry-oldest="${page.oldestOnPage}"
        data-page-has-up="${page.hasUpPage}"
        data-page-has-down="${page.hasDownPage}">
-    <div class="a" id="jenkins-builds" controls="${controls}" expandable="${it.baseUrl}/buildTimeTrend">
+    <div id="jenkins-builds">
       <div style="display: none">
         <l:search-bar placeholder="${%find}"
                       clazz="${page.runs.isEmpty() and page.queueItems.isEmpty() ? 'jenkins-hidden' : ''}"/>
@@ -55,7 +55,7 @@ THE SOFTWARE.
           ${%No builds}
         </div>
 
-        <div id="jenkins-build-history" class="app-builds-container__items">
+        <div id="jenkins-build-history">
         </div>
 
         <div class="app-builds-container__controls jenkins-hidden" id="controls">

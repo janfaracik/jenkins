@@ -8,6 +8,7 @@
   border-radius: var(--form-input-border-radius);
   background: var(--card-background);
   border: var(--card-border-width) solid var(--card-border-color);
+  margin-bottom: var(--section-padding);
 
   &__item {
     --tertiary-color: var(--text-color-secondary);
@@ -161,15 +162,20 @@
       align-items: center;
       gap: 0.625rem;
       color: var(--text-color-secondary);
-      margin: 0;
       white-space: nowrap;
-      //mask-image: linear-gradient(90deg, black calc(100% - 1rem), transparent);
       font-size: var(--font-size-xs);
       font-weight: normal;
+      opacity: 0.85;
+      margin: 3px 0 0;
+
+      .jenkins-details {
+        gap: 0.75rem;
+      }
 
       .jenkins-details__item {
         min-height: 0 !important;
         padding: 0 !important;
+        gap: 0.25rem;
 
         .jenkins-details__item__icon {
           height: 1rem !important;

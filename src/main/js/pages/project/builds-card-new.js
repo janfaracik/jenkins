@@ -69,6 +69,7 @@ BehaviorShim.specify(
                 noBuilds.style.display = "block";
               } else {
                 noBuildsYet.classList.remove("jenkins-hidden");
+                card.classList.add("jenkins-hidden");
               }
               loadingBuilds.style.display = "none";
               updateCardControls({
@@ -86,6 +87,7 @@ BehaviorShim.specify(
               noBuilds.style.display = "hidden";
             } else {
               noBuildsYet.classList.add("jenkins-hidden");
+              card.classList.remove("jenkins-hidden");
             }
             loadingBuilds.style.display = "none";
             BehaviorShim.applySubtree(contents);
