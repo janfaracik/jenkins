@@ -11,7 +11,6 @@ import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.ConfirmationEvent;
 import jenkins.model.menu.event.Event;
-import jenkins.model.run.Messages;
 
 @Extension
 public class DeleteViewAction extends TransientActionFactory<View> {
