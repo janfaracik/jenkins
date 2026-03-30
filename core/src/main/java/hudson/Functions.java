@@ -2685,7 +2685,7 @@ public class Functions {
      * Returns a grouped list of Detail objects for the given Actionable object
      */
     @Restricted(NoExternalUse.class)
-    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object) {
+    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object, boolean shortHand) {
         ExtensionList<DetailGroup> groupsExtensionList = ExtensionList.lookup(DetailGroup.class);
         List<ExtensionComponent<DetailGroup>> components = groupsExtensionList.getComponents();
         Map<String, Double> detailGroupOrdinal = components.stream()
@@ -2694,38 +2694,32 @@ public class Functions {
                         ExtensionComponent::ordinal
                 ));
 
-        Map<DetailGroup, List<Detail>> result = new TreeMap<>(Comparator.comparingDouble(d -> detailGroupOrdinal.get(d.getClass().getName())));
+        Map<DetailGroup, List<Detail>> result = new TreeMap<>(
+                Comparator.comparingDouble(d -> detailGroupOrdinal.get(d.getClass().getName()))
+        );
+
         for (DetailFactory taf : DetailFactory.factoriesFor(object.getClass())) {
             List<Detail> details = taf.createFor(object);
-            details.forEach(e -> result.computeIfAbsent(e.getGroup(), k -> new ArrayList<>()).add(e));
+            details = details.stream()
+                    .filter(detail -> {
+                        var shorthand2 = detail.getShorthand();
+                        if (shortHand) {
+                            return shorthand2.equals(Detail.DetailVisibility.SNIPPET)
+                                    || shorthand2.equals(Detail.DetailVisibility.FULL_AND_SNIPPET);
+                        } else {
+                            return shorthand2.equals(Detail.DetailVisibility.FULL);
+                        }
+                    })
+                    .toList();
+
+            details.forEach(detail ->
+                    result.computeIfAbsent(detail.getGroup(), k -> new ArrayList<>()).add(detail)
+            );
         }
 
         for (Map.Entry<DetailGroup, List<Detail>> entry : result.entrySet()) {
             List<Detail> detailList = entry.getValue();
             detailList.sort(Comparator.comparingInt(Detail::getOrder).reversed());
-        }
-
-        return result;
-    }
-
-    /**
-     *
-     * @return
-     */
-    @Restricted(NoExternalUse.class)
-    public static Map<DetailGroup, List<Detail>> getShorthandDetailsFor(Actionable object) {
-        Map<DetailGroup, List<Detail>> all = getDetailsFor(object);
-        Map<DetailGroup, List<Detail>> result = new HashMap<>();
-
-        for (Map.Entry<DetailGroup, List<Detail>> entry : all.entrySet()) {
-            List<Detail> filtered = entry.getValue()
-                    .stream()
-                    .filter(Detail::isShorthand)
-                    .collect(Collectors.toList());
-
-            if (!filtered.isEmpty()) {
-                result.put(entry.getKey(), filtered);
-            }
         }
 
         return result;

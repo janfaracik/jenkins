@@ -69,7 +69,13 @@ public abstract class Detail implements ModelObject, IconSpec {
     /**
      * @return whether this detail should appear in model summaries.
      */
-    public boolean isShorthand() {
-        return false;
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL;
+    }
+
+    public enum DetailVisibility {
+        FULL,
+        SNIPPET,
+        FULL_AND_SNIPPET
     }
 }

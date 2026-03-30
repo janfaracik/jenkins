@@ -25,4 +25,9 @@ public class WeatherDetail extends Detail {
     public @Nullable String getDisplayName() {
         return "Health";
     }
+
+    @Override
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL_AND_SNIPPET;
+    }
 }

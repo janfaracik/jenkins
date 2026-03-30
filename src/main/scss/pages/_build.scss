@@ -114,7 +114,7 @@
 
     &__actions {
       display: flex;
-      justify-content: start;
+      align-items: center;
       gap: var(--jenkins-border-width);
       padding-right: 0.875rem;
 
@@ -208,7 +208,7 @@
 
 .app-build-item {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr 1fr auto;
 
   &__icon {
     margin: 0.75rem 0 0 0.875rem;

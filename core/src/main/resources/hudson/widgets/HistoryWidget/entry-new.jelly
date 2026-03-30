@@ -43,11 +43,12 @@ THE SOFTWARE.
          data-tooltip-append-to-parent="true">
         <l:icon src="symbol-status-${build.iconColor.iconName}" />
       </a>
+
       <div class="app-temp-list__item__details" href="${link}">
         <div class="app-temp-list__item__details__text">
           <a class="app-temp-list__item__label" href="${rootURL}/${build.url}">${build.displayName}</a>
           <div class="app-temp-list__item__description">
-            <l:details-bar it="${build}" />
+            <l:details-bar it="${build}" shorthand="true" />
 
             <j:if test="${!empty build.truncatedDescription}">
               <j:if test="${index gt 0}">
@@ -65,18 +66,18 @@ THE SOFTWARE.
           </div>
         </div>
       </div>
+
       <j:set var="entryDecorators" value="${it.widget.getEntryDecorators(pageEntry)}" />
       <div class="app-build-item__supplementary">
         <j:if test="${!empty(entryDecorators)}">
-          <div class="app-build-item__extensions">
-            <j:forEach var="entryDecorator" items="${entryDecorators}">
-              <st:include from="${entryDecorator.decorator}" it="${entryDecorator}" page="entry.jelly" optional="true" />
-            </j:forEach>
-          </div>
+          <j:forEach var="entryDecorator" items="${entryDecorators}">
+            <st:include from="${entryDecorator.decorator}" it="${entryDecorator}" page="entry.jelly" optional="true" />
+          </j:forEach>
         </j:if>
-        <div class="app-temp-list__item__actions">
-          <l:actions it="${build}" url="${rootURL}/${build.url}" compact="true" />
-        </div>
+      </div>
+
+      <div class="app-temp-list__item__actions">
+        <l:actions it="${build}" url="${rootURL}/${build.url}" compact="true" />
       </div>
     </div>
   </div>

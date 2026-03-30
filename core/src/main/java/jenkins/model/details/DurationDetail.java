@@ -12,7 +12,7 @@ public class DurationDetail extends Detail {
     }
 
     @Override
-    public boolean isShorthand() {
-        return true;
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL_AND_SNIPPET;
     }
 }
