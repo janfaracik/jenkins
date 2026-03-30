@@ -2,6 +2,12 @@
 @use "../components/cards";
 @use "../components/dialogs";
 
+.app-builds-container__controls-new {
+  border-top: var(--jenkins-border);
+  margin: 0 !important;
+  padding: 0.5rem !important;
+}
+
 .app-temp-list {
   display: flex;
   flex-direction: column;
@@ -169,6 +175,8 @@
       margin: 3px 0 0;
 
       .jenkins-details {
+        display: grid;
+        grid-template-columns: 150px 180px 170px;
         gap: 0.75rem;
       }
 
@@ -176,6 +184,7 @@
         min-height: 0 !important;
         padding: 0 !important;
         gap: 0.25rem;
+        overflow: hidden;
 
         .jenkins-details__item__icon {
           height: 1rem !important;
@@ -208,7 +217,7 @@
 
 .app-build-item {
   display: grid;
-  grid-template-columns: auto 1fr 1fr auto;
+  grid-template-columns: auto auto 1fr auto;
 
   &__icon {
     margin: 0.75rem 0 0 0.875rem;

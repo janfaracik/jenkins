@@ -2685,7 +2685,7 @@ public class Functions {
      * Returns a grouped list of Detail objects for the given Actionable object
      */
     @Restricted(NoExternalUse.class)
-    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object, boolean shortHand) {
+    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object, boolean isShorthand) {
         ExtensionList<DetailGroup> groupsExtensionList = ExtensionList.lookup(DetailGroup.class);
         List<ExtensionComponent<DetailGroup>> components = groupsExtensionList.getComponents();
         Map<String, Double> detailGroupOrdinal = components.stream()
@@ -2702,13 +2702,13 @@ public class Functions {
             List<Detail> details = taf.createFor(object);
             details = details.stream()
                     .filter(detail -> {
-                        var shorthand2 = detail.getShorthand();
-                        if (shortHand) {
-                            return shorthand2.equals(Detail.DetailVisibility.SNIPPET)
-                                    || shorthand2.equals(Detail.DetailVisibility.FULL_AND_SNIPPET);
-                        } else {
-                            return shorthand2.equals(Detail.DetailVisibility.FULL);
-                        }
+                        Detail.DetailVisibility visibility = detail.getShorthand();
+
+                        return switch (visibility) {
+                            case FULL -> !isShorthand;
+                            case SNIPPET -> isShorthand;
+                            case FULL_AND_SNIPPET -> true;
+                        };
                     })
                     .toList();
 

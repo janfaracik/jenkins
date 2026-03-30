@@ -94,26 +94,6 @@ THE SOFTWARE.
                 </p>
                 <div class="jenkins-jobs-list__item__description">
                   <l:details-bar it="${job}" shorthand="true" />
-<!--                  <j:forEach var="col" items="${columnExtensions}" indexVar="index">-->
-<!--                    <j:set var="item">-->
-<!--                      <st:include page="compactColumn.jelly" it="${col}" optional="true" />-->
-<!--                    </j:set>-->
-
-<!--                    <j:if test="${item.length() != 0}">-->
-<!--                      <div class="db-blackstar">-->
-<!--                        <j:out value="${item}" />-->
-<!--                      </div>-->
-<!--                    </j:if>-->
-<!--                  </j:forEach>-->
-
-<!--                  <j:set var="lBuild" value="${job.lastSuccessfulBuild ?: job.lastFailedBuild}"/>-->
-<!--                  <j:set var="lastChangeSet" value="${lBuild.changeSets[0].items[0]}"/>-->
-
-<!--                  <j:if test="${lastChangeSet != null}">-->
-<!--                    <div class="db-blackstar">-->
-<!--                      '${lastChangeSet.msg}' by ${lastChangeSet.author.displayName}-->
-<!--                    </div>-->
-<!--                  </j:if>-->
                 </div>
               </div>
             </a>
