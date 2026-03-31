@@ -261,22 +261,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
                     .withUrl(job.getSearchUrl()));
         }
 
-        // Used in Jelly! - task.jelly
-        public ContextMenu add(String url, String icon, String iconXml, String text, boolean post, boolean requiresConfirmation, Badge badge, String message) {
-            if (text != null && icon != null && url != null) {
-                MenuItem item = new MenuItem().withUrl(url).withIcon(icon).withDisplayName(text);
-                item.iconXml = iconXml;
-                item.badge = badge;
-                if (requiresConfirmation) {
-                    item.event = ConfirmationEvent.of(message, null, item.url);
-                } else {
-                    item.event = LinkEvent.of(item.url, post ? LinkEvent.LinkEventType.POST : LinkEvent.LinkEventType.GET);
-                }
-                items.add(item);
-            }
-            return this;
-        }
-
         /**
          * Default implementation of the context menu generation.
          *
