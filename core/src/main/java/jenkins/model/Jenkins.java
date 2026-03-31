@@ -4474,18 +4474,6 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
     }
 
     @Override
-    public ContextMenu doContextMenu(StaplerRequest2 request, StaplerResponse2 response) throws IOException, JellyException {
-        ContextMenu menu = new ContextMenu().from(this, request, response);
-        for (MenuItem i : menu.items) {
-            if (i.url.equals(request.getContextPath() + "/manage")) {
-                // add "Manage Jenkins" subitems
-                i.subMenu = new ContextMenu().from(ExtensionList.lookupSingleton(ManageJenkinsAction.class), request, response, "index");
-            }
-        }
-        return menu;
-    }
-
-    @Override
     public ContextMenu doChildrenContextMenu(StaplerRequest2 request, StaplerResponse2 response) throws Exception {
         ContextMenu menu = new ContextMenu();
         for (View view : getViews()) {
