@@ -49,21 +49,27 @@ THE SOFTWARE.
           <a class="app-temp-list__item__label" href="${rootURL}/${build.url}">${build.displayName}</a>
           <div class="app-temp-list__item__description">
             <l:details-bar it="${build}" shorthand="true" />
+          </div>
 
-            <j:if test="${!empty build.truncatedDescription}">
-              <j:if test="${index gt 0}">
-                <div class="jenkins-details__separator">•</div>
-              </j:if>
-              <j:out value="${app.markupFormatter.translate(build.truncatedDescription)}"/>
-            </j:if>
-
-            <j:set var="badges" value="${build.badgeActions}"/>
-            <j:if test="${!empty(badges)}">
+          <j:set var="badges" value="${build.badgeActions}"/>
+          <j:if test="${!empty(badges)}">
+            <div class="app-temp-list__item__description">
               <j:forEach var="badge" items="${badges}">
                 <st:include it="${badge}" page="badge.jelly" />
               </j:forEach>
-            </j:if>
-          </div>
+            </div>
+          </j:if>
+
+          <j:if test="${!empty build.truncatedDescription}">
+            <div class="app-temp-list__item__description">
+              <div class="jenkins-details__item">
+                <div class="jenkins-details__item__icon">
+                  <l:icon src="symbol-description" />
+                </div>
+                ${app.markupFormatter.translate(build.truncatedDescription)}
+              </div>
+            </div>
+          </j:if>
         </div>
       </div>
 

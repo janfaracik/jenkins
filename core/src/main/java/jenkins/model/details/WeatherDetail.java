@@ -14,16 +14,18 @@ public class WeatherDetail extends Detail {
 
     public @Nullable String getIconClassName() {
         var healthReports = ((Job<?, ?>) getObject()).getBuildHealthReports();
-        var buildHealth = healthReports.isEmpty() ? null : healthReports.get(0);
+        var buildHealth = healthReports.isEmpty() ? null : healthReports.getFirst();
 
-        assert buildHealth != null;
+        if (buildHealth == null) {
+            return null;
+        }
 
         return "symbol-weather-" + buildHealth.getIconClassName();
     }
 
     @Override
     public @Nullable String getDisplayName() {
-        return "Health";
+        return "";
     }
 
     @Override
