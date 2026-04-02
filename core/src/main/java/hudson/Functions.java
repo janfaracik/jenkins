@@ -2083,20 +2083,47 @@ public class Functions {
 
         String url = Stapler.getCurrentRequest2().getRequestURI();
 
+        // Refine the URLs
+        if (href.startsWith("/")) {
+            href = href.substring(1);
+        }
+
+        if (href.endsWith("/")) {
+            href = href.substring(0, href.length() - 1);
+        }
+
+        if (url.startsWith("/")) {
+            url = url.substring(1);
+        }
+
+        if (url.endsWith("/")) {
+            url = url.substring(0, url.length() - 1);
+        }
+
+        if (contextPath.startsWith("/")) {
+            contextPath = contextPath.substring(1);
+        }
+
+        if (contextPath.endsWith("/")) {
+            contextPath = contextPath.substring(0, contextPath.length() - 1);
+        }
+
+        // If the URLs are exact, skip any fancy matching
+        if (url.equals(href)) {
+            System.out.println("Exact match");
+            return true;
+        }
+
         var trimmedUrl = url.substring(contextPath.length());
         if (trimmedUrl.startsWith("/")) {
             trimmedUrl = trimmedUrl.substring(1);
         }
 
-        if (href.startsWith("/")) {
-            href = href.substring(1);
-        }
-
         System.out.println("===");
         System.out.println("url: " + url);
         System.out.println("contextPath: " + contextPath);
-        System.out.println("href: " + href);
         System.out.println("trimmedUrl: " + trimmedUrl);
+        System.out.println("href: " + href);
         System.out.println(trimmedUrl.startsWith(href));
         System.out.println("===");
 

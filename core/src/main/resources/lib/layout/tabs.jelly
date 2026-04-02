@@ -33,9 +33,10 @@ THE SOFTWARE.
   </st:documentation>
 
   <j:if test="${items.size() gt 1}">
-    <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage2(tab.urlName ?: url, rootURL + '/' + it.object.url)}" />
     <div class="app-build-tabs">
       <j:forEach var="tab" items="${items}">
+        <j:set var="isCurrent"
+               value="${h.hyperlinkMatchesCurrentPage2(tab.urlName ?: url, rootURL + '/' + it.object.url)}" />
         <a href="${url}/${tab.urlName}"
            class="jenkins-button ${isCurrent ? '' : 'jenkins-button--tertiary'}">
           <j:if test="${tab.iconFileName != null}">
