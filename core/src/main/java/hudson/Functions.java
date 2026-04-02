@@ -2071,6 +2071,42 @@ public class Functions {
     }
 
     /**
+     * If the given href link matches the start of the current page URL, return true.
+     *
+     * Used in {@code task.jelly} to decide if the page should be highlighted.
+     */
+    public boolean hyperlinkMatchesCurrentPage2(String href) {
+        // TODO - not sure what situation this can be null but it can be!
+        if (href == null) {
+            return false;
+        }
+
+        var req = Stapler.getCurrentRequest2();
+
+        String url = req.getRequestURI();
+        String contextPath = req.getContextPath();
+
+        var trimmedUrl = url.substring(contextPath.length());
+        if (trimmedUrl.startsWith("/")) {
+            trimmedUrl = trimmedUrl.substring(1);
+        }
+
+        if (href.startsWith("/")) {
+            href = href.substring(1);
+        }
+
+        System.out.println("===");
+        System.out.println("url: " + url);
+        System.out.println("contextPath: " + contextPath);
+        System.out.println("href: " + href);
+        System.out.println("trimmedUrl: " + trimmedUrl);
+        System.out.println(trimmedUrl.startsWith(href));
+        System.out.println("===");
+
+        return trimmedUrl.startsWith(href);
+    }
+
+    /**
      * If the given {@code Action} is a {@link RootAction#isPrimaryAction() primary} {@code RootAction}, or a parent of the current page, return {@code true}.
      * Used in {@code actions.jelly} to decide if the action should shown in the main header or the hamburger.
      */

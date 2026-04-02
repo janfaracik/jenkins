@@ -7,7 +7,7 @@
 
     <!--  first render all primary actions (except the user login )-->
     <j:forEach var="action" items="${allActions}">
-      <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(action.urlName)}" />
+      <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage2(action.urlName)}" />
       <j:set var="isPrimary" value="${h.showInPrimaryHeader(action)}"/>
 
       <j:if test="${isCurrent or isPrimary}">
@@ -25,7 +25,7 @@
     <j:set var="hamburgerHasBadgeWithSeverityInfo" value="false" />
     <j:set var="hamburgerEntries">
       <j:forEach var="action" items="${allActions}">
-        <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(action.urlName)}" />
+        <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage2(action.urlName)}" />
         <j:set var="isPrimary" value="${h.showInPrimaryHeader(action)}"/>
         <j:if test="${!isCurrent and !isPrimary}">
           <h:secondaryAction action="${action}"/>
@@ -68,7 +68,7 @@
     <!--  finally the user avatar or login button (if required) -->
     <j:forEach var="action" items="${allActions}">
       <j:if test="${action.class.name == 'jenkins.model.navigation.UserAction'}">
-        <h:primaryAction action="${action}" isCurrent="${h.hyperlinkMatchesCurrentPage(action.urlName)}"/>
+        <h:primaryAction action="${action}" isCurrent="${h.hyperlinkMatchesCurrentPage2(action.urlName)}"/>
       </j:if>
     </j:forEach>
     <h:login/>
