@@ -2075,7 +2075,7 @@ public class Functions {
      *
      * Used in {@code task.jelly} to decide if the page should be highlighted.
      */
-    public boolean hyperlinkMatchesCurrentPage2(String href) {
+    public boolean hyperlinkMatchesCurrentPage2(String href, String contextPath) {
         // TODO - not sure what situation this can be null but it can be!
         if (href == null) {
             return false;
@@ -2084,7 +2084,6 @@ public class Functions {
         var req = Stapler.getCurrentRequest2();
 
         String url = req.getRequestURI();
-        String contextPath = req.getContextPath();
 
         var trimmedUrl = url.substring(contextPath.length());
         if (trimmedUrl.startsWith("/")) {
