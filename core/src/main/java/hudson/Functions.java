@@ -2081,9 +2081,7 @@ public class Functions {
             return false;
         }
 
-        var req = Stapler.getCurrentRequest2();
-
-        String url = req.getRequestURI();
+        String url = Stapler.getCurrentRequest2().getRequestURI();
 
         var trimmedUrl = url.substring(contextPath.length());
         if (trimmedUrl.startsWith("/")) {
