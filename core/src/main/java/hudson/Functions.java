@@ -96,6 +96,7 @@ import hudson.util.jna.GNUCLibrary;
 import hudson.views.MyViewsTabBar;
 import hudson.views.ViewsTabBar;
 import hudson.widgets.RenderOnDemandClosure;
+import io.jenkins.cli.shaded.org.apache.commons.io.FilenameUtils;
 import io.jenkins.servlet.http.CookieWrapper;
 import io.jenkins.servlet.http.HttpServletRequestWrapper;
 import io.jenkins.servlet.http.HttpServletResponseWrapper;
@@ -2738,5 +2739,15 @@ public class Functions {
         }
 
         return MessageFormat.format(format, args);
+    }
+
+    @Restricted(NoExternalUse.class)
+    public String getFileIcon(String fileName) {
+        return switch (FilenameUtils.getExtension(fileName)) {
+            case "jpg", "jpeg", "bmp", "png", "gif" -> "symbol-image";
+            case "xml", "json", "html" -> "symbol-code-working";
+            case "war", "jar" -> "symbol-coffee";
+            default -> "symbol-document-text";
+        };
     }
 }
