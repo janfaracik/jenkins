@@ -24,12 +24,27 @@ THE SOFTWARE.
 
 <!-- Show files in the workspace -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:dd="/lib/layout/dropdowns" xmlns:i="jelly:fmt">
   <l:layout title="${it.title} : ${path}">
     <st:include page="sidepanel.jelly" it="${it.owner}"/>
     <l:breadcrumb title="${it.title}" />
     <l:main-panel>
-      <h1><l:breakable value="${it.title}"/></h1>
+      <l:app-bar title="${it.title}">
+        <l:overflowButton>
+          <dd:custom>
+            <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
+                                href="doDelete"
+                                message="${%delete.logrecorder(it.displayName)}"
+                                post="true">
+              <div class="jenkins-dropdown__item__icon">
+                <l:icon src="symbol-trash" />
+              </div>
+              ${%Wipe out workspace}
+            </l:confirmationLink>
+          </dd:custom>
+        </l:overflowButton>
+      </l:app-bar>
+
       <div class="dirTree">
       <!-- parent path -->
         <div class="parentPath">
