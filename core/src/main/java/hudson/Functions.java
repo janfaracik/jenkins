@@ -2741,8 +2741,13 @@ public class Functions {
         return MessageFormat.format(format, args);
     }
 
+    /**
+     * Returns the Jenkins Symbol that best matches the supplied file name.
+     * @param fileName the file name to inspect
+     * @return the icon identifier for the file type
+     */
     @Restricted(NoExternalUse.class)
-    public String getFileIcon(String fileName) {
+    public String getFileIcon(@NonNull String fileName) {
         if (fileName.equals("Jenkinsfile")) {
             return "symbol-jenkins";
         }
