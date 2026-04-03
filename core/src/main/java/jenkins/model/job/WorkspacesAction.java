@@ -30,7 +30,6 @@ import hudson.model.Action;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
-import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 
 @Extension
 public class WorkspacesAction extends TransientActionFactory<AbstractProject> {
