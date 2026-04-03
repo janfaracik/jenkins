@@ -2743,9 +2743,23 @@ public class Functions {
 
     @Restricted(NoExternalUse.class)
     public String getFileIcon(String fileName) {
+        if (fileName.equals("Jenkinsfile")) {
+            return "symbol-jenkins";
+        }
+
         return switch (FilenameUtils.getExtension(fileName)) {
-            case "jpg", "jpeg", "bmp", "png", "gif" -> "symbol-image";
-            case "xml", "json", "html" -> "symbol-code-working";
+            case "jpg", "jpeg", "bmp", "png", "gif", "svg" -> "symbol-image";
+            case "xml", "json", "yaml", "yml", "toml", "ini", "properties",
+                 "html", "htm", "xhtml", "css", "scss", "less",
+                 "js", "mjs", "cjs", "ts", "tsx", "jsx",
+                 "java", "kt", "kts", "groovy", "gradle",
+                 "c", "h", "cpp", "cc", "cxx", "hpp",
+                 "cs", "go", "rs", "php", "py", "rb", "pl", "swift",
+                 "sql", "sh", "bash", "zsh", "bat", "cmd", "ps1",
+                 "dockerfile", "makefile" ->
+                    "symbol-code-working";
+            case "zip", "tar", "gz", "tgz", "bz2", "xz", "7z", "rar" ->
+                    "symbol-briefcase";
             case "war", "jar" -> "symbol-coffee";
             default -> "symbol-document-text";
         };
