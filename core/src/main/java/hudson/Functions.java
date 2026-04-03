@@ -2110,7 +2110,6 @@ public class Functions {
 
         // If the URLs are exact, skip any fancy matching
         if (url.equals(href)) {
-            System.out.println("Exact match");
             return true;
         }
 
@@ -2119,7 +2118,7 @@ public class Functions {
             trimmedUrl = trimmedUrl.substring(1);
         }
 
-        if (href.contains("credentials")) {
+        if (href.contains("plugin")) {
             System.out.println("===");
             System.out.println("url: " + url);
             System.out.println("contextPath: " + contextPath);
@@ -2128,6 +2127,7 @@ public class Functions {
             System.out.println("Does trimmed url start with href?");
             System.out.println(trimmedUrl.startsWith(href));
             System.out.println("===");
+            System.out.println();
         }
 
         return trimmedUrl.startsWith(href);
