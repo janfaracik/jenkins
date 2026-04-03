@@ -2088,24 +2088,24 @@ public class Functions {
             href = href.substring(1);
         }
 
-        if (href.endsWith("/")) {
-            href = href.substring(0, href.length() - 1);
+        if (!href.endsWith("/")) {
+            href = href + "/";
         }
 
         if (url.startsWith("/")) {
             url = url.substring(1);
         }
 
-        if (url.endsWith("/")) {
-            url = url.substring(0, url.length() - 1);
+        if (!url.endsWith("/")) {
+            url = url + "/";
         }
 
         if (contextPath.startsWith("/")) {
             contextPath = contextPath.substring(1);
         }
 
-        if (contextPath.endsWith("/")) {
-            contextPath = contextPath.substring(0, contextPath.length() - 1);
+        if (!contextPath.endsWith("/")) {
+            contextPath = contextPath + "/";
         }
 
         // If the URLs are exact, skip any fancy matching
@@ -2114,18 +2114,21 @@ public class Functions {
             return true;
         }
 
-        var trimmedUrl = url.substring(contextPath.length());
+        var trimmedUrl = url.substring(contextPath.length() - 1);
         if (trimmedUrl.startsWith("/")) {
             trimmedUrl = trimmedUrl.substring(1);
         }
 
-        System.out.println("===");
-        System.out.println("url: " + url);
-        System.out.println("contextPath: " + contextPath);
-        System.out.println("trimmedUrl: " + trimmedUrl);
-        System.out.println("href: " + href);
-        System.out.println(trimmedUrl.startsWith(href));
-        System.out.println("===");
+        if (href.contains("credentials")) {
+            System.out.println("===");
+            System.out.println("url: " + url);
+            System.out.println("contextPath: " + contextPath);
+            System.out.println("trimmedUrl: " + trimmedUrl);
+            System.out.println("href: " + href);
+            System.out.println("Does trimmed url start with href?");
+            System.out.println(trimmedUrl.startsWith(href));
+            System.out.println("===");
+        }
 
         return trimmedUrl.startsWith(href);
     }
