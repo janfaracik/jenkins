@@ -30,11 +30,16 @@ THE SOFTWARE.
     <l:breadcrumb title="${it.title}" />
     <l:main-panel>
       <l:app-bar title="${it.title}">
+        <a class="jenkins-button" href="${backPath}${pattern!=''?pattern+'/':''}*zip*/${dir.name}.zip">
+          <l:icon src="symbol-download"/>
+          ${%all files in zip}
+        </a>
         <l:overflowButton>
           <dd:custom>
             <l:confirmationLink class="jenkins-dropdown__item jenkins-!-destructive-color"
                                 href="doDelete"
-                                message="${%delete.logrecorder(it.displayName)}"
+                                title="${%delete.logrecorder(it.displayName)}"
+                                destructive="true"
                                 post="true">
               <div class="jenkins-dropdown__item__icon">
                 <l:icon src="symbol-trash" />
@@ -129,16 +134,6 @@ THE SOFTWARE.
                   </j:if>
                 </tr>
               </j:forEach>
-              <tr>
-                <td style="text-align:right;" colspan="3">
-                  <div style="margin-top: 1em;">
-                    <a class="jenkins-link--with-icon" href="${backPath}${pattern!=''?pattern+'/':''}*zip*/${dir.name}.zip">
-                      <l:icon src="symbol-download"/>
-                      (${%all files in zip})
-                    </a>
-                  </div>
-                </td>
-              </tr>
            </table>
            <j:if test="${showSymlinkWarning}">
              <p>
