@@ -22,26 +22,58 @@
  * THE SOFTWARE.
  */
 
-package jenkins.model.menu.event;
+package jenkins.model.menu.action;
 
-import java.util.Map;
-import org.kohsuke.accmod.Restricted;
-import org.kohsuke.accmod.restrictions.Beta;
-import org.kohsuke.stapler.export.ExportedBean;
+import hudson.model.Action;
+import jenkins.model.menu.Group;
+import jenkins.model.menu.Semantic;
+import jenkins.model.menu.event.ConfirmationEvent;
+import jenkins.model.menu.event.Event;
 
 /**
- * Displays a dialog, contents are lazily loaded when needed.
+ * A reusable delete action for items.
  */
-@ExportedBean
-@Restricted(Beta.class)
-public final class DialogEvent {
+public final class DeleteAction implements Action {
+
+    private final String suffix;
+
+    private final String displayName;
 
     /**
-     * Create a DialogEvent.
-     * @param url the url of the dialog to load.
-     * @return the event
+     *
      */
-    public static JavaScriptEvent of(String url) {
-        return JavaScriptEvent.of(Map.of("type", "dialog-opener", "dialog-url", url), "");
+    public DeleteAction(String suffix, String displayName) {
+        this.suffix = suffix;
+        this.displayName = displayName;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return Messages.DeleteAction_Delete(suffix);
+    }
+
+    @Override
+    public String getIconFileName() {
+        return "symbol-trash";
+    }
+
+    @Override
+    public Group getGroup() {
+        return Group.LAST_IN_MENU;
+    }
+
+    @Override
+    public String getUrlName() {
+        return null;
+    }
+
+    @Override
+    public Event getEvent() {
+        return ConfirmationEvent.of(Messages.DeleteAction_DeleteDialog_Title(displayName), "doDelete");
+    }
+
+    @Override
+    public Semantic getSemantic() {
+        return Semantic.DESTRUCTIVE;
     }
 }
