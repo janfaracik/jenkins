@@ -26,7 +26,8 @@ THE SOFTWARE.
   Entrance to the configuration page
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:s="/lib/form"
+         xmlns:dd="/lib/layout/dropdowns">
   <j:set var="header">
     <l:view>
       <j:new var="it" className="jenkins.management.NodesLink" />
@@ -39,12 +40,6 @@ THE SOFTWARE.
             ${%New Node}
           </a>
         </j:if>
-        <j:set var="hasPermission" value="${h.hasAnyPermission(it, app.MANAGE_AND_SYSTEM_READ)}" />
-        <j:if test="${hasPermission}">
-          <a class="jenkins-button" href="configure">
-            ${%Configure Monitors}
-          </a>
-        </j:if>
         <l:hasAdministerOrManage>
           <form method="post" action="updateNow" class="jenkins-!-display-contents">
             <button tooltip="${%Refresh status}" class="jenkins-button">
@@ -52,6 +47,18 @@ THE SOFTWARE.
             </button>
           </form>
         </l:hasAdministerOrManage>
+        <l:overflowButton>
+          <j:set var="hasPermission" value="${h.hasAnyPermission(it, app.MANAGE_AND_SYSTEM_READ)}" />
+          <j:if test="${hasPermission}">
+            <dd:item icon="symbol-settings"
+                     text="${%Configure Monitors}"
+                     href="configure" />
+            <dd:separator />
+          </j:if>
+          <dd:item icon="symbol-information-circle"
+                   id="button-computer-icon-legend"
+                   text="${%Legend}" />
+        </l:overflowButton>
       </l:app-bar>
 
       <div class="jenkins-page-description">
@@ -61,9 +68,12 @@ THE SOFTWARE.
   </j:set>
 
   <l:settings-subpage header="${header}" width="wide">
+    <script src="${resURL}/jsbundles/pages/computer-set.js" type="text/javascript" async="true" />
+
     <j:set var="monitors" value="${it._monitors}"/>
     <j:set var="tableWidth" value="${3}"/>
     <t:setIconSize/>
+
     <table id="computers" class="jenkins-table ${iconSize == '16x16' ? 'jenkins-table--small' : iconSize == '24x24' ? 'jenkins-table--medium' : ''} sortable">
       <thead>
         <tr>
@@ -135,16 +145,9 @@ THE SOFTWARE.
       </tr>
       </tbody>
     </table>
-    <t:iconSize>
-      <div class="jenkins-buttons-row jenkins-buttons-row--invert">
-        <button class="jenkins-button jenkins-button--tertiary" id="button-computer-icon-legend">
-          ${%Legend}
-        </button>
-      </div>
-    </t:iconSize>
-    <template id="template-computer-icon-legend" data-title="${%Computer icon legend}">
+
+    <template id="template-computer-icon-legend" data-title="${%Legend}">
       <st:include page="_legend.jelly"/>
     </template>
-    <script src="${resURL}/jsbundles/pages/computer-set.js" type="text/javascript" defer="true" />
   </l:settings-subpage>
 </j:jelly>
