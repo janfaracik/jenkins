@@ -158,6 +158,8 @@
       font-weight: var(--font-bold-weight);
       margin: 0;
       font-variant-numeric: tabular-nums;
+      color: var(--text-color) !important;
+      text-decoration: none !important;
 
       .jenkins-badge {
         padding: 0 0.5rem;
