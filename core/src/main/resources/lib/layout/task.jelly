@@ -212,7 +212,7 @@ THE SOFTWARE.
                 <l:icon src="${icon}" class="''"/>
                 <span class="jenkins-visually-hidden" data-type="action-label">${title}</span>
                 <j:if test="${badge != null}">
-                  <span class="jenkins-badge jenkins-!-${badge.severity}-color" />
+                  <span class="jenkins-badge jenkins-!-${badge.severityAsString}-color" />
                 </j:if>
               </x:element>
 
@@ -249,7 +249,7 @@ THE SOFTWARE.
             </dd:custom>
           </j:when>
           <j:otherwise>
-            <j:set var="badgeClazz" value="${badge == null ? '' : 'jenkins-badge jenkins-!-${badge.severity}-color'}"/>
+            <j:set var="badgeClazz" value="${badge == null ? '' : 'jenkins-badge jenkins-!-${badge.severityAsString}-color'}"/>
             <dd:item icon="${action.iconClassName != null ? action.iconClassName : action.iconFileName}"
                      text="${action.displayName}"
                      href="${href}"

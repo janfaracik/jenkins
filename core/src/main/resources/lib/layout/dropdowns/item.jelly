@@ -66,6 +66,6 @@ THE SOFTWARE.
                   data-dropdown-clazz="${attrs.clazz}"
                   data-dropdown-badge-text="${attrs.badge.text}"
                   data-dropdown-badge-tooltip="${attrs.badge.tooltip}"
-                  data-dropdown-badge-severity="${attrs.badge.severity}"/>
+                  data-dropdown-badge-severity="${attrs.badge.severityAsString}"/>
     </j:if>
 </j:jelly>

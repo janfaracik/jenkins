@@ -26,11 +26,10 @@ package hudson.model;
 
 import hudson.Extension;
 import hudson.Util;
-import hudson.util.HudsonIsLoading;
-import hudson.util.HudsonIsRestarting;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
-import java.util.logging.Level;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
@@ -53,8 +52,6 @@ import org.kohsuke.stapler.StaplerResponse2;
  */
 @Extension(ordinal = 998) @Symbol("manageJenkins")
 public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelObjectWithContextMenu {
-
-    private static final Logger LOGGER = Logger.getLogger(ManageJenkinsAction.class.getName());
 
     @Override
     public String getIconFileName() {
@@ -119,36 +116,27 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, ModelOb
         menu.add("manage/" + url, icon, iconXml, text, post, requiresConfirmation, badge, message);
     }
 
-    /** Unlike {@link Jenkins#getActiveAdministrativeMonitors} this checks for activation lazily. */
     @Override
     public Badge getBadge() {
-        if (!(AdministrativeMonitor.hasPermissionToDisplay())) {
+        List<Badge> badges = ManagementLink.all().stream()
+                .map(ManagementLink::getBadge)
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (badges.isEmpty()) {
             return null;
         }
 
-        var app = Jenkins.get().getServletContext().getAttribute("app");
-        if (app instanceof HudsonIsLoading || app instanceof HudsonIsRestarting) {
-            return null;
-        }
+        Badge.Severity severity = badges.stream().anyMatch(b -> b.getSeverity() == Badge.Severity.DANGER)
+                ? Badge.Severity.DANGER
+                : badges.stream().anyMatch(b -> b.getSeverity() == Badge.Severity.WARNING)
+                  ? Badge.Severity.WARNING
+                  : Badge.Severity.INFO;
 
-        if (Jenkins.get().administrativeMonitors.stream().anyMatch(m -> m.isSecurity() && isActive(m))) {
-            return new Badge("1+", Messages.ManageJenkinsAction_notifications(),
-                    Badge.Severity.DANGER);
-        } else if (Jenkins.get().administrativeMonitors.stream().anyMatch(m -> !m.isSecurity() && isActive(m))) {
-            return new Badge("1+", Messages.ManageJenkinsAction_notifications(),
-                    Badge.Severity.WARNING);
-        } else {
-            return null;
-        }
+        return new Badge(
+                String.valueOf(badges.size()),
+                badges.size() + " notifications",
+                severity
+        );
     }
-
-    private static boolean isActive(AdministrativeMonitor m) {
-        try {
-            return !m.isActivationFake() && m.hasRequiredPermission() && m.isEnabled() && m.isActivated();
-        } catch (Throwable x) {
-            LOGGER.log(Level.WARNING, null, x);
-            return false;
-        }
-    }
-
 }

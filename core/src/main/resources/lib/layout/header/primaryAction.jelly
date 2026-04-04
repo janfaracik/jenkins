@@ -68,7 +68,7 @@
           <l:icon src="${icon}" class="${action.class.name == 'jenkins.model.navigation.UserAction' ? 'jenkins-avatar' : ''}"/>
           <span class="jenkins-visually-hidden" data-type="action-label">${action.displayName}</span>
           <j:if test="${badge != null}">
-            <span class="jenkins-badge jenkins-!-${badge.severity}-color" />
+            <span class="jenkins-badge jenkins-!-${badge.severityAsString}-color" />
           </j:if>
         </x:element>
 

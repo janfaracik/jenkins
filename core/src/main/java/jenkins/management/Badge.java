@@ -98,12 +98,21 @@ public class Badge {
 
     /**
      * The severity of the badge.
+     *
+     * @return severity
+     */
+    public Severity getSeverity() {
+        return severity;
+    }
+
+    /**
+     * The severity of the badge.
      * Influences the background color of the badge.
      *
      * @return severity as String
      */
     @Exported(visibility = 999)
-    public String getSeverity() {
+    public String getSeverityAsString() {
         return severity.toString().toLowerCase(Locale.US);
     }
 

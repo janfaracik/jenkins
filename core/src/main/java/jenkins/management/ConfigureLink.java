@@ -26,8 +26,14 @@ package jenkins.management;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.model.AdministrativeMonitor;
+import hudson.model.ManageJenkinsAction;
 import hudson.model.ManagementLink;
 import hudson.security.Permission;
+import hudson.util.HudsonIsLoading;
+import hudson.util.HudsonIsRestarting;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jenkins.model.Jenkins;
 import org.jenkinsci.Symbol;
 
@@ -36,6 +42,8 @@ import org.jenkinsci.Symbol;
  */
 @Extension(ordinal = Integer.MAX_VALUE - 200) @Symbol("configure")
 public class ConfigureLink extends ManagementLink {
+
+    private static final Logger LOGGER = Logger.getLogger(ConfigureLink.class.getName());
 
     @Override
     public String getIconFileName() {
@@ -67,5 +75,37 @@ public class ConfigureLink extends ManagementLink {
     @Override
     public Category getCategory() {
         return Category.CONFIGURATION;
+    }
+
+    /** Unlike {@link Jenkins#getActiveAdministrativeMonitors} this checks for activation lazily. */
+    @Override
+    public Badge getBadge() {
+        if (!(AdministrativeMonitor.hasPermissionToDisplay())) {
+            return null;
+        }
+
+        var app = Jenkins.get().getServletContext().getAttribute("app");
+        if (app instanceof HudsonIsLoading || app instanceof HudsonIsRestarting) {
+            return null;
+        }
+
+        if (Jenkins.get().administrativeMonitors.stream().anyMatch(m -> m.isSecurity() && isActive(m))) {
+            return new Badge("1+", hudson.model.Messages.ManageJenkinsAction_notifications(),
+                    Badge.Severity.DANGER);
+        } else if (Jenkins.get().administrativeMonitors.stream().anyMatch(m -> !m.isSecurity() && isActive(m))) {
+            return new Badge("1+", hudson.model.Messages.ManageJenkinsAction_notifications(),
+                    Badge.Severity.WARNING);
+        } else {
+            return null;
+        }
+    }
+
+    private static boolean isActive(AdministrativeMonitor m) {
+        try {
+            return !m.isActivationFake() && m.hasRequiredPermission() && m.isEnabled() && m.isActivated();
+        } catch (Throwable x) {
+            LOGGER.log(Level.WARNING, null, x);
+            return false;
+        }
     }
 }
