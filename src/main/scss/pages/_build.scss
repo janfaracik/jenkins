@@ -157,6 +157,7 @@
       gap: 0.5rem;
       font-weight: var(--font-bold-weight);
       margin: 0;
+      font-variant-numeric: tabular-nums;
 
       .jenkins-badge {
         padding: 0 0.5rem;
@@ -176,7 +177,7 @@
 
       .jenkins-details {
         display: grid;
-        grid-template-columns: 150px 180px 170px;
+        grid-template-columns: 160px 120px 170px;
         gap: 0.75rem;
       }
 
