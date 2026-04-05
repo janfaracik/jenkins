@@ -196,10 +196,9 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
 
   // Do not prepend the context path for root-relative or absolute URLs
   if (tag === "a") {
-    if (
-      itemOptions.event.url.startsWith("/") ||
-      itemOptions.event.url.startsWith("http")
-    ) {
+    if (itemOptions.event.url.startsWith("/")) {
+      context = document.head.dataset.rooturl;
+    } else if (itemOptions.event.url.startsWith("http")) {
       context = "";
     }
   }
