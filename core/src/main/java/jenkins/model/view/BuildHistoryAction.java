@@ -34,7 +34,7 @@ public class BuildHistoryAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Build History";
+                return Messages.BuildHistoryAction_DisplayName();
             }
 
             @Override

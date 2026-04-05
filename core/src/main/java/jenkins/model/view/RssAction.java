@@ -32,7 +32,7 @@ public class RssAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Atom Feed";
+                return Messages.RssAction_DisplayName();
             }
 
             @Override
@@ -60,7 +60,7 @@ public class RssAction extends TransientActionFactory<View> {
 
                     @Override
                     public String getDisplayName() {
-                        return "All";
+                        return Messages.RssAction_All_DisplayName();
                     }
 
                     @Override
@@ -75,7 +75,7 @@ public class RssAction extends TransientActionFactory<View> {
 
                     @Override
                     public String getDisplayName() {
-                        return "Latest builds";
+                        return Messages.RssAction_LatestBuilds_DisplayName();
                     }
 
                     @Override
@@ -90,7 +90,7 @@ public class RssAction extends TransientActionFactory<View> {
 
                     @Override
                     public String getDisplayName() {
-                        return "Failures";
+                        return Messages.RssAction_Failures_DisplayName();
                     }
 
                     @Override

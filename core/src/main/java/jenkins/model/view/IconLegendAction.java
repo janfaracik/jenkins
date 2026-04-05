@@ -31,7 +31,7 @@ public class IconLegendAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Icon Legend";
+                return Messages.IconLegendAction_DisplayName();
             }
 
             @Override

@@ -2,6 +2,7 @@ package jenkins.model.view;
 
 import hudson.Extension;
 import hudson.model.Action;
+import hudson.model.Item;
 import hudson.model.View;
 import java.util.Collection;
 import java.util.Set;
@@ -26,14 +27,14 @@ public class NewItemAction extends TransientActionFactory<View> {
             return Set.of();
         }
 
-        if (!target.hasPermission(View.CREATE)) {
+        if (!target.hasPermission(Item.CREATE)) {
             return Set.of();
         }
 
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "New Item";
+                return Messages.NewItemAction_DisplayName(target.getNewPronoun());
             }
 
             @Override

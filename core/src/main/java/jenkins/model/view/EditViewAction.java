@@ -33,7 +33,7 @@ public class EditViewAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Edit View";
+                return Messages.EditViewAction_DisplayName();
             }
 
             @Override

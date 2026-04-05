@@ -34,7 +34,7 @@ public class CheckFileFingerprintAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Check File Fingerprint";
+                return Messages.CheckFileFingerprintAction_DisplayName();
             }
 
             @Override

@@ -34,7 +34,7 @@ public class ProjectRelationshipAction extends TransientActionFactory<View> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Project Relationship";
+                return Messages.ProjectRelationshipAction_DisplayName();
             }
 
             @Override
