@@ -7,10 +7,7 @@ import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
-import jenkins.model.menu.Group;
-import jenkins.model.menu.Semantic;
-import jenkins.model.menu.event.ConfirmationEvent;
-import jenkins.model.menu.event.Event;
+import jenkins.model.menu.action.DeleteAction;
 
 @Extension
 public class DeleteViewAction extends TransientActionFactory<View> {
@@ -33,36 +30,6 @@ public class DeleteViewAction extends TransientActionFactory<View> {
             return Set.of();
         }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return "Delete View";
-            }
-
-            @Override
-            public String getIconFileName() {
-                return "symbol-trash";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.LAST_IN_MENU;
-            }
-
-            @Override
-            public String getUrlName() {
-                return null;
-            }
-
-            @Override
-            public Event getEvent() {
-                return ConfirmationEvent.of("Are you sure you want to delete this view?", null,"doDelete");
-            }
-
-            @Override
-            public Semantic getSemantic() {
-                return Semantic.DESTRUCTIVE;
-            }
-        });
+        return Set.of(new DeleteAction("View", target.getDisplayName()));
     }
 }
