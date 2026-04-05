@@ -8,9 +8,11 @@ import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
+import jenkins.model.menu.event.DialogEvent;
+import jenkins.model.menu.event.Event;
 
 @Extension
-public class LegendAction extends TransientActionFactory<View> {
+public class IconLegendAction extends TransientActionFactory<View> {
 
     @Override
     public Class<View> type() {
@@ -44,7 +46,12 @@ public class LegendAction extends TransientActionFactory<View> {
 
             @Override
             public String getUrlName() {
-                return "newJob";
+                return null;
+            }
+
+            @Override
+            public Event getEvent() {
+                return DialogEvent.of("legend");
             }
         });
     }
