@@ -7,8 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
-import jenkins.model.menu.Group;
-import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.DeleteAction;
 import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.Event;
@@ -26,17 +24,12 @@ public class AtomFeedAction extends TransientActionFactory<LogRecorder> {
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
-                return "Atom feeeed";
+                return "Atom feed";
             }
 
             @Override
             public String getIconFileName() {
-                return "symbol-trash";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.LAST_IN_MENU;
+                return "symbol-rss";
             }
 
             @Override
@@ -52,8 +45,8 @@ public class AtomFeedAction extends TransientActionFactory<LogRecorder> {
             }
 
             @Override
-            public Semantic getSemantic() {
-                return Semantic.DESTRUCTIVE;
+            public boolean isVisibleInContextMenu() {
+                return false;
             }
         });
     }
