@@ -48,6 +48,10 @@ public class NewItemAction extends TransientActionFactory<View> {
 
             @Override
             public String getUrlName() {
+                if (target.isDefault()) {
+                    return "/newJob";
+                }
+
                 return "newJob";
             }
         });
