@@ -7,10 +7,7 @@ import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
-import jenkins.model.menu.Group;
-import jenkins.model.menu.Semantic;
-import jenkins.model.menu.event.ConfirmationEvent;
-import jenkins.model.menu.event.Event;
+import jenkins.model.menu.action.DeleteAction;
 
 @Extension
 public class DeleteRunAction extends TransientActionFactory<Run> {
@@ -33,36 +30,6 @@ public class DeleteRunAction extends TransientActionFactory<Run> {
             return Set.of();
         }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return Messages.DeleteRunFactory_Delete();
-            }
-
-            @Override
-            public String getIconFileName() {
-                return "symbol-trash";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.LAST_IN_MENU;
-            }
-
-            @Override
-            public String getUrlName() {
-                return null;
-            }
-
-            @Override
-            public Event getEvent() {
-                return ConfirmationEvent.of(Messages.DeleteRunFactory_DeleteDialog_Title(),  "doDelete");
-            }
-
-            @Override
-            public Semantic getSemantic() {
-                return Semantic.DESTRUCTIVE;
-            }
-        });
+        return Set.of(new DeleteAction("Build", target.getDisplayName()));
     }
 }
