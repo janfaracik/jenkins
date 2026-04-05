@@ -26,16 +26,16 @@ THE SOFTWARE.
   Config page
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<l:layout permission="${app.ADMINISTER}" title="${%Configure log recorder}" type="one-column">
-  <l:breadcrumb title="${%Configure log recorder}" />
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<l:settings-subpage title="${%Configure log recorder}"
+                    permission="${app.ADMINISTER}"
+                    includeBreadcrumb="true"
+                    header="${null}">
+  <l:app-bar title="${%Configure log recorder}">
+    <t:help href="https://www.jenkins.io/redirect/log-recorders" tooltip="${%Additional information on log levels}" />
+  </l:app-bar>
 
-  <l:main-panel>
-    <l:app-bar title="${%Configure log recorder}">
-      <t:help href="https://www.jenkins.io/redirect/log-recorders" tooltip="${%Additional information on log levels}" />
-    </l:app-bar>
-
-    <f:form method="post" name="config" action="configSubmit">
+  <f:form method="post" name="config" action="configSubmit">
       <div class="jenkins-alert jenkins-alert-info jenkins-form-item">
         ${%fine_warning}
       </div>
@@ -68,6 +68,5 @@ THE SOFTWARE.
       </f:entry>
       <f:saveApplyBar/>
     </f:form>
-  </l:main-panel>
-</l:layout>
+</l:settings-subpage>
 </j:jelly>

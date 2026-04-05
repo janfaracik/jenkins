@@ -71,7 +71,9 @@ THE SOFTWARE.
         <local:row href="all" name="${it.ALL_LOGS_ACTION.displayName}" />
         <j:forEach var="lr" items="${it.recorders}">
           <local:row name="${lr.name}" href="${lr.searchUrl}/">
-            <l:actions it="${lr}" compact="true" url="${lr.searchUrl}" />
+            <div class="jenkins-table__cell__button-wrapper">
+              <l:actions it="${lr}" compact="true" url="${lr.searchUrl}" />
+            </div>
           </local:row>
         </j:forEach>
       </tbody>

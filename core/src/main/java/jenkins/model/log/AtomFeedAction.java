@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
-import jenkins.model.menu.action.DeleteAction;
 import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.Event;
 
@@ -40,7 +39,54 @@ public class AtomFeedAction extends TransientActionFactory<LogRecorder> {
             @Override
             public Event getEvent() {
                 return DropdownEvent.of(List.of(
-                        new DeleteAction("", "")
+                        new Action() {
+                            @Override
+                            public String getIconFileName() {
+                                return "symbol-rss";
+                            }
+
+                            @Override
+                            public String getDisplayName() {
+                                return "All";
+                            }
+
+                            @Override
+                            public String getUrlName() {
+                                return "rss";
+                            }
+                        },
+                        new Action() {
+                            @Override
+                            public String getIconFileName() {
+                                return "symbol-rss";
+                            }
+
+                            @Override
+                            public String getDisplayName() {
+                                return "Warning";
+                            }
+
+                            @Override
+                            public String getUrlName() {
+                                return "rss?level=WARNING";
+                            }
+                        },
+                        new Action() {
+                            @Override
+                            public String getIconFileName() {
+                                return "symbol-rss";
+                            }
+
+                            @Override
+                            public String getDisplayName() {
+                                return "Severe";
+                            }
+
+                            @Override
+                            public String getUrlName() {
+                                return "rss?level=SEVERE";
+                            }
+                        }
                 ));
             }
 
