@@ -48,7 +48,7 @@ THE SOFTWARE.
     </l:view>
   </j:set>
 
-  <l:settings-subpage header="${header}" managementLink="${it.managementLink}" xmlns:local="local">
+  <l:settings-subpage header="${header}" managementLink="${it.managementLink}" xmlns:local="local" noDefer="true">
     <d:taglib uri="local">
       <d:tag name="row">
         <tr>
@@ -68,16 +68,10 @@ THE SOFTWARE.
         </tr>
       </thead>
       <tbody>
-        <local:row href="all" name="${%All Jenkins Logs}" />
+        <local:row href="all" name="${it.ALL_LOGS_ACTION.displayName}" />
         <j:forEach var="lr" items="${it.recorders}">
           <local:row name="${lr.name}" href="${lr.searchUrl}/">
-            <l:isAdmin>
-              <div class="jenkins-table__cell__button-wrapper">
-                <a href="${lr.searchUrl}/configure" class="jenkins-button jenkins-button--tertiary">
-                  <l:icon src="symbol-settings" />
-                </a>
-              </div>
-            </l:isAdmin>
+            <l:actions it="${lr}" compact="true" url="${lr.searchUrl}" />
           </local:row>
         </j:forEach>
       </tbody>

@@ -33,7 +33,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Util;
 import hudson.XmlFile;
-import hudson.model.AbstractModelObject;
+import hudson.model.Actionable;
 import hudson.model.AutoCompletionCandidates;
 import hudson.model.Computer;
 import hudson.model.Saveable;
@@ -99,7 +99,7 @@ import org.kohsuke.stapler.verb.POST;
  * @author Kohsuke Kawaguchi
  * @see LogRecorderManager
  */
-public class LogRecorder extends AbstractModelObject implements Loadable, Saveable {
+public class LogRecorder extends Actionable implements Loadable, Saveable {
     private volatile String name;
 
     private List<Target> loggers = new ArrayList<>();
@@ -399,6 +399,11 @@ public class LogRecorder extends AbstractModelObject implements Loadable, Saveab
     @Override
     public String getSearchUrl() {
         return Util.rawEncode(name);
+    }
+
+    // TODO - validate
+    public String getUrl() {
+        return getSearchUrl();
     }
 
     public String getName() {

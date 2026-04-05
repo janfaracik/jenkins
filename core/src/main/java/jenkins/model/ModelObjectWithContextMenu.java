@@ -3,6 +3,7 @@ package jenkins.model;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Functions;
 import hudson.Util;
+import hudson.logging.LogRecorder;
 import hudson.model.Action;
 import hudson.model.Actionable;
 import hudson.model.Computer;
@@ -22,9 +23,9 @@ import jenkins.management.Badge;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.ConfirmationEvent;
+import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.Event;
 import jenkins.model.menu.event.LinkEvent;
-import jenkins.model.menu.event.SplitButtonEvent;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyException;
@@ -121,9 +122,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
 
         public ContextMenu addAll(Collection<? extends Action> actions) {
             for (Action a : actions) {
-                if (a.isVisibleInContextMenu()) {
-                    add(a);
-                }
+                add(a);
             }
 
             return this;
@@ -144,9 +143,10 @@ public interface ModelObjectWithContextMenu extends ModelObject {
                 return this;
             }
 
-            if (action.getEvent() instanceof SplitButtonEvent splitButtonEvent) {
+            // Move actions to subMenu so we can access them from JavaScript
+            if (action.getEvent() instanceof DropdownEvent dropdownEvent) {
                 menuItem.subMenu = new ContextMenu();
-                menuItem.subMenu.addAll(splitButtonEvent.getActions());
+                menuItem.subMenu.addAll(dropdownEvent.getActions());
             }
 
             // Set icon
@@ -296,8 +296,8 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         }
 
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest2 request, StaplerResponse2 response, String view) throws JellyException, IOException {
-            // Only Runs support getAppBarActions currently
-            if (self instanceof Run) {
+            // Only Jobs and Runs support getAppBarActions currently
+            if (self instanceof Job<?, ?> || self instanceof Run || self instanceof LogRecorder) {
                 boolean menuOnly = Boolean.parseBoolean(request.getParameter("menu-only"));
 
                 List<Action> actions = ((Actionable) self).getAppBarActions().stream()
@@ -306,6 +306,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
                                         || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
                         )
                         .filter(action -> !menuOnly || action.getGroup().getOrder() >= Group.FIRST_IN_MENU.getOrder())
+                        .filter(action -> menuOnly || action.isVisibleInContextMenu())
                         .toList();
 
                 return new ModelObjectWithContextMenu.ContextMenu().addAll(actions);
@@ -389,6 +390,8 @@ public interface ModelObjectWithContextMenu extends ModelObject {
 
         private Badge badge;
 
+        private String description;
+
         private Group group;
 
         private Event event;
@@ -421,6 +424,11 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         @Exported
         public Badge getBadge() {
             return badge;
+        }
+
+        @Exported
+        public String getDescription() {
+            return description;
         }
 
         @Exported(inline = true)

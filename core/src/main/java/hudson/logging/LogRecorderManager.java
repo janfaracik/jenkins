@@ -35,6 +35,8 @@ import hudson.RestrictedSince;
 import hudson.Util;
 import hudson.init.Initializer;
 import hudson.model.AbstractModelObject;
+import hudson.model.Action;
+import hudson.model.Actionable;
 import hudson.model.Failure;
 import hudson.model.ManagementLink;
 import hudson.model.RSS;
@@ -61,6 +63,7 @@ import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu.ContextMenu;
+import jenkins.model.menu.Group;
 import jenkins.util.SystemProperties;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.kohsuke.accmod.Restricted;
@@ -193,7 +196,7 @@ public class LogRecorderManager extends AbstractModelObject implements ModelObje
     @Override
     public ContextMenu doChildrenContextMenu(StaplerRequest2 request, StaplerResponse2 response) throws Exception {
         ContextMenu menu = new ContextMenu();
-        menu.add("all", "All Jenkins Logs");
+        menu.add("all", ALL_LOGS_ACTION.getDisplayName());
         for (LogRecorder lr : recorders) {
             menu.add(lr.getSearchUrl(), lr.getDisplayName());
         }
@@ -311,4 +314,45 @@ public class LogRecorderManager extends AbstractModelObject implements ModelObje
     @Restricted(NoExternalUse.class)
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "for script console")
     public static /* Script Console modifiable */ boolean SKIP_PERMISSION_CHECK = SystemProperties.getBoolean(LogRecorderManager.class.getName() + ".skipPermissionCheck");
+
+    /**
+     * Represents the "All Jenkins Logs" page.
+     */
+    @Restricted(NoExternalUse.class)
+    public static final Actionable ALL_LOGS_ACTION = new Actionable() {
+        @Override
+        public String getSearchUrl() {
+            return null;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "All Jenkins Logs new!";
+        }
+
+        @Override
+        public List<Action> getAppBarActions() {
+            return List.of(new Action() {
+                @Override
+                public String getIconFileName() {
+                    return "symbol-rss";
+                }
+
+                @Override
+                public String getDisplayName() {
+                    return "Atom feeed";
+                }
+
+                @Override
+                public String getUrlName() {
+                    return "atomsss";
+                }
+
+                @Override
+                public Group getGroup() {
+                    return Group.IN_APP_BAR;
+                }
+            });
+        }
+    };
 }
