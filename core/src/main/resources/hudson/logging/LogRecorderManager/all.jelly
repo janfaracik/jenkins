@@ -26,13 +26,12 @@ THE SOFTWARE.
   Show all hudson.* logs
 -->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-  <l:settings-subpage title="${it.ALL_LOGS_ACTION.displayName}"
-                      header="${null}"
-                      type="wide"
-                      includeBreadcrumb="true">
-    <l:app-bar title="${it.ALL_LOGS_ACTION.displayName}">
-      <l:actions it="${it.ALL_LOGS_ACTION}" />
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+<l:settings-subpage title="${%All Jenkins Logs}" type="wide" header="${null}" includeBreadcrumb="true">
+    <l:app-bar title="${%All Jenkins Logs}">
+      <l:overflowButton icon="symbol-rss" text="${%Atom feed}" tooltip="${null}">
+        <st:include page="feeds.jelly" />
+      </l:overflowButton>
     </l:app-bar>
 
     <div class="jenkins-alert jenkins-alert-info">
@@ -40,5 +39,5 @@ THE SOFTWARE.
     </div>
 
     <t:logRecords logRecords="${h.logRecords}"/>
-  </l:settings-subpage>
+</l:settings-subpage>
 </j:jelly>
