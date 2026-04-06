@@ -725,6 +725,29 @@ public abstract class View extends Actionable implements AccessControlled, Descr
     }
 
     /**
+     * Folders need to display their own actions as part of the app bar,
+     * so include the parent owner's app bar actions when applicable.
+     *
+     * @return this view's app bar actions, optionally merged with the parent folder's actions
+     */
+    @Override
+    public List<Action> getAppBarActions() {
+        List<Action> actions = new ArrayList<>(super.getAppBarActions());
+
+        Object owner = getOwner();
+        if (owner instanceof Actionable actionable) {
+            actions.addAll(actionable.getAppBarActions());
+        }
+
+        return actions.stream()
+                .sorted(
+                        Comparator.comparingInt((Action action) -> action.getGroup().getOrder())
+                                .thenComparing(action -> Objects.requireNonNullElse(action.getDisplayName(), ""))
+                )
+                .toList();
+    }
+
+    /**
      * Accepts submission from the configuration page.
      *
      * Subtypes should override the {@link #submit(StaplerRequest2)} method.
