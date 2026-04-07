@@ -45,7 +45,7 @@ Dialog.prototype.init = function () {
     `<div class='jenkins-dialog__title'><span></span></div>`,
   );
   this.dialog.appendChild(title);
-  title.querySelector("span").innerText = this.options.title;
+  title.querySelector("span").textContent = this.options.title ?? "";
 
   if (this.dialogType === "modal") {
     if (this.options.content != null) {
@@ -374,12 +374,28 @@ function updateWizardTitle(titleText) {
     return;
   }
 
-  const title = document.querySelector(
-    "body > .jenkins-dialog .jenkins-dialog__title > span",
-  );
+  const title = getWizardTitleElement();
   if (title != null) {
     title.textContent = titleText;
   }
+}
+
+function getWizardDialog() {
+  return document.querySelector("body > .jenkins-dialog");
+}
+
+function getWizardTitleElement(dialog = getWizardDialog()) {
+  return dialog?.querySelector(".jenkins-dialog__title > span");
+}
+
+function getWizardForms(dialogContents) {
+  return Array.from(dialogContents?.children ?? []).filter(
+    (element) => element.tagName === "FORM",
+  );
+}
+
+function getCurrentWizardTitle() {
+  return getWizardTitleElement()?.textContent ?? "";
 }
 
 /** Resolve a relative wizard form action against the current step URL. */
@@ -394,29 +410,52 @@ function resolveWizardFormAction(form, baseUrl) {
   }
 }
 
-function showBackButtonInDialog() {
-  const dialog = document.querySelector(".jenkins-dialog");
-  const title =
-    dialog.querySelector(".jenkins-dialog__title > span");
-  const backButton = document.createElement("button");
+function syncBackButtonInDialog() {
+  const dialog = getWizardDialog();
+  const dialogTitle = dialog?.querySelector(".jenkins-dialog__title");
+  const dialogContents = dialog?.querySelector(".jenkins-dialog__contents");
+  const dialogTitleTitle = dialogTitle?.querySelector("span");
+
+  if (dialog == null || dialogTitle == null || dialogContents == null) {
+    return;
+  }
+
+  const forms = getWizardForms(dialogContents);
+  let backButton = dialogTitle.querySelector(".jenkins-dialog__back-button");
+
+  if (forms.length <= 1) {
+    dialogTitleTitle.style.marginLeft = "0";
+    backButton?.remove();
+    return;
+  }
+
+  if (backButton != null) {
+    return;
+  }
+
+  backButton = document.createElement("button");
+  backButton.type = "button";
   backButton.classList.add("jenkins-button");
+  backButton.classList.add("jenkins-dialog__title__button");
   backButton.classList.add("jenkins-dialog__back-button");
   backButton.ariaLabel = "Back";
   backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>`;
-  title.style.transition = "var(--standard-transition)";
-  title.style.marginLeft = "2.75rem";
-  dialog.appendChild(backButton);
+  dialogTitleTitle.style.marginLeft = "2.75rem";
+  dialogTitle.prepend(backButton);
 
   backButton.addEventListener("click", () => {
-    dialog
-      .querySelector(".jenkins-dialog__contents form:first-of-type")
-      .classList.remove("jenkins-hidden");
-    dialog
-      .querySelector(".jenkins-dialog__contents form:last-of-type")
-      .remove();
-    title.style.marginLeft = "0";
-    title.textContent = "TODO";
-    backButton.remove();
+    const wizardForms = getWizardForms(dialogContents);
+    const previousForm = wizardForms.at(-2);
+    const currentForm = wizardForms.at(-1);
+
+    if (currentForm == null || previousForm == null) {
+      return;
+    }
+
+    currentForm.remove();
+    previousForm.classList.remove("jenkins-hidden");
+    updateWizardTitle(previousForm.dataset.dialogTitle ?? "");
+    syncBackButtonInDialog();
   });
 }
 
@@ -494,21 +533,23 @@ function renderWizardForm({
   }
 
   if (hideExistingForms) {
-    Array.from(dialogContents.children)
-      .filter((element) => element.tagName === "FORM")
-      .forEach((existingForm) => existingForm.classList.add("jenkins-hidden"));
+    getWizardForms(dialogContents).forEach((existingForm) =>
+      existingForm.classList.add("jenkins-hidden"),
+    );
   }
 
   resolveWizardFormAction(form, requestUrl);
-  updateWizardTitle(titleText);
+  const effectiveTitle = titleText ?? getCurrentWizardTitle();
+  form.dataset.dialogTitle = effectiveTitle;
+  updateWizardTitle(effectiveTitle);
   configureWizardForm(form);
 
   if (replaceExistingForm != null) {
-    showBackButtonInDialog();
-    replaceExistingForm.replaceWith(form);
-  } else {
-    dialogContents.appendChild(form);
+    replaceExistingForm.classList.add("jenkins-hidden");
   }
+
+  dialogContents.appendChild(form);
+  syncBackButtonInDialog();
 
   recreateScripts(form);
   wireCancelButton(form);
