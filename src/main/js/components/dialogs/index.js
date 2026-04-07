@@ -394,6 +394,32 @@ function resolveWizardFormAction(form, baseUrl) {
   }
 }
 
+function showBackButtonInDialog() {
+  const dialog = document.querySelector(".jenkins-dialog");
+  const title =
+    dialog.querySelector(".jenkins-dialog__title > span");
+  const backButton = document.createElement("button");
+  backButton.classList.add("jenkins-button");
+  backButton.classList.add("jenkins-dialog__back-button");
+  backButton.ariaLabel = "Back";
+  backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>`;
+  title.style.transition = "var(--standard-transition)";
+  title.style.marginLeft = "2.75rem";
+  dialog.appendChild(backButton);
+
+  backButton.addEventListener("click", () => {
+    dialog
+      .querySelector(".jenkins-dialog__contents form:first-of-type")
+      .classList.remove("jenkins-hidden");
+    dialog
+      .querySelector(".jenkins-dialog__contents form:last-of-type")
+      .remove();
+    title.style.marginLeft = "0";
+    title.textContent = "TODO";
+    backButton.remove();
+  });
+}
+
 // TODO - Validate this
 function submitWizardForm(form) {
   const jsonInputName = "json";
@@ -478,6 +504,7 @@ function renderWizardForm({
   configureWizardForm(form);
 
   if (replaceExistingForm != null) {
+    showBackButtonInDialog();
     replaceExistingForm.replaceWith(form);
   } else {
     dialogContents.appendChild(form);
