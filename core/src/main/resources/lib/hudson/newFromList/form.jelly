@@ -57,6 +57,9 @@ THE SOFTWARE.
     <st:attribute name="checkUrl" use="required">
       relative URL that point to the check method that validates the new name.
     </st:attribute>
+    <st:attribute name="submitButtonText">
+      todo
+    </st:attribute>
   </st:documentation>
 
   <j:set var="descriptors" value="${h.filterDescriptors(it,attrs.descriptors)}" />
@@ -139,7 +142,7 @@ THE SOFTWARE.
        -->
       <input type="radio" name="mode" value="dummy1" style="display:none" />
       <input type="radio" name="mode" value="dummy2" style="display:none" />
-      <s:submit value="${%Create}" id="ok"  />
+      <s:submit value="${attrs.submitButtonText ?: '%Create'}" id="ok"  />
     </s:bottomButtonBar>
 
     <st:adjunct includes="lib.hudson.newFromList.validation" />

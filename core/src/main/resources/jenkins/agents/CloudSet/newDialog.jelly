@@ -37,6 +37,7 @@ THE SOFTWARE.
             action="create"
             descriptors="${clouds}"
             checkUrl="checkName"
-            defaultIcon="symbol-cloud" />
+            defaultIcon="symbol-cloud"
+            submitButtonText="${%Next}" />
   </l:ajax>
 </j:jelly>

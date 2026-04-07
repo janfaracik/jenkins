@@ -394,11 +394,33 @@ function resolveWizardFormAction(form, baseUrl) {
   }
 }
 
+// TODO - Validate this
 function submitWizardForm(form) {
+  const jsonInputName = "json";
+  let jsonInput = form.elements.namedItem(jsonInputName);
+
+  if (jsonInput == null) {
+    jsonInput = document.createElement("input");
+    jsonInput.type = "hidden";
+    jsonInput.name = jsonInputName;
+    form.appendChild(jsonInput);
+  }
+
+  buildFormTree(form);
+
+  let body = new FormData(form);
+  const hasFileInput = Array.from(form.elements).some(
+    (element) => element instanceof HTMLInputElement && element.type === "file",
+  );
+
+  if (!hasFileInput) {
+    body = new URLSearchParams(body);
+  }
+
   fetch(form.action, {
     method: form.method.toUpperCase(),
     headers: crumb.wrap({}),
-    body: new FormData(form),
+    body: body,
   }).then((rsp) => {
     if (rsp.redirected) {
       window.location.assign(rsp.url);
@@ -462,7 +484,17 @@ function renderWizardForm({
   }
 
   recreateScripts(form);
+  wireCancelButton(form);
+
   return form;
+}
+
+function wireCancelButton(form) {
+  const dialog = form.closest("dialog");
+  form.querySelector("[data-id=cancel]")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    dialog?.dispatchEvent(new Event("cancel"));
+  });
 }
 
 function navigateToNextPage(url) {
