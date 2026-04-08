@@ -38,7 +38,8 @@ THE SOFTWARE.
         <form method="post" id='clear-logrecorder' action="clear">
           <f:submit icon="symbol-close-circle"
                     value="${%Clear This Log}"
-                    primary="false" />
+                    primary="false"
+                    clazz="jenkins-!-destructive-color" />
         </form>
       </j:if>
       <a class="jenkins-button" href="configure">
