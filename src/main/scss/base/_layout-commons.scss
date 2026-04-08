@@ -3,67 +3,87 @@
 /* -------------------------------------- */
 
 .app-page-body {
-  display: flex;
-  justify-content: flex-start;
-  align-items: stretch;
-  flex: 1 0 auto;
+  border: var(--jenkins-border);
+  border-radius: var(--form-input-border-radius);
+  height: calc(100vh - var(--header-height) - (var(--section-padding) / 2));
+  margin-left: calc(var(--section-padding) / 2);
+  margin-right: calc(var(--section-padding) / 2);
+  display: grid;
+  grid-template-columns: auto 1fr;
+
+  --background: var(--card-background);
+  --top: color-mix(
+          in sRGB,
+          var(--text-color-secondary) 2%,
+          var(--card-background)
+  );
+
+  position: relative;
+  background-color: var(--card-background);
+  background-image: linear-gradient(var(--top), var(--card-background));
+  background-size: 100% 90vh;
+  background-repeat: no-repeat;
+  //border: var(--jenkins-border);
+  //border-radius: var(--form-input-border-radius);
+  overflow: hidden;
 }
 
 .app-page-body__sidebar {
-  @media (min-width: breakpoints.$tablet-breakpoint) {
-    &--sticky {
-      position: sticky;
-      top: var(--header-height);
-      align-self: flex-start;
-    }
+  border-right: var(--jenkins-border);
+  overflow-y: auto;
+  padding-top: var(--section-padding);
+}
+
+.testingwrapper {
+  padding-top: var(--section-padding);
+  overflow-y: auto;
+}
+
+//.app-page-body--one-column {
+//  --form-item-max-width: calc(85vw - 4rem);
+//
+//  @media screen and (width <= 1200px) {
+//    --form-item-max-width: 100%;
+//  }
+//
+//  max-width: 85vw;
+//
+//  #main-panel {
+//    width: 100vw;
+//  }
+//
+//  .jenkins-section {
+//    max-width: unset;
+//  }
+//
+//  @media (width <= 1200px) {
+//    max-width: unset;
+//  }
+//
+//  margin: auto;
+//}
+
+body:has(#side-panel) {
+  #main-panel {
+    width: calc(100% - var(--side-panel-width));
+    margin-inline: auto;
+    margin-bottom: var(--section-padding);
   }
 }
 
-#page-body.clear::after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-#side-panel {
-  flex-shrink: 0;
-}
-
-#main-panel {
-  padding: 0 var(--section-padding) var(--section-padding)
-    var(--section-padding);
-  display: inline-block;
-  width: 100%;
-}
-
-.app-page-body--one-column {
-  --form-item-max-width: calc(85vw - 4rem);
-
-  @media screen and (width <= 1200px) {
-    --form-item-max-width: 100%;
+body:not(:has(#side-panel)) {
+  .app-page-body {
+    display: flex;
+    flex-direction: column;
   }
 
-  max-width: 85vw;
+  .testingwrapper {
+    padding-top: 0;
+  }
 
   #main-panel {
-    width: 100vw;
+    width: 100%;
   }
-
-  .jenkins-section {
-    max-width: unset;
-  }
-
-  @media (width <= 1200px) {
-    max-width: unset;
-  }
-
-  margin: auto;
-}
-
-body.two-column #main-panel {
-  width: calc(100% - var(--side-panel-width));
-  flex: 1;
-  display: block;
 }
 
 body.full-screen {
@@ -99,11 +119,13 @@ body.two-column #side-panel {
   overflow-x: auto;
 }
 
-@media (width >= 1170px) {
-  body.two-column #main-panel {
-    width: calc(
-      100% - calc(var(--side-panel-width) + calc(var(--section-padding) * 2))
-    );
+body:has(#side-panel) {
+  @media (width >= 1170px) {
+    body.two-column #main-panel {
+      width: calc(
+              100% - calc(var(--side-panel-width) + calc(var(--section-padding) * 2))
+      );
+    }
   }
 }
 

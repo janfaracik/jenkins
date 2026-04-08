@@ -174,49 +174,51 @@ THE SOFTWARE.
         <j:set var="mode" value="side-panel" />
         <d:invokeBody />
       </j:if>
-      <div id="main-panel">
-        <j:set var="mode" value="main-panel" />
-        <d:invokeBody/>
+      <div class="testingwrapper">
+        <div id="main-panel">
+          <j:set var="mode" value="main-panel" />
+          <d:invokeBody/>
+        </div>
       </div>
     </div>
 
-    <j:if test="${layoutType!='full-screen'}">
-      <footer class="page-footer jenkins-mobile-hide">
-        <div class="page-footer__flex-row">
-          <div class="page-footer__footer-id-placeholder" id="footer"></div>
+<!--    <j:if test="${layoutType!='full-screen'}">-->
+<!--      <footer class="page-footer jenkins-mobile-hide">-->
+<!--        <div class="page-footer__flex-row">-->
+<!--          <div class="page-footer__footer-id-placeholder" id="footer"></div>-->
 
-          <j:if test="${extensionsAvailable}">
-            <j:forEach var="pd" items="${h.pageDecorators}">
-              <st:include it="${pd}" page="footer.jelly" optional="true" />
-            </j:forEach>
-          </j:if>
+<!--          <j:if test="${extensionsAvailable}">-->
+<!--            <j:forEach var="pd" items="${h.pageDecorators}">-->
+<!--              <st:include it="${pd}" page="footer.jelly" optional="true" />-->
+<!--            </j:forEach>-->
+<!--          </j:if>-->
 
-          <div class="page-footer__links">
-            <j:if test="${!empty(it.api)}">
-              <a class="jenkins-button jenkins-button--tertiary rest-api" href="api/">REST API</a>
-            </j:if>
+<!--          <div class="page-footer__links">-->
+<!--            <j:if test="${!empty(it.api)}">-->
+<!--              <a class="jenkins-button jenkins-button&#45;&#45;tertiary rest-api" href="api/">REST API</a>-->
+<!--            </j:if>-->
 
-            <l:overflowButton text="Jenkins ${h.version}"
-                              clazz="jenkins-button--tertiary jenkins_ver"
-                              icon="${null}"
-                              tooltip="${null}">
-              <l:hasPermission permission="${app.SYSTEM_READ}">
-                <dd:item icon="symbol-jenkins"
-                        text="${%About Jenkins}"
-                         href="${rootURL}/manage/about" />
-                <dd:separator />
-              </l:hasPermission>
-              <dd:item icon="symbol-heart"
-                       text="${%Get involved}"
-                       href="https://www.jenkins.io/participate/" />
-              <dd:item icon="symbol-external"
-                       text="${%Website}"
-                       href="${h.getFooterURL()}" />
-            </l:overflowButton>
-          </div>
-        </div>
-      </footer>
-    </j:if>
+<!--            <l:overflowButton text="Jenkins ${h.version}"-->
+<!--                              clazz="jenkins-button&#45;&#45;tertiary jenkins_ver"-->
+<!--                              icon="${null}"-->
+<!--                              tooltip="${null}">-->
+<!--              <l:hasPermission permission="${app.SYSTEM_READ}">-->
+<!--                <dd:item icon="symbol-jenkins"-->
+<!--                        text="${%About Jenkins}"-->
+<!--                         href="${rootURL}/manage/about" />-->
+<!--                <dd:separator />-->
+<!--              </l:hasPermission>-->
+<!--              <dd:item icon="symbol-heart"-->
+<!--                       text="${%Get involved}"-->
+<!--                       href="https://www.jenkins.io/participate/" />-->
+<!--              <dd:item icon="symbol-external"-->
+<!--                       text="${%Website}"-->
+<!--                       href="${h.getFooterURL()}" />-->
+<!--            </l:overflowButton>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </footer>-->
+<!--    </j:if>-->
   </body>
 </html>
 </l:view>
