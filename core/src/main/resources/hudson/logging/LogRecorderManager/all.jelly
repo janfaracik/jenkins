@@ -27,7 +27,7 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-<l:settings-subpage title="${%All Jenkins Logs}" includeBreadcrumb="true" header="${null}">
+<l:settings-subpage title="${%All Jenkins Logs}" includeBreadcrumb="true" header="${null}" width="wide">
   <l:app-bar title="${%All Jenkins Logs}">
     <l:overflowButton icon="symbol-rss" text="${%Atom feed}" tooltip="${null}">
       <st:include page="feeds.jelly" />

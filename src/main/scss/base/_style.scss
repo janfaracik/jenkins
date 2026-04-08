@@ -684,7 +684,7 @@ table.progress-bar.red td.progress-bar-done {
 /* ========================= logRecords.jelly ================== */
 
 .jenkins-alert + .logrecord-container {
-  margin-top: calc((var(--section-padding) * -1) + 1.375rem);
+  margin-top: calc((var(--section-padding) * -1) + 1.125rem);
 }
 
 .logrecord-container {
