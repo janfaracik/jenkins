@@ -2,6 +2,95 @@
 
 /* -------------------------------------- */
 
+$jenkins-dialog-padding: 0.75rem;
+
+@property --top-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --bottom-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes scrollfade {
+  0% {
+    --top-fade: 0;
+    --bottom-fade: #{$jenkins-dialog-padding};
+  }
+
+  10%,
+  90% {
+    --top-fade: #{$jenkins-dialog-padding};
+    --bottom-fade: #{$jenkins-dialog-padding};
+  }
+
+  100% {
+    --top-fade: #{$jenkins-dialog-padding};
+    --bottom-fade: 0;
+  }
+}
+
+.app-page-body:has(.app-settings-container) {
+  display: grid !important;
+  grid-template-columns: auto 1fr;
+
+  #side-panel {
+    height: calc(100vh - var(--header-height) - (var(--section-padding) / 2));
+    overflow-y: auto;
+
+    mask: linear-gradient(
+            to bottom,
+            #0000,
+            #ffff var(--top-fade) calc(100% - var(--bottom-fade)),
+            #0000
+    );
+    animation: scrollfade;
+    animation-timeline: --scrollfade;
+    scroll-timeline: --scrollfade y;
+  }
+
+  #main-panel {
+    display: block;
+    width: unset;
+    height: calc(100vh - var(--header-height) - (var(--section-padding) / 2));
+    padding: 0 0;
+    margin: 0 calc(var(--section-padding) / 2) 0 0;
+
+    --background: var(--card-background);
+    --top: color-mix(
+            in sRGB,
+            var(--white) 2%,
+            var(--card-background)
+    );
+
+    background-color: var(--card-background);
+    background-image: linear-gradient(var(--top), var(--card-background));
+    background-size: 100% 90vh;
+    background-repeat: no-repeat;
+    border: var(--jenkins-border);
+    border-radius: var(--form-input-border-radius);
+  }
+
+  .app-settings-container {
+    height: calc(100vh - var(--header-height) - (var(--section-padding) / 2));
+    overflow-y: auto;
+
+    mask: linear-gradient(
+            to bottom,
+            #0000,
+            #ffff var(--top-fade) calc(100% - var(--bottom-fade)),
+            #0000
+    );
+    animation: scrollfade;
+    animation-timeline: --scrollfade;
+    scroll-timeline: --scrollfade y;
+  }
+}
+
 .app-page-body {
   display: flex;
   justify-content: flex-start;

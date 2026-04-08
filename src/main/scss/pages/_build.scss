@@ -153,20 +153,7 @@ body:has(.app-settings-container) {
 }
 
 .app-settings-container {
-  --background: var(--card-background);
-  --top: color-mix(
-    in sRGB,
-    var(--text-color-secondary) 2%,
-    var(--card-background)
-  );
-
   position: relative;
-  background-color: var(--card-background);
-  background-image: linear-gradient(var(--top), var(--card-background));
-  background-size: 100% 90vh;
-  background-repeat: no-repeat;
-  border: var(--jenkins-border);
-  border-radius: var(--form-input-border-radius);
   z-index: 0;
   min-height: calc(100vh - var(--header-height) - var(--section-padding));
 
@@ -183,6 +170,7 @@ body:has(.app-settings-container) {
 
     // TODO - this can be moved to app-bar.scss when Manage Jenkins flag is removed
     .jenkins-app-bar--sticky {
+      top: 0;
       padding: var(--section-padding) 0 !important;
       margin: -1rem 0 0.5rem !important;
 
@@ -194,7 +182,7 @@ body:has(.app-settings-container) {
       &::before {
         background: color-mix(
           in sRGB,
-          var(--text-color-secondary) 2%,
+          var(--white) 2%,
           var(--card-background)
         ) !important;
         mask-image: linear-gradient(black 60%, transparent) !important;
@@ -224,15 +212,6 @@ body:has(.app-settings-container) {
   @media (width <= 1200px) {
     display: flex;
     flex-direction: column;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: -1000px calc(var(--section-padding) * -1) 0;
-    background-color: var(--background);
-    border-bottom: var(--jenkins-border);
-    z-index: -1;
   }
 
   .app-build-bar__content {
@@ -325,10 +304,30 @@ body:has(.app-settings-container) {
 }
 
 .app-build-content {
-  display: flex;
+  //display: flex;
   flex-direction: column;
-  padding: 0 var(--section-padding);
-  margin-inline: calc(var(--section-padding) * -1);
+  //padding: 0 var(--section-padding);
+  //margin-inline: calc(var(--section-padding) * -1);
+
+  //display: block;
+  //width: unset;
+  height: calc(100vh - var(--header-height) - 100px - (var(--section-padding) / 2));
+  padding: 0 calc(var(--section-padding) * 0.5);
+  margin: 0 calc(var(--section-padding) * -0.5);
+
+  --background: var(--card-background);
+  --top: color-mix(
+          in sRGB,
+          var(--white) 2%,
+          var(--card-background)
+  );
+
+  background-color: var(--card-background);
+  background-image: linear-gradient(var(--top), var(--card-background));
+  background-size: 100% 90vh;
+  background-repeat: no-repeat;
+  border: var(--jenkins-border);
+  border-radius: var(--form-input-border-radius);
 
   .jenkins-app-bar {
     min-height: 2.5rem;
