@@ -11,12 +11,12 @@
   display: grid;
   grid-template-columns: auto 1fr;
 
-  --background: var(--card-background);
   --top: color-mix(
           in sRGB,
-          var(--text-color-secondary) 2%,
+          white 2%,
           var(--card-background)
   );
+  --background: var(--card-background);
 
   position: relative;
   background-color: var(--card-background);
@@ -26,6 +26,7 @@
   //border: var(--jenkins-border);
   //border-radius: var(--form-input-border-radius);
   overflow: hidden;
+  box-shadow: var(--control-shadow);
 }
 
 .app-page-body__sidebar {
@@ -92,6 +93,10 @@ body.full-screen {
 
 body.full-screen #main-panel {
   padding: 0;
+}
+
+body {
+  background: color-mix(in srgb, var(--background), var(--text-color-secondary) 3%);
 }
 
 body.two-column #side-panel {

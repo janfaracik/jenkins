@@ -23,7 +23,7 @@ $background-outset: 0.5rem;
 
 #side-panel {
   .jenkins-app-bar {
-    margin-left: calc(var(--section-padding) + 0.375rem);
+    margin-left: var(--section-padding);
     margin-right: var(--section-padding);
   }
 
