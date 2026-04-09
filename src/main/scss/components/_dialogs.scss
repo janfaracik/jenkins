@@ -44,6 +44,8 @@ $jenkins-dialog-padding: 1.25rem;
       width: 2rem;
       min-height: 2rem;
       border-radius: 100%;
+      flex-shrink: 0;
+      align-self: start;
     }
 
     &__close-button {
