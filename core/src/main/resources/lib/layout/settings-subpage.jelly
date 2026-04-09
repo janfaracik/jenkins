@@ -70,7 +70,7 @@ THE SOFTWARE.
       Defaults to false if not set.
     </st:attribute>
     <st:attribute name="width">
-      default or 'wide'
+      Optional, sets the width of the page. Available options are 'default' or 'wide'.
     </st:attribute>
   </st:documentation>
 
