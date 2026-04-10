@@ -26,6 +26,7 @@ package jenkins.management;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
+import hudson.lifecycle.RestartNotSupportedException;
 import hudson.model.ManagementLink;
 import hudson.security.Permission;
 import jakarta.servlet.ServletException;
@@ -67,20 +68,45 @@ public class ShutdownLink extends ManagementLink {
 
     @POST
     public synchronized void doPrepare(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException, InterruptedException {
-        Jenkins.get().checkPermission(Jenkins.MANAGE);
+        Jenkins jenkins = Jenkins.get();
+        jenkins.checkPermission(Jenkins.MANAGE);
 
         JSONObject submittedForm = req.getSubmittedForm();
         String inputReason = submittedForm.getString("shutdownReason");
-        String shutdownReason = inputReason.isEmpty() ? null : inputReason;
-        LOGGER.log(Level.FINE, "Shutdown requested by user {0}", Jenkins.getAuthentication().getName());
-        Jenkins.get().doQuietDown(false, 0, shutdownReason).generateResponse(req, rsp, null);
+        String shutdownReason = inputReason.isBlank() ? null : inputReason;
+        LOGGER.log(Level.FINE, "Quiet down requested by user {0}", Jenkins.getAuthentication().getName());
+        jenkins.doQuietDown(false, 0, shutdownReason, jenkins.isPreparingSafeRestart()).generateResponse(req, rsp, null);
+    }
+
+    @POST
+    public synchronized void doRestart(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException, RestartNotSupportedException {
+        Jenkins jenkins = Jenkins.get();
+        jenkins.checkPermission(Jenkins.MANAGE);
+
+        JSONObject submittedForm = req.getSubmittedForm();
+        boolean safeRestart = !"false".equals(submittedForm.optString("safeRestart", "true"));
+        String inputMessage = submittedForm.optString("message", "");
+        String restartMessage = inputMessage.isBlank() ? null : inputMessage;
+
+        LOGGER.log(
+                Level.FINE,
+                "{0} restart requested by user {1}",
+                new Object[] {safeRestart ? "Safe" : "Immediate", Jenkins.getAuthentication().getName()});
+
+        if (safeRestart) {
+            jenkins.safeRestart(restartMessage);
+        } else {
+            jenkins.restart();
+        }
+
+        rsp.sendRedirect2(".");
     }
 
     @POST
     public synchronized void doCancel(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         Jenkins.get().checkPermission(Jenkins.MANAGE);
 
-        LOGGER.log(Level.FINE, "Shutdown cancel requested by user {0}", Jenkins.getAuthentication().getName());
+        LOGGER.log(Level.FINE, "Quiet down cancel requested by user {0}", Jenkins.getAuthentication().getName());
         Jenkins.get().doCancelQuietDown().generateResponse(req, rsp, null);
     }
 

@@ -24,17 +24,30 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:st="jelly:stapler" xmlns:f="/lib/form">
-  <st:setHeader name="X-Dialog-Title" value="${%Update shutdown reason}" />
+  <j:choose>
+    <j:when test="${app.isPreparingSafeRestart()}">
+      <j:set var="entryTitle" value="${%RestartMessage}" />
+      <j:set var="entryDescription" value="${%RestartMessageDescription}" />
+      <j:set var="submitLabel" value="${%UpdateMessage}" />
+      <st:setHeader name="X-Dialog-Title" value="${%Update restart message}" />
+    </j:when>
+    <j:otherwise>
+      <j:set var="entryTitle" value="${%ShutDownReason}" />
+      <j:set var="entryDescription" value="" />
+      <j:set var="submitLabel" value="${%Update}" />
+      <st:setHeader name="X-Dialog-Title" value="${%Update shutdown reason}" />
+    </j:otherwise>
+  </j:choose>
 
   <l:ajax>
     <f:form method="post" name="prepareShutdown" action="prepare">
-      <f:entry title="${%ShutDownReason}">
+      <f:entry title="${entryTitle}" description="${entryDescription}">
         <f:textbox name="shutdownReason" value="${app.quietDownReason}" autofocus="true" />
       </f:entry>
 
       <f:bottomButtonBar borderless="true">
         <button class="jenkins-button" type="button" data-id="cancel">${%Cancel}</button>
-        <f:submit value="${%Update}" clazz="jenkins-!-destructive-color" />
+        <f:submit value="${submitLabel}" clazz="jenkins-!-destructive-color" />
       </f:bottomButtonBar>
     </f:form>
   </l:ajax>

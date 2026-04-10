@@ -281,6 +281,11 @@ $semantics: (
     var(--text-color-secondary) 50%,
     transparent
   );
+  --input-border--disabled: color-mix(
+          in sRGB,
+          var(--text-color-secondary) 10%,
+          transparent
+  );
   --form-item-max-width: min(65vw, 1600px);
   --form-item-max-width--medium: min(50vw, 1400px);
   --form-item-max-width--small: min(35vw, 1200px);

@@ -26,14 +26,22 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout">
   <l:settings-subpage>
     <link rel="stylesheet" href="${resURL}/jsbundles/pages/system-actions.css" type="text/css" />
+    <script src="${resURL}/jsbundles/pages/system-actions.js" type="text/javascript" async="true" />
 
     <section class="app-system-actions__buttons">
       <j:if test="${app.isQuietingDown()}">
 
         <div class="app-system-actions__shutting-down app-system-actions__group">
-          <l:icon src="symbol-power" />
+          <l:icon src="${app.isPreparingSafeRestart() ? 'symbol-refresh' : 'symbol-power'}" />
           <div>
-            ${%Jenkins is preparing for shutdown}
+            <j:choose>
+              <j:when test="${app.isPreparingSafeRestart()}">
+                ${%Jenkins is preparing for safe restart}
+              </j:when>
+              <j:otherwise>
+                ${%Jenkins is preparing for shutdown}
+              </j:otherwise>
+            </j:choose>
           </div>
           <j:if test="${app.getQuietDownReason() != null}">
             <div>
@@ -46,14 +54,28 @@ THE SOFTWARE.
                     data-dialog-url="updateShutdownReasonDialog">
               <l:icon src="symbol-edit" />
               <div>
-                ${%Update shutdown reason}
+                <j:choose>
+                  <j:when test="${app.isPreparingSafeRestart()}">
+                    ${%Update restart message}
+                  </j:when>
+                  <j:otherwise>
+                    ${%Update shutdown reason}
+                  </j:otherwise>
+                </j:choose>
               </div>
             </button>
             <form method="post" name="cancelShutdown" action="cancel" class="jenkins-!-display-contents">
               <button class="jenkins-button">
                 <l:icon src="symbol-close-circle" />
                 <div>
-                  ${%Cancel shutdown}
+                  <j:choose>
+                    <j:when test="${app.isPreparingSafeRestart()}">
+                      ${%Cancel safe restart}
+                    </j:when>
+                    <j:otherwise>
+                      ${%Cancel shutdown}
+                    </j:otherwise>
+                  </j:choose>
                 </div>
               </button>
             </form>
@@ -72,6 +94,19 @@ THE SOFTWARE.
           </div>
           <div>
             Stops executing new builds, so that the system can be eventually shut down safely.
+          </div>
+        </button>
+
+        <button class="jenkins-button app-system-actions__group"
+                data-type="dialog-opener"
+                data-dialog-url="restartDialog">
+          <l:icon src="symbol-refresh" />
+          <div>
+            ${%Restart Jenkins}
+            <l:icon src="symbol-chevron-forward" />
+          </div>
+          <div>
+            Restart Jenkins now, or do a safe restart that waits for running jobs to finish or pause first.
           </div>
         </button>
       </j:if>
