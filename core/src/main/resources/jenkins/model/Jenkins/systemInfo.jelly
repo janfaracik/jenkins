@@ -29,9 +29,9 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
   <j:new className="jenkins.management.SystemInfoLink" var="it" />
 
-  <l:settings-subpage permissions="${app.MANAGE_AND_SYSTEM_READ}" includeBreadcrumb="true">
-    <script src="${resURL}/jsbundles/section-to-tabs.js" type="text/javascript" defer="true" />
-    <script src="${resURL}/jsbundles/pages/manage-jenkins/system-information.js" type="text/javascript" defer="true" />
+  <l:settings-subpage permissions="${app.MANAGE_AND_SYSTEM_READ}" includeBreadcrumb="true" width="wide">
+    <script src="${resURL}/jsbundles/section-to-tabs.js" type="text/javascript" async="true" />
+    <script src="${resURL}/jsbundles/pages/manage-jenkins/system-information.js" type="text/javascript" async="true" />
 
     <l:hasPermission permission="${app.SYSTEM_READ}">
       <l:tabPane title="${%System Properties}">
@@ -98,7 +98,7 @@ THE SOFTWARE.
 
     <l:isAdmin>
       <l:tabPane title="${%Thread Dumps}">
-        <p>${%threadDump_blurb('threadDump')}</p>
+        <p class="jenkins-!-margin-0">${%threadDump_blurb('threadDump')}</p>
       </l:tabPane>
     </l:isAdmin>
   </l:settings-subpage>

@@ -40,12 +40,12 @@ THE SOFTWARE.
   <j:set var="tableId" value="${h.generateId()}"/>
   <j:if test="${attrs.sensitive}">
     <div class="jenkins-!-margin-bottom-2">
-      <button class="app-all-hidden-reveal-all jenkins-button jenkins-button--transparent jenkins-!-color-blue" data-table-id="${tableId}">
-        <l:icon src="symbol-view"/>
+      <button class="app-all-hidden-reveal-all jenkins-button" data-table-id="${tableId}">
+        <l:icon src="symbol-view" />
         ${%revealAll}
       </button>
-      <button class="app-all-hidden-hide-all jenkins-hidden jenkins-button jenkins-button--transparent jenkins-!-color-blue" data-table-id="${tableId}">
-        <l:icon src="symbol-view"/>
+      <button class="app-all-hidden-hide-all jenkins-hidden jenkins-button" data-table-id="${tableId}">
+        <l:icon src="symbol-eye-off-outline" />
         ${%hideAll}
       </button>
     </div>
@@ -54,12 +54,12 @@ THE SOFTWARE.
     <thead>
       <tr>
         <th initialSortDir="down">${%Name}</th>
-        <th class="app-table-full-width-column">${%Value}</th>
+        <th class="app-table-full-width-column" data-sort-disable="true">${%Value}</th>
       </tr>
     </thead>
     <tbody>
       <j:forEach var="e" items="${items}">
-        <tr>
+        <tr style="font-family: var(--font-family-mono)">
           <td>
             <st:out value="${e.key}"/>
           </td>
@@ -67,15 +67,13 @@ THE SOFTWARE.
             <j:choose>
               <j:when test="${attrs.sensitive}">
                 <div class="app-hidden-info-reveal">
-                  <button class="jenkins-button jenkins-button--transparent jenkins-!-color-blue">
+                  <button class="jenkins-button">
                     <l:icon src="symbol-view"/> ${%reveal}
                   </button>
                 </div>
                 <div class="app-hidden-info-hide jenkins-hidden">
-                  <button class="jenkins-button jenkins-button--transparent">
-                    <span class="jenkins-!-color-blue">
-                      <l:icon src="symbol-eye-off-outline"/><j:out value=" "/><l:breakable value="${e.value}"/>
-                    </span>
+                  <button class="jenkins-button">
+                    <l:icon src="symbol-eye-off-outline"/><j:out value=" "/><l:breakable value="${e.value}"/>
                   </button>
                 </div>
               </j:when>
