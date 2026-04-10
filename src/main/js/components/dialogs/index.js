@@ -51,6 +51,10 @@ Dialog.prototype.init = function () {
     `<div class='jenkins-dialog__contents'/>`,
   );
 
+  const content = createElementFromHtml(
+    `<div class='jenkins-dialog__contents'/>`,
+  );
+
   if (this.dialogType === "modal") {
     if (this.options.content != null) {
       content.appendChild(this.options.content);
