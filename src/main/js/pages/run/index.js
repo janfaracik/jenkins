@@ -3,7 +3,7 @@ import { createElementFromHtml } from "@/util/dom";
 
 let activeController = null;
 let activeRequestId = 0;
-const loadedModuleScripts = new Set();
+let preloadedPage = null;
 
 behaviorShim.specify(
   "[data-type='main-panel-thing']",
@@ -17,20 +17,35 @@ behaviorShim.specify(
     const getTabs = () =>
       Array.from(document.querySelectorAll(".app-build-tabs a"));
 
-    behaviorShim.specify("a", "link", 999, (link) => {
-      if (!shouldInterceptLink(link, interceptUrl)) {
-        return;
-      }
-
-      link.addEventListener("click", (e) => {
-        if (!shouldHandleLinkClick(e, link)) {
+    behaviorShim.specify(
+      ".app-build-bar__tabs .app-build-tabs a, .app-build__navigation-previous, .app-build__navigation-next",
+      "run-link",
+      999,
+      (link) => {
+        if (!shouldInterceptLink(link, interceptUrl)) {
           return;
         }
 
-        e.preventDefault();
-        loadPage(mainPanelThing, link.href, getTabs(), { updateHistory: true });
-      });
-    });
+        link.addEventListener("click", (e) => {
+          if (!shouldHandleLinkClick(e, link)) {
+            return;
+          }
+
+          e.preventDefault();
+          loadPage(mainPanelThing, link.href, getTabs(), {
+            updateHistory: true,
+          });
+        });
+
+        link.addEventListener("pointerdown", (e) => {
+          if (!shouldPreloadLinkEvent(e)) {
+            return;
+          }
+
+          preloadPage(link.href);
+        });
+      },
+    );
 
     window.addEventListener("popstate", () => {
       const currentUrl = new URL(window.location.href);
@@ -69,6 +84,7 @@ function actuallyLoadPage(mainPanelThing, href) {
   }
 
   activeController = new AbortController();
+  cancelPreloadedPage(href);
 
   mainPanelThing.innerHTML = "";
   mainPanelThing.append(
@@ -77,19 +93,10 @@ function actuallyLoadPage(mainPanelThing, href) {
     ),
   );
 
-  fetch(href, {
-    method: "GET",
-    headers: crumb.wrap({
-      "X-Content-Only": true,
-    }),
-    signal: activeController.signal,
-  })
-    .then((rsp) => {
-      if (!rsp.ok) {
-        throw new Error(`Request failed: ${rsp.status}`);
-      }
-      return rsp.text();
-    })
+  const request =
+    consumePreloadedPage(href) ?? requestPage(href, activeController.signal);
+
+  request
     .then((responseText) => {
       if (requestId !== activeRequestId) {
         return;
@@ -112,6 +119,65 @@ function actuallyLoadPage(mainPanelThing, href) {
     });
 }
 
+function preloadPage(href) {
+  const targetUrl = new URL(href, window.location.href);
+  if (preloadedPage?.href === targetUrl.href) {
+    return;
+  }
+
+  cancelPreloadedPage();
+
+  const controller = new AbortController();
+  const promise = requestPage(targetUrl.href, controller.signal).catch((err) => {
+    if (preloadedPage?.promise === promise) {
+      preloadedPage = null;
+    }
+
+    throw err;
+  });
+
+  preloadedPage = {
+    controller,
+    href: targetUrl.href,
+    promise,
+  };
+}
+
+function consumePreloadedPage(href) {
+  if (!preloadedPage || preloadedPage.href !== href) {
+    return null;
+  }
+
+  const { promise } = preloadedPage;
+  preloadedPage = null;
+  return promise;
+}
+
+function cancelPreloadedPage(hrefToKeep) {
+  if (!preloadedPage || preloadedPage.href === hrefToKeep) {
+    return;
+  }
+
+  preloadedPage.controller.abort();
+  preloadedPage = null;
+}
+
+function requestPage(href, signal) {
+  return fetch(href, {
+    method: "GET",
+    headers: crumb.wrap({
+      "X-Content-Only": true,
+    }),
+    signal,
+  }).then((rsp) => {
+    if (!rsp.ok) {
+      throw new Error(`Request failed: ${rsp.status}`);
+    }
+
+    return rsp.text();
+  });
+}
+
 /*
  * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
  */
@@ -124,21 +190,13 @@ function recreateScripts(form) {
 
   scripts.forEach((existingScript) => {
     const script = recreateScript(existingScript);
-    if (script) {
-      existingScript.parentNode.replaceChild(script, existingScript);
-    } else {
-      existingScript.remove();
-    }
+    existingScript.parentNode.replaceChild(script, existingScript);
   });
 
   behaviorShim.applySubtree(form, false);
 }
 
 function recreateScript(existingScript) {
-  if (shouldSkipModuleScript(existingScript)) {
-    return null;
-  }
-
   const script = document.createElement("script");
 
   for (let i = 0; i < existingScript.attributes.length; i++) {
@@ -155,30 +213,6 @@ function recreateScript(existingScript) {
   return script;
 }
 
-function shouldSkipModuleScript(existingScript) {
-  const type = existingScript.getAttribute("type")?.trim().toLowerCase();
-  if (type !== "module") {
-    return false;
-  }
-
-  const signature = getModuleScriptSignature(existingScript);
-  if (loadedModuleScripts.has(signature)) {
-    return true;
-  }
-
-  loadedModuleScripts.add(signature);
-  return false;
-}
-
-function getModuleScriptSignature(existingScript) {
-  const src = existingScript.getAttribute("src");
-  if (src) {
-    return new URL(src, window.location.href).href;
-  }
-
-  return existingScript.text.trim();
-}
-
 function shouldHandleLinkClick(event, link) {
   return (
     !event.defaultPrevented &&
@@ -189,6 +223,16 @@ function shouldHandleLinkClick(event, link) {
     !event.altKey &&
     (!link.target || link.target === "_self") &&
     !link.hasAttribute("download")
+  );
+}
+
+function shouldPreloadLinkEvent(event) {
+  return (
+    event.button === 0 &&
+    !event.altKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.shiftKey
   );
 }
 
