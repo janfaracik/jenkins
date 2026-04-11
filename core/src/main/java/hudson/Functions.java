@@ -2739,14 +2739,4 @@ public class Functions {
 
         return MessageFormat.format(format, args);
     }
-
-    @Restricted(NoExternalUse.class)
-    public static String expensiveOperation() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        return "Finished";
-    }
 }

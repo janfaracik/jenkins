@@ -42,6 +42,8 @@ THE SOFTWARE.
         <j:choose>
           <j:when test="${newBuildPage}">
             <l:main-panel>
+              <script src="${resURL}/jsbundles/pages/run.js" type="text/javascript" async="true" />
+
               <j:set var="buildUrl" value="${h.decompose(request2)}" />
 
               <div class="app-build-bar">
