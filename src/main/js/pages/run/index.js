@@ -3,6 +3,7 @@ import { createElementFromHtml } from "@/util/dom";
 
 let activeController = null;
 let activeRequestId = 0;
+const loadedModuleScripts = new Set();
 
 behaviorShim.specify(
   "[data-type='main-panel-thing']",
@@ -115,26 +116,67 @@ function actuallyLoadPage(mainPanelThing, href) {
  * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
  */
 function recreateScripts(form) {
-  const scripts = form.getElementsByTagName("script");
+  const scripts = Array.from(form.getElementsByTagName("script"));
   if (scripts.length === 0) {
     behaviorShim.applySubtree(form, false);
     return;
   }
-  for (let i = 0; i < scripts.length; i++) {
-    const script = document.createElement("script");
-    if (scripts[i].text) {
-      script.text = scripts[i].text;
-    } else {
-      for (let j = 0; j < scripts[i].attributes.length; j++) {
-        if (scripts[i].attributes[j].name in HTMLScriptElement.prototype) {
-          script[scripts[i].attributes[j].name] =
-            scripts[i].attributes[j].value;
-        }
-      }
-    }
 
-    scripts[i].parentNode.replaceChild(script, scripts[i]);
+  scripts.forEach((existingScript) => {
+    const script = recreateScript(existingScript);
+    if (script) {
+      existingScript.parentNode.replaceChild(script, existingScript);
+    } else {
+      existingScript.remove();
+    }
+  });
+
+  behaviorShim.applySubtree(form, false);
+}
+
+function recreateScript(existingScript) {
+  if (shouldSkipModuleScript(existingScript)) {
+    return null;
   }
+
+  const script = document.createElement("script");
+
+  for (let i = 0; i < existingScript.attributes.length; i++) {
+    script.setAttribute(
+      existingScript.attributes[i].name,
+      existingScript.attributes[i].value,
+    );
+  }
+
+  if (existingScript.text) {
+    script.text = existingScript.text;
+  }
+
+  return script;
+}
+
+function shouldSkipModuleScript(existingScript) {
+  const type = existingScript.getAttribute("type")?.trim().toLowerCase();
+  if (type !== "module") {
+    return false;
+  }
+
+  const signature = getModuleScriptSignature(existingScript);
+  if (loadedModuleScripts.has(signature)) {
+    return true;
+  }
+
+  loadedModuleScripts.add(signature);
+  return false;
+}
+
+function getModuleScriptSignature(existingScript) {
+  const src = existingScript.getAttribute("src");
+  if (src) {
+    return new URL(src, window.location.href).href;
+  }
+
+  return existingScript.text.trim();
 }
 
 function shouldHandleLinkClick(event, link) {
