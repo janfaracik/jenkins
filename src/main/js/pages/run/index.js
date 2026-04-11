@@ -18,7 +18,7 @@ behaviorShim.specify(
       Array.from(document.querySelectorAll(".app-build-tabs a"));
 
     behaviorShim.specify(
-      ".app-build-bar__tabs .app-build-tabs a, .app-build__navigation-previous, .app-build__navigation-next",
+      ".app-build-bar__tabs .app-build-tabs a",
       "run-link",
       999,
       (link) => {
