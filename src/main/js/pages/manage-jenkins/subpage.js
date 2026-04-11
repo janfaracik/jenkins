@@ -6,7 +6,7 @@ let activeRequestId = 0;
 let preloadedPage = null;
 
 behaviorShim.specify(
-  "[data-type='main-panel-thing']",
+  "[data-type='manage-jenkins-panel']",
   "",
   999,
   (mainPanelThing) => {
@@ -14,12 +14,13 @@ behaviorShim.specify(
       mainPanelThing.dataset.interceptUrl,
       window.location.href,
     );
-    const getTabs = () =>
-      Array.from(document.querySelectorAll(".app-build-tabs a"));
+    const initialUrl = new URL(window.location.href);
+    const getSidebarLinks = () =>
+      Array.from(document.querySelectorAll("#tasks .task-link-no-confirm"));
 
     behaviorShim.specify(
-      ".app-build-bar__tabs .app-build-tabs a",
-      "run-link",
+      "#tasks .task-link-no-confirm",
+      "manage-link",
       999,
       (link) => {
         if (!shouldInterceptLink(link, interceptUrl)) {
@@ -32,7 +33,7 @@ behaviorShim.specify(
           }
 
           e.preventDefault();
-          loadPage(mainPanelThing, link.href, getTabs(), {
+          loadPage(mainPanelThing, link.href, getSidebarLinks(), {
             updateHistory: true,
           });
         });
@@ -50,23 +51,23 @@ behaviorShim.specify(
     window.addEventListener("popstate", () => {
       const currentUrl = new URL(window.location.href);
 
-      if (!shouldInterceptUrl(currentUrl, interceptUrl)) {
+      if (!shouldLoadPopstateUrl(currentUrl, interceptUrl, initialUrl)) {
         return;
       }
 
-      loadPage(mainPanelThing, currentUrl.href, getTabs());
+      loadPage(mainPanelThing, currentUrl.href, getSidebarLinks());
     });
 
-    syncActiveTab(getTabs(), window.location.href);
+    syncActiveSidebarLink(getSidebarLinks(), window.location.href);
     actuallyLoadPage(mainPanelThing, window.location.href);
   },
 );
 
-function loadPage(mainPanelThing, href, tabs, options = {}) {
+function loadPage(mainPanelThing, href, sidebarLinks, options = {}) {
   const { updateHistory = false } = options;
   const targetUrl = new URL(href, window.location.href);
 
-  syncActiveTab(tabs, targetUrl.href);
+  syncActiveSidebarLink(sidebarLinks, targetUrl.href);
 
   if (updateHistory && targetUrl.href !== window.location.href) {
     history.pushState({}, "", targetUrl.href);
@@ -189,9 +190,6 @@ function requestPage(href, signal) {
   });
 }
 
-/*
- * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
- */
 function recreateScripts(form) {
   const scripts = Array.from(form.getElementsByTagName("script"));
   if (scripts.length === 0) {
@@ -249,7 +247,7 @@ function shouldPreloadLinkEvent(event) {
 
 function shouldInterceptLink(link, interceptUrl) {
   const href = link.getAttribute("href");
-  if (!href) {
+  if (!href || link.dataset.taskPost === "true" || link.dataset.callback) {
     return false;
   }
 
@@ -279,6 +277,14 @@ function shouldInterceptUrl(targetUrl, interceptUrl) {
   );
 }
 
+function shouldLoadPopstateUrl(targetUrl, interceptUrl, initialUrl) {
+  return (
+    shouldInterceptUrl(targetUrl, interceptUrl) ||
+    normalizeUrlForComparison(targetUrl.href) ===
+      normalizeUrlForComparison(initialUrl.href)
+  );
+}
+
 function isHashOnlyNavigation(targetUrl) {
   const currentUrl = new URL(window.location.href);
   return (
@@ -288,12 +294,12 @@ function isHashOnlyNavigation(targetUrl) {
   );
 }
 
-function syncActiveTab(tabs, href) {
+function syncActiveSidebarLink(sidebarLinks, href) {
   const activeHref = normalizeUrlForComparison(href);
 
-  tabs.forEach((tab) => {
-    const isActive = normalizeUrlForComparison(tab.href) === activeHref;
-    tab.classList.toggle("jenkins-button--tertiary", !isActive);
+  sidebarLinks.forEach((link) => {
+    const isActive = normalizeUrlForComparison(link.href) === activeHref;
+    link.classList.toggle("task-link--active", isActive);
   });
 }
 
