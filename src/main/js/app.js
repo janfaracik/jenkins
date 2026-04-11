@@ -9,6 +9,7 @@ import ConfirmationLink from "@/components/confirmation-link";
 import Dialogs from "@/components/dialogs";
 import Defer from "@/components/defer";
 import behaviorShim from "@/util/behavior-shim";
+import { createElementFromHtml } from "@/util/dom";
 
 AppBar.init();
 Dropdowns.init();
@@ -20,6 +21,9 @@ Tooltips.init();
 StopButtonLink.init();
 ConfirmationLink.init();
 Dialogs.init();
+
+let activeController = null;
+let activeRequestId = 0;
 
 behaviorShim.specify("[data-type='main-panel-thing']", '', 999, (mainPanelThing) => {
   const tabs = document.querySelectorAll(".app-build-tabs a");
@@ -51,18 +55,48 @@ function loadPage(mainPanelThing, link, tabs) {
 }
 
 function actuallyLoadPage(mainPanelThing, href) {
+  activeRequestId += 1;
+  const requestId = activeRequestId;
+
+  if (activeController) {
+    activeController.abort();
+  }
+
+  activeController = new AbortController();
+
   mainPanelThing.innerHTML = "";
+  mainPanelThing.append(createElementFromHtml(`<div class="underthegunagain"><div class="jenkins-spinner"></div></div>`));
 
   fetch(href, {
     method: "GET",
     headers: crumb.wrap({
       "X-Content-Only": true,
     }),
-  }).then((rsp) => {
-    if (rsp.ok) {
-      rsp.text().then((responseText) => {
-        mainPanelThing.innerHTML = responseText;
-      });
-    }
-  });
+    signal: activeController.signal,
+  })
+    .then((rsp) => {
+      if (!rsp.ok) {
+        throw new Error(`Request failed: ${rsp.status}`);
+      }
+      return rsp.text();
+    })
+    .then((responseText) => {
+      if (requestId !== activeRequestId) {
+        return;
+      }
+
+      mainPanelThing.innerHTML = responseText;
+    })
+    .catch((err) => {
+      if (err.name === "AbortError") {
+        return;
+      }
+
+      if (requestId !== activeRequestId) {
+        return;
+      }
+
+      mainPanelThing.innerHTML = "<div>Failed to load page</div>";
+      console.error(err);
+    });
 }
