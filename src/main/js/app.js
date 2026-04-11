@@ -86,6 +86,7 @@ function actuallyLoadPage(mainPanelThing, href) {
       }
 
       mainPanelThing.innerHTML = responseText;
+      recreateScripts(mainPanelThing);
     })
     .catch((err) => {
       if (err.name === "AbortError") {
@@ -99,4 +100,36 @@ function actuallyLoadPage(mainPanelThing, href) {
       mainPanelThing.innerHTML = "<div>Failed to load page</div>";
       console.error(err);
     });
+}
+
+/*
+ * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
+ */
+function recreateScripts(form) {
+  const scripts = form.getElementsByTagName("script");
+  if (scripts.length === 0) {
+    behaviorShim.applySubtree(form, false);
+    return;
+  }
+  for (let i = 0; i < scripts.length; i++) {
+    const script = document.createElement("script");
+    if (scripts[i].text) {
+      script.text = scripts[i].text;
+    } else {
+      for (let j = 0; j < scripts[i].attributes.length; j++) {
+        if (scripts[i].attributes[j].name in HTMLScriptElement.prototype) {
+          console.log("appending", scripts[i].attributes[j].name, scripts[i].attributes[j].value)
+
+          script['banana'] = 'wama'
+
+          script[scripts[i].attributes[j].name] =
+            scripts[i].attributes[j].value;
+        }
+      }
+    }
+
+    console.log("script", script)
+
+    scripts[i].parentNode.replaceChild(script, scripts[i]);
+  }
 }
