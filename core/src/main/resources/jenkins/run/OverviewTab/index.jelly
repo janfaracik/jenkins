@@ -42,6 +42,8 @@ THE SOFTWARE.
       </j:forEach>
 
       <l:card title="Legacy">
+        ${h.expensiveOperation()}
+
         <table>
           <j:forEach var="a" items="${it.allActions}">
             <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />
