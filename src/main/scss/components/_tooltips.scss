@@ -1,6 +1,6 @@
 .tippy-box[data-theme~="tooltip"] {
   color: var(--tooltip-color);
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.625rem;
   border-radius: var(--form-input-border-radius);
   box-shadow: var(--tooltip-box-shadow);
   font-size: 0.75rem;
@@ -10,6 +10,7 @@
   z-index: 0;
   background: color-mix(in sRGB, var(--card-background) 85%, transparent);
   backdrop-filter: var(--tooltip-backdrop-filter);
+  transition: var(--standard-transition) !important;
 
   .tippy-content {
     padding: 0;

@@ -13,7 +13,7 @@ $colors: (
   "red": oklch(60% 0.2671 30),
   "yellow": oklch(80% 0.17 76),
   "teal": oklch(60% 0.1122 216.72),
-  "white": #fff,
+  "white": rgb(250 250 250),
   "black": oklch(from var(--accent-color) 25% 0.065 h),
 );
 $semantics: (
@@ -75,7 +75,7 @@ $semantics: (
   --unstable-build-icon-color: var(--orange);
 
   // Background colors
-  --background: rgb(254 254 254);
+  --background: rgb(248 248 250);
 
   // Header
   --header-background: var(--background);
@@ -128,7 +128,7 @@ $semantics: (
   --jenkins-border-width: 1px;
   --jenkins-border-color: color-mix(
                   in sRGB,
-                  var(--text-color-secondary) 30%,
+                  var(--text-color-secondary) 20%,
                   var(--card-background)
   );
   --jenkins-border-color--subtle: color-mix(
@@ -305,7 +305,7 @@ $semantics: (
   }
 
   // Animations
-  --standard-transition: 0.25s ease;
+  --standard-transition: 0.2s ease;
   --elastic-transition: 0.3s cubic-bezier(0, 0.68, 0.5, 1.5);
 
   // Plugin manager
