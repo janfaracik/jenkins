@@ -96,7 +96,10 @@ body.full-screen #main-panel {
 }
 
 body {
-  background: color-mix(in srgb, var(--background), var(--text-color-secondary) 5%);
+  background: color-mix(in srgb, var(--background), var(--text-color-secondary) 4%);
+
+  --scrollbar-color: oklch(from var(--text-color-secondary) l c h / 0.35);
+  scrollbar-color: var(--scrollbar-color) var(--scrollbar-color);
 }
 
 body.two-column #side-panel {
