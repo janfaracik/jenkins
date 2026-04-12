@@ -103,6 +103,10 @@ $background-outset: 0.5rem;
       }
     }
 
+    &::before {
+      transition: 0s;
+    }
+
     &:not(:hover, &:active, &:focus, &--active) {
       &::before {
         border-color: transparent;

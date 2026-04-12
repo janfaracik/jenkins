@@ -32,12 +32,14 @@
 .app-page-body__sidebar {
   border-right: var(--jenkins-border);
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding-top: var(--section-padding);
 }
 
 .testingwrapper {
   padding-top: var(--section-padding);
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 //.app-page-body--one-column {
@@ -96,7 +98,10 @@ body.full-screen #main-panel {
 }
 
 body {
-  background: color-mix(in srgb, var(--background), var(--text-color-secondary) 4%);
+  background: linear-gradient(
+          color-mix(in srgb, var(--background), var(--text-color-secondary) 3%),
+          color-mix(in srgb, var(--background), var(--black) 4%)
+  );
 
   --scrollbar-color: oklch(from var(--text-color-secondary) l c h / 0.35);
   scrollbar-color: var(--scrollbar-color) var(--scrollbar-color);
