@@ -19,8 +19,6 @@
 
   // Avoid duplicate padding
   &:has(> :last-child.jenkins-form-item) {
-    //outline: 3px solid blue;
-    background: rgb(0 0 255 / 0.1);
     padding-bottom: 0;
   }
 }
@@ -28,8 +26,7 @@
 .jenkins-section__title {
   margin: 0 0 var(--section-padding) 0;
   font-size: 1rem;
-  font-weight: var(--font-bold-weight);
-  text-box: cap alphabetic;
+  font-weight: 500;
 }
 
 .jenkins-section__description {
