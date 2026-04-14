@@ -85,11 +85,6 @@ public final class ConfigureJobAction implements Action {
 
         @Override
         public Collection<? extends Action> createFor(Job target) {
-            // This condition can be removed when the flag has been removed
-            if (!new NewJobPageUserExperimentalFlag().getFlagValue()) {
-                return Set.of();
-            }
-
             if (!target.hasPermission(Job.CONFIGURE) && !target.hasPermission(Job.EXTENDED_READ)) {
                 return Set.of();
             }
