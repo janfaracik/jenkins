@@ -31,43 +31,53 @@ import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
-@Extension
-public class WorkspacesAction extends TransientActionFactory<AbstractProject> {
+/**
+ * App bar action that links to the workspace browser for an {@link AbstractProject}.
+ *
+ * @since TODO
+ */
+@Restricted(Beta.class)
+public final class WorkspacesAction implements Action {
 
     @Override
-    public Class<AbstractProject> type() {
-        return AbstractProject.class;
+    public String getDisplayName() {
+        return Messages.WorkspacesAction_Title();
     }
 
     @Override
-    public Collection<? extends Action> createFor(AbstractProject target) {
-        Boolean newJobPageEnabled = new NewJobPageUserExperimentalFlag().getFlagValue();
+    public String getIconFileName() {
+        return "symbol-folder";
+    }
 
-        // This condition can be removed when the flag has been removed
-        if (!newJobPageEnabled) {
-            return Set.of();
+    @Override
+    public String getUrlName() {
+        return "ws";
+    }
+
+    @Extension
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<AbstractProject> {
+
+        @Override
+        public Class<AbstractProject> type() {
+            return AbstractProject.class;
         }
 
-        if (!target.hasPermission(AbstractProject.WORKSPACE)) {
-            return Set.of();
+        @Override
+        public Collection<? extends Action> createFor(AbstractProject target) {
+            // This condition can be removed when the flag has been removed
+            if (!new NewJobPageUserExperimentalFlag().getFlagValue()) {
+                return Set.of();
+            }
+
+            if (!target.hasPermission(AbstractProject.WORKSPACE)) {
+                return Set.of();
+            }
+
+            return Set.of(new WorkspacesAction());
         }
-
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return Messages.WorkspacesAction_Title();
-            }
-
-            @Override
-            public String getIconFileName() {
-                return "symbol-folder";
-            }
-
-            @Override
-            public String getUrlName() {
-                return "ws";
-            }
-        });
     }
 }

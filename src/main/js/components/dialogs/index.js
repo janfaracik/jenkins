@@ -478,13 +478,16 @@ function renderWizardForm({
   updateWizardTitle(titleText);
   configureWizardForm(form);
 
+  // Recreate script tags while the form is still detached, so each script
+  // executes exactly once, at the moment the form is inserted into the dialog.
+  recreateScripts(form);
+
   if (replaceExistingForm != null) {
     replaceExistingForm.replaceWith(form);
   } else {
     dialogContents.appendChild(form);
   }
 
-  recreateScripts(form);
   wireCancelButton(form);
 
   return form;
@@ -522,24 +525,26 @@ function navigateToNextPage(url) {
 
 /*
  * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
+ *
  */
 function recreateScripts(form) {
-  const scripts = form.getElementsByTagName("script");
+  const scripts = Array.from(form.getElementsByTagName("script"));
   if (scripts.length === 0) {
     Behaviour.applySubtree(form, true);
     return;
   }
   for (let i = 0; i < scripts.length; i++) {
+    const original = scripts[i];
     const script = document.createElement("script");
-    if (scripts[i].text) {
-      script.text = scripts[i].text;
-    } else {
-      for (let j = 0; j < scripts[i].attributes.length; j++) {
-        if (scripts[i].attributes[j].name in HTMLScriptElement.prototype) {
-          script[scripts[i].attributes[j].name] =
-            scripts[i].attributes[j].value;
-        }
-      }
+
+    for (let j = 0; j < original.attributes.length; j++) {
+      script.setAttribute(
+        original.attributes[j].name,
+        original.attributes[j].value,
+      );
+    }
+    if (original.text) {
+      script.text = original.text;
     }
 
     // only attach the load listener to the last script to avoid multiple calls to Behaviour.applySubtree
@@ -554,7 +559,7 @@ function recreateScripts(form) {
       });
     }
 
-    scripts[i].parentNode.replaceChild(script, scripts[i]);
+    original.parentNode.replaceChild(script, original);
   }
 }
 

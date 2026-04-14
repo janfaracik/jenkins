@@ -24,32 +24,48 @@
 
 package jenkins.model.menu.action;
 
+import hudson.Extension;
 import hudson.model.Action;
+import hudson.model.Job;
+import java.util.Collection;
+import java.util.Set;
+import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.ConfirmationEvent;
 import jenkins.model.menu.event.Event;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
 /**
- * A reusable delete action for items.
+ * A reusable app bar action that deletes an item after user confirmation.
+ *
+ * @since TODO
  */
+@Restricted(Beta.class)
 public final class DeleteAction implements Action {
 
-    private final String suffix;
+    private final String pronoun;
 
     private final String displayName;
 
     /**
+     * Create a delete action.
      *
+     * @param pronoun   the pronoun of the item being deleted, used in the button label
+     *                  (e.g. {@code "Job"} → <i>Delete Job</i>).
+     * @param displayName the display name of the item being deleted, used in the
+     *                    confirmation dialog title.
      */
-    public DeleteAction(String suffix, String displayName) {
-        this.suffix = suffix;
+    public DeleteAction(String pronoun, String displayName) {
+        this.pronoun = pronoun;
         this.displayName = displayName;
     }
 
     @Override
     public String getDisplayName() {
-        return Messages.DeleteAction_Delete(suffix);
+        return Messages.DeleteAction_Delete(pronoun);
     }
 
     @Override
@@ -75,5 +91,34 @@ public final class DeleteAction implements Action {
     @Override
     public Semantic getSemantic() {
         return Semantic.DESTRUCTIVE;
+    }
+
+    /**
+     * Factory that contributes a {@link DeleteAction} to every {@link Job} the current
+     * user has {@link Job#DELETE} permission on when the new job page experimental flag
+     * is enabled.
+     */
+    @Extension
+    @Restricted(Beta.class)
+    public static final class JobFactory extends TransientActionFactory<Job> {
+
+        @Override
+        public Class<Job> type() {
+            return Job.class;
+        }
+
+        @Override
+        public Collection<? extends Action> createFor(Job target) {
+            // This condition can be removed when the flag has been removed
+            if (!new NewJobPageUserExperimentalFlag().getFlagValue()) {
+                return Set.of();
+            }
+
+            if (!target.hasPermission(Job.DELETE)) {
+                return Set.of();
+            }
+
+            return Set.of(new DeleteAction(target.getPronoun(), target.getDisplayName()));
+        }
     }
 }
