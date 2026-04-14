@@ -74,7 +74,7 @@ public final class ConfigureJobAction implements Action {
         return "configure";
     }
 
-    @Extension
+    @Extension(ordinal = 90)
     @Restricted(Beta.class)
     public static final class Factory extends TransientActionFactory<Job> {
 

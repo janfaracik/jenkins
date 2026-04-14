@@ -98,7 +98,7 @@ public final class DeleteAction implements Action {
      * user has {@link Job#DELETE} permission on when the new job page experimental flag
      * is enabled.
      */
-    @Extension
+    @Extension(ordinal = 80)
     @Restricted(Beta.class)
     public static final class JobFactory extends TransientActionFactory<Job> {
 

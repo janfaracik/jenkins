@@ -98,7 +98,7 @@ public final class BuildJobAction implements Action {
         return Semantic.BUILD;
     }
 
-    @Extension
+    @Extension(ordinal = 100)
     @Restricted(Beta.class)
     public static final class Factory extends TransientActionFactory<ParameterizedJobMixIn.ParameterizedJob> {
 
