@@ -20,7 +20,7 @@ $border-radius: 19px;
     content: "";
     position: absolute;
     inset: 0;
-    border: var(--jenkins-border-width) solid var(--card-border-color);
+    border: var(--jenkins-border);
     border-radius: inherit;
     pointer-events: none;
   }
@@ -102,7 +102,7 @@ $border-radius: 19px;
     content: "";
     position: absolute;
     inset: 0;
-    border: var(--jenkins-border--subtle);
+    border: var(--jenkins-border);
     border-radius: 22px;
     opacity: 0;
     transition: var(--standard-transition);
@@ -113,13 +113,14 @@ $border-radius: 19px;
     position: absolute;
     top: anchor(--a top);
     bottom: anchor(--a bottom);
-    border: var(--jenkins-border--subtle);
+    border: var(--jenkins-border);
     border-radius: 100px;
     transition: var(--standard-transition);
     left: anchor(--a left);
     width: anchor-size(--a width);
     background-color: var(--button-background);
     pointer-events: none;
+    box-shadow: var(--control-shadow);
   }
 
   &:hover {
