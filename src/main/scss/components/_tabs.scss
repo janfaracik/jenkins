@@ -93,19 +93,12 @@ $border-radius: 19px;
   z-index: 0;
   justify-content: center;
   flex-wrap: wrap;
+  padding: 1.5px;
+  border: var(--jenkins-border);
+  border-radius: 19px;
 
   @media (width <= 1200px) {
     justify-content: start;
-  }
-
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border: var(--jenkins-border);
-    border-radius: 22px;
-    opacity: 0;
-    transition: var(--standard-transition);
   }
 
   &::after {
@@ -124,12 +117,6 @@ $border-radius: 19px;
   }
 
   &:hover {
-    &::before {
-      opacity: 1;
-      inset: -0.25rem;
-      background: var(--card-background);
-    }
-
     &::after {
       background-color: var(--button-background--hover);
     }
@@ -159,6 +146,7 @@ $border-radius: 19px;
                     var(--text-color-secondary) 75%,
                     var(--text-color)) !important;
     transition: color var(--standard-transition);
+    min-height: 34px;
 
     &::before,
     &::after {
