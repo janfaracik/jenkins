@@ -61,21 +61,23 @@ window.addEventListener("load", () => {
     };
   });
 
-  const content = createElementFromHtml(
-    "<div class='itsagame2'>" +
-      Object.entries(shortcuts)
-        .map(
-          ([key, value]) =>
-            `<div class="itsagame">${value.title}${value.subtitle ? `<span class="jenkins-!-text-color-secondary">${value.subtitle}</span>` : ``}<div class="jenkins-keyboard-shortcut">${tryTranslateToSymbol(key)}</div></div>`,
-        )
-        .join("") +
-      "</div>",
-  );
+  hotkeys("shift+/", () => {
+    const content = createElementFromHtml(
+      "<div class='itsagame2'>" +
+        Object.entries(shortcuts)
+          .map(
+            ([key, value]) =>
+              `<div class="itsagame">${value.title}${value.subtitle ? `<span class="jenkins-!-text-color-secondary">${value.subtitle}</span>` : ``}<div class="jenkins-keyboard-shortcut">${tryTranslateToSymbol(key)}</div></div>`,
+          )
+          .join("") +
+        "</div>",
+    );
 
-  // dialog.modal(content, {
-  //   maxWidth: "550px",
-  //   title: "Keyboard shortcuts",
-  // });
+    dialog.modal(content, {
+      maxWidth: "550px",
+      title: "Keyboard shortcuts",
+    });
+  });
 });
 
 function tryTranslateToSymbol(keyboardShortcut) {
