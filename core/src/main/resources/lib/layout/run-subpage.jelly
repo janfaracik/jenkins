@@ -45,44 +45,18 @@ THE SOFTWARE.
                         src="symbol-status-${it.object.iconColor.iconName}" />
               </a>
               <j:if test="${it.object.previousBuild != null}">
-                <j:set var="tooltip">
-                  <div class="jenkins-keyboard-shortcut__tooltip">
-                    <span class="jenkins-!-margin-right-1">
-                      ${%Previous build}
-                    </span>
-                    <l:keyboard-shortcut shortcut="symbol-arrow-left" />
-                  </div>
-                </j:set>
                 <a href="${buildUrl.previousBuildUrl}"
-                   class="jenkins-button jenkins-button--tertiary"
-                   data-keyboard-shortcut-title="${%Previous build}"
-                   data-keyboard-shortcut-subtitle="${it.object.previousBuild.displayName}"
-                   data-keyboard-shortcut="left"
-                   data-html-tooltip="${tooltip}"
-                   data-tooltip-delay="400"
+                   class="jenkins-button jenkins-button--tertiary app-build__navigation-previous"
                    aria-label="${%Previous build}">
-                  <l:icon class="symbol-chevron-back" />
+                  <l:icon class="symbol-arrow-left" />
                 </a>
               </j:if>
               <h1>${it.object.displayName}</h1>
               <j:if test="${it.object.nextBuild != null}">
-                <j:set var="tooltip">
-                  <div class="jenkins-keyboard-shortcut__tooltip">
-                    <span class="jenkins-!-margin-right-1">
-                      ${%Next build}
-                    </span>
-                    <l:keyboard-shortcut shortcut="symbol-arrow-right" />
-                  </div>
-                </j:set>
                 <a href="${buildUrl.nextBuildUrl}"
-                   class="jenkins-button jenkins-button--tertiary"
-                   data-keyboard-shortcut-title="${%Next build}"
-                   data-keyboard-shortcut-subtitle="${it.object.nextBuild.displayName}"
-                   data-keyboard-shortcut="right"
-                   data-html-tooltip="${tooltip}"
-                   data-tooltip-delay="400"
+                   class="jenkins-button jenkins-button--tertiary app-build__navigation-next"
                    aria-label="${%Next build}">
-                  <l:icon class="symbol-chevron-forward" />
+                  <l:icon class="symbol-arrow-right" />
                 </a>
               </j:if>
             </div>
@@ -94,17 +68,8 @@ THE SOFTWARE.
             </div>
 
             <div class="app-build-bar__controls">
-              <l:overflowButton>
-                <dd:custom>
-                  <div class="app-build-overflow">
-                    <j:set var="mode" value="side-panel" />
-                    <st:include page="sidepanel.jelly" it="${it.object}" />
-                  </div>
-                </dd:custom>
-              </l:overflowButton>
+              <l:actions it="${it.object}" />
             </div>
-
-            <st:adjunct includes="lib.hudson.build-caption" />
           </div>
 
           <div class="app-build-content">

@@ -22,7 +22,7 @@ window.addEventListener("load", () => {
   const pageSearchBar = document.querySelectorAll(
     "#page-body .jenkins-search__input",
   );
-  if (pageSearchBar.length === 1) {
+  if (pageSearchBar.length > 0) {
     shortcuts["/"] = { title: pageSearchBar[0].placeholder };
     hotkeys("/", () => {
       pageSearchBar[0].focus();
