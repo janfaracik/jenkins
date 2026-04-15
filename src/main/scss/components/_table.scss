@@ -1,30 +1,28 @@
 @use "../abstracts/mixins";
 
+$table-cell-border-color: color-mix(
+  in sRGB,
+  var(--table-background) 75%,
+  var(--card-border-color)
+);
+$table-border: var(--jenkins-border-width) solid var(--card-border-color);
+$table-cell-border: var(--jenkins-border-width) solid $table-cell-border-color;
+
 .jenkins-table {
-  --table-padding: 0.55rem;
+  --table-padding: 0.5rem;
+  --sortheader-transition: 0s;
 
   position: relative;
   width: 100%;
-  background: var(--table-background);
-  border-radius: calc(
-    var(--table-border-radius) + (var(--jenkins-border-width) * 2)
-  );
-  border: calc(var(--jenkins-border-width) * 2) solid var(--table-background);
-  border-bottom-width: var(--jenkins-border-width);
-  border-spacing: 0 var(--jenkins-border-width);
-  background-clip: padding-box;
+  border-radius: var(--form-input-border-radius);
+  background: var(--card-background);
+  border-spacing: 0;
   margin-bottom: var(--section-padding);
+  border: $table-border;
+  overflow: hidden;
 
-  // The '::before' pseudo-element is causing overflow issues in Firefox, so disable it for that browser
-  @supports (not (-moz-appearance: none)) {
-    &::before {
-      content: "";
-      position: absolute;
-      inset: -2px -2px -1px;
-      border: var(--jenkins-border);
-      border-radius: inherit;
-      pointer-events: none;
-    }
+  td, th {
+    border-bottom: $table-cell-border !important;
   }
 
   * {
@@ -37,11 +35,12 @@
       & > th {
         color: var(--table-header-foreground);
         text-align: left;
-        padding-top: calc(var(--table-padding) * 0.9);
-        padding-bottom: calc((var(--table-padding) * 0.9) + 2px);
-        padding-left: 1.6rem;
+        padding-top: var(--table-padding);
+        padding-bottom: var(--table-padding);
+        padding-inline: 0.5rem;
         font-size: var(--font-size-sm);
         font-weight: var(--font-bold-weight);
+        height: 2.5rem;
 
         &[align="center"] {
           text-align: center;
@@ -59,12 +58,65 @@
           padding-right: var(--table-padding);
         }
 
-        a {
+        .sortheader {
+          @include mixins.item($border: false);
+
+          padding: 7px 0;
+          margin-block: -7px;
           color: var(--table-header-foreground);
-          font-weight: 700;
+          font-weight: inherit;
+          font-size: inherit;
+          line-height: 1 !important;
+          text-align: inherit;
+
+          &::before,
+          &::after {
+            inset: 0 -10px;
+            pointer-events: all;
+          }
+
+          &--up,
+          &--down {
+            &::before,
+            &::after {
+              right: -26px;
+            }
+
+            .sortarrow {
+              opacity: 1 !important;
+              scale: 1 !important;
+              translate: 0.25rem 0 !important;
+            }
+          }
+
+          &--up {
+            .sortarrow {
+              rotate: 180deg;
+            }
+          }
 
           span.sortarrow {
-            width: 24px;
+            position: absolute;
+            display: inline-flex;
+            width: 0.875rem;
+            height: 0.875rem;
+            transition: var(--sortheader-transition);
+            opacity: 0;
+            scale: 0.5;
+            translate: -0.25rem 0;
+
+            svg {
+              width: 0.875rem;
+              height: 0.875rem;
+              transition: var(--sortheader-transition);
+              opacity: 0.5;
+            }
+          }
+
+          &:hover {
+            svg {
+              opacity: 1 !important;
+            }
           }
         }
 
@@ -81,10 +133,9 @@
     & > tr {
       color: var(--table-body-foreground);
 
-      & > td {
-        background: var(--table-body-background);
+      & > * {
         vertical-align: middle;
-        padding: var(--table-padding) 0 var(--table-padding) 1.6rem;
+        padding: var(--table-padding) 0.5rem;
         height: 3rem;
 
         &:first-of-type {
@@ -96,36 +147,19 @@
         }
       }
 
-      // Style the rows so that the first and last have a larger border radius
-      & > td:first-of-type {
-        border-top-left-radius: var(--table-row-border-radius);
-        border-bottom-left-radius: var(--table-row-border-radius);
+      & > th {
+        background: color-mix(
+          in sRGB,
+          var(--table-background) 40%,
+          var(--table-body-background)
+        );
+        color: var(--text-color-secondary);
+        font-weight: var(--font-bold-weight);
       }
 
-      & > td:last-of-type {
-        border-top-right-radius: var(--table-row-border-radius);
-        border-bottom-right-radius: var(--table-row-border-radius);
-      }
-
-      // First row
-      &:first-of-type {
-        & > td:first-of-type {
-          border-top-left-radius: var(--table-border-radius);
-        }
-
-        & > td:last-of-type {
-          border-top-right-radius: var(--table-border-radius);
-        }
-      }
-
-      // Last row
       &:last-of-type {
-        & > td:first-of-type {
-          border-bottom-left-radius: var(--table-border-radius);
-        }
-
-        & > td:last-of-type {
-          border-bottom-right-radius: var(--table-border-radius);
+        td, th {
+          border-bottom: none !important;
         }
       }
     }
@@ -138,10 +172,9 @@
   }
 
   &__cell--tight {
-    padding-left: 0 !important;
-    text-align: right !important;
+    text-align: center !important;
     white-space: nowrap;
-    width: 4rem;
+    width: 3.25rem;
   }
 
   &__cell--checkbox {
@@ -158,27 +191,14 @@
     display: inline-flex;
   }
 
-  &__link,
-  .sortheader {
-    display: inline-flex;
-  }
-
   &__link {
-    .jenkins-menu-dropdown-chevron {
-      top: 0;
-    }
+    display: inline-flex;
   }
 
   .jenkins-button {
     margin: -10px 0;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem;
     min-height: 1.75rem;
-
-    // Increase the size of symbols compared to regular buttons
-    svg {
-      width: 1.5rem !important;
-      height: 1.5rem !important;
-    }
   }
 
   &__button,
@@ -186,8 +206,8 @@
     svg,
     .build-status-icon__wrapper,
     img {
-      width: 1.5rem !important;
-      height: 1.5rem !important;
+      width: 1.25rem !important;
+      height: 1.25rem !important;
     }
   }
 
@@ -256,9 +276,7 @@
     color: var(--link-color);
   }
 
-  &__button,
-  .sortheader,
-  &__link {
+  &__button {
     @include mixins.item($border: false);
 
     align-items: center;
@@ -280,7 +298,6 @@
     &::before,
     &::after {
       inset: -7px -10px;
-      border-radius: 6px;
     }
   }
 
@@ -308,7 +325,11 @@
 
     &::before,
     &::after {
-      inset: -5px -8px;
+      inset: -1px -8px;
+    }
+    
+    &::before {
+      border: var(--jenkins-border--inherit-subtle);
     }
   }
 }
