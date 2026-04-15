@@ -395,7 +395,6 @@ function resolveWizardFormAction(form, baseUrl) {
   }
 }
 
-// TODO - Validate this
 function submitWizardForm(form) {
   const jsonInputName = "json";
   let jsonInput = form.elements.namedItem(jsonInputName);
