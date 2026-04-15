@@ -53,7 +53,8 @@
   }
 
   &::after {
-    border: var(--jenkins-border--subtle);
+    border: var(--jenkins-border);
+    box-shadow: var(--control-shadow);
   }
 
   .app-branding__conic {
