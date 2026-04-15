@@ -36,9 +36,6 @@ THE SOFTWARE.
     <st:attribute name="action" use="required">
       The method to call from within the HudsonPrivateSecurityRealm.
     </st:attribute>
-    <st:attribute name="captcha" use="optional">
-      Determines if the tag will include the captcha.
-    </st:attribute>
     <st:attribute name="data" use="optional" type="hudson.security.HudsonPrivateSecurityRealm.SignupInfo">
       The wrapper for the data provided by the user and the error message(s) if any. Is null on first form display.
     </st:attribute>
@@ -89,14 +86,5 @@ THE SOFTWARE.
         ${data.errors.get('email')}
       </div>
     </j:if>
-  </j:if>
-  <j:if test="${captcha}">
-    <tr>
-      <td>${%Enter text as shown}:</td>
-      <td>
-        <input class="jenkins-input" type="text" name="captcha" autocomplete="off" /><br />
-        <img src="${rootURL}/securityRealm/captcha" alt="[${%captcha}]" />
-      </td>
-    </tr>
   </j:if>
 </j:jelly>
