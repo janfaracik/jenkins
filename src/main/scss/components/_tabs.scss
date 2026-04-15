@@ -20,7 +20,7 @@ $border-radius: 19px;
     content: "";
     position: absolute;
     inset: 0;
-    border: var(--jenkins-border);
+    border: var(--jenkins-border-width) solid var(--card-border-color);
     border-radius: inherit;
     pointer-events: none;
   }
@@ -90,9 +90,9 @@ $border-radius: 19px;
 .app-build-tabs {
   position: relative;
   display: inline-flex;
+  z-index: 0;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 0.1875rem;
 
   @media (width <= 1200px) {
     justify-content: start;
@@ -108,15 +108,62 @@ $border-radius: 19px;
     transition: var(--standard-transition);
   }
 
-  &:hover::before {
-    opacity: 1;
-    inset: -0.25rem;
-    background: var(--card-background);
-    box-shadow: var(--control-shadow);
+  &::after {
+    content: "";
+    position: absolute;
+    top: anchor(--a top);
+    bottom: anchor(--a bottom);
+    border: var(--jenkins-border--subtle);
+    border-radius: 100px;
+    transition: var(--standard-transition);
+    left: anchor(--a left);
+    width: anchor-size(--a width);
+    background-color: var(--button-background);
+    pointer-events: none;
   }
 
-  a {
-    border-radius: 100px;
+  &:hover {
+    &::before {
+      opacity: 1;
+      inset: -0.25rem;
+      background: var(--card-background);
+    }
+
+    &::after {
+      background-color: var(--button-background--hover);
+    }
+  }
+
+  &:active {
+    &::after {
+      background-color: var(--button-background--active);
+    }
+  }
+
+  &:has(.jenkins-button:focus-visible) {
+    &::after {
+      box-shadow: 0 0 0 0.2rem var(--text-color) !important;
+    }
+  }
+
+  &:not(:has(.jenkins-button:hover, .jenkins-button:focus-visible)) .jenkins-button:not(.jenkins-button--tertiary) {
+    anchor-name: --a;
+    color: var(--text-color) !important;
+  }
+
+  a, button {
+    border-radius: 0;
+    color: color-mix(
+                    in sRGB,
+                    var(--text-color-secondary) 75%,
+                    var(--text-color)) !important;
+    transition: color var(--standard-transition);
+
+    &::before,
+    &::after {
+      display: none;
+      border-radius: 100px;
+    }
 
     svg {
       width: 1rem;
@@ -129,37 +176,43 @@ $border-radius: 19px;
 
     &:not(.jenkins-button--tertiary) {
       pointer-events: none;
-      font-weight: var(--font-bold-weight);
+    }
+
+    &:hover, &:focus-visible {
+      color: var(--text-color) !important;
+      anchor-name: --a !important;
+    }
+
+    .pill {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100px;
+      font-size: 12px;
+      min-width: 20px;
+      text-align: center;
+      padding-inline: 6px;
+      text-box: cap alphabetic;
+      height: 20px;
+      z-index: 0;
+      margin-right: -0.25rem;
+      transition: border var(--standard-transition);
 
       &::before {
-        border: var(--jenkins-border);
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: color-mix(
+          in sRGB,
+          var(--color, var(--background)) 5%,
+          var(--background)
+        );
+        border: var(--jenkins-border-width) solid
+          color-mix(in sRGB, var(--color, currentColor) 10%, transparent);
+        z-index: -1;
       }
-    }
-
-    &.jenkins-button--tertiary {
-      color: color-mix(
-        in sRGB,
-        var(--text-color-secondary) 75%,
-        var(--text-color)
-      ) !important;
-
-      &::before,
-      &::after {
-        inset: 3px;
-      }
-    }
-
-    &:hover {
-      color: var(--text-color) !important;
-
-      &::before,
-      &::after {
-        inset: 1.5px;
-      }
-    }
-
-    .jenkins-badge {
-      margin-right: -0.25rem;
     }
   }
 }
