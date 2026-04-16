@@ -12,7 +12,7 @@
 
 .app-build__grid {
   gap: calc(var(--section-padding) / 1.5);
-  margin-bottom: calc(var(--section-padding) * -0.5);
+  margin-bottom: var(--section-padding);
 
   & > * {
     height: 350px;
