@@ -34,8 +34,10 @@ THE SOFTWARE.
 
   <j:if test="${items.size() gt 1}">
     <div class="app-build-tabs">
-      <j:forEach var="tab" items="${items}">
+      <j:forEach var="tab" items="${items}" indexVar="i">
         <a href="${url}/${tab.urlName}"
+           data-keyboard-shortcut-title="${tab.displayName}"
+           data-keyboard-shortcut="${i + 1}"
            class="jenkins-button ${h.hyperlinkMatchesCurrentPage(tab.urlName ?: url) ? '' : 'jenkins-button--tertiary'}">
           <j:if test="${tab.iconFileName != null}">
             <l:icon src="${tab.iconFileName}" />

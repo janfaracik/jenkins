@@ -41,6 +41,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   height: 100%;
+  isolation: isolate;
 }
 
 //.app-page-body--one-column {
