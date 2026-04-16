@@ -45,7 +45,7 @@ Dialog.prototype.init = function () {
     `<div class='jenkins-dialog__title'><span></span></div>`,
   );
   this.dialog.appendChild(title);
-  title.querySelector("span").innerText = this.options.title;
+  title.querySelector("span").textContent = this.options.title ?? "";
 
   const content = createElementFromHtml(
     `<div class='jenkins-dialog__contents'/>`,
@@ -331,6 +331,12 @@ function init() {
       let dialog = new Dialog("form", options);
       return dialog.show();
     },
+
+    wizard: function (initialUrl, options) {
+      dialog.modal(document.createElement("template"), options);
+
+      navigateToNextPage(initialUrl, "");
+    },
   };
 
   behaviorShim.specify(
@@ -339,7 +345,14 @@ function init() {
     1000,
     (element) => {
       element.addEventListener("click", () => {
-        renderOnDemandDialog(element.dataset.dialogId);
+        if (element.dataset.dialogUrl != null) {
+          window.dialog.wizard(element.dataset.dialogUrl, {
+            minWidth: "min(550px, 100vw)",
+            preventCloseOnOutsideClick: true,
+          });
+        } else {
+          renderOnDemandDialog(element.dataset.dialogId);
+        }
       });
     },
   );
@@ -354,6 +367,262 @@ function init() {
         element.className.match(/dialog-(id\d+)-template/)[1],
       );
     }
+  }
+}
+
+function updateWizardTitle(titleText) {
+  if (titleText == null) {
+    return;
+  }
+
+  const title = getWizardTitleElement();
+  if (title != null) {
+    title.textContent = titleText;
+  }
+}
+
+function getWizardDialog() {
+  return document.querySelector("body > .jenkins-dialog");
+}
+
+function getWizardTitleElement(dialog = getWizardDialog()) {
+  return dialog?.querySelector(".jenkins-dialog__title > span");
+}
+
+function getWizardForms(dialogContents) {
+  return Array.from(dialogContents?.children ?? []).filter(
+    (element) => element.tagName === "FORM",
+  );
+}
+
+function getCurrentWizardTitle() {
+  return getWizardTitleElement()?.textContent ?? "";
+}
+
+/** Resolve a relative wizard form action against the current step URL. */
+function resolveWizardFormAction(form, baseUrl) {
+  const formAction = form.getAttribute("action");
+  if (
+    formAction &&
+    !formAction.startsWith("/") &&
+    !formAction.startsWith("http")
+  ) {
+    form.action = new URL(formAction, baseUrl).toString();
+  }
+}
+
+function syncBackButtonInDialog() {
+  const dialog = getWizardDialog();
+  const dialogTitle = dialog?.querySelector(".jenkins-dialog__title");
+  const dialogContents = dialog?.querySelector(".jenkins-dialog__contents");
+  const dialogTitleTitle = dialogTitle?.querySelector("span");
+
+  if (dialog == null || dialogTitle == null || dialogContents == null) {
+    return;
+  }
+
+  const forms = getWizardForms(dialogContents);
+  let backButton = dialogTitle.querySelector(".jenkins-dialog__back-button");
+
+  if (forms.length <= 1) {
+    dialogTitleTitle.style.marginLeft = "0";
+    backButton?.remove();
+    return;
+  }
+
+  if (backButton != null) {
+    return;
+  }
+
+  backButton = document.createElement("button");
+  backButton.type = "button";
+  backButton.classList.add("jenkins-button");
+  backButton.classList.add("jenkins-dialog__title__button");
+  backButton.classList.add("jenkins-dialog__back-button");
+  backButton.ariaLabel = "Back";
+  backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>`;
+  dialogTitleTitle.style.marginLeft = "2.75rem";
+  dialogTitle.prepend(backButton);
+
+  backButton.addEventListener("click", () => {
+    const wizardForms = getWizardForms(dialogContents);
+    const previousForm = wizardForms.at(-2);
+    const currentForm = wizardForms.at(-1);
+
+    if (currentForm == null || previousForm == null) {
+      return;
+    }
+
+    currentForm.remove();
+    previousForm.classList.remove("jenkins-hidden");
+    updateWizardTitle(previousForm.dataset.dialogTitle ?? "");
+    syncBackButtonInDialog();
+  });
+}
+
+// TODO - Validate this
+function submitWizardForm(form) {
+  const jsonInputName = "json";
+  let jsonInput = form.elements.namedItem(jsonInputName);
+
+  if (jsonInput == null) {
+    jsonInput = document.createElement("input");
+    jsonInput.type = "hidden";
+    jsonInput.name = jsonInputName;
+    form.appendChild(jsonInput);
+  }
+
+  buildFormTree(form);
+
+  let body = new FormData(form);
+  const hasFileInput = Array.from(form.elements).some(
+    (element) => element instanceof HTMLInputElement && element.type === "file",
+  );
+
+  if (!hasFileInput) {
+    body = new URLSearchParams(body);
+  }
+
+  fetch(form.action, {
+    method: form.method.toUpperCase(),
+    headers: crumb.wrap({}),
+    body: body,
+  }).then((rsp) => {
+    if (rsp.redirected) {
+      window.location.assign(rsp.url);
+      return;
+    }
+
+    rsp.text().then((responseText) => {
+      const replacementForm = renderWizardForm({
+        responseText,
+        requestUrl: rsp.url,
+        titleText: rsp.headers.get("X-Dialog-Title"),
+        replaceExistingForm: form,
+      });
+
+      if (replacementForm == null) {
+        window.location.assign(rsp.url);
+      }
+    });
+  });
+}
+
+function configureWizardForm(form) {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    submitWizardForm(e.currentTarget);
+  });
+}
+
+function renderWizardForm({
+  responseText,
+  requestUrl,
+  titleText,
+  replaceExistingForm = null,
+  hideExistingForms = false,
+}) {
+  const dialogContents = document.querySelector(
+    "body > .jenkins-dialog .jenkins-dialog__contents",
+  );
+  const newDialog = document.createElement("div");
+  newDialog.innerHTML = responseText;
+
+  const form = newDialog.querySelector("form");
+  if (form == null) {
+    return null;
+  }
+
+  if (hideExistingForms) {
+    getWizardForms(dialogContents).forEach((existingForm) =>
+      existingForm.classList.add("jenkins-hidden"),
+    );
+  }
+
+  resolveWizardFormAction(form, requestUrl);
+  const effectiveTitle = titleText ?? getCurrentWizardTitle();
+  form.dataset.dialogTitle = effectiveTitle;
+  updateWizardTitle(effectiveTitle);
+  configureWizardForm(form);
+
+  if (replaceExistingForm != null) {
+    replaceExistingForm.classList.add("jenkins-hidden");
+  }
+
+  dialogContents.appendChild(form);
+  syncBackButtonInDialog();
+
+  recreateScripts(form);
+  wireCancelButton(form);
+
+  return form;
+}
+
+function wireCancelButton(form) {
+  const dialog = form.closest("dialog");
+  form.querySelector("[data-id=cancel]")?.addEventListener("click", (e) => {
+    e.preventDefault();
+    dialog?.dispatchEvent(new Event("cancel"));
+  });
+}
+
+function navigateToNextPage(url) {
+  fetch(url, {
+    method: "GET",
+    headers: crumb.wrap({}),
+  }).then((rsp) => {
+    if (rsp.ok) {
+      rsp.text().then((responseText) => {
+        const form = renderWizardForm({
+          responseText,
+          requestUrl: rsp.url,
+          titleText: rsp.headers.get("X-Dialog-Title"),
+          hideExistingForms: true,
+        });
+
+        if (form == null) {
+          window.location.assign(rsp.url);
+        }
+      });
+    }
+  });
+}
+
+/*
+ * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
+ */
+function recreateScripts(form) {
+  const scripts = form.getElementsByTagName("script");
+  if (scripts.length === 0) {
+    Behaviour.applySubtree(form, true);
+    return;
+  }
+  for (let i = 0; i < scripts.length; i++) {
+    const script = document.createElement("script");
+    if (scripts[i].text) {
+      script.text = scripts[i].text;
+    } else {
+      for (let j = 0; j < scripts[i].attributes.length; j++) {
+        if (scripts[i].attributes[j].name in HTMLScriptElement.prototype) {
+          script[scripts[i].attributes[j].name] =
+            scripts[i].attributes[j].value;
+        }
+      }
+    }
+
+    // only attach the load listener to the last script to avoid multiple calls to Behaviour.applySubtree
+    if (i === scripts.length - 1) {
+      script.addEventListener("load", () => {
+        setTimeout(() => {
+          Behaviour.applySubtree(form, true);
+          if (form.method.toLowerCase() !== "get") {
+            form.onsubmit = null; // clear any existing handler
+          }
+        }, 50);
+      });
+    }
+
+    scripts[i].parentNode.replaceChild(script, scripts[i]);
   }
 }
 

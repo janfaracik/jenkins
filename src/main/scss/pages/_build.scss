@@ -138,6 +138,20 @@
   }
 }
 
+.app-settings-container {
+  &__inner {
+    max-width: 900px;
+    margin: auto;
+    padding: var(--section-padding);
+    display: flex;
+    flex-direction: column;
+
+    &--wide {
+      max-width: 70vw;
+    }
+  }
+}
+
 .app-build-bar {
   position: sticky;
   top: 0;
