@@ -37,9 +37,17 @@ THE SOFTWARE.
     <t:editableDescription permission="${it.UPDATE}" hideButton="true" />
 
     <div class="app-build__grid">
-      <j:forEach var="a" items="${it.runTabs}">
+      <j:set var="runTabs" value="${it.runTabs}" />
+
+      <j:forEach var="a" items="${runTabs}">
         <st:include page="widget.jelly" from="${a}" optional="true" it="${a}" />
       </j:forEach>
+
+      <j:if test="${runTabs.size() lt 12}">
+        <j:forEach var="i" begin="1" end="${12 - runTabs.size()}">
+          <div class="jenkins-notice" style="margin: 0; background: none" />
+        </j:forEach>
+      </j:if>
 
 <!--      <l:card title="Legacy">-->
 <!--        <table>-->
