@@ -9,6 +9,7 @@
 
   &__list {
     display: flex;
+    margin: 0;
 
     & > * {
       z-index: 1;
@@ -66,15 +67,23 @@
 
       // '/' separator between two items
       &::before {
-        content: "/";
+        content: "";
         position: relative;
+        width: 1rem;
+        height: 1.25rem;
         flex-shrink: 0;
-        color: color-mix(in sRGB, var(--text-color-secondary) 30%, transparent);
-        padding-left: 4px;
-        padding-right: 4px;
+        mask-size: contain;
+        mask-position: center;
+        mask-repeat: no-repeat;
+        mask-image: url("data:image/svg+xml,%3Csvg width='10' height='20' viewBox='0 0 10 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2 18L8 2' stroke='black' stroke-width='1.5px' stroke-linecap='round'/%3E%3C/svg%3E%0A");
+        background: color-mix(
+          in sRGB,
+          var(--text-color-secondary) 30%,
+          transparent
+        );
 
         @media (prefers-contrast: more) {
-          color: var(--text-color);
+          background: var(--text-color);
         }
       }
     }
