@@ -19,10 +19,10 @@
   }
 
   // Legacy card shouldn't have a fixed height
-  .jenkins-card:last-of-type {
-    height: unset;
-    min-height: 350px;
-  }
+  //.jenkins-card:last-of-type {
+  //  height: unset;
+  //  min-height: 350px;
+  //}
 
   @media (width < 1000px) {
     display: flex;
@@ -46,9 +46,9 @@
         grid-column: span 1;
       }
 
-      &:last-of-type {
-        grid-column: span 2;
-      }
+      //&:last-of-type {
+      //  grid-column: span 2;
+      //}
     }
 
     .jenkins-card__content .app-console-output-widget {
@@ -64,9 +64,9 @@
         grid-column: span 2;
       }
 
-      &:last-of-type {
-        grid-column: span 3;
-      }
+      //&:last-of-type {
+      //  grid-column: span 3;
+      //}
     }
   }
 
@@ -78,9 +78,9 @@
         grid-column: span 3;
       }
 
-      &:last-of-type {
-        grid-column: span 4;
-      }
+      //&:last-of-type {
+      //  grid-column: span 4;
+      //}
     }
   }
 
@@ -92,9 +92,9 @@
         grid-column: span 4;
       }
 
-      &:last-of-type {
-        grid-column: span 5;
-      }
+      //&:last-of-type {
+      //  grid-column: span 5;
+      //}
     }
   }
 }

@@ -41,17 +41,17 @@ THE SOFTWARE.
         <st:include page="widget.jelly" from="${a}" optional="true" it="${a}" />
       </j:forEach>
 
-      <l:card title="Legacy">
-        <table>
-          <j:forEach var="a" items="${it.allActions}">
-            <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />
-          </j:forEach>
+<!--      <l:card title="Legacy">-->
+<!--        <table>-->
+<!--          <j:forEach var="a" items="${it.allActions}">-->
+<!--            <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />-->
+<!--          </j:forEach>-->
 
-          <st:include page="summary.jelly" optional="true" />
-        </table>
+<!--          <st:include page="summary.jelly" optional="true" />-->
+<!--        </table>-->
 
-        <st:include page="main.jelly" optional="true" />
-      </l:card>
+<!--        <st:include page="main.jelly" optional="true" />-->
+<!--      </l:card>-->
     </div>
   </l:run-subpage>
 </j:jelly>
