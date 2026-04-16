@@ -140,11 +140,9 @@
 
 .app-settings-container {
   &__inner {
-    max-width: 900px;
-    margin: auto;
-    padding: var(--section-padding);
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    margin-inline: auto;
+    max-width: 800px;
 
     &--wide {
       max-width: 70vw;

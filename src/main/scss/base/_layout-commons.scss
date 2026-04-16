@@ -68,8 +68,6 @@
 
 body:has(#side-panel) {
   #main-panel {
-    width: 800px;
-    margin-inline: auto;
     margin-bottom: var(--section-padding);
   }
 }
