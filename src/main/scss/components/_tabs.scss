@@ -93,9 +93,10 @@ $border-radius: 19px;
   z-index: 0;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 1.5px;
-  border: var(--jenkins-border);
-  border-radius: 19px;
+  gap: 0.5rem;
+  //padding: 1.5px;
+  //border: var(--jenkins-border);
+  //border-radius: 19px;
 
   @media (width <= 1200px) {
     justify-content: start;
@@ -140,18 +141,17 @@ $border-radius: 19px;
   }
 
   a, button {
-    border-radius: 0;
+    border-radius: 100px;
     color: color-mix(
                     in sRGB,
                     var(--text-color-secondary) 75%,
                     var(--text-color)) !important;
     transition: color var(--standard-transition);
-    min-height: 34px;
+    //min-height: 34px;
 
     &::before,
     &::after {
       display: none;
-      border-radius: 100px;
     }
 
     svg {
@@ -160,6 +160,13 @@ $border-radius: 19px;
 
       * {
         stroke-width: 40px;
+      }
+    }
+
+    &.jenkins-button--tertiary {
+      &::after {
+        display: flex;
+        box-shadow: inset 0 0 0 1px var(--jenkins-border-color);
       }
     }
 
