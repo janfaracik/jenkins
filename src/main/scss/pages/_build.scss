@@ -167,6 +167,7 @@
   padding-inline: var(--section-padding);
   z-index: 102;
   border-bottom: var(--jenkins-border-width) solid color-mix(in srgb, var(--jenkins-border-color), transparent);
+  background-clip: padding-box;
 
   @media (width <= 1200px) {
     display: flex;
