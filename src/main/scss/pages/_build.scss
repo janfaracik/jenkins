@@ -166,7 +166,7 @@
   );
   padding-inline: var(--section-padding);
   z-index: 102;
-  border-bottom: var(--jenkins-border);
+  border-bottom: var(--jenkins-border-width) solid color-mix(in srgb, var(--jenkins-border-color), transparent);
 
   @media (width <= 1200px) {
     display: flex;
@@ -184,6 +184,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .app-build-tabs {
+    gap: 0;
+
+    .jenkins-button--tertiary {
+      &::after {
+        box-shadow: none;
+      }
+    }
   }
 
   .app-build-bar__controls {
@@ -264,8 +274,7 @@
   padding: 0 var(--section-padding);
 
   .jenkins-app-bar {
-    min-height: 2.5rem;
-    margin-block: 1.0625rem;
+    margin-block: 0.875rem;
   }
 }
 
