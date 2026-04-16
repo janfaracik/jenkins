@@ -15,13 +15,13 @@ $table-cell-border: var(--jenkins-border);
   position: relative;
   width: 100%;
   border-radius: var(--form-input-border-radius);
-  background: var(--card-background);
   border-spacing: 0;
   margin-bottom: var(--section-padding);
   border: $table-border;
   overflow: hidden;
   box-shadow: inset 0 10px 10px color-mix(in srgb, white 1.5%, transparent),
   var(--control-shadow);
+  background: var(--button-background);
 
   td, th {
     border-bottom: $table-cell-border !important;
@@ -35,7 +35,6 @@ $table-cell-border: var(--jenkins-border);
   & > thead {
     & > tr {
       & > th {
-        background: var(--button-background);
         color: var(--table-header-foreground);
         text-align: left;
         padding-top: var(--table-padding);
@@ -135,6 +134,7 @@ $table-cell-border: var(--jenkins-border);
 
   & > tbody {
     & > tr {
+      background: var(--card-background);
       color: var(--table-body-foreground);
 
       & > * {
