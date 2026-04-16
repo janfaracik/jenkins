@@ -36,30 +36,30 @@ THE SOFTWARE.
 
     <t:editableDescription permission="${it.UPDATE}" hideButton="true" />
 
-    <div class="app-build__grid">
-      <j:set var="runTabs" value="${it.runTabs}" />
-
-      <j:forEach var="a" items="${runTabs}">
-        <st:include page="widget.jelly" from="${a}" optional="true" it="${a}" />
-      </j:forEach>
-
-      <j:if test="${runTabs.size() lt 12}">
-        <j:forEach var="i" begin="1" end="${12 - runTabs.size()}">
+    <div style="position: relative;">
+      <div class="app-build__grid" style="position: absolute; top: 0; left: 0; right: 0;">
+        <j:forEach var="i" begin="1" end="20">
           <div class="jenkins-notice" style="margin: 0; background: none" />
         </j:forEach>
-      </j:if>
+      </div>
 
-<!--      <l:card title="Legacy">-->
-<!--        <table>-->
-<!--          <j:forEach var="a" items="${it.allActions}">-->
-<!--            <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />-->
-<!--          </j:forEach>-->
+      <div class="app-build__grid">
+        <j:forEach var="a" items="${it.runTabs}">
+          <st:include page="widget.jelly" from="${a}" optional="true" it="${a}" />
+        </j:forEach>
 
-<!--          <st:include page="summary.jelly" optional="true" />-->
-<!--        </table>-->
+        <!--      <l:card title="Legacy">-->
+        <!--        <table>-->
+        <!--          <j:forEach var="a" items="${it.allActions}">-->
+        <!--            <st:include page="summary.jelly" from="${a}" optional="true" it="${a}" />-->
+        <!--          </j:forEach>-->
 
-<!--        <st:include page="main.jelly" optional="true" />-->
-<!--      </l:card>-->
+        <!--          <st:include page="summary.jelly" optional="true" />-->
+        <!--        </table>-->
+
+        <!--        <st:include page="main.jelly" optional="true" />-->
+        <!--      </l:card>-->
+      </div>
     </div>
   </l:run-subpage>
 </j:jelly>
