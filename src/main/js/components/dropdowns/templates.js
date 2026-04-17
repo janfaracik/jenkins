@@ -254,9 +254,10 @@ function tryLoadScripts(element, opt, context) {
     element.dataset[kebabToCamelCase(key)] =
       opt.event.attributes[key].toString();
   }
-  element.dataset["baseUrl"] = context;
 
-  // todo - refine this
+  element.dataset.baseUrl = context;
+
+  // Dialog URLs should open relative to the context path, not the base URL
   element.dataset.dialogUrl = context + element.dataset.dialogUrl;
 
   loadScriptIfNotLoaded(opt.event.javascriptUrl, element);
