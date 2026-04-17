@@ -40,11 +40,11 @@ import org.kohsuke.accmod.restrictions.Beta;
  * @since TODO
  */
 @Restricted(Beta.class)
-public final class WorkspacesAction implements Action {
+public final class WorkspaceAction implements Action {
 
     @Override
     public String getDisplayName() {
-        return Messages.WorkspacesAction_Title();
+        return Messages.WorkspaceAction_Title();
     }
 
     @Override
@@ -77,7 +77,7 @@ public final class WorkspacesAction implements Action {
                 return Set.of();
             }
 
-            return Set.of(new WorkspacesAction());
+            return Set.of(new WorkspaceAction());
         }
     }
 }
