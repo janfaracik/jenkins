@@ -1,8 +1,8 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
-  <l:card title="${%Artifacts}" expandable="artifact">
+  <l:card title="${it.displayName}" expandable="${it.urlName}">
     <table>
-      <t:artifactList build="${it.object}" caption="${%Build Artifacts}" />
+      <t:artifactList build="${it.object}" />
     </table>
   </l:card>
 </j:jelly>

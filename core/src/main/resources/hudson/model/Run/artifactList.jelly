@@ -25,6 +25,12 @@ THE SOFTWARE.
 
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
+  <st:documentation>
+    <st:attribute name="build">
+      Build object for which the artifacts are displayed.
+    </st:attribute>
+  </st:documentation>
+
   <l:userExperimentalFlag var="newBuildPage" flagClassName="jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag" />
 
   <j:choose>
