@@ -52,7 +52,7 @@
           <x:attribute name="id">root-action-${action.class.simpleName}</x:attribute>
           <x:attribute name="href">${h.getActionUrl(app.url, action)}</x:attribute>
           <j:if test="${interactive}">
-            <x:attribute name="data-tippy-offset">[0, 6]</x:attribute>
+            <x:attribute name="data-tippy-offset">[0, 8]</x:attribute>
           </j:if>
           <j:if test="${!interactive}">
             <x:attribute name="data-html-tooltip" escapeText="false"><j:out value="${tooltip}" /></x:attribute>

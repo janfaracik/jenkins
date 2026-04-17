@@ -6,6 +6,7 @@ const TOOLTIP_BASE = {
   theme: "tooltip",
   animation: "tooltip",
   touch: false,
+  offset: [0, 8],
   popperOptions: {
     modifiers: [
       {

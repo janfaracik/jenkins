@@ -196,7 +196,7 @@ THE SOFTWARE.
                   <x:attribute name="href">${href}</x:attribute>
                 </j:if>
                 <j:if test="${interactive}">
-                  <x:attribute name="data-tippy-offset">[0, 6]</x:attribute>
+                  <x:attribute name="data-tippy-offset">[0, 8]</x:attribute>
                 </j:if>
                 <j:if test="${!interactive}">
                   <x:attribute name="data-html-tooltip" escapeText="false"><j:out value="${tooltip}" /></x:attribute>
