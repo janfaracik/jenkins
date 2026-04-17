@@ -56,6 +56,7 @@
 
     & > div {
       overflow: clip;
+      min-width: 0;
 
       &:first-of-type {
         grid-column: span 1;
@@ -318,4 +319,26 @@
   );
 
   background: var(--bg);
+}
+
+.app-build__artifact-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  padding: 0.25rem 0.5rem;
+  min-height: 0;
+  margin-inline: -0.5rem;
+
+  span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 1lh;
+    margin-left: -0.125rem;
+  }
 }
