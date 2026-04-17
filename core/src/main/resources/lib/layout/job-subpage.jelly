@@ -23,8 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define" xmlns:dd="/lib/layout/dropdowns"
-         xmlns:st="jelly:stapler">
+<j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:d="jelly:define" xmlns:st="jelly:stapler">
   <st:documentation>
     A reusable container for subpages relating to Jobs in Jenkins.
     Renders a tabbed layout for jobs, including build status and actions.
