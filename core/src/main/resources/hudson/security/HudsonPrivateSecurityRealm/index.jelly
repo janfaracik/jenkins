@@ -47,6 +47,7 @@ THE SOFTWARE.
           <th initialSortDir="down">${%Username}</th>
           <th>${%Full name}</th>
           <th class="jenkins-table__cell--tight" data-sort-disable="true" />
+          <th class="jenkins-table__cell--tight" data-sort-disable="true" />
         </tr>
       </thead>
       <tbody>
@@ -68,24 +69,21 @@ THE SOFTWARE.
                 <a href="${user.url}/account" class="jenkins-button jenkins-button--tertiary">
                   <l:icon src="symbol-settings" />
                 </a>
-                <j:choose>
-                  <j:when test="${user.canDelete()}">
-                    <l:confirmationLink href="${user.url}/doDelete"
-                                        class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color"
-                                        post="true"
-                                        title="${%delete.user(user.displayName)}"
-                                        destructive="true"
-                                        okText="${%Delete}">
-                      <l:icon src="symbol-trash" />
-                    </l:confirmationLink>
-                  </j:when>
-                  <j:otherwise>
-                    <button class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color" disabled="true">
-                      <l:icon src="symbol-trash" />
-                    </button>
-                  </j:otherwise>
-                </j:choose>
               </div>
+            </td>
+            <td>
+              <j:if test="${user.canDelete()}">
+                <div class="jenkins-table__cell__button-wrapper">
+                  <l:confirmationLink href="${user.url}/doDelete"
+                                      class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color"
+                                      post="true"
+                                      title="${%delete.user(user.displayName)}"
+                                      okText="${%Delete}"
+                                      destructive="true">
+                    <l:icon src="symbol-trash" />
+                  </l:confirmationLink>
+                </div>
+              </j:if>
             </td>
           </tr>
         </j:forEach>
