@@ -33,7 +33,7 @@ import jenkins.model.Tab;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 
-@Extension
+@Extension(ordinal = Integer.MAX_VALUE - 3)
 public class ArtifactsTabFactory extends TransientActionFactory<Run> {
 
     @Override
