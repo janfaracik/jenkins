@@ -68,11 +68,23 @@ THE SOFTWARE.
                 <a href="${user.url}/account" class="jenkins-button jenkins-button--tertiary">
                   <l:icon src="symbol-settings" />
                 </a>
-                <button type="button"
-                        data-href="${user.url}/"
-                        class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link">
-                  <l:icon src="symbol-menu" />
-                </button>
+                <j:choose>
+                  <j:when test="${user.canDelete()}">
+                    <l:confirmationLink href="${user.url}/doDelete"
+                                        class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color"
+                                        post="true"
+                                        title="${%delete.user(user.displayName)}"
+                                        destructive="true"
+                                        okText="${%Delete}">
+                      <l:icon src="symbol-trash" />
+                    </l:confirmationLink>
+                  </j:when>
+                  <j:otherwise>
+                    <button class="jenkins-button jenkins-button--tertiary jenkins-!-destructive-color" disabled="true">
+                      <l:icon src="symbol-trash" />
+                    </button>
+                  </j:otherwise>
+                </j:choose>
               </div>
             </td>
           </tr>
