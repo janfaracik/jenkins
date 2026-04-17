@@ -8,8 +8,6 @@ import org.kohsuke.stapler.export.ExportedBean;
 /**
  * When clicked, a dialog will pop up for confirmation.
  * e.g. Delete item.
- *
- * @since TODO
  */
 @ExportedBean
 @Restricted(Beta.class)
