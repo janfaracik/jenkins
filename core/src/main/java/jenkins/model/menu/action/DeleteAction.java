@@ -27,10 +27,9 @@ package jenkins.model.menu.action;
 import hudson.Extension;
 import hudson.model.Action;
 import hudson.model.Job;
+import hudson.model.View;
 import java.util.Collection;
 import java.util.Set;
-
-import hudson.model.View;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
@@ -132,7 +131,7 @@ public final class DeleteAction implements Action {
      */
     @Extension(ordinal = 80)
     @Restricted(Beta.class)
-    public class ViewFactory extends TransientActionFactory<View> {
+    public static final class ViewFactory extends TransientActionFactory<View> {
 
         @Override
         public Class<View> type() {
