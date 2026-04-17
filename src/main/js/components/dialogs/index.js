@@ -45,7 +45,7 @@ Dialog.prototype.init = function () {
     `<div class='jenkins-dialog__title'><span></span></div>`,
   );
   this.dialog.appendChild(title);
-  title.querySelector("span").textContent = this.options.title ?? "";
+  title.querySelector("span").innerText = this.options.title;
 
   const content = createElementFromHtml(
     `<div class='jenkins-dialog__contents'/>`,
@@ -375,28 +375,12 @@ function updateWizardTitle(titleText) {
     return;
   }
 
-  const title = getWizardTitleElement();
+  const title = document.querySelector(
+    ".jenkins-dialog .jenkins-dialog__title > span",
+  );
   if (title != null) {
     title.textContent = titleText;
   }
-}
-
-function getWizardDialog() {
-  return document.querySelector("body > .jenkins-dialog");
-}
-
-function getWizardTitleElement(dialog = getWizardDialog()) {
-  return dialog?.querySelector(".jenkins-dialog__title > span");
-}
-
-function getWizardForms(dialogContents) {
-  return Array.from(dialogContents?.children ?? []).filter(
-    (element) => element.tagName === "FORM",
-  );
-}
-
-function getCurrentWizardTitle() {
-  return getWizardTitleElement()?.textContent ?? "";
 }
 
 /** Resolve a relative wizard form action against the current step URL. */
@@ -411,56 +395,6 @@ function resolveWizardFormAction(form, baseUrl) {
   }
 }
 
-function syncBackButtonInDialog() {
-  const dialog = getWizardDialog();
-  const dialogTitle = dialog?.querySelector(".jenkins-dialog__title");
-  const dialogContents = dialog?.querySelector(".jenkins-dialog__contents");
-  const dialogTitleTitle = dialogTitle?.querySelector("span");
-
-  if (dialog == null || dialogTitle == null || dialogContents == null) {
-    return;
-  }
-
-  const forms = getWizardForms(dialogContents);
-  let backButton = dialogTitle.querySelector(".jenkins-dialog__back-button");
-
-  if (forms.length <= 1) {
-    dialogTitleTitle.style.marginLeft = "0";
-    backButton?.remove();
-    return;
-  }
-
-  if (backButton != null) {
-    return;
-  }
-
-  backButton = document.createElement("button");
-  backButton.type = "button";
-  backButton.classList.add("jenkins-button");
-  backButton.classList.add("jenkins-dialog__title__button");
-  backButton.classList.add("jenkins-dialog__back-button");
-  backButton.ariaLabel = "Back";
-  backButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="48" d="M328 112L184 256l144 144"/></svg>`;
-  dialogTitleTitle.style.marginLeft = "2.75rem";
-  dialogTitle.prepend(backButton);
-
-  backButton.addEventListener("click", () => {
-    const wizardForms = getWizardForms(dialogContents);
-    const previousForm = wizardForms.at(-2);
-    const currentForm = wizardForms.at(-1);
-
-    if (currentForm == null || previousForm == null) {
-      return;
-    }
-
-    currentForm.remove();
-    previousForm.classList.remove("jenkins-hidden");
-    updateWizardTitle(previousForm.dataset.dialogTitle ?? "");
-    syncBackButtonInDialog();
-  });
-}
-
-// TODO - Validate this
 function submitWizardForm(form) {
   const jsonInputName = "json";
   let jsonInput = form.elements.namedItem(jsonInputName);
@@ -523,7 +457,7 @@ function renderWizardForm({
   hideExistingForms = false,
 }) {
   const dialogContents = document.querySelector(
-    "body > .jenkins-dialog .jenkins-dialog__contents",
+    ".jenkins-dialog .jenkins-dialog__contents",
   );
   const newDialog = document.createElement("div");
   newDialog.innerHTML = responseText;
@@ -534,25 +468,25 @@ function renderWizardForm({
   }
 
   if (hideExistingForms) {
-    getWizardForms(dialogContents).forEach((existingForm) =>
-      existingForm.classList.add("jenkins-hidden"),
-    );
+    Array.from(dialogContents.children)
+      .filter((element) => element.tagName === "FORM")
+      .forEach((existingForm) => existingForm.classList.add("jenkins-hidden"));
   }
 
   resolveWizardFormAction(form, requestUrl);
-  const effectiveTitle = titleText ?? getCurrentWizardTitle();
-  form.dataset.dialogTitle = effectiveTitle;
-  updateWizardTitle(effectiveTitle);
+  updateWizardTitle(titleText);
   configureWizardForm(form);
 
+  // Recreate script tags while the form is still detached, so each script
+  // executes exactly once, at the moment the form is inserted into the dialog.
+  recreateScripts(form);
+
   if (replaceExistingForm != null) {
-    replaceExistingForm.classList.add("jenkins-hidden");
+    replaceExistingForm.replaceWith(form);
+  } else {
+    dialogContents.appendChild(form);
   }
 
-  dialogContents.appendChild(form);
-  syncBackButtonInDialog();
-
-  recreateScripts(form);
   wireCancelButton(form);
 
   return form;
@@ -584,30 +518,37 @@ function navigateToNextPage(url) {
           window.location.assign(rsp.url);
         }
       });
+    } else {
+      console.error(
+        "Failed to load dialog content, response from API is:",
+        rsp,
+      );
     }
   });
 }
 
 /*
  * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
+ *
  */
 function recreateScripts(form) {
-  const scripts = form.getElementsByTagName("script");
+  const scripts = Array.from(form.getElementsByTagName("script"));
   if (scripts.length === 0) {
     Behaviour.applySubtree(form, true);
     return;
   }
   for (let i = 0; i < scripts.length; i++) {
+    const original = scripts[i];
     const script = document.createElement("script");
-    if (scripts[i].text) {
-      script.text = scripts[i].text;
-    } else {
-      for (let j = 0; j < scripts[i].attributes.length; j++) {
-        if (scripts[i].attributes[j].name in HTMLScriptElement.prototype) {
-          script[scripts[i].attributes[j].name] =
-            scripts[i].attributes[j].value;
-        }
-      }
+
+    for (let j = 0; j < original.attributes.length; j++) {
+      script.setAttribute(
+        original.attributes[j].name,
+        original.attributes[j].value,
+      );
+    }
+    if (original.text) {
+      script.text = original.text;
     }
 
     // only attach the load listener to the last script to avoid multiple calls to Behaviour.applySubtree
@@ -622,7 +563,7 @@ function recreateScripts(form) {
       });
     }
 
-    scripts[i].parentNode.replaceChild(script, scripts[i]);
+    original.parentNode.replaceChild(script, original);
   }
 }
 
