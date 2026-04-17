@@ -41,6 +41,7 @@
 
     & > div {
       overflow: clip;
+      min-width: 0;
 
       &:first-of-type {
         grid-column: span 1;
