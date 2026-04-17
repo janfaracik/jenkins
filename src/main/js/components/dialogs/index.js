@@ -518,6 +518,8 @@ function navigateToNextPage(url) {
           window.location.assign(rsp.url);
         }
       });
+    } else {
+      console.error("Failed to load dialog content, response from API is:", rsp);
     }
   });
 }
