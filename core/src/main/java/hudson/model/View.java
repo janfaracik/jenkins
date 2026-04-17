@@ -29,6 +29,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.DescriptorExtensionList;
@@ -108,6 +109,7 @@ import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
@@ -906,24 +908,37 @@ public abstract class View extends Actionable implements AccessControlled, Descr
         rsp.addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
         rsp.addHeader("Pragma", "no-cache");
         rsp.addHeader("Expires", "0");
+        String resUrl = iconStyle != null && !iconStyle.isBlank() ? req.getContextPath() + Jenkins.RESOURCE_PATH : null;
+        return collectItemCategories(iconStyle, resUrl);
+    }
+
+    @Restricted(NoExternalUse.class)
+    public Categories getNewJobDialogCategories() {
+        getOwner().checkPermission(Item.CREATE);
+
+        StaplerRequest2 currentRequest = Stapler.getCurrentRequest2();
+        String resUrl = currentRequest != null ? currentRequest.getContextPath() + Jenkins.RESOURCE_PATH : null;
+        return collectItemCategories("icon-xlg", resUrl);
+    }
+
+    private Categories collectItemCategories(@CheckForNull String iconStyle, @CheckForNull String resUrl) {
         Categories categories = new Categories();
         int order = 0;
-        String resUrl;
 
-        if (iconStyle != null && !iconStyle.isBlank()) {
-            resUrl = req.getContextPath() + Jenkins.RESOURCE_PATH;
-        } else {
-            resUrl = null;
-        }
         for (TopLevelItemDescriptor descriptor : DescriptorVisibilityFilter.apply(getOwner().getItemGroup(), Items.all2(Jenkins.getAuthentication2(), getOwner().getItemGroup()))) {
             ItemCategory ic = ItemCategory.getCategory(descriptor);
             Map<String, Serializable> metadata = new HashMap<>();
+            String displayName = descriptor.getDisplayName().strip();
+            String description = descriptor.getDescription() == null ? "" : descriptor.getDescription();
 
             // Information about Item.
             metadata.put("class", descriptor.getId());
+            metadata.put("cssClass", descriptor.getId().replace(".", "_"));
             metadata.put("order", ++order);
-            metadata.put("displayName", descriptor.getDisplayName());
-            metadata.put("description", descriptor.getDescription());
+            metadata.put("displayName", displayName);
+            metadata.put("description", description);
+            metadata.put("initialA", getInitialA(displayName));
+            metadata.put("initialB", getInitialB(displayName));
             metadata.put("iconFilePathPattern", descriptor.getIconFilePathPattern());
             String iconClassName = descriptor.getIconClassName();
             if (iconClassName != null && !iconClassName.isBlank()) {
@@ -935,13 +950,10 @@ public abstract class View extends Actionable implements AccessControlled, Descr
                             .withClasses("icon-xlg")
                             .build());
                     metadata.put("iconXml", iconXml);
-                } else {
-                    if (resUrl != null) {
-                        Icon icon = IconSet.icons
-                                .getIconByClassSpec(String.join(" ", iconClassName, iconStyle));
-                        if (icon != null) {
-                            metadata.put("iconQualifiedUrl", icon.getQualifiedUrl(resUrl));
-                        }
+                } else if (iconStyle != null && !iconStyle.isBlank() && resUrl != null) {
+                    Icon icon = IconSet.icons.getIconByClassSpec(String.join(" ", iconClassName, iconStyle));
+                    if (icon != null) {
+                        metadata.put("iconQualifiedUrl", icon.getQualifiedUrl(resUrl));
                     }
                 }
             }
@@ -957,6 +969,23 @@ public abstract class View extends Actionable implements AccessControlled, Descr
             }
         }
         return categories;
+    }
+
+    private static String getInitialA(String displayName) {
+        return displayName.isEmpty() ? "" : displayName.substring(0, 1);
+    }
+
+    private static String getInitialB(String displayName) {
+        if (displayName.length() <= 1) {
+            return "";
+        }
+
+        String[] words = displayName.split("\\s+");
+        if (words.length > 1 && !words[1].isEmpty()) {
+            return words[1].substring(0, 1);
+        }
+
+        return displayName.substring(1, 2);
     }
 
     public void doRssAll(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {

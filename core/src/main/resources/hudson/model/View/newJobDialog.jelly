@@ -28,55 +28,82 @@ THE SOFTWARE.
   <j:getStatic var="permission" className="hudson.model.Item" field="CREATE"/>
 
   <l:ajax>
-    <link rel="stylesheet" href="${resURL}/jsbundles/add-item.css" type="text/css" />
-    <script src="${resURL}/jsbundles/add-item.js" type="text/javascript" defer="true" />
-    <template id="i18n" data-empty-name="${%ItemName.validation.required}" />
+    <form id="add-item-panel" method="post" action="createItem" name="createItem">
+      <link rel="stylesheet" href="${resURL}/jsbundles/add-item.css" type="text/css" />
+      <script src="${resURL}/jsbundles/add-item.js" type="text/javascript" defer="true" />
+      <template id="i18n" data-empty-name="${%ItemName.validation.required}" />
 
-    <div id="add-item-panel" style="display: none;">
-      <l:app-bar title="${%NewJob(it.newPronoun)}" />
-
-      <form method="post" action="createItem" name="createItem" id="createItem">
-        <div class="header">
-          <div class="jenkins-form-item add-item-name">
-            <label for="name" class="jenkins-form-label">${%ItemName.label}</label>
-            <input name="name" class="jenkins-input" id="name" data-valid="false" type="text" tabindex="0" />
-            <div class="validation-error-area" />
-          </div>
+      <div class="header">
+        <div class="jenkins-form-item add-item-name">
+          <label for="name" class="jenkins-form-label">${%ItemName.label}</label>
+          <input name="name" class="jenkins-input" id="name" data-valid="false" type="text" tabindex="0" />
+          <div class="validation-error-area" />
         </div>
+      </div>
 
-        <fieldset class="jenkins-!-display-contents">
-          <div class="jenkins-form-item">
-            <legend class="jenkins-form-label">${%ItemType.label}</legend>
-            <div id="items" class="jenkins-choice-list categories" data-valid="false" />
-
-            <j:if test="${!empty(app.items)}">
-              <div class="jenkins-choice-list jenkins-!-margin-top-2">
-                <div class="jenkins-choice-list__item">
-                  <label id="duplicate-job">
+      <fieldset class="jenkins-!-display-contents">
+        <div class="jenkins-form-item">
+          <legend class="jenkins-form-label">${%ItemType.label}</legend>
+          <div id="items" class="jenkins-choice-list categories" data-valid="false">
+            <j:forEach var="category" items="${it.newJobDialogCategories.items}">
+              <j:forEach var="item" items="${category.items}">
+                <div class="${item['cssClass']} jenkins-choice-list__item">
+                  <label>
                     <div class="jenkins-choice-list__item__icon">
-                      <l:icon src="symbol-duplicate" />
+                      <j:choose>
+                        <j:when test="${!empty(item['iconXml'])}">
+                          <j:out value="${item['iconXml']}" escapeText="false" />
+                        </j:when>
+                        <j:when test="${!empty(item['iconQualifiedUrl'])}">
+                          <img src="${item['iconQualifiedUrl']}" alt="" />
+                        </j:when>
+                        <j:when test="${!empty(item['iconFilePathPattern'])}">
+                          <img src="${rootURL}/${item['iconFilePathPattern'].replace(':size', '48x48')}" alt="" />
+                        </j:when>
+                        <j:otherwise>
+                          <span class="a">${item['initialA']}</span>
+                          <span class="b">${item['initialB']}</span>
+                        </j:otherwise>
+                      </j:choose>
                     </div>
-                    <input type="radio" name="mode" value="copy" />
-                    <div class="jenkins-choice-list__item__label">
-                      ${%CopyOption.label}
+                    <input type="radio" name="mode" value="${item['class']}" />
+                    <span class="jenkins-choice-list__item__label">${item['displayName']}</span>
+                    <div class="jenkins-choice-list__item__description">
+                      <j:out value="${h.xmlUnescape(item['description'])}" escapeText="false" />
                     </div>
-                    <div class="jenkins-choice-list__item__description">${%CopyOption.description}</div>
                   </label>
+                </div>
+              </j:forEach>
+            </j:forEach>
+          </div>
 
-                  <div class="jenkins-choice-list__item__conditional">
-                    <j:set var="descriptor" value="${it.descriptor}" />
-                    <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
+          <j:if test="${!empty(app.items)}">
+            <div class="jenkins-choice-list jenkins-!-margin-top-2">
+              <div class="jenkins-choice-list__item">
+                <label id="duplicate-job">
+                  <div class="jenkins-choice-list__item__icon">
+                    <l:icon src="symbol-duplicate" />
                   </div>
+                  <input type="radio" name="mode" value="copy" />
+                  <div class="jenkins-choice-list__item__label">
+                    ${%CopyOption.label}
+                  </div>
+                  <div class="jenkins-choice-list__item__description">${%CopyOption.description}</div>
+                </label>
+
+                <div class="jenkins-choice-list__item__conditional">
+                  <j:set var="descriptor" value="${it.descriptor}" />
+                  <s:textbox id="from" data-valid="false" name="from" placeholder="${%CopyOption.placeholder}" field="copyNewItemFrom"/>
                 </div>
               </div>
-            </j:if>
-          </div>
-        </fieldset>
+            </div>
+          </j:if>
+        </div>
+      </fieldset>
 
-        <s:bottomButtonBar>
-          <st:include page="newJobButtonBar.jelly"/>
-        </s:bottomButtonBar>
-      </form>
-    </div>
+      <s:bottomButtonBar>
+        <st:include page="newJobButtonBar.jelly"/>
+      </s:bottomButtonBar>
+    </form>
   </l:ajax>
 </j:jelly>
