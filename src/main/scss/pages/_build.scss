@@ -59,7 +59,7 @@
       min-width: 0;
 
       &:first-of-type {
-        grid-column: span 1;
+        grid-column: span 2;
       }
 
       // &:last-of-type {
@@ -86,7 +86,7 @@
     }
   }
 
-  @media (width >= 1600px) {
+  @media (width >= 1500px) {
     grid-template-columns: 1fr 1fr 1fr 1fr;
 
     & > div {
