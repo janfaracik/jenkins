@@ -48,7 +48,7 @@ THE SOFTWARE.
       <j:if test="${!newDashboardPage}">
         <st:include page="tasks-new.jelly" it="${it.owner}" optional="true">
           <!-- made overridable for ViewGroup that doesn't allow modifications -->
-          <l:task href="${rootURL}/${it.viewUrl}newJob" icon="symbol-add" it="${app}" permission="${it.itemCreatePermission}" title="${%NewJob(it.newPronoun)}"/>
+          <l:task data-type="dialog-opener" data-dialog-url="${rootURL}/${it.viewUrl}newJobDialog" icon="symbol-add" it="${app}" permission="${it.itemCreatePermission}" title="${%NewJob(it.newPronoun)}"/>
         </st:include>
       </j:if>
 

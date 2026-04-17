@@ -51,7 +51,7 @@ public class NewItemAction extends TransientActionFactory<View> {
 
             @Override
             public String getUrlName() {
-                return "newJob";
+                return null;
             }
 
             @Override
