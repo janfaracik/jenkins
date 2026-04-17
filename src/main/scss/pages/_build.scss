@@ -348,6 +348,11 @@ body:has(.app-settings-container) {
   min-height: 0;
   margin-inline: -0.5rem;
 
+  span {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
   &__icon {
     display: flex;
     align-items: center;

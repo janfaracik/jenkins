@@ -47,7 +47,7 @@ THE SOFTWARE.
                     <div class="app-build__artifact-item__icon">
                       <l:icon class="icon-document icon-sm" />
                     </div>
-                    ${f.displayPath}
+                    <span class="jenkins-!-margin-right-1">${f.displayPath}</span>
                     <span class="jenkins-!-text-color-secondary">${h.humanReadableByteSize(f.getFileSize())}</span>
                   </a>
                 </j:forEach>
