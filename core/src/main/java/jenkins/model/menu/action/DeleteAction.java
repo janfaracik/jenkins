@@ -27,10 +27,12 @@ package jenkins.model.menu.action;
 import hudson.Extension;
 import hudson.model.Action;
 import hudson.model.Job;
+import hudson.model.Run;
 import hudson.model.View;
 import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
@@ -121,6 +123,37 @@ public final class DeleteAction implements Action {
             }
 
             return Set.of(new DeleteAction(target.getPronoun(), target.getDisplayName()));
+        }
+    }
+
+    /**
+     * Factory that contributes a {@link DeleteAction} to every {@link Run} the current
+     * user has {@link Run#DELETE} permission on when the new run page experimental flag
+     * is enabled.
+     */
+    @Extension(ordinal = 80)
+    @Restricted(Beta.class)
+    public static final class RunFactory extends TransientActionFactory<Run> {
+
+        @Override
+        public Class<Run> type() {
+            return Run.class;
+        }
+
+        @Override
+        public Collection<? extends Action> createFor(Run target) {
+            Boolean newBuildPageEnabled = new NewBuildPageUserExperimentalFlag().getFlagValue();
+
+            // This condition can be removed when the flag has been removed
+            if (!newBuildPageEnabled) {
+                return Set.of();
+            }
+
+            if (!target.hasPermission(Run.DELETE) || target.isKeepLog()) {
+                return Set.of();
+            }
+
+            return Set.of(new DeleteAction("Build", target.getDisplayName()));
         }
     }
 
