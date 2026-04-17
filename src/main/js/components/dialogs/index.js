@@ -519,7 +519,10 @@ function navigateToNextPage(url) {
         }
       });
     } else {
-      console.error("Failed to load dialog content, response from API is:", rsp);
+      console.error(
+        "Failed to load dialog content, response from API is:",
+        rsp,
+      );
     }
   });
 }
