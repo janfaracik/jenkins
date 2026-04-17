@@ -26,6 +26,7 @@ package jenkins.model.job;
 
 import hudson.Extension;
 import hudson.model.Action;
+import hudson.model.Item;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -37,66 +38,87 @@ import jenkins.model.menu.Semantic;
 import jenkins.model.menu.event.DialogEvent;
 import jenkins.model.menu.event.Event;
 import jenkins.model.menu.event.JavaScriptEvent;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
-@Extension
-public class BuildJobAction extends TransientActionFactory<ParameterizedJobMixIn.ParameterizedJob> {
+/**
+ * App bar action that triggers a build for a {@link ParameterizedJobMixIn.ParameterizedJob}.
+ *
+ * <p>For parameterized jobs this opens the parameters dialog; otherwise it posts directly
+ * to {@code build?delay=0sec} using a small client-side script.
+ *
+ * @since TODO
+ */
+@Restricted(Beta.class)
+public final class BuildJobAction implements Action {
 
-    @Override
-    public Class<ParameterizedJobMixIn.ParameterizedJob> type() {
-        return ParameterizedJobMixIn.ParameterizedJob.class;
+    private final ParameterizedJobMixIn.ParameterizedJob target;
+
+    BuildJobAction(ParameterizedJobMixIn.ParameterizedJob target) {
+        this.target = target;
     }
 
     @Override
-    public Collection<? extends Action> createFor(ParameterizedJobMixIn.ParameterizedJob target) {
-        Boolean newJobPageEnabled = new NewJobPageUserExperimentalFlag().getFlagValue();
+    public String getDisplayName() {
+        return target.getBuildNowText();
+    }
 
-        // This condition can be removed when the flag has been removed
-        if (!newJobPageEnabled) {
-            return Set.of();
+    @Override
+    public String getIconFileName() {
+        return "symbol-play";
+    }
+
+    @Override
+    public Group getGroup() {
+        return Group.FIRST_IN_APP_BAR;
+    }
+
+    @Override
+    public String getUrlName() {
+        return "build";
+    }
+
+    @Override
+    public Event getEvent() {
+        if (target.isParameterized()) {
+            return DialogEvent.of("parametersDefinitionProperty/dialog");
         }
 
-        if (!target.isBuildable()) {
-            return Set.of();
+        return JavaScriptEvent.of(
+                Map.of(
+                        "type", "build-now",
+                        "href", "build?delay=0sec",
+                        "buildSuccess", Messages.BuildJobAction_BuildSuccess(),
+                        "buildFailure", Messages.BuildJobAction_BuildFailure()),
+                "jsbundles/pages/project/build.js");
+    }
+
+    @Override
+    public Semantic getSemantic() {
+        return Semantic.BUILD;
+    }
+
+    @Extension(ordinal = 100)
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<ParameterizedJobMixIn.ParameterizedJob> {
+
+        @Override
+        public Class<ParameterizedJobMixIn.ParameterizedJob> type() {
+            return ParameterizedJobMixIn.ParameterizedJob.class;
         }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return target.getBuildNowText();
+        @Override
+        public Collection<? extends Action> createFor(ParameterizedJobMixIn.ParameterizedJob target) {
+            // This condition can be removed when the flag has been removed
+            if (!new NewJobPageUserExperimentalFlag().getFlagValue()) {
+                return Set.of();
             }
 
-            @Override
-            public String getIconFileName() {
-                return "symbol-play";
+            if (!target.isBuildable() || !target.hasPermission(Item.BUILD)) {
+                return Set.of();
             }
 
-            @Override
-            public Group getGroup() {
-                return Group.FIRST_IN_APP_BAR;
-            }
-
-            @Override
-            public String getUrlName() {
-                return "build";
-            }
-
-            @Override
-            public Event getEvent() {
-                if (isParameterized()) {
-                    return DialogEvent.of("parametersDefinitionProperty/dialog");
-                }
-
-                return JavaScriptEvent.of(Map.of("type", "build-now", "href", "build?delay=0sec", "buildSuccess", Messages.BuildJobAction_BuildSuccess(), "buildFailure", Messages.BuildJobAction_BuildFailure()), "jsbundles/pages/project/build.js");
-            }
-
-            @Override
-            public Semantic getSemantic() {
-                return Semantic.BUILD;
-            }
-
-            private boolean isParameterized() {
-                return target.isParameterized();
-            }
-        });
+            return Set.of(new BuildJobAction(target));
+        }
     }
 }

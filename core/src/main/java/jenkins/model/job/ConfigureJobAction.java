@@ -31,41 +31,64 @@ import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.menu.Group;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
-@Extension
-public class ConfigureJobAction extends TransientActionFactory<Job> {
+/**
+ * App bar action that links to the configuration page for a {@link Job}.
+ *
+ * <p>The display name is adjusted depending on whether the user has {@link Job#CONFIGURE}
+ * or only {@link Job#EXTENDED_READ}.
+ *
+ * @since TODO
+ */
+@Restricted(Beta.class)
+public final class ConfigureJobAction implements Action {
 
-    @Override
-    public Class<Job> type() {
-        return Job.class;
+    private final Job<?, ?> target;
+
+    ConfigureJobAction(Job<?, ?> target) {
+        this.target = target;
     }
 
     @Override
-    public Collection<? extends Action> createFor(Job target) {
-        if (!target.hasPermission(Job.CONFIGURE) && !target.hasPermission(Job.EXTENDED_READ)) {
-            return Set.of();
+    public String getDisplayName() {
+        return target.hasPermission(Job.CONFIGURE)
+                ? Messages.ConfigureJobAction_Title()
+                : Messages.ConfigureJobAction_ViewConfiguration();
+    }
+
+    @Override
+    public String getIconFileName() {
+        return "symbol-settings";
+    }
+
+    @Override
+    public Group getGroup() {
+        return Group.IN_APP_BAR;
+    }
+
+    @Override
+    public String getUrlName() {
+        return "configure";
+    }
+
+    @Extension(ordinal = 90)
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<Job> {
+
+        @Override
+        public Class<Job> type() {
+            return Job.class;
         }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return target.hasPermission(Job.CONFIGURE) ? Messages.ConfigureJobAction_Title() : Messages.ConfigureJobAction_ViewConfiguration();
+        @Override
+        public Collection<? extends Action> createFor(Job target) {
+            if (!target.hasPermission(Job.CONFIGURE) && !target.hasPermission(Job.EXTENDED_READ)) {
+                return Set.of();
             }
 
-            @Override
-            public String getIconFileName() {
-                return "symbol-settings";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.IN_APP_BAR;
-            }
-
-            @Override
-            public String getUrlName() {
-                return "configure";
-            }
-        });
+            return Set.of(new ConfigureJobAction(target));
+        }
     }
 }
