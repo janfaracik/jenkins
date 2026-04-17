@@ -2071,6 +2071,69 @@ public class Functions {
     }
 
     /**
+     * If the given href link matches the start of the current page URL, return true.
+     *
+     * Used in {@code task.jelly} to decide if the page should be highlighted.
+     */
+    public boolean hyperlinkMatchesCurrentPage2(String href, String contextPath) {
+        // TODO - not sure what situation this can be null but it can be!
+        if (href == null) {
+            return false;
+        }
+
+        String url = Stapler.getCurrentRequest2().getRequestURI();
+
+        // Refine the URLs
+        if (href.startsWith("/")) {
+            href = href.substring(1);
+        }
+
+        if (!href.endsWith("/")) {
+            href = href + "/";
+        }
+
+        if (url.startsWith("/")) {
+            url = url.substring(1);
+        }
+
+        if (!url.endsWith("/")) {
+            url = url + "/";
+        }
+
+        if (contextPath.startsWith("/")) {
+            contextPath = contextPath.substring(1);
+        }
+
+        if (!contextPath.endsWith("/")) {
+            contextPath = contextPath + "/";
+        }
+
+        // If the URLs are exact, skip any fancy matching
+        if (url.equals(href)) {
+            return true;
+        }
+
+        var trimmedUrl = url.substring(contextPath.length() - 1);
+        if (trimmedUrl.startsWith("/")) {
+            trimmedUrl = trimmedUrl.substring(1);
+        }
+
+        if (href.contains("plugin")) {
+            System.out.println("===");
+            System.out.println("url: " + url);
+            System.out.println("contextPath: " + contextPath);
+            System.out.println("trimmedUrl: " + trimmedUrl);
+            System.out.println("href: " + href);
+            System.out.println("Does trimmed url start with href?");
+            System.out.println(trimmedUrl.startsWith(href));
+            System.out.println("===");
+            System.out.println();
+        }
+
+        return trimmedUrl.startsWith(href);
+    }
+
+    /**
      * If the given {@code Action} is a {@link RootAction#isPrimaryAction() primary} {@code RootAction}, or a parent of the current page, return {@code true}.
      * Used in {@code actions.jelly} to decide if the action should shown in the main header or the hamburger.
      */
