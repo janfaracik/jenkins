@@ -2118,18 +2118,6 @@ public class Functions {
             trimmedUrl = trimmedUrl.substring(1);
         }
 
-        if (href.contains("plugin")) {
-            System.out.println("===");
-            System.out.println("url: " + url);
-            System.out.println("contextPath: " + contextPath);
-            System.out.println("trimmedUrl: " + trimmedUrl);
-            System.out.println("href: " + href);
-            System.out.println("Does trimmed url start with href?");
-            System.out.println(trimmedUrl.startsWith(href));
-            System.out.println("===");
-            System.out.println();
-        }
-
         return trimmedUrl.startsWith(href);
     }
 
