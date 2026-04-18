@@ -235,7 +235,7 @@ var FormChecker = {
   sendRequest: function (url, params) {
     const method = params.method.toLowerCase();
     if (method !== "get") {
-      var idx = url.indexOf("?");
+      const idx = url.indexOf("?");
       params.parameters = url.substring(idx + 1);
       url = url.substring(0, idx);
     }
@@ -672,7 +672,7 @@ function getValidationInteractionEvent(e) {
 
 function registerValidator(e) {
   // Retrieve the validation error area
-  var tr = e
+  const tr = e
     .closest(".jenkins-form-item")
     .querySelector(".validation-error-area");
   if (!tr) {
@@ -686,8 +686,8 @@ function registerValidator(e) {
   e.targetElement = tr;
 
   e.targetUrl = function () {
-    var url = this.getAttribute("checkUrl");
-    var depends = this.getAttribute("checkDependsOn");
+    const url = this.getAttribute("checkUrl");
+    const depends = this.getAttribute("checkDependsOn");
 
     if (depends == null) {
       // legacy behaviour where checkUrl is a JavaScript
@@ -700,7 +700,7 @@ function registerValidator(e) {
         return url; // return plain url as fallback
       }
     } else {
-      var q = qs(this).addThis();
+      const q = qs(this).addThis();
       if (depends.length > 0) {
         depends.split(" ").forEach(
           TryEach(function (n) {
@@ -712,12 +712,12 @@ function registerValidator(e) {
     }
   };
 
-  var method = e.getAttribute("checkMethod") || "post";
-  var checkAfterInteraction =
+  const method = e.getAttribute("checkMethod") || "post";
+  const checkAfterInteraction =
     e.getAttribute("checkAfterInteraction") === "true" ||
     e.getAttribute("checkOnBlur") === "true";
 
-  var performCheck = function () {
+  const performCheck = function () {
     if (this.validationPromise) {
       return this.validationPromise;
     }
@@ -756,7 +756,7 @@ function registerValidator(e) {
   e.performValidation = performCheck;
 
   if (!checkAfterInteraction) {
-    var url = e.targetUrl();
+    const url = e.targetUrl();
     try {
       if (!e.disabled) {
         FormChecker.delayedCheck(url, method, e.targetElement);
@@ -775,13 +775,13 @@ function registerValidator(e) {
     }
   }
 
-  var checker = function () {
+  const checker = function () {
     if (checkAfterInteraction && !this.hasValidatedOnce) {
       return;
     }
     performCheck.call(this);
   };
-  var oldOnchange = e.onchange;
+  const oldOnchange = e.onchange;
   if (typeof oldOnchange == "function") {
     e.onchange = function () {
       checker.call(this);
@@ -815,11 +815,11 @@ function registerValidator(e) {
     });
   }
 
-  var v = e.getAttribute("checkDependsOn");
+  const v = e.getAttribute("checkDependsOn");
   if (v) {
     v.split(" ").forEach(
       TryEach(function (name) {
-        var c = findNearBy(e, name);
+        const c = findNearBy(e, name);
         if (c == null) {
           console.warn("Unable to find nearby " + name);
           return;
@@ -1564,13 +1564,13 @@ function rowvgStartEachRow(recursive, f) {
           return;
         }
 
-        var fields = getSubmitValidationFields(this);
+        const fields = getSubmitValidationFields(this);
         if (fields.length === 0) {
           return;
         }
 
-        var activeElement = this.ownerDocument.activeElement;
-        var fieldsToValidate = fields.filter(
+        const activeElement = this.ownerDocument.activeElement;
+        const fieldsToValidate = fields.filter(
           (field) =>
             field.validationPromise ||
             !field.hasValidatedOnce ||
@@ -1590,7 +1590,7 @@ function rowvgStartEachRow(recursive, f) {
 
         Promise.all(fieldsToValidate.map((field) => field.performValidation()))
           .then(() => {
-            var fieldsWithErrors = fields.filter((field) =>
+            const fieldsWithErrors = fields.filter((field) =>
               validationAreaHasError(field.targetElement),
             );
             if (fieldsWithErrors.length > 0) {
