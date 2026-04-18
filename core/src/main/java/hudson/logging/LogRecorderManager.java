@@ -178,10 +178,6 @@ public class LogRecorderManager extends AbstractModelObject implements ModelObje
 
     @Restricted(NoExternalUse.class)
     public FormValidation doCheckNewName(@QueryParameter String name) {
-        if (Util.fixEmpty(name) == null) {
-            return FormValidation.ok();
-        }
-
         try {
             Jenkins.checkGoodName(name);
         } catch (Failure e) {

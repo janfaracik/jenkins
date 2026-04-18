@@ -82,6 +82,10 @@ THE SOFTWARE.
       If any other value is specified then requests will use POST.
       The historical default was GET and 'post' had to be specified to change that, but this was changed in Jenkins 2.285.
     </st:attribute>
+    <st:attribute name="checkAfterInteraction">
+      If set to true, suppresses the initial @checkUrl request and only starts automatic validation
+      after the user has modified the field. Fields using this are also validated when their form is submitted.
+    </st:attribute>
     <st:attribute name="autoCompleteUrl">
       Url to use for auto-completion
 

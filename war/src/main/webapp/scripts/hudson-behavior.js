@@ -240,14 +240,14 @@ var FormChecker = {
       url = url.substring(0, idx);
     }
 
-    fetch(url, {
+    return fetch(url, {
       method: params.method,
       headers: crumb.wrap({
         "Content-Type": "application/x-www-form-urlencoded",
       }),
       body: method !== "get" ? params.parameters : null,
     }).then((response) => {
-      params.onComplete(response);
+      return params.onComplete(response);
     });
   },
 
@@ -638,6 +638,38 @@ function updateValidationArea(validationArea, content) {
   }
 }
 
+function validationAreaHasError(validationArea) {
+  return validationArea.querySelector(".error") !== null;
+}
+
+function getSubmitValidationFields(form) {
+  return Array.from(
+    form.querySelectorAll(
+      ".validated[checkAfterInteraction='true'], .validated[checkOnBlur='true']",
+    ),
+  ).filter((field) => !field.disabled && typeof field.performValidation === "function");
+}
+
+function markValidationInteraction(event) {
+  event.currentTarget.hasInteracted = true;
+  event.currentTarget.needsValidation = true;
+}
+
+function getValidationInteractionEvent(e) {
+  if (e.tagName === "SELECT") {
+    return "change";
+  }
+
+  if (
+    e.tagName === "INPUT" &&
+    ["checkbox", "radio", "file"].includes(e.type)
+  ) {
+    return "change";
+  }
+
+  return "input";
+}
+
 function registerValidator(e) {
   // Retrieve the validation error area
   var tr = e
@@ -681,35 +713,25 @@ function registerValidator(e) {
   };
 
   var method = e.getAttribute("checkMethod") || "post";
+  var checkAfterInteraction =
+    e.getAttribute("checkAfterInteraction") === "true" ||
+    e.getAttribute("checkOnBlur") === "true";
 
-  var url = e.targetUrl();
-  try {
-    if (!e.disabled) {
-      FormChecker.delayedCheck(url, method, e.targetElement);
+  var performCheck = function () {
+    if (this.validationPromise) {
+      return this.validationPromise;
     }
-    // eslint-disable-next-line no-unused-vars
-  } catch (x) {
-    // this happens if the checkUrl refers to a non-existing element.
-    // don't let this kill off the entire JavaScript
-    console.warn(
-      "Failed to register validation method: " +
-        e.getAttribute("checkUrl") +
-        " : " +
-        e,
-    );
-    return;
-  }
-
-  var checker = function () {
     if (this.disabled) {
-      return;
+      return Promise.resolve(false);
     }
+    this.hasValidatedOnce = true;
+    this.needsValidation = false;
     const validationArea = this.targetElement;
-    FormChecker.sendRequest(this.targetUrl(), {
+    this.validationPromise = FormChecker.sendRequest(this.targetUrl(), {
       method: method,
       onComplete: function (response) {
         // TODO Add i18n support
-        response.text().then((responseText) => {
+        return response.text().then((responseText) => {
           const errorMessage = `<div class="error">An internal error occurred during form field validation (HTTP ${response.status}). Please reload the page and if the problem persists, ask the administrator for help.</div>`;
           updateValidationArea(
             validationArea,
@@ -717,7 +739,47 @@ function registerValidator(e) {
           );
         });
       },
-    });
+    })
+      .catch((error) => {
+        console.warn("Failed to validate form field", error);
+        updateValidationArea(
+          validationArea,
+          `<div class="error">An internal error occurred during form field validation. Please reload the page and if the problem persists, ask the administrator for help.</div>`,
+        );
+      })
+      .then(() => {
+        this.validationPromise = null;
+        return validationAreaHasError(validationArea);
+      });
+    return this.validationPromise;
+  };
+  e.performValidation = performCheck;
+
+  if (!checkAfterInteraction) {
+    var url = e.targetUrl();
+    try {
+      if (!e.disabled) {
+        FormChecker.delayedCheck(url, method, e.targetElement);
+      }
+      // eslint-disable-next-line no-unused-vars
+    } catch (x) {
+      // this happens if the checkUrl refers to a non-existing element.
+      // don't let this kill off the entire JavaScript
+      console.warn(
+        "Failed to register validation method: " +
+          e.getAttribute("checkUrl") +
+          " : " +
+          e,
+      );
+      return;
+    }
+  }
+
+  var checker = function () {
+    if (checkAfterInteraction && !this.hasValidatedOnce) {
+      return;
+    }
+    performCheck.call(this);
   };
   var oldOnchange = e.onchange;
   if (typeof oldOnchange == "function") {
@@ -727,6 +789,30 @@ function registerValidator(e) {
     };
   } else {
     e.onchange = checker;
+  }
+
+  if (checkAfterInteraction) {
+    e.addEventListener(getValidationInteractionEvent(e), markValidationInteraction);
+    e.addEventListener("blur", function () {
+      if (
+        this.disabled ||
+        !this.hasInteracted ||
+        !this.needsValidation ||
+        this.validationPromise
+      ) {
+        return;
+      }
+      setTimeout(() => {
+        if (
+          !this.disabled &&
+          this.hasInteracted &&
+          this.needsValidation &&
+          !this.validationPromise
+        ) {
+          performCheck.call(this);
+        }
+      });
+    });
   }
 
   var v = e.getAttribute("checkDependsOn");
@@ -1470,6 +1556,75 @@ function rowvgStartEachRow(recursive, f) {
   // structured form submission
   Behaviour.specify("FORM", "form", ++p, function (form) {
     crumb.appendToForm(form);
+    form.addEventListener(
+      "submit",
+      function (event) {
+        if (this.dataset.validationResubmitting === "true") {
+          delete this.dataset.validationResubmitting;
+          return;
+        }
+
+        var fields = getSubmitValidationFields(this);
+        if (fields.length === 0) {
+          return;
+        }
+
+        var activeElement = this.ownerDocument.activeElement;
+        var fieldsToValidate = fields.filter(
+          (field) =>
+            field.validationPromise ||
+            !field.hasValidatedOnce ||
+            field.needsValidation ||
+            field === activeElement,
+        );
+
+        if (
+          fieldsToValidate.length === 0 &&
+          !fields.some((field) => validationAreaHasError(field.targetElement))
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+
+        Promise.all(fieldsToValidate.map((field) => field.performValidation()))
+          .then(() => {
+            var fieldsWithErrors = fields.filter((field) =>
+              validationAreaHasError(field.targetElement),
+            );
+            if (fieldsWithErrors.length > 0) {
+              fieldsWithErrors[0].focus();
+              return;
+            }
+
+            this.dataset.validationResubmitting = "true";
+            if (typeof this.requestSubmit === "function") {
+              if (event.submitter != null && event.submitter.form === this) {
+                this.requestSubmit(event.submitter);
+              } else {
+                this.requestSubmit();
+              }
+              return;
+            }
+
+            if (
+              event.submitter != null &&
+              typeof event.submitter.click === "function"
+            ) {
+              event.submitter.click();
+              return;
+            }
+
+            if (typeof this.onsubmit == "function" && this.onsubmit() === false) {
+              delete this.dataset.validationResubmitting;
+              return;
+            }
+            this.submit();
+          });
+      },
+      true,
+    );
     if (form.classList.contains("no-json")) {
       return;
     }
