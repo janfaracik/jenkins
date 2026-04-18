@@ -487,9 +487,20 @@ function renderWizardForm({
     dialogContents.appendChild(form);
   }
 
+  focusAutofocusField(form);
   wireCancelButton(form);
 
   return form;
+}
+
+function focusAutofocusField(form) {
+  const autofocusField = form.querySelector(
+    "input[autofocus]:not([disabled]), textarea[autofocus]:not([disabled]), select[autofocus]:not([disabled])",
+  );
+
+  if (autofocusField != null) {
+    autofocusField.focus();
+  }
 }
 
 function wireCancelButton(form) {
