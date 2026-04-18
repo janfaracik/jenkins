@@ -235,7 +235,7 @@ var FormChecker = {
   sendRequest: function (url, params) {
     const method = params.method.toLowerCase();
     if (method !== "get") {
-      const idx = url.indexOf("?");
+      var idx = url.indexOf("?");
       params.parameters = url.substring(idx + 1);
       url = url.substring(0, idx);
     }
@@ -672,7 +672,7 @@ function getValidationInteractionEvent(e) {
 
 function registerValidator(e) {
   // Retrieve the validation error area
-  const tr = e
+  var tr = e
     .closest(".jenkins-form-item")
     .querySelector(".validation-error-area");
   if (!tr) {
@@ -686,8 +686,8 @@ function registerValidator(e) {
   e.targetElement = tr;
 
   e.targetUrl = function () {
-    const url = this.getAttribute("checkUrl");
-    const depends = this.getAttribute("checkDependsOn");
+    var url = this.getAttribute("checkUrl");
+    var depends = this.getAttribute("checkDependsOn");
 
     if (depends == null) {
       // legacy behaviour where checkUrl is a JavaScript
@@ -700,7 +700,7 @@ function registerValidator(e) {
         return url; // return plain url as fallback
       }
     } else {
-      const q = qs(this).addThis();
+      var q = qs(this).addThis();
       if (depends.length > 0) {
         depends.split(" ").forEach(
           TryEach(function (n) {
@@ -712,7 +712,7 @@ function registerValidator(e) {
     }
   };
 
-  const method = e.getAttribute("checkMethod") || "post";
+  var method = e.getAttribute("checkMethod") || "post";
   const checkAfterInteraction =
     e.getAttribute("checkAfterInteraction") === "true" ||
     e.getAttribute("checkOnBlur") === "true";
@@ -756,7 +756,7 @@ function registerValidator(e) {
   e.performValidation = performCheck;
 
   if (!checkAfterInteraction) {
-    const url = e.targetUrl();
+    var url = e.targetUrl();
     try {
       if (!e.disabled) {
         FormChecker.delayedCheck(url, method, e.targetElement);
@@ -775,13 +775,13 @@ function registerValidator(e) {
     }
   }
 
-  const checker = function () {
+  var checker = function () {
     if (checkAfterInteraction && !this.hasValidatedOnce) {
       return;
     }
     performCheck.call(this);
   };
-  const oldOnchange = e.onchange;
+  var oldOnchange = e.onchange;
   if (typeof oldOnchange == "function") {
     e.onchange = function () {
       checker.call(this);
@@ -815,11 +815,11 @@ function registerValidator(e) {
     });
   }
 
-  const v = e.getAttribute("checkDependsOn");
+  var v = e.getAttribute("checkDependsOn");
   if (v) {
     v.split(" ").forEach(
       TryEach(function (name) {
-        const c = findNearBy(e, name);
+        var c = findNearBy(e, name);
         if (c == null) {
           console.warn("Unable to find nearby " + name);
           return;
