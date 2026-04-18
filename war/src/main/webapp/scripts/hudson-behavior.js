@@ -644,10 +644,10 @@ function validationAreaHasError(validationArea) {
 
 function getSubmitValidationFields(form) {
   return Array.from(
-    form.querySelectorAll(
-      ".validated[checkAfterInteraction='true'], .validated[checkOnBlur='true']",
-    ),
-  ).filter((field) => !field.disabled && typeof field.performValidation === "function");
+    form.querySelectorAll(".validated[checkAfterInteraction='true']"),
+  ).filter(
+    (field) => !field.disabled && typeof field.performValidation === "function",
+  );
 }
 
 function markValidationInteraction(event) {
@@ -656,14 +656,12 @@ function markValidationInteraction(event) {
 }
 
 function getValidationInteractionEvent(e) {
+  // Text fields change on input, choice controls on change
   if (e.tagName === "SELECT") {
     return "change";
   }
 
-  if (
-    e.tagName === "INPUT" &&
-    ["checkbox", "radio", "file"].includes(e.type)
-  ) {
+  if (e.tagName === "INPUT" && ["checkbox", "radio", "file"].includes(e.type)) {
     return "change";
   }
 
@@ -714,10 +712,10 @@ function registerValidator(e) {
 
   var method = e.getAttribute("checkMethod") || "post";
   const checkAfterInteraction =
-    e.getAttribute("checkAfterInteraction") === "true" ||
-    e.getAttribute("checkOnBlur") === "true";
+    e.getAttribute("checkAfterInteraction") === "true";
 
   const performCheck = function () {
+    // Share one request if blur, change, and submit all hit at once
     if (this.validationPromise) {
       return this.validationPromise;
     }
@@ -792,8 +790,12 @@ function registerValidator(e) {
   }
 
   if (checkAfterInteraction) {
-    e.addEventListener(getValidationInteractionEvent(e), markValidationInteraction);
+    e.addEventListener(
+      getValidationInteractionEvent(e),
+      markValidationInteraction,
+    );
     e.addEventListener("blur", function () {
+      // Only validate after an actual edit
       if (
         this.disabled ||
         !this.hasInteracted ||
@@ -1559,6 +1561,8 @@ function rowvgStartEachRow(recursive, f) {
     form.addEventListener(
       "submit",
       function (event) {
+        // We resubmit after async validation passes
+        // Let that next submit through
         if (this.dataset.validationResubmitting === "true") {
           delete this.dataset.validationResubmitting;
           return;
@@ -1588,40 +1592,42 @@ function rowvgStartEachRow(recursive, f) {
         event.preventDefault();
         event.stopImmediatePropagation();
 
-        Promise.all(fieldsToValidate.map((field) => field.performValidation()))
-          .then(() => {
-            const fieldsWithErrors = fields.filter((field) =>
-              validationAreaHasError(field.targetElement),
-            );
-            if (fieldsWithErrors.length > 0) {
-              fieldsWithErrors[0].focus();
-              return;
-            }
+        Promise.all(
+          fieldsToValidate.map((field) => field.performValidation()),
+        ).then(() => {
+          const fieldsWithErrors = fields.filter((field) =>
+            validationAreaHasError(field.targetElement),
+          );
+          if (fieldsWithErrors.length > 0) {
+            fieldsWithErrors[0].focus();
+            return;
+          }
 
-            this.dataset.validationResubmitting = "true";
-            if (typeof this.requestSubmit === "function") {
-              if (event.submitter != null && event.submitter.form === this) {
-                this.requestSubmit(event.submitter);
-              } else {
-                this.requestSubmit();
-              }
-              return;
+          // Mark the next submit as allowed
+          this.dataset.validationResubmitting = "true";
+          if (typeof this.requestSubmit === "function") {
+            if (event.submitter != null && event.submitter.form === this) {
+              this.requestSubmit(event.submitter);
+            } else {
+              this.requestSubmit();
             }
+            return;
+          }
 
-            if (
-              event.submitter != null &&
-              typeof event.submitter.click === "function"
-            ) {
-              event.submitter.click();
-              return;
-            }
+          if (
+            event.submitter != null &&
+            typeof event.submitter.click === "function"
+          ) {
+            event.submitter.click();
+            return;
+          }
 
-            if (typeof this.onsubmit == "function" && this.onsubmit() === false) {
-              delete this.dataset.validationResubmitting;
-              return;
-            }
-            this.submit();
-          });
+          if (typeof this.onsubmit == "function" && this.onsubmit() === false) {
+            delete this.dataset.validationResubmitting;
+            return;
+          }
+          this.submit();
+        });
       },
       true,
     );
