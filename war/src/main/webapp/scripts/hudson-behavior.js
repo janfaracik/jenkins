@@ -643,6 +643,7 @@ function validationAreaHasError(validationArea) {
 }
 
 function getSubmitValidationFields(form) {
+  // These fields defer automatic checks, so submit needs to catch them too
   return Array.from(
     form.querySelectorAll(".validated[checkAfterInteraction='true']"),
   ).filter(
@@ -651,21 +652,10 @@ function getSubmitValidationFields(form) {
 }
 
 function markValidationInteraction(event) {
+  // hasInteracted gates the first automatic check
+  // needsValidation means the value changed since the last check
   event.currentTarget.hasInteracted = true;
   event.currentTarget.needsValidation = true;
-}
-
-function getValidationInteractionEvent(e) {
-  // Text fields change on input, choice controls on change
-  if (e.tagName === "SELECT") {
-    return "change";
-  }
-
-  if (e.tagName === "INPUT" && ["checkbox", "radio", "file"].includes(e.type)) {
-    return "change";
-  }
-
-  return "input";
 }
 
 function registerValidator(e) {
@@ -722,6 +712,7 @@ function registerValidator(e) {
     if (this.disabled) {
       return Promise.resolve(false);
     }
+    // After the first real check, normal change handling can keep revalidating
     this.hasValidatedOnce = true;
     this.needsValidation = false;
     const validationArea = this.targetElement;
@@ -774,6 +765,7 @@ function registerValidator(e) {
   }
 
   var checker = function () {
+    // Delayed fields ignore change until blur or submit triggers the first check
     if (checkAfterInteraction && !this.hasValidatedOnce) {
       return;
     }
@@ -790,10 +782,7 @@ function registerValidator(e) {
   }
 
   if (checkAfterInteraction) {
-    e.addEventListener(
-      getValidationInteractionEvent(e),
-      markValidationInteraction,
-    );
+    e.addEventListener("input", markValidationInteraction);
     e.addEventListener("blur", function () {
       // Only validate after an actual edit
       if (
@@ -804,6 +793,7 @@ function registerValidator(e) {
       ) {
         return;
       }
+      // Let blur finish first so focus and submit transitions settle
       setTimeout(() => {
         if (
           !this.disabled &&
@@ -1574,6 +1564,7 @@ function rowvgStartEachRow(recursive, f) {
         }
 
         const activeElement = this.ownerDocument.activeElement;
+        // Submit covers fields already in flight, never checked, or changed since the last check
         const fieldsToValidate = fields.filter(
           (field) =>
             field.validationPromise ||
