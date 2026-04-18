@@ -27,12 +27,12 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-<l:settings-subpage permission="${app.ADMINISTER}" title="${%Configure log recorder}" includeBreadcrumb="true" header="${null}">
-  <l:app-bar title="${%Configure log recorder}">
-    <t:help href="https://www.jenkins.io/redirect/log-recorders" tooltip="${%Additional information on log levels}" />
-  </l:app-bar>
+  <l:settings-subpage permission="${app.ADMINISTER}" title="${%Configure log recorder}" includeBreadcrumb="true" header="${null}">
+    <l:app-bar title="${%Configure log recorder}">
+      <t:help href="https://www.jenkins.io/redirect/log-recorders" tooltip="${%Additional information on log levels}" />
+    </l:app-bar>
 
-  <f:form method="post" name="config" action="configSubmit">
+    <f:form method="post" name="config" action="configSubmit">
       <div class="jenkins-alert jenkins-alert-info jenkins-form-item">
         ${%fine_warning}
       </div>
@@ -63,5 +63,5 @@ THE SOFTWARE.
       </f:entry>
       <f:saveApplyBar/>
     </f:form>
-</l:settings-subpage>
+  </l:settings-subpage>
 </j:jelly>
