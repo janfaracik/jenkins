@@ -7,41 +7,64 @@ import java.util.Collection;
 import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.menu.Group;
+import jenkins.model.menu.event.DialogEvent;
+import jenkins.model.menu.event.Event;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 
-@Extension
-public class EditRunAction extends TransientActionFactory<Run> {
+@Restricted(Beta.class)
+public final class EditRunAction implements Action {
 
-    @Override
-    public Class<Run> type() {
-        return Run.class;
+    private final Run<?, ?> target;
+
+    // for Jelly
+    @Restricted(NoExternalUse.class)
+    public EditRunAction(Run<?, ?> target) {
+        this.target = target;
     }
 
     @Override
-    public Collection<? extends Action> createFor(Run target) {
-        if (!target.hasPermission(Run.UPDATE)) {
-            return Set.of();
+    public String getDisplayName() {
+        return target.hasPermission(Run.UPDATE) ? Messages.EditRunAction_DisplayName_Update() : Messages.EditRunAction_DisplayName_View();
+    }
+
+    @Override
+    public String getIconFileName() {
+        return "symbol-edit";
+    }
+
+    @Override
+    public Group getGroup() {
+        return Group.FIRST_IN_MENU;
+    }
+
+    @Override
+    public String getUrlName() {
+        return "configure";
+    }
+
+    @Override
+    public Event getEvent() {
+        return DialogEvent.of("configureDialog");
+    }
+
+    @Extension(ordinal = 90)
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<Run> {
+
+        @Override
+        public Class<Run> type() {
+            return Run.class;
         }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return target.hasPermission(Run.UPDATE) ? Messages.EditRunAction_DisplayName_Update() : Messages.EditRunAction_DisplayName_View();
+        @Override
+        public Collection<? extends Action> createFor(Run target) {
+            if (!target.hasPermission(Run.UPDATE)) {
+                return Set.of();
             }
 
-            @Override
-            public String getIconFileName() {
-                return "symbol-edit";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.FIRST_IN_MENU;
-            }
-
-            @Override
-            public String getUrlName() {
-                return "configure";
-            }
-        });
+            return Set.of(new EditRunAction(target));
+        }
     }
 }
