@@ -15,17 +15,11 @@
 
 .app-sign-in-register__branding {
   position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
+  top: .375rem;
+  bottom: .375rem;
+  left: .375rem;
   width: 40vw;
-  border-radius: 0;
-
-  &::after {
-    border-top: none;
-    border-left: none;
-    border-bottom: none;
-  }
+  border-radius: var(--form-input-border-radius);
 
   @media (width < 992px) {
     display: none;
