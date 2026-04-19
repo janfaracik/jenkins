@@ -23,19 +23,19 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form">
-  <j:new var="action" className="jenkins.model.run.EditRunAction">
-    <j:arg value="${it}" />
-  </j:new>
-
-  <st:setHeader name="X-Dialog-Title" value="${action.displayName}" />
-
-  <l:ajax>
-    <f:form method="post" action="configSubmit" name="config">
-      <st:include page="configure-entries.jelly" />
-      <f:bottomButtonBar>
-        <f:submit value="${%Save}" />
-      </f:bottomButtonBar>
-    </f:form>
-  </l:ajax>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+  <j:set var="readOnlyMode" value="${!h.hasPermission(it, it.UPDATE)}" />
+  <f:entry title="${%DisplayName}" description="${%displayName.description}">
+    <f:textbox name="displayName"
+               value="${it.hasCustomDisplayName() ? it.displayName : ''}"
+               placeholder="#${it.number}"
+               autofocus="${true}" />
+  </f:entry>
+  <f:entry title="${%Description}" description="${%description.description}">
+    <f:textarea name="description"
+                value="${it.description}"
+                codemirror-mode="${app.markupFormatter.codeMirrorMode}"
+                codemirror-config="${app.markupFormatter.codeMirrorConfig}"
+                previewEndpoint="/markupFormatter/previewDescription"/>
+  </f:entry>
 </j:jelly>
