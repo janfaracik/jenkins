@@ -7,21 +7,27 @@ $card-padding: 1rem;
   border: 1px solid transparent !important;
 }
 
-//.pgv-stages-graph__controls {
-//  background: transparent !important;
-//}
+.pgv-stages-graph__controls {
+  background: transparent !important;
+}
+
+html[data-theme="none"], html[data-theme="catppuccin-latte"], html[data-theme="solarized"] {
+  .jenkins-card {
+    background: var(--card-background);
+    box-shadow: var(--control-shadow);
+  }
+}
 
 .jenkins-card {
   display: flex;
   flex-direction: column;
   position: relative;
   border-radius: var(--form-input-border-radius);
-  background: var(--card-background);
-  box-shadow: var(--control-shadow);
 
-  //background: color-mix(in srgb, var(--white), transparent 98.5%);
-  //box-shadow: inset 0 10px 10px color-mix(in srgb, white 0.5%, transparent),
-  //var(--control-shadow);
+
+  background: color-mix(in srgb, var(--text-color-secondary), var(--background) 95%);
+  box-shadow: inset 0 10px 10px color-mix(in srgb, white 0.5%, transparent),
+  var(--control-shadow);
 
   &__title {
     display: flex;
