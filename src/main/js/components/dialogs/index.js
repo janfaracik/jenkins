@@ -391,7 +391,10 @@ function resolveWizardFormAction(form, baseUrl) {
     !formAction.startsWith("/") &&
     !formAction.startsWith("http")
   ) {
-    form.action = new URL(formAction, baseUrl).toString();
+    // This might be flaky in the future
+    // Couldn't use new URL(...) as HTMLUnit didn't like it
+    form.action =
+      baseUrl.substring(0, baseUrl.lastIndexOf("/") + 1) + formAction;
   }
 }
 
