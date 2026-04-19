@@ -38,15 +38,5 @@ THE SOFTWARE.
     <j:forEach var="w" items="${it.widgets}">
       <st:include it="${w}" page="index.jelly" />
     </j:forEach>
-
-    <l:card title="${%Legacy}">
-      <div>
-        <st:include page="jobpropertysummaries.jelly" />
-
-        <st:include page="main.jelly" />
-
-        <st:include page="permalinks.jelly" />
-      </div>
-    </l:card>
   </l:job-subpage>
 </j:jelly>
