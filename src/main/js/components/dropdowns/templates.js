@@ -144,6 +144,7 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
   const clazz = [
     type,
     itemOptions.clazz,
+    (itemOptions.compact ? "jenkins-button--tertiary" : null),
     itemOptions.semantic
       ? " jenkins-!-" + itemOptions.semantic.toLowerCase() + "-color"
       : null,
@@ -200,6 +201,10 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
 
   const url = tag === "a" ? context + xmlEscape(itemOptions.event.url) : null;
 
+  if (itemOptions.compact) {
+    itemOptions.tooltip = label;
+  }
+
   const item = createElementFromHtml(`
       <${tag}
         ${optionalVals({
@@ -209,7 +214,7 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
           "data-html-tooltip": itemOptions.tooltip,
         })}>
           ${icon(itemOptions)}
-          ${label}
+          ${itemOptions.compact ? '' : label}
           ${badge(itemOptions)}
           ${
             itemOptions.event &&

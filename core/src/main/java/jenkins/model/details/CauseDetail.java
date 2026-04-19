@@ -26,4 +26,9 @@ public class CauseDetail extends Detail {
         CauseAction causeAction = getObject().getAction(CauseAction.class);
         return causeAction.getCauseCounts();
     }
+
+    @Override
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL_AND_SNIPPET;
+    }
 }

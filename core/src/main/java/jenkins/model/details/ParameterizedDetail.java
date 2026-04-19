@@ -24,4 +24,9 @@ public class ParameterizedDetail extends Detail {
     public @Nullable String getDisplayName() {
         return action.getDisplayName();
     }
+
+    @Override
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL_AND_SNIPPET;
+    }
 }

@@ -65,4 +65,17 @@ public abstract class Detail implements ModelObject, IconSpec {
     public int getOrder() {
         return 0;
     }
+
+    /**
+     * @return whether this detail should appear in model summaries.
+     */
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL;
+    }
+
+    public enum DetailVisibility {
+        FULL,
+        SNIPPET,
+        FULL_AND_SNIPPET
+    }
 }

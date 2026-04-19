@@ -1,5 +1,4 @@
 import debounce from "lodash/debounce";
-import behaviorShim from "@/util/behavior-shim";
 import BehaviorShim from "@/util/behavior-shim";
 
 BehaviorShim.specify(
@@ -13,9 +12,10 @@ BehaviorShim.specify(
     const ajaxUrl = buildHistoryPage.getAttribute("page-ajax");
     const card = document.querySelector("#jenkins-builds");
     const contents = card.querySelector("#jenkins-build-history");
-    const container = card.querySelector(".app-builds-container");
+    const container = card.querySelector(".app-temp-list");
     const loadingBuilds = card.querySelector("#loading-builds");
     const noBuilds = card.querySelector("#no-builds");
+    const noBuildsYet = document.querySelector("#no-builds-yet");
 
     // Pagination controls
     const paginationControls = document.querySelector("#controls");
@@ -65,7 +65,12 @@ BehaviorShim.specify(
             // Show the 'No builds' text if there are no builds
             if (responseText.trim() === "") {
               contents.innerHTML = "";
-              noBuilds.style.display = "block";
+              if (params.search) {
+                noBuilds.style.display = "block";
+              } else {
+                noBuildsYet.classList.remove("jenkins-hidden");
+                card.classList.add("jenkins-hidden");
+              }
               loadingBuilds.style.display = "none";
               updateCardControls({
                 pageHasUp: false,
@@ -78,9 +83,14 @@ BehaviorShim.specify(
 
             // Show the refreshed builds list
             contents.innerHTML = responseText;
-            noBuilds.style.display = "none";
+            if (params.search) {
+              noBuilds.style.display = "hidden";
+            } else {
+              noBuildsYet.classList.add("jenkins-hidden");
+              card.classList.remove("jenkins-hidden");
+            }
             loadingBuilds.style.display = "none";
-            behaviorShim.applySubtree(contents);
+            BehaviorShim.applySubtree(contents);
 
             // Show the card controls
             const div = document.createElement("div");

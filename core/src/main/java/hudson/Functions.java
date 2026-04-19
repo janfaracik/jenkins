@@ -2736,7 +2736,7 @@ public class Functions {
      * Returns a grouped list of Detail objects for the given Actionable object
      */
     @Restricted(NoExternalUse.class)
-    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object) {
+    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object, boolean isShorthand) {
         ExtensionList<DetailGroup> groupsExtensionList = ExtensionList.lookup(DetailGroup.class);
         List<ExtensionComponent<DetailGroup>> components = groupsExtensionList.getComponents();
         Map<String, Double> detailGroupOrdinal = components.stream()
@@ -2745,10 +2745,27 @@ public class Functions {
                         ExtensionComponent::ordinal
                 ));
 
-        Map<DetailGroup, List<Detail>> result = new TreeMap<>(Comparator.comparingDouble(d -> detailGroupOrdinal.get(d.getClass().getName())));
+        Map<DetailGroup, List<Detail>> result = new TreeMap<>(
+                Comparator.comparingDouble(d -> detailGroupOrdinal.get(d.getClass().getName()))
+        );
+
         for (DetailFactory taf : DetailFactory.factoriesFor(object.getClass())) {
             List<Detail> details = taf.createFor(object);
-            details.forEach(e -> result.computeIfAbsent(e.getGroup(), k -> new ArrayList<>()).add(e));
+            details = details.stream()
+                    .filter(detail -> {
+                        Detail.DetailVisibility visibility = detail.getShorthand();
+
+                        return switch (visibility) {
+                            case FULL -> !isShorthand;
+                            case SNIPPET -> isShorthand;
+                            case FULL_AND_SNIPPET -> true;
+                        };
+                    })
+                    .toList();
+
+            details.forEach(detail ->
+                    result.computeIfAbsent(detail.getGroup(), k -> new ArrayList<>()).add(detail)
+            );
         }
 
         for (Map.Entry<DetailGroup, List<Detail>> entry : result.entrySet()) {
