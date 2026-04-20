@@ -54,6 +54,7 @@
 
   &::after {
     border: var(--jenkins-border--subtle);
+    z-index: 1;
   }
 
   .app-branding__conic {
