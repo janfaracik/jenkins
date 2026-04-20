@@ -184,7 +184,7 @@
   backdrop-filter: blur(15px);
   background-color: color-mix(
           in sRGB,
-          transparent 20%,
+          transparent 25%,
           var(--bg)
   );
   padding-inline: var(--section-padding);
@@ -199,7 +199,7 @@
     animation-fill-mode: both;
     animation-timing-function: linear;
     animation-timeline: scroll(nearest block);
-    animation-range: 0 calc(var(--header-height) + var(--section-padding));
+    animation-range: 0 var(--header-height);
   }
 
   @media (width <= 1200px) {
