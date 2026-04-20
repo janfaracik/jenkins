@@ -55,6 +55,7 @@
   &::after {
     border: var(--jenkins-border);
     box-shadow: var(--control-shadow);
+    z-index: 1;
   }
 
   .app-branding__conic {
