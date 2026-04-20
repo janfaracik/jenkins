@@ -158,8 +158,8 @@ public final class DeleteAction implements Action {
     }
 
     /**
-     * Factory that contributes a {@link DeleteAction} to every {@link View} the current
-     * user has {@link Job#DELETE} permission on when the new view page experimental flag
+     * Factory that contributes a {@link DeleteAction} to every deletable {@link View} the current
+     * user has {@link View#DELETE} permission on when the new view page experimental flag
      * is enabled.
      */
     @Extension(ordinal = 80)
