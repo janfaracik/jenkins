@@ -12,6 +12,11 @@ import jenkins.model.menu.Group;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.Beta;
 
+/**
+ * App bar action that links to the build history page for a {@link View}.
+ *
+ * @since TODO
+ */
 @Restricted(Beta.class)
 public final class BuildHistoryAction implements Action {
 

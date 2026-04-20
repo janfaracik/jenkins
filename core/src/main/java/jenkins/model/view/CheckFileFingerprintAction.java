@@ -12,6 +12,11 @@ import jenkins.model.menu.Group;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.Beta;
 
+/**
+ * App bar action that links to the file fingerprint lookup for Jenkins.
+ *
+ * @since TODO
+ */
 @Restricted(Beta.class)
 public final class CheckFileFingerprintAction implements Action {
 

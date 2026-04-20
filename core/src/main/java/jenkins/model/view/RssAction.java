@@ -14,6 +14,14 @@ import jenkins.model.menu.event.Event;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.Beta;
 
+/**
+ * App bar action that exposes RSS feeds for a {@link View}.
+ *
+ * <p>This action opens a dropdown with links to the all builds, latest builds,
+ * and failed builds feeds.
+ *
+ * @since TODO
+ */
 @Restricted(Beta.class)
 public final class RssAction implements Action {
 
