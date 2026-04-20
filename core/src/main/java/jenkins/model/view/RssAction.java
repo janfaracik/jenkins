@@ -11,94 +11,101 @@ import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.Event;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
-@Extension
-public class RssAction extends TransientActionFactory<View> {
+@Restricted(Beta.class)
+public final class RssAction implements Action {
 
     @Override
-    public Class<View> type() {
-        return View.class;
+    public String getDisplayName() {
+        return Messages.RssAction_DisplayName();
     }
 
     @Override
-    public Collection<? extends Action> createFor(View target) {
-        Boolean newDashboardPageEnabled = new NewDashboardPageUserExperimentalFlag().getFlagValue();
+    public String getIconFileName() {
+        return "symbol-rss";
+    }
 
-        // This condition can be removed when the flag has been removed
-        if (!newDashboardPageEnabled) {
-            return Set.of();
-        }
+    @Override
+    public Group getGroup() {
+        return Group.of(Integer.MAX_VALUE - 1);
+    }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return Messages.RssAction_DisplayName();
-            }
+    @Override
+    public String getUrlName() {
+        return "";
+    }
 
+    @Override
+    public Event getEvent() {
+        return DropdownEvent.of(List.of(new Action() {
             @Override
             public String getIconFileName() {
-                return "symbol-rss";
+                return "symbol-list";
             }
 
             @Override
-            public Group getGroup() {
-                return Group.of(Integer.MAX_VALUE - 1);
+            public String getDisplayName() {
+                return Messages.RssAction_All_DisplayName();
             }
 
             @Override
             public String getUrlName() {
-                return "";
+                return "rssAll";
+            }
+        }, new Action() {
+            @Override
+            public String getIconFileName() {
+                return "symbol-clock";
             }
 
             @Override
-            public Event getEvent() {
-                return DropdownEvent.of(List.of(new Action() {
-                    @Override
-                    public String getIconFileName() {
-                        return "symbol-list";
-                    }
-
-                    @Override
-                    public String getDisplayName() {
-                        return Messages.RssAction_All_DisplayName();
-                    }
-
-                    @Override
-                    public String getUrlName() {
-                        return "rssAll";
-                    }
-                }, new Action() {
-                    @Override
-                    public String getIconFileName() {
-                        return "symbol-clock";
-                    }
-
-                    @Override
-                    public String getDisplayName() {
-                        return Messages.RssAction_LatestBuilds_DisplayName();
-                    }
-
-                    @Override
-                    public String getUrlName() {
-                        return "rssLatest";
-                    }
-                }, new Action() {
-                    @Override
-                    public String getIconFileName() {
-                        return "symbol-close-circle";
-                    }
-
-                    @Override
-                    public String getDisplayName() {
-                        return Messages.RssAction_Failures_DisplayName();
-                    }
-
-                    @Override
-                    public String getUrlName() {
-                        return "rssFailed";
-                    }
-                }));
+            public String getDisplayName() {
+                return Messages.RssAction_LatestBuilds_DisplayName();
             }
-        });
+
+            @Override
+            public String getUrlName() {
+                return "rssLatest";
+            }
+        }, new Action() {
+            @Override
+            public String getIconFileName() {
+                return "symbol-close-circle";
+            }
+
+            @Override
+            public String getDisplayName() {
+                return Messages.RssAction_Failures_DisplayName();
+            }
+
+            @Override
+            public String getUrlName() {
+                return "rssFailed";
+            }
+        }));
+    }
+
+    @Extension
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<View> {
+
+        @Override
+        public Class<View> type() {
+            return View.class;
+        }
+
+        @Override
+        public Collection<? extends Action> createFor(View target) {
+            Boolean newDashboardPageEnabled = new NewDashboardPageUserExperimentalFlag().getFlagValue();
+
+            // This condition can be removed when the flag has been removed
+            if (!newDashboardPageEnabled) {
+                return Set.of();
+            }
+
+            return Set.of(new RssAction());
+        }
     }
 }

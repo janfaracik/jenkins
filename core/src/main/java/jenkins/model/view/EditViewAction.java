@@ -8,48 +8,55 @@ import java.util.Set;
 import jenkins.model.TransientActionFactory;
 import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
-@Extension
-public class EditViewAction extends TransientActionFactory<View> {
+@Restricted(Beta.class)
+public final class EditViewAction implements Action {
 
     @Override
-    public Class<View> type() {
-        return View.class;
+    public String getDisplayName() {
+        return Messages.EditViewAction_DisplayName();
     }
 
     @Override
-    public Collection<? extends Action> createFor(View target) {
-        Boolean newDashboardPageEnabled = new NewDashboardPageUserExperimentalFlag().getFlagValue();
+    public String getIconFileName() {
+        return "symbol-edit";
+    }
 
-        // This condition can be removed when the flag has been removed
-        if (!newDashboardPageEnabled) {
-            return Set.of();
+    @Override
+    public Group getGroup() {
+        return Group.FIRST_IN_MENU;
+    }
+
+    @Override
+    public String getUrlName() {
+        return "configure";
+    }
+
+    @Extension
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<View> {
+
+        @Override
+        public Class<View> type() {
+            return View.class;
         }
 
-        if (!(target.isEditable() && target.hasPermission(View.CONFIGURE))) {
-            return Set.of();
+        @Override
+        public Collection<? extends Action> createFor(View target) {
+            Boolean newDashboardPageEnabled = new NewDashboardPageUserExperimentalFlag().getFlagValue();
+
+            // This condition can be removed when the flag has been removed
+            if (!newDashboardPageEnabled) {
+                return Set.of();
+            }
+
+            if (!(target.isEditable() && target.hasPermission(View.CONFIGURE))) {
+                return Set.of();
+            }
+
+            return Set.of(new EditViewAction());
         }
-
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return Messages.EditViewAction_DisplayName();
-            }
-
-            @Override
-            public String getIconFileName() {
-                return "symbol-edit";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.FIRST_IN_MENU;
-            }
-
-            @Override
-            public String getUrlName() {
-                return "configure";
-            }
-        });
     }
 }

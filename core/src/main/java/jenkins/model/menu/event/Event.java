@@ -7,5 +7,5 @@ import org.kohsuke.stapler.export.ExportedBean;
  * This is a JavaScript API and is not currently extensible to new types.
  */
 @ExportedBean
-public sealed interface Event permits ConfirmationEvent, LinkEvent, JavaScriptEvent, SplitButtonEvent, DropdownEvent {
+public sealed interface Event permits ConfirmationEvent, LinkEvent, JavaScriptEvent, DropdownEvent {
 }

@@ -29,7 +29,6 @@ import jenkins.model.menu.event.ConfirmationEvent;
 import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.Event;
 import jenkins.model.menu.event.LinkEvent;
-import jenkins.model.menu.event.SplitButtonEvent;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyException;
@@ -149,11 +148,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
                 return this;
             }
 
-            if (action.getEvent() instanceof SplitButtonEvent splitButtonEvent) {
-                menuItem.subMenu = new ContextMenu();
-                menuItem.subMenu.addAll(splitButtonEvent.getActions());
-            }
-
+            // Move actions to subMenu so we can access them from JavaScript
             if (action.getEvent() instanceof DropdownEvent dropdownEvent) {
                 menuItem.subMenu = new ContextMenu();
                 menuItem.subMenu.addAll(dropdownEvent.getActions());

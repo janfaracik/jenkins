@@ -10,49 +10,56 @@ import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
 import jenkins.model.menu.event.DialogEvent;
 import jenkins.model.menu.event.Event;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 
-@Extension
-public class IconLegendAction extends TransientActionFactory<View> {
+@Restricted(Beta.class)
+public final class IconLegendAction implements Action {
 
     @Override
-    public Class<View> type() {
-        return View.class;
+    public String getDisplayName() {
+        return Messages.IconLegendAction_DisplayName();
     }
 
     @Override
-    public Collection<? extends Action> createFor(View target) {
-        Boolean newDashboardPageEnabled = new NewDashboardPageUserExperimentalFlag().getFlagValue();
+    public String getIconFileName() {
+        return "symbol-information-circle";
+    }
 
-        // This condition can be removed when the flag has been removed
-        if (!newDashboardPageEnabled) {
-            return Set.of();
+    @Override
+    public Group getGroup() {
+        return Group.of(Integer.MAX_VALUE - 1);
+    }
+
+    @Override
+    public String getUrlName() {
+        return null;
+    }
+
+    @Override
+    public Event getEvent() {
+        return DialogEvent.of("legend");
+    }
+
+    @Extension
+    @Restricted(Beta.class)
+    public static final class Factory extends TransientActionFactory<View> {
+
+        @Override
+        public Class<View> type() {
+            return View.class;
         }
 
-        return Set.of(new Action() {
-            @Override
-            public String getDisplayName() {
-                return Messages.IconLegendAction_DisplayName();
+        @Override
+        public Collection<? extends Action> createFor(View target) {
+            Boolean newDashboardPageEnabled = new NewDashboardPageUserExperimentalFlag().getFlagValue();
+
+            // This condition can be removed when the flag has been removed
+            if (!newDashboardPageEnabled) {
+                return Set.of();
             }
 
-            @Override
-            public String getIconFileName() {
-                return "symbol-information-circle";
-            }
-
-            @Override
-            public Group getGroup() {
-                return Group.of(Integer.MAX_VALUE - 1);
-            }
-
-            @Override
-            public String getUrlName() {
-                return null;
-            }
-
-            @Override
-            public Event getEvent() {
-                return DialogEvent.of("legend");
-            }
-        });
+            return Set.of(new IconLegendAction());
+        }
     }
 }

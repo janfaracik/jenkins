@@ -12,12 +12,12 @@ import org.kohsuke.stapler.export.ExportedBean;
  */
 @ExportedBean
 @Restricted(Beta.class)
-public final class DropdownEvent implements Event {
+public sealed class DropdownEvent implements Event permits SplitButtonEvent {
 
     private final List<Action> actions;
 
-    private DropdownEvent(List<Action> actions) {
-        this.actions = actions;
+    DropdownEvent(List<Action> actions) {
+        this.actions = actions.stream().filter(e -> e.getIconFileName() != null).toList();
     }
 
     /**
