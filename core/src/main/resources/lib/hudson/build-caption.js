@@ -52,8 +52,10 @@
                   const controls = buildCaption.querySelector(
                     ".app-build-bar__controls",
                   );
-                  controls.innerHTML = responseText;
-                  Behaviour.applySubtree(controls);
+                  document.startViewTransition(() => {
+                    controls.innerHTML = responseText;
+                    Behaviour.applySubtree(controls);
+                  });
                 });
               }
             });
