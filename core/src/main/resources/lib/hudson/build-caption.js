@@ -2,6 +2,7 @@
   const buildCaption = document.querySelector("[data-status-url]");
   const progress = buildCaption.dataset.progress;
   const url = buildCaption.dataset.statusUrl;
+  const actionsUrl = buildCaption.dataset.actionsUrl;
   const title = document.title;
 
   function updateBuildCaptionIcon() {
@@ -42,13 +43,30 @@
             progressBar.style.display = "none";
           }
           document.title = title;
+
+          // Once the build is complete, refresh the build's actions
+          if (actionsUrl) {
+            fetch(actionsUrl).then((rsp) => {
+              if (rsp.ok) {
+                rsp.text().then((responseText) => {
+                  const controls = buildCaption.querySelector(
+                    ".app-build-bar__controls",
+                  );
+                  controls.innerHTML = responseText;
+                  Behaviour.applySubtree(controls);
+                });
+              }
+            });
+          }
         }
+
         rsp.text().then((responseText) => {
           // The first svg selector can be removed once experimental Run UI is default
           buildCaption.querySelector(
             "svg, .app-build-bar__content__headline svg",
           ).outerHTML = responseText;
-          Behaviour.applySubtree(buildCaption, false);
+
+          // Behaviour.applySubtree(buildCaption, false);
         });
       }
     });
