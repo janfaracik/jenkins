@@ -315,7 +315,10 @@ function convertHtmlToItems(children) {
           icon: attributes.dropdownIcon,
           iconXml: attributes.dropdownIcon,
           event: {
-            actions: convertHtmlToItems(child.content.children),
+            actions: [],
+          },
+          subMenu: {
+            items: convertHtmlToItems(child.content.children),
           },
         };
       case "SEPARATOR":
