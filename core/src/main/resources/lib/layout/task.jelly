@@ -107,7 +107,7 @@ THE SOFTWARE.
     The semantics is that when one of the nested <task> matches, the parent is also considered as a match
     and thus gets a highlight.
   -->
-  <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage2(href, '')}" />
+  <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(href, '')}" />
   <j:scope>
     <j:set var="parentTagContext" value="${context.parent}"/>
     <d:invokeBody />
@@ -159,7 +159,7 @@ THE SOFTWARE.
             <!-- there was no custom action and we have no icon so this is intended to be hidden -->
             <j:if test="${icon != null}">
 
-              <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage2(action.urlName, '')}" />
+              <j:set var="isCurrent" value="${h.hyperlinkMatchesCurrentPage(action.urlName, '')}" />
 
               <j:set var="jumplist">
                 <j:if test="${match}">
