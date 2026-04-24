@@ -14,7 +14,7 @@ function init() {
       const compact = element.dataset.compact === "true";
       const template = JSON.parse(element.nextSibling.content.textContent);
       const topLevelActions = Utils.mapChildrenItemsToDropdownItems(
-        template.items.filter((e) => e.group.order <= 2),
+        template.items,
       );
 
       // Append top-level items next to the overflow menu
