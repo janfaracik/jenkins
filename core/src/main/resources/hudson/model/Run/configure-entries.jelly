@@ -25,13 +25,12 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
   <j:set var="readOnlyMode" value="${!h.hasPermission(it, it.UPDATE)}" />
-  <f:entry title="${%DisplayName}" description="${%displayName.description}">
+  <f:entry title="${%DisplayName}" description="${%displayName.description(it.number)}">
     <f:textbox name="displayName"
                value="${it.hasCustomDisplayName() ? it.displayName : ''}"
-               placeholder="#${it.number}"
                autofocus="${true}" />
   </f:entry>
-  <f:entry title="${%Description}" description="${%description.description}">
+  <f:entry title="${%Description}">
     <f:textarea name="description"
                 value="${it.description}"
                 codemirror-mode="${app.markupFormatter.codeMirrorMode}"
