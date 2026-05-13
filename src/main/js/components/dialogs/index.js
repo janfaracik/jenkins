@@ -1,5 +1,5 @@
 import { createElementFromHtml } from "@/util/dom";
-import { BACK_BUTTON, CLOSE } from "@/util/symbols";
+import { CLOSE } from "@/util/symbols";
 import behaviorShim from "@/util/behavior-shim";
 import jenkins from "@/util/jenkins";
 
@@ -331,6 +331,12 @@ function init() {
       let dialog = new Dialog("form", options);
       return dialog.show();
     },
+
+    wizard: function (initialUrl, options) {
+      dialog.modal(document.createElement("template"), options);
+
+      navigateToNextPage(initialUrl, "");
+    },
   };
 
   behaviorShim.specify(
@@ -340,7 +346,10 @@ function init() {
     (element) => {
       element.addEventListener("click", () => {
         if (element.dataset.dialogUrl != null) {
-          loadDialogWizard(element.dataset.dialogUrl);
+          window.dialog.wizard(element.dataset.dialogUrl, {
+            minWidth: "min(550px, 100vw)",
+            preventCloseOnOutsideClick: true,
+          });
         } else {
           renderOnDemandDialog(element.dataset.dialogId);
         }
@@ -361,25 +370,6 @@ function init() {
   }
 }
 
-window.dialog2 = {
-  wizard: (initialUrl, options) => {
-    dialog.modal(document.createElement("template"), options);
-
-    navigateToNextPage(initialUrl, "");
-  },
-};
-
-function mergeUrlParams(url, params) {
-  const base = new URL(url, window.location.href);
-  if (params) {
-    const newParams = new URLSearchParams(params);
-    for (const [key, value] of newParams.entries()) {
-      base.searchParams.set(key, value);
-    }
-  }
-  return base.toString();
-}
-
 function updateWizardTitle(titleText) {
   if (titleText == null) {
     return;
@@ -393,6 +383,7 @@ function updateWizardTitle(titleText) {
   }
 }
 
+/** Resolve a relative wizard form action against the current step URL. */
 function resolveWizardFormAction(form, baseUrl) {
   const formAction = form.getAttribute("action");
   if (
@@ -405,15 +396,31 @@ function resolveWizardFormAction(form, baseUrl) {
 }
 
 function submitWizardForm(form) {
+  const jsonInputName = "json";
+  let jsonInput = form.elements.namedItem(jsonInputName);
+
+  if (jsonInput == null) {
+    jsonInput = document.createElement("input");
+    jsonInput.type = "hidden";
+    jsonInput.name = jsonInputName;
+    form.appendChild(jsonInput);
+  }
+
+  buildFormTree(form);
+
+  let body = new FormData(form);
+  const hasFileInput = Array.from(form.elements).some(
+    (element) => element instanceof HTMLInputElement && element.type === "file",
+  );
+
+  if (!hasFileInput) {
+    body = new URLSearchParams(body);
+  }
+
   fetch(form.action, {
-    method: "POST",
-    headers: {
-      ...crumb.wrap({}),
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: new URLSearchParams({
-      json: JSON.stringify(Object.fromEntries(new FormData(form))),
-    }),
+    method: form.method.toUpperCase(),
+    headers: crumb.wrap({}),
+    body: body,
   }).then((rsp) => {
     if (rsp.redirected) {
       window.location.assign(rsp.url);
@@ -436,29 +443,6 @@ function submitWizardForm(form) {
 }
 
 function configureWizardForm(form) {
-  if (form.method.toLowerCase() === "get") {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const wizardForm = e.currentTarget;
-      const fd = new FormData(wizardForm);
-      const params = new URLSearchParams();
-
-      fd.forEach(function (value, key) {
-        // FormData can include File objects. Query strings cannot.
-        if (value instanceof File) {
-          return;
-        }
-        params.append(key, String(value));
-      });
-
-      showBackButtonInDialog();
-
-      navigateToNextPage(wizardForm.action, params.toString());
-    });
-    return;
-  }
-
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     submitWizardForm(e.currentTarget);
@@ -493,27 +477,19 @@ function renderWizardForm({
   updateWizardTitle(titleText);
   configureWizardForm(form);
 
+  // Recreate script tags while the form is still detached, so each script
+  // executes exactly once, at the moment the form is inserted into the dialog.
+  recreateScripts(form);
+
   if (replaceExistingForm != null) {
     replaceExistingForm.replaceWith(form);
   } else {
     dialogContents.appendChild(form);
   }
 
-  recreateScripts(form);
-  focusAutofocusField(form);
   wireCancelButton(form);
 
   return form;
-}
-
-function focusAutofocusField(form) {
-  const autofocusField = form.querySelector(
-    "input[autofocus]:not([disabled]), textarea[autofocus]:not([disabled]), select[autofocus]:not([disabled])",
-  );
-
-  if (autofocusField != null) {
-    autofocusField.focus();
-  }
 }
 
 function wireCancelButton(form) {
@@ -524,10 +500,8 @@ function wireCancelButton(form) {
   });
 }
 
-function navigateToNextPage(url, params) {
-  const finalUrl = mergeUrlParams(url, params);
-
-  fetch(finalUrl, {
+function navigateToNextPage(url) {
+  fetch(url, {
     method: "GET",
     headers: crumb.wrap({}),
   }).then((rsp) => {
@@ -544,54 +518,37 @@ function navigateToNextPage(url, params) {
           window.location.assign(rsp.url);
         }
       });
+    } else {
+      console.error(
+        "Failed to load dialog content, response from API is:",
+        rsp,
+      );
     }
-  });
-}
-
-function showBackButtonInDialog() {
-  const dialog = document.querySelector(".jenkins-dialog");
-  const title = dialog.querySelector(".jenkins-dialog__title > span");
-  const backButton = document.createElement("button");
-  backButton.classList.add("jenkins-button");
-  backButton.classList.add("jenkins-dialog__back-button");
-  backButton.ariaLabel = "Back";
-  backButton.innerHTML = BACK_BUTTON;
-  title.style.transition = "var(--standard-transition)";
-  title.style.marginLeft = "2.75rem";
-  dialog.appendChild(backButton);
-
-  backButton.addEventListener("click", () => {
-    dialog
-      .querySelector(".jenkins-dialog__contents form:first-of-type")
-      .classList.remove("jenkins-hidden");
-    dialog
-      .querySelector(".jenkins-dialog__contents form:last-of-type")
-      .remove();
-    title.style.marginLeft = "0";
-    backButton.remove();
   });
 }
 
 /*
  * Recreate script tags to ensure they are executed, as innerHTML does not execute scripts.
+ *
  */
 function recreateScripts(form) {
-  const scripts = form.getElementsByTagName("script");
+  const scripts = Array.from(form.getElementsByTagName("script"));
   if (scripts.length === 0) {
     Behaviour.applySubtree(form, true);
     return;
   }
   for (let i = 0; i < scripts.length; i++) {
+    const original = scripts[i];
     const script = document.createElement("script");
-    if (scripts[i].text) {
-      script.text = scripts[i].text;
-    } else {
-      for (let j = 0; j < scripts[i].attributes.length; j++) {
-        if (scripts[i].attributes[j].name in HTMLScriptElement.prototype) {
-          script[scripts[i].attributes[j].name] =
-            scripts[i].attributes[j].value;
-        }
-      }
+
+    for (let j = 0; j < original.attributes.length; j++) {
+      script.setAttribute(
+        original.attributes[j].name,
+        original.attributes[j].value,
+      );
+    }
+    if (original.text) {
+      script.text = original.text;
     }
 
     // only attach the load listener to the last script to avoid multiple calls to Behaviour.applySubtree
@@ -606,16 +563,8 @@ function recreateScripts(form) {
       });
     }
 
-    scripts[i].parentNode.replaceChild(script, scripts[i]);
+    original.parentNode.replaceChild(script, original);
   }
-}
-
-function loadDialogWizard(url) {
-  window.dialog2.wizard(url, {
-    title: "",
-    minWidth: "min(550px, 100vw)",
-    preventCloseOnOutsideClick: true,
-  });
 }
 
 export default { init };
