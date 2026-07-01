@@ -234,6 +234,12 @@ $semantics: (
   --pane-link-color--visited: black;
 
   // Cards
+  // frame
+  --elevation-1-background: var(--white);
+
+  // cards, dropdowns, menus, dialogs
+  --elevation-2-background: var(--white);
+
   --card-background: var(--white);
   --card-background--hover: transparent;
   --card-background--active: transparent;
