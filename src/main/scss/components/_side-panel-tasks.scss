@@ -52,6 +52,10 @@ $background-outset: 0.5rem;
 #tasks,
 .tasks {
   .task .task-link {
+    --item-background--hover: var(--button-background);
+    --item-background--active: var(--button-background--hover);
+    --item-box-shadow--focus: var(--button-box-shadow--focus);
+
     @include mixins.item;
 
     display: flex;
@@ -93,9 +97,10 @@ $background-outset: 0.5rem;
     &--active {
       font-weight: var(--font-bold-weight);
       cursor: default;
+      box-shadow: var(--control-shadow);
 
       &::before {
-        background-color: var(--item-background--active) !important;
+        background-color: var(--button-background) !important;
       }
 
       &::after {
@@ -114,7 +119,6 @@ $background-outset: 0.5rem;
 .jenkins-side-nav__heading {
   font-size: var(--font-size-sm);
   color: var(--text-color-secondary);
-  font-weight: var(--font-bold-weight);
   margin: 1rem 0 0.375rem;
 
   &:first-of-type {

@@ -14,6 +14,7 @@
   border-spacing: 0 var(--jenkins-border-width);
   background-clip: padding-box;
   margin-bottom: var(--section-padding);
+  box-shadow: var(--control-shadow);
 
   // The '::before' pseudo-element is causing overflow issues in Firefox, so disable it for that browser
   @supports (not (-moz-appearance: none)) {
