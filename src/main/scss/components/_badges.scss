@@ -44,8 +44,7 @@ button.jenkins-badge {
   text-box: cap alphabetic;
 
   &::before {
-    border: var(--jenkins-border-width) solid
-      oklch(from currentColor l c h / 0.17);
+    border: var(--jenkins-border-width) solid var(--jenkins-border-color--inherit-subtle);
     background-clip: padding-box;
   }
 
