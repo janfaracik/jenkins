@@ -169,6 +169,7 @@ body:has(.app-settings-container) {
   border-radius: var(--form-input-border-radius);
   z-index: 0;
   min-height: calc(100vh - var(--header-height) - var(--section-padding));
+  box-shadow: var(--control-shadow);
 
   &__inner {
     max-width: 900px;
