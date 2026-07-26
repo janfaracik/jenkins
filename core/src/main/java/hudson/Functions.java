@@ -2415,14 +2415,26 @@ public class Functions {
     }
 
     /**
-     * Returns whether sticky positioning of UI elements should be disabled via the
-     * {@code disableStickyPositioning} cookie (primarily for UI acceptance tests).
-     * Sticky elements can otherwise float over the element under test and intercept clicks.
+     * Returns whether sticky positioning / nested page scrollers should be disabled for UI
+     * acceptance tests.
+     *
+     * <p>Enabled when either:
+     * <ul>
+     *   <li>the {@code hudson.Functions.disableStickyPositioning} system property is {@code true}
+     *       (preferred — set by ATH on the Jenkins-under-test JVM), or</li>
+     *   <li>the {@code disableStickyPositioning} cookie is {@code true}</li>
+     * </ul>
+     *
+     * <p>Sticky elements and nested {@code overflow-y: auto} panes otherwise prevent Selenium from
+     * scrolling targets into view / intercept clicks.
      */
     @Restricted(NoExternalUse.class)
     public static boolean isStickyPositioningDisabled() {
+        if (SystemProperties.getBoolean(Functions.class.getName() + ".disableStickyPositioning")) {
+            return true;
+        }
         String cookieValue = Functions.getCookie(Stapler.getCurrentRequest2(), "disableStickyPositioning", null);
-        return Boolean.valueOf(cookieValue);
+        return Boolean.parseBoolean(cookieValue);
     }
 
     @Deprecated

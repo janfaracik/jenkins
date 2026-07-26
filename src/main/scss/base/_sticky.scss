@@ -1,16 +1,27 @@
-// When sticky positioning is disabled (hudson.Functions.disableStickyPositioning, used by
-// acceptance tests), neutralise every sticky element so it cannot float over and intercept
-// clicks.
-// Keep this list in sync with the `position: sticky` rules across the SCSS sources.
+// When sticky positioning is disabled (hudson.Functions.disableStickyPositioning system
+// property or disableStickyPositioning cookie, used by acceptance tests), neutralise every
+// sticky element and flatten nested scroll containers so Selenium can scroll targets into view.
+// Keep this list in sync with the `position: sticky` / overflow rules across the SCSS sources.
 :root[data-disable-sticky="true"] {
+  // Nested overflow panes break Firefox/Selenium scrollIntoView; force document scrolling.
+  overscroll-behavior: auto !important;
+
+  body {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
   .app-page-body {
     height: auto !important;
+    max-height: none !important;
     overflow: visible !important;
   }
 
   .app-page-body > .app-page-body__sidebar,
   .app-page-body > .app-page-body__contents {
-    overflow-y: visible !important;
+    overflow: visible !important;
+    max-height: none !important;
   }
 
   .jenkins-app-bar--sticky,

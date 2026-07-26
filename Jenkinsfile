@@ -97,7 +97,6 @@ axes.values().combinations {
               '-Penable-jacoco',
               '--update-snapshots',
               "-Dmaven.repo.local=$m2repo",
-              '-Dtest=ManagementLinkTest#links',
               '-Dmaven.test.failure.ignore',
               '-DforkCount=2',
               '-Dspotbugs.failOnError=false',
