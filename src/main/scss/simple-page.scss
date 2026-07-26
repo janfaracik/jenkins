@@ -42,19 +42,18 @@
   text-align: center;
   margin-top: 2rem;
   background-color: var(--alert-success-bg-color);
-  border: 1px solid var(--alert-success-border-color);
+  color: var(--alert-success-text-color);
+  border: var(--jenkins-border-width) solid
+  var(--jenkins-border-color--inherit-subtle);
 
   * {
-    color: var(--alert-success-text-color) !important;
+    color: inherit !important;
+    margin: 0;
   }
 
   strong {
     font-weight: var(--font-bold-weight);
   }
-}
-
-.simple-page .safe-restarting > p {
-  margin: 0;
 }
 
 .simple-page--description {
