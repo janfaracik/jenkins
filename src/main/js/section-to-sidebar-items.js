@@ -7,6 +7,7 @@ const DEFAULT_ICON = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 5
 window.addEventListener("load", function () {
   const sidebarItems = document.querySelector("#tasks");
   const sectionHeaders = document.querySelectorAll(HEADER_SELECTOR);
+  const scrollContainer = document.querySelector(".app-page-body__contents");
 
   // Create the sidebar items
   sectionHeaders.forEach(function (header, i) {
@@ -35,8 +36,11 @@ window.addEventListener("load", function () {
       );
 
       const sectionTopPosition =
-        headerToScrollTo.getBoundingClientRect().top + window.scrollY - 70;
-      window.scrollTo({
+        headerToScrollTo.getBoundingClientRect().top -
+        scrollContainer.getBoundingClientRect().top +
+        scrollContainer.scrollTop -
+        70;
+      scrollContainer.scrollTo({
         top: i === 0 ? 0 : sectionTopPosition,
         behavior: "smooth",
       });
@@ -54,15 +58,15 @@ window.addEventListener("load", function () {
       input.parentElement.remove();
     });
 
-  document.addEventListener("scroll", () => onScroll());
-  onScroll();
+  scrollContainer.addEventListener("scroll", () => onScroll(scrollContainer));
+  onScroll(scrollContainer);
 });
 
 /**
  * Change the selected item depending on the user's vertical scroll position
  */
-function onScroll() {
-  const scrollY = Math.max(window.scrollY, 0);
+function onScroll(scrollContainer) {
+  const scrollY = Math.max(scrollContainer.scrollTop, 0);
   const sectionHeaders = document.querySelectorAll(HEADER_SELECTOR);
 
   let selectedSection = null;
@@ -76,8 +80,9 @@ function onScroll() {
     const viewportEntryOffset =
       i === 0
         ? 0
-        : section.parentNode.getBoundingClientRect().top +
-          window.scrollY -
+        : section.parentNode.getBoundingClientRect().top -
+          scrollContainer.getBoundingClientRect().top +
+          scrollContainer.scrollTop -
           previousSection.offsetHeight / 2;
 
     if (scrollY >= viewportEntryOffset) {
