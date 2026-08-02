@@ -11,18 +11,20 @@
 }
 
 .app-build__grid {
+  padding-bottom: var(--section-padding);
   gap: calc(var(--section-padding) / 2);
 
   & > * {
     height: 350px;
     min-width: 0;
+    flex-shrink: 0;
   }
 
   // Legacy card shouldn't have a fixed height
-  .jenkins-card:last-of-type {
-    height: unset;
-    min-height: 350px;
-  }
+  //.jenkins-card:last-of-type {
+  //  height: unset;
+  //  min-height: 350px;
+  //}
 
   @media (width < 1000px) {
     display: flex;
@@ -43,12 +45,12 @@
       overflow: clip;
 
       &:first-of-type {
-        grid-column: span 1;
-      }
-
-      &:last-of-type {
         grid-column: span 2;
       }
+
+      //&:last-of-type {
+      //  grid-column: span 2;
+      //}
     }
 
     .jenkins-card__content .app-console-output-widget {
@@ -64,9 +66,9 @@
         grid-column: span 2;
       }
 
-      &:last-of-type {
-        grid-column: span 3;
-      }
+      //&:last-of-type {
+      //  grid-column: span 3;
+      //}
     }
   }
 
@@ -77,10 +79,10 @@
       &:first-of-type {
         grid-column: span 3;
       }
-
-      &:last-of-type {
-        grid-column: span 4;
-      }
+      //
+      //&:last-of-type {
+      //  grid-column: span 4;
+      //}
     }
   }
 
@@ -92,9 +94,9 @@
         grid-column: span 4;
       }
 
-      &:last-of-type {
-        grid-column: span 5;
-      }
+      //&:last-of-type {
+      //  grid-column: span 5;
+      //}
     }
   }
 }
@@ -301,8 +303,15 @@
   flex-direction: column;
   padding: 0 var(--section-padding);
   margin-inline: calc(var(--section-padding) * -1);
+  //background: firebrick;
+  flex-grow: 1;
 
   .jenkins-app-bar {
     margin-block: 0.875rem;
   }
+}
+
+.app-main-panel:has(.app-build__grid) {
+  min-height: 100%;
+  margin-bottom: 0;
 }

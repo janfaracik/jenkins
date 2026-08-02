@@ -2,7 +2,8 @@
 
 .app-page-body {
   position: relative;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   border: var(--jenkins-border);
   margin-inline: var(--page-inset);
   height: calc(100vh - var(--header-height) - var(--page-inset));
@@ -19,12 +20,11 @@
   isolation: isolate;
 
   &:has(> .app-page-body__sidebar) {
+    display: grid;
     grid-template-columns: auto 1fr;
   }
 
   @media (width < 740px) {
-    display: flex;
-    flex-direction: column;
     overflow-y: auto;
   }
 
@@ -44,6 +44,9 @@
   & > .app-page-body__contents {
     padding: var(--section-padding);
     padding-bottom: 0;
+    //background: #ec971f;
+    flex-grow: 1;
+    height: 100%;
   }
 
   @media (width >= 740px) {
@@ -79,6 +82,9 @@
 }
 
 .app-main-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100% - var(--section-padding));
   margin-bottom: var(--section-padding);
 
   &--narrow {
