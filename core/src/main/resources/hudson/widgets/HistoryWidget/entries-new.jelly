@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2024 Jan Faracik
+Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 -->
 
+<!--
+  Render build histories. 
+-->
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:i="jelly:fmt" xmlns:l="/lib/layout">
-  <j:set var="object" value="${it.getObject()}" />
-  <i:formatDate var="tooltip" value="${object.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
-
-  <div class="jenkins-details__item" tooltip="${shorthand ? null : tooltip}" data-tooltip-delay="500">
-    <div class="jenkins-details__item__icon">
-      <l:icon src="symbol-clock" />
-    </div>
-    <span>
-      <j:choose>
-        <j:when test="${shorthand}">
-          <i:formatDate value="${object.timestamp.time}" type="time" timeStyle="short" var="time" />
-          ${%started(time)}
-        </j:when>
-        <j:otherwise>
-          ${%startedAgo(object.timestampString)}
-        </j:otherwise>
-      </j:choose>
-    </span>
-  </div>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+  <j:set target="${it}" property="nextBuildNumberToFetch" value="${it.nextBuildNumber}" />
+  <j:forEach var="pageEntry" items="${it.runs}">
+    <st:include page="/hudson/widgets/HistoryWidget/entry-new.jelly" />
+  </j:forEach>
 </j:jelly>

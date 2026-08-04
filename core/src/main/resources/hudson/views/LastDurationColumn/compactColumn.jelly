@@ -1,7 +1,7 @@
 <!--
 The MIT License
 
-Copyright (c) 2024 Jan Faracik
+Copyright (c) 2025, Jan Faracik
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23,24 +23,9 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:i="jelly:fmt" xmlns:l="/lib/layout">
-  <j:set var="object" value="${it.getObject()}" />
-  <i:formatDate var="tooltip" value="${object.timestamp.time}" type="both" dateStyle="long" timeStyle="medium" />
-
-  <div class="jenkins-details__item" tooltip="${shorthand ? null : tooltip}" data-tooltip-delay="500">
-    <div class="jenkins-details__item__icon">
-      <l:icon src="symbol-clock" />
-    </div>
-    <span>
-      <j:choose>
-        <j:when test="${shorthand}">
-          <i:formatDate value="${object.timestamp.time}" type="time" timeStyle="short" var="time" />
-          ${%started(time)}
-        </j:when>
-        <j:otherwise>
-          ${%startedAgo(object.timestampString)}
-        </j:otherwise>
-      </j:choose>
-    </span>
-  </div>
+<j:jelly xmlns:j="jelly:core">
+  <j:set var="lBuild" value="${job.lastSuccessfulBuild ?: job.lastFailedBuild}"/>
+  <j:if test="${lBuild!=null}">
+    ${%took(lBuild.timestampString, lBuild.durationString)}
+  </j:if>
 </j:jelly>

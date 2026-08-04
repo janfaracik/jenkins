@@ -273,6 +273,12 @@ $jenkins-split-button-border-radius: 0.2rem;
       height: 0.75rem;
     }
   }
+
+  &:hover {
+    .jenkins-button--tertiary {
+      --button-background: oklch(from currentColor l c h / 0.1) !important;
+    }
+  }
 }
 
 .stop-button-link {

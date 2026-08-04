@@ -30,4 +30,9 @@ public class CauseDetail extends Detail {
         }
         return causeAction.getCauseCounts();
     }
+
+    @Override
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL_AND_SNIPPET;
+    }
 }

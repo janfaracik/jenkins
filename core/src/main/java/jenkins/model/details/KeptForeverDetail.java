@@ -23,4 +23,9 @@ public class KeptForeverDetail extends Detail {
         Run<?, ?> run = (Run<?, ?>) getObject();
         return run.isKeepLog() ? "symbol-lock-closed" : null;
     }
+
+    @Override
+    public DetailVisibility getShorthand() {
+        return DetailVisibility.FULL_AND_SNIPPET;
+    }
 }
