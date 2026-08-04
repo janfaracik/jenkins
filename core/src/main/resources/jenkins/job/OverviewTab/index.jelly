@@ -36,7 +36,7 @@ THE SOFTWARE.
     <t:editableDescription permission="${it.CONFIGURE}" hideButton="true"/>
 
     <j:forEach var="w" items="${it.widgets}">
-      <st:include it="${w}" page="index.jelly" />
+      <st:include it="${w}" page="index-new.jelly" />
     </j:forEach>
 
     <l:card title="${%Legacy}">
