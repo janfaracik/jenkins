@@ -66,7 +66,34 @@ THE SOFTWARE.
         <d:invokeBody/>
       </div>
 
-      <div class="jenkins-jobs-list">
+      <div class="jenkins-mobile-hide">
+        <div class="app-project-status-table">
+          <table id="projectstatus" class="jenkins-table ${iconSize == '16x16' ? 'jenkins-table--small' : iconSize == '24x24' ? 'jenkins-table--medium' : ''} sortable">
+            <thead>
+              <tr>
+                <j:forEach var="col" items="${columnExtensions}">
+                  <j:if test="${col.class.simpleName.equals('BuildButtonColumn')}">
+                    <j:set var="buildButtonColumn" value="${col}" />
+                  </j:if>
+                  <st:include page="columnHeader.jelly" it="${col}" />
+                </j:forEach>
+              </tr>
+            </thead>
+
+            <j:forEach var="job" items="${jobs}">
+              <j:set var="relativeLinkToJob" value="${h.getRelativeLinkTo(job)}"/>
+              <t:projectViewRow jobBaseUrl="${relativeLinkToJob.substring(0, relativeLinkToJob.length() - job.shortUrl.length())}"/>
+            </j:forEach>
+          </table>
+        </div>
+
+        <l:userExperimentalFlag var="newDashboardPage" flagClassName="jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag" />
+        <j:if test="${!newDashboardPage}">
+          <t:iconSize><t:rssBar/></t:iconSize>
+        </j:if>
+      </div>
+
+      <div class="jenkins-jobs-list jenkins-mobile-show">
         <j:set var="jenkins_mobile_show" value="${true}"/>
         <j:forEach var="job" items="${jobs}">
           <j:set var="relativeLinkToJob" value="${h.getRelativeLinkTo(job)}"/>
@@ -76,7 +103,7 @@ THE SOFTWARE.
               <div class="jenkins-jobs-list__item__icons">
                 <j:choose>
                   <j:when test="${job.iconColor.iconName != null}">
-                    <l:icon src="symbol-status-${job.iconColor.iconName}" alt="${job.iconColor.description}" />
+                    <l:icon src="symbol-status-${job.iconColor.iconName}" tooltip="${job.iconColor.description}" />
                   </j:when>
                   <j:otherwise>
                     <!-- This is for special conditions, such as folders -->
@@ -85,32 +112,23 @@ THE SOFTWARE.
                 </j:choose>
               </div>
               <div class="jenkins-jobs-list__item__details__text">
-                <p class="jenkins-jobs-list__item__label">
-                  ${job.displayName}
-                  <!-- TODO - Hack - don't merge the below! -->
-                  <j:if test="${job.displayName eq 'main'}">
-                    <span class="jenkins-badge jenkins-!-info-color">Default</span>
-                  </j:if>
-                </p>
+                <p class="jenkins-jobs-list__item__label">${job.displayName}</p>
                 <div class="jenkins-jobs-list__item__description">
-                  <l:details-bar it="${job}" shorthand="true" />
+                  <j:set var="lastBuild" value="${job.lastBuild}"/>
+                  <j:if test="${lastBuild != null}">
+                    <span>
+                      ${%Description(lastBuild.timestampString, lastBuild.durationString)}
+                    </span>
+                  </j:if>
+
+                  <j:forEach var="col" items="${columnExtensions}">
+                    <st:include page="compactColumn.jelly" it="${col}" optional="true" />
+                  </j:forEach>
                 </div>
               </div>
             </a>
             <div class="jenkins-jobs-list__item__actions">
-              <j:if test="${job.buildable and job.hasPermission(job.BUILD)}">
-                <button class="jenkins-button jenkins-button--tertiary jenkins-!-build-color" tooltip="Build">
-                  <l:icon src="symbol-play" />
-                </button>
-              </j:if>
-              <a class="jenkins-button jenkins-button--tertiary" tooltip="Configure" href="${jobBaseUrl}${job.shortUrl}configure">
-                <l:icon src="symbol-settings" />
-              </a>
-              <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
-                      tooltip="More actions"
-                      data-href="${jobBaseUrl}${job.shortUrl}">
-                <l:icon src="symbol-menu" />
-              </button>
+              <st:include page="column.jelly" it="${buildButtonColumn}" optional="true"/>
             </div>
           </div>
         </j:forEach>

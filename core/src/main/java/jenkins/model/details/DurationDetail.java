@@ -10,9 +10,4 @@ public class DurationDetail extends Detail {
     public DurationDetail(Run<?, ?> run) {
         super(run);
     }
-
-    @Override
-    public DetailVisibility getShorthand() {
-        return DetailVisibility.FULL_AND_SNIPPET;
-    }
 }

@@ -15,9 +15,4 @@ public class TimestampDetail extends Detail {
     public int getOrder() {
         return Integer.MAX_VALUE - 1;
     }
-
-    @Override
-    public DetailVisibility getShorthand() {
-        return DetailVisibility.FULL_AND_SNIPPET;
-    }
 }
