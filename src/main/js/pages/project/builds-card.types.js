@@ -14,3 +14,13 @@
  * @property {string | undefined} pageEntryNewest
  * @property {string | undefined} pageEntryOldest
  */
+
+/**
+ * @typedef NewCardControlsOptions
+ * @type {object}
+ * @property {number} pageCurrent
+ * @property {number} pageTotal
+ * @property {boolean} pageHasMore
+ * @property {string | undefined} pageEntryNewest
+ * @property {string | undefined} pageEntryOldest
+ */

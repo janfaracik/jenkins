@@ -19,8 +19,6 @@ BehaviorShim.specify(
 
     // Pagination controls
     const paginationControls = document.querySelector("#controls");
-    const paginationPrevious = document.querySelector("#up");
-    const paginationNext = document.querySelector("#down");
 
     // Refresh variables
     let buildRefreshTimeout;
@@ -33,13 +31,15 @@ BehaviorShim.specify(
     function load(options = {}) {
       /** @type {QueryParameters} */
       cancelRefreshTimeout();
-      const params = Object.assign({}, options, {
-        search: pageSearchInput.value,
-      });
-      const paginationOrFirst =
-        buildHistoryPage.dataset.pageHasUp === "false" ||
-        "older-than" in params ||
-        "newer-than" in params;
+      const params = Object.assign(
+        {
+          page: buildHistoryPage.dataset.pageCurrent || 1,
+        },
+        options,
+        {
+          search: pageSearchInput.value,
+        },
+      );
 
       // Avoid fetching if the page isn't visible
       if (document.hidden) {
@@ -47,14 +47,6 @@ BehaviorShim.specify(
       }
 
       createRefreshTimeout();
-
-      // When we're not on the first page and this is not a load due to pagination
-      // we need to set the correct value for older-than so we fetch the same set of runs
-      if (!paginationOrFirst) {
-        params["older-than"] = (
-          BigInt(buildHistoryPage.dataset.pageEntryNewest) + 1n
-        ).toString();
-      }
 
       fetch(ajaxUrl + toQueryString(params)).then((rsp) => {
         if (rsp.ok) {
@@ -73,8 +65,9 @@ BehaviorShim.specify(
               }
               loadingBuilds.style.display = "none";
               updateCardControls({
-                pageHasUp: false,
-                pageHasDown: false,
+                pageCurrent: 1,
+                pageTotal: 0,
+                pageHasMore: false,
                 pageEntryNewest: false,
                 pageEntryOldest: false,
               });
@@ -97,8 +90,9 @@ BehaviorShim.specify(
             div.innerHTML = responseText;
             const innerChild = div.children[0];
             updateCardControls({
-              pageHasUp: innerChild.dataset.pageHasUp === "true",
-              pageHasDown: innerChild.dataset.pageHasDown === "true",
+              pageCurrent: parseInt(innerChild.dataset.pageCurrent, 10) || 1,
+              pageTotal: parseInt(innerChild.dataset.pageTotal, 10) || 1,
+              pageHasMore: innerChild.dataset.pageHasMore === "true",
               pageEntryNewest: innerChild.dataset.pageEntryNewest,
               pageEntryOldest: innerChild.dataset.pageEntryOldest,
             });
@@ -113,35 +107,49 @@ BehaviorShim.specify(
     }
 
     /**
-     * Shows/hides the card's pagination controls depending on the passed parameter
-     * @param {CardControlsOptions}  parameters
+     * Rebuilds the numbered page buttons and remembers the current page.
+     * @param {NewCardControlsOptions}  parameters
      */
     function updateCardControls(parameters) {
-      paginationControls.classList.toggle(
-        "jenkins-hidden",
-        !parameters.pageHasUp && !parameters.pageHasDown,
-      );
-      paginationPrevious.classList.toggle(
-        "app-temporary-list__button--disabled",
-        !parameters.pageHasUp,
-      );
-      paginationNext.classList.toggle(
-        "app-temporary-list__button--disabled",
-        !parameters.pageHasDown,
-      );
-
+      buildHistoryPage.dataset.pageCurrent = parameters.pageCurrent;
       buildHistoryPage.dataset.pageEntryNewest = parameters.pageEntryNewest;
       buildHistoryPage.dataset.pageEntryOldest = parameters.pageEntryOldest;
-      buildHistoryPage.dataset.pageHasUp = parameters.pageHasUp;
+
+      paginationControls.innerHTML = "";
+      paginationControls.classList.toggle(
+        "jenkins-hidden",
+        parameters.pageTotal <= 1 && !parameters.pageHasMore,
+      );
+
+      for (let i = 1; i <= parameters.pageTotal; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.type = "button";
+        pageButton.textContent = i.toString();
+        pageButton.classList.add(
+          "jenkins-button",
+          "jenkins-button--tertiary",
+          "app-temporary-list__page-button",
+        );
+
+        if (i === parameters.pageCurrent) {
+          pageButton.classList.add("app-temporary-list__page-button--active");
+          pageButton.disabled = true;
+        } else {
+          pageButton.addEventListener("click", () => {
+            load({ page: i });
+          });
+        }
+
+        paginationControls.appendChild(pageButton);
+      }
+
+      if (parameters.pageHasMore) {
+        const ellipsis = document.createElement("span");
+        ellipsis.className = "app-temporary-list__page-ellipsis";
+        ellipsis.textContent = "…";
+        paginationControls.appendChild(ellipsis);
+      }
     }
-
-    paginationPrevious.addEventListener("click", () => {
-      load({ "newer-than": buildHistoryPage.dataset.pageEntryNewest });
-    });
-
-    paginationNext.addEventListener("click", () => {
-      load({ "older-than": buildHistoryPage.dataset.pageEntryOldest });
-    });
 
     function createRefreshTimeout() {
       cancelRefreshTimeout();
@@ -158,14 +166,15 @@ BehaviorShim.specify(
       }
     }
 
-    const debouncedLoad = debounce(() => {
-      load();
+    const debouncedLoad = debounce((options) => {
+      load(options);
     }, 150);
 
     pageSearchInput.addEventListener("input", function () {
       container.classList.add("app-temporary-list--loading");
       pageSearch.classList.add("jenkins-search--loading");
-      debouncedLoad();
+      // A new search resets us back to the first page of results
+      debouncedLoad({ page: 1 });
     });
 
     container.classList.add("app-temporary-list--loading");

@@ -94,6 +94,7 @@ public class HistoryWidget<O extends ModelObject, T> extends Widget {
 
     final Long newerThan;
     final Long olderThan;
+    final Integer page;
     final String searchString;
 
     /**
@@ -113,6 +114,8 @@ public class HistoryWidget<O extends ModelObject, T> extends Widget {
         this.owner = owner;
         this.newerThan = getPagingParam(currentRequest, "newer-than");
         this.olderThan = getPagingParam(currentRequest, "older-than");
+        Long pageParam = getPagingParam(currentRequest, "page");
+        this.page = pageParam != null ? pageParam.intValue() : null;
         this.searchString = currentRequest.getParameter("search");
     }
 
@@ -211,7 +214,9 @@ public class HistoryWidget<O extends ModelObject, T> extends Widget {
         HistoryPageFilter<T> historyPageFilter = new HistoryPageFilter<>(maxEntries);
         historyPageFilter.widget = this;
 
-        if (newerThan != null) {
+        if (page != null) {
+            historyPageFilter.setPage(page);
+        } else if (newerThan != null) {
             historyPageFilter.setNewerThan(newerThan);
         } else if (olderThan != null) {
             historyPageFilter.setOlderThan(olderThan);

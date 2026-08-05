@@ -388,9 +388,29 @@
   }
 
   &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
     border-top: var(--jenkins-border);
     margin: 0 !important;
     padding: 0.5rem !important;
+  }
+
+  &__page-button {
+    min-width: 2rem;
+
+    &--active {
+      background: var(--button-background--hover);
+      font-weight: 600;
+      pointer-events: none;
+    }
+  }
+
+  &__page-ellipsis {
+    padding: 0 0.25rem;
+    color: var(--text-color-secondary);
   }
 }
 

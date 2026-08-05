@@ -51,10 +51,18 @@ import jenkins.model.queue.QueueItem;
  */
 public class HistoryPageFilter<T> {
 
+    /**
+     * Upper bound on how many pages we'll report via {@link #totalPages}. Bounds how much of a
+     * (potentially huge, lazily loaded) build history we're willing to scan just to render page numbers.
+     */
+    private static final int MAX_PAGE_LINKS = 10;
+
     private final int maxEntries;
     private Long newerThan;
     private Long olderThan;
     private String searchString;
+    private int page = 1;
+    private boolean paged;
 
     // Need to use different Lists for QueueItem and HistoricalBuilds because
     // we need access to them separately in the jelly files for rendering.
@@ -73,6 +81,11 @@ public class HistoryPageFilter<T> {
     public long newestOnPage = Long.MIN_VALUE; // see updateNewestOldest()
     @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", justification = "Preserve API compatibility")
     public long oldestOnPage = Long.MAX_VALUE; // see updateNewestOldest()
+
+    @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", justification = "Preserve API compatibility; read by Stapler")
+    public int totalPages = 1; // number of pages known so far, bounded by MAX_PAGE_LINKS, only meaningful when paged
+    @SuppressFBWarnings(value = "PA_PUBLIC_PRIMITIVE_ATTRIBUTE", justification = "Preserve API compatibility; read by Stapler")
+    public boolean hasMorePages = false; // there are more pages beyond totalPages that we didn't bother counting
 
     /**
      * Create a history page filter instance.
@@ -114,6 +127,26 @@ public class HistoryPageFilter<T> {
     }
 
     /**
+     * Switches this filter into numbered-page mode and selects the given 1-based page.
+     * Mutually exclusive with {@link #setNewerThan(Long)} / {@link #setOlderThan(Long)}.
+     * @param page The 1-based page number to render.
+     */
+    public void setPage(int page) {
+        if (newerThan != null || olderThan != null) {
+            throw new UnsupportedOperationException("Cannot set 'page'. 'newerThan'/'olderThan' already set.");
+        }
+        this.paged = true;
+        this.page = Math.max(page, 1);
+    }
+
+    /**
+     * The 1-based page currently being rendered. Only meaningful in numbered-page mode.
+     */
+    public int getPage() {
+        return page;
+    }
+
+    /**
      * Add build items to the History page.
      *
      * @param runItems The items to be added. Assumes the items are in descending queue ID order i.e. newest first.
@@ -150,7 +183,9 @@ public class HistoryPageFilter<T> {
 
         nextBuildNumber = getNextBuildNumber(items.iterator().next());
 
-        if (newerThan == null && olderThan == null) {
+        if (paged) {
+            addPaged(items);
+        } else if (newerThan == null && olderThan == null) {
             // Just return the first page of entries (newest)
             Iterator<ItemT> iter = items.iterator();
             while (iter.hasNext()) {
@@ -222,6 +257,40 @@ public class HistoryPageFilter<T> {
         }
     }
 
+    /**
+     * Slice out a single numbered page of matching items, and work out how many pages are
+     * available (bounded by {@link #MAX_PAGE_LINKS} so we never have to scan an entire,
+     * potentially huge, build history just to render page numbers).
+     *
+     * @param items The items to page through.
+     * @param <ItemT> The type of items should either be T or {@link QueueItem}.
+     */
+    private <ItemT> void addPaged(@NonNull Iterable<ItemT> items) {
+        int cap = MAX_PAGE_LINKS * maxEntries;
+        int offset = (page - 1) * maxEntries;
+
+        List<ItemT> matched = new ArrayList<>();
+        Iterator<ItemT> iter = items.iterator();
+        while (iter.hasNext() && matched.size() <= cap) {
+            ItemT item = iter.next();
+            if (matchesSearch(item)) {
+                matched.add(item);
+            }
+        }
+
+        hasMorePages = matched.size() > cap;
+        int knownCount = Math.min(matched.size(), cap);
+        totalPages = Math.max(1, (int) Math.ceil(knownCount / (double) maxEntries));
+
+        int end = Math.min(offset + maxEntries, matched.size());
+        for (int i = offset; i < end; i++) {
+            add(matched.get(i));
+        }
+
+        hasUpPage = page > 1;
+        hasDownPage = page < totalPages || hasMorePages;
+    }
+
     public int size() {
         return queueItems.size() + runs.size();
     }
@@ -275,18 +344,24 @@ public class HistoryPageFilter<T> {
     private boolean add(Object entry) {
         // Purposely not calling isFull(). May need to add a greater number of entries
         // to the page initially, newerThan then cutting it back down to size using cutLeading()
+        if (!matchesSearch(entry)) {
+            return false;
+        }
         if (entry instanceof QueueItem item) {
-            if (searchString != null && !fitsSearchParams(item)) {
-                return false;
-            }
             addQueueItem(item);
             return true;
         } else if (entry instanceof HistoricalBuild run) {
-            if (searchString != null && !fitsSearchParams(run)) {
-                return false;
-            }
             addRun(run);
             return true;
+        }
+        return false;
+    }
+
+    private boolean matchesSearch(Object entry) {
+        if (entry instanceof QueueItem item) {
+            return searchString == null || fitsSearchParams(item);
+        } else if (entry instanceof HistoricalBuild run) {
+            return searchString == null || fitsSearchParams(run);
         }
         return false;
     }

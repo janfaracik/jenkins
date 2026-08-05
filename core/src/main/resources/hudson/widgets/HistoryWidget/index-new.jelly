@@ -39,7 +39,8 @@ THE SOFTWARE.
        data-page-entry-newest="${page.newestOnPage}"
        data-page-entry-oldest="${page.oldestOnPage}"
        data-page-has-up="${page.hasUpPage}"
-       data-page-has-down="${page.hasDownPage}">
+       data-page-has-down="${page.hasDownPage}"
+       data-page-current="1">
     <div id="jenkins-builds">
       <div style="display: none">
         <l:search-bar placeholder="${%find}"
@@ -61,16 +62,8 @@ THE SOFTWARE.
         <div id="jenkins-build-history">
         </div>
 
-        <div class="app-temporary-list__controls jenkins-hidden" id="controls">
-          <button class="jenkins-button jenkins-button--tertiary jenkins-card__unveil" id="up">
-            <l:icon src="symbol-arrow-left" />
-            <span class="jenkins-visually-hidden">${%Newer builds}</span>
-          </button>
-          <button class="jenkins-button jenkins-button--tertiary jenkins-card__unveil" id="down">
-            <l:icon src="symbol-arrow-right" />
-            <span class="jenkins-visually-hidden">${%Older builds}</span>
-          </button>
-        </div>
+        <!--Populated with numbered page buttons by builds-card-new.js-->
+        <div class="app-temporary-list__controls jenkins-hidden" id="controls"></div>
       </div>
 
       <!--The value for `page-next-build` is modified inside of `entries.jelly` on render, so set the attribute-->
