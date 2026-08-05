@@ -71,7 +71,7 @@ $min-button-size: 2.375rem;
   flex-direction: column;
   border-radius: var(--form-input-border-radius);
   background: var(--card-background);
-  border: var(--card-border-width) solid var(--card-border-color);
+  border: var(--jenkins-border);
 
   &__item {
     --tertiary-color: var(--text-color-secondary);
@@ -85,7 +85,7 @@ $min-button-size: 2.375rem;
       0 0 0 0.5rem transparent;
 
     &:not(:last-of-type) {
-      border-bottom: var(--card-border-width) solid var(--card-border-color);
+      border-bottom: var(--jenkins-border);
     }
 
     &:hover {
@@ -104,7 +104,7 @@ $min-button-size: 2.375rem;
     &:has(.jenkins-jobs-list__item__details:active) {
       background: var(--card-background--active);
       box-shadow:
-        0 0 0 0.09375rem
+        0 0 0 var(--jenkins-border-width)
           color-mix(
             in sRGB,
             var(--text-color-secondary) 20%,
