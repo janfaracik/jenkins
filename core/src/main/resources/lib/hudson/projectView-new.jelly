@@ -67,19 +67,7 @@ THE SOFTWARE.
               </div>
             </a>
             <div class="jenkins-jobs-list__item__actions">
-              <j:if test="${job.buildable and job.hasPermission(job.BUILD)}">
-                <button class="jenkins-button jenkins-button--tertiary jenkins-!-build-color" tooltip="Build">
-                  <l:icon src="symbol-play" />
-                </button>
-              </j:if>
-              <a class="jenkins-button jenkins-button--tertiary" tooltip="Configure" href="${jobBaseUrl}${job.shortUrl}configure">
-                <l:icon src="symbol-settings" />
-              </a>
-              <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
-                      tooltip="More actions"
-                      data-href="${jobBaseUrl}${job.shortUrl}">
-                <l:icon src="symbol-menu" />
-              </button>
+              <l:actions it="${job}" url="${rootURL}/${job.url}" compact="true" />
             </div>
           </div>
         </j:forEach>
