@@ -1,0 +1,89 @@
+<!--
+The MIT License
+
+Copyright (c) 2004-2010, Sun Microsystems, Inc., Kohsuke Kawaguchi, Stephen Connolly, id:cactusman, Martin Eigenbrodt
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define" xmlns:l="/lib/layout">
+  <div class="dashboard">
+    <j:if test="${columnExtensions==null}">
+        <j:invokeStatic var="columnExtensions" className="hudson.model.ListView" method="getDefaultColumns"/>
+    </j:if>
+
+    <j:if test="${!empty(jobs) or !empty(attrs.views)}">
+      <!-- the caller can inject a tab bar here -->
+      <div id="projectstatus-tabBar">
+        <d:invokeBody/>
+      </div>
+
+      <div class="jenkins-jobs-list">
+        <j:set var="jenkins_mobile_show" value="${true}"/>
+        <j:forEach var="job" items="${jobs}">
+          <j:set var="relativeLinkToJob" value="${h.getRelativeLinkTo(job)}"/>
+          <j:set var="jobBaseUrl" value="${relativeLinkToJob.substring(0, relativeLinkToJob.length() - job.shortUrl.length())}"/>
+          <div class="jenkins-jobs-list__item">
+            <a class="jenkins-jobs-list__item__details" href="${jobBaseUrl}${job.shortUrl}">
+              <div class="jenkins-jobs-list__item__icons">
+                <j:choose>
+                  <j:when test="${job.iconColor.iconName != null}">
+                    <l:icon src="symbol-status-${job.iconColor.iconName}" alt="${job.iconColor.description}" />
+                  </j:when>
+                  <j:otherwise>
+                    <!-- This is for special conditions, such as folders -->
+                    <l:icon src="${job.iconColor.iconClassName}" />
+                  </j:otherwise>
+                </j:choose>
+              </div>
+              <div class="jenkins-jobs-list__item__details__text">
+                <p class="jenkins-jobs-list__item__label">
+                  ${job.displayName}
+                  <!-- TODO - Hack - don't merge the below! -->
+                  <j:if test="${job.displayName eq 'main'}">
+                    <span class="jenkins-badge jenkins-!-info-color">Default</span>
+                  </j:if>
+                </p>
+                <div class="jenkins-jobs-list__item__description">
+                  <l:details-bar it="${job}" shorthand="true" />
+                </div>
+              </div>
+            </a>
+            <div class="jenkins-jobs-list__item__actions">
+              <j:if test="${job.buildable and job.hasPermission(job.BUILD)}">
+                <button class="jenkins-button jenkins-button--tertiary jenkins-!-build-color" tooltip="Build">
+                  <l:icon src="symbol-play" />
+                </button>
+              </j:if>
+              <a class="jenkins-button jenkins-button--tertiary" tooltip="Configure" href="${jobBaseUrl}${job.shortUrl}configure">
+                <l:icon src="symbol-settings" />
+              </a>
+              <button class="jenkins-button jenkins-button--tertiary jenkins-jumplist-link"
+                      tooltip="More actions"
+                      data-href="${jobBaseUrl}${job.shortUrl}">
+                <l:icon src="symbol-menu" />
+              </button>
+            </div>
+          </div>
+        </j:forEach>
+      </div>
+    </j:if>
+  </div>
+</j:jelly>
