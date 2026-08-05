@@ -88,10 +88,6 @@ $min-button-size: 2.375rem;
       border-bottom: var(--jenkins-border);
     }
 
-    &:hover {
-      background: var(--card-background--hover);
-    }
-
     &:has(.jenkins-jobs-list__item__details:active, .jenkins-jobs-list__item__details:focus) {
       border-bottom-color: transparent;
       border-radius: calc(var(--form-input-border-radius) / 2);
@@ -99,10 +95,12 @@ $min-button-size: 2.375rem;
 
     &:hover {
       --tertiary-color: var(--text-color);
+
+      background: var(--button-background);
     }
 
     &:has(.jenkins-jobs-list__item__details:active) {
-      background: var(--card-background--active);
+      background: var(--button-background--hover);
       box-shadow:
         0 0 0 var(--jenkins-border-width)
           color-mix(
@@ -123,8 +121,8 @@ $min-button-size: 2.375rem;
           );
     }
 
-    &:has(.jenkins-jobs-list__item__details:focus) {
-      background: var(--card-background--active);
+    &:has(.jenkins-jobs-list__item__details:focus-visible) {
+      background: var(--button-background--hover);
       box-shadow: 0 0 0 0.2rem var(--text-color) !important;
     }
 
