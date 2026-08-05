@@ -23,7 +23,7 @@ THE SOFTWARE.
 -->
 
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:d="jelly:define" xmlns:l="/lib/layout">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout">
   <div class="dashboard">
     <j:if test="${columnExtensions==null}">
         <j:invokeStatic var="columnExtensions" className="hudson.model.ListView" method="getDefaultColumns"/>
@@ -37,6 +37,11 @@ THE SOFTWARE.
 
       <div class="jenkins-jobs-list">
         <j:set var="jenkins_mobile_show" value="${true}"/>
+        <j:forEach var="col" items="${columnExtensions}">
+          <j:if test="${col.class.simpleName.equals('BuildButtonColumn')}">
+            <j:set var="buildButtonColumn" value="${col}" />
+          </j:if>
+        </j:forEach>
         <j:forEach var="job" items="${jobs}">
           <j:set var="relativeLinkToJob" value="${h.getRelativeLinkTo(job)}"/>
           <j:set var="jobBaseUrl" value="${relativeLinkToJob.substring(0, relativeLinkToJob.length() - job.shortUrl.length())}"/>
@@ -45,7 +50,7 @@ THE SOFTWARE.
               <div class="jenkins-jobs-list__item__icons">
                 <j:choose>
                   <j:when test="${job.iconColor.iconName != null}">
-                    <l:icon src="symbol-status-${job.iconColor.iconName}" alt="${job.iconColor.description}" />
+                    <l:icon src="symbol-status-${job.iconColor.iconName}" tooltip="${job.iconColor.description}" />
                   </j:when>
                   <j:otherwise>
                     <!-- This is for special conditions, such as folders -->
@@ -54,15 +59,9 @@ THE SOFTWARE.
                 </j:choose>
               </div>
               <div class="jenkins-jobs-list__item__details__text">
-                <p class="jenkins-jobs-list__item__label">
-                  ${job.displayName}
-                  <!-- TODO - Hack - don't merge the below! -->
-                  <j:if test="${job.displayName eq 'main'}">
-                    <span class="jenkins-badge jenkins-!-info-color">Default</span>
-                  </j:if>
-                </p>
+                <p class="jenkins-jobs-list__item__label">${job.displayName}</p>
                 <div class="jenkins-jobs-list__item__description">
-                  <l:details-bar it="${job}" shorthand="true" />
+                  <l:details-bar it="${job}" />
                 </div>
               </div>
             </a>
