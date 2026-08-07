@@ -45,7 +45,7 @@ button.jenkins-badge {
 
   &::before {
     border: var(--jenkins-border-width) solid
-      var(--jenkins-border-color--inherit-subtle);
+    oklch(from currentColor l c h / 0.275);
     background-clip: padding-box;
   }
 
