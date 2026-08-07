@@ -17,6 +17,7 @@
   background-size: 100% 90vh;
   background-repeat: no-repeat;
   isolation: isolate;
+  box-shadow: var(--control-shadow);
 
   &:has(> .app-page-body__sidebar) {
     grid-template-columns: auto 1fr;

@@ -110,8 +110,7 @@ $border-radius: 19px;
 
   &:hover::before {
     opacity: 1;
-    inset: -4px;
-    background: var(--card-background);
+    inset: -3px;
   }
 
   a {
@@ -140,7 +139,7 @@ $border-radius: 19px;
 
       &::before,
       &::after {
-        inset: 3px;
+        inset: 4px;
       }
     }
 
@@ -149,7 +148,7 @@ $border-radius: 19px;
 
       &::before,
       &::after {
-        inset: 1.5px;
+        inset: 1px;
       }
     }
 
