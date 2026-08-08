@@ -80,11 +80,11 @@ BehaviorShim.specify(
             container.classList.remove("app-temporary-list--loading");
             pageSearch.classList.remove("jenkins-search--loading");
 
-            // Show the 'No builds' text if there are no builds
+            // Show the 'No results found' notice if there are no builds
             if (responseText.trim() === "") {
               contents.innerHTML = "";
               if (params.search) {
-                noBuilds.style.display = "block";
+                noBuilds.classList.remove("jenkins-hidden");
               } else {
                 noBuildsYet.classList.remove("jenkins-hidden");
                 card.classList.add("jenkins-hidden");
@@ -101,9 +101,8 @@ BehaviorShim.specify(
 
             // Show the refreshed builds list
             contents.innerHTML = responseText;
-            if (params.search) {
-              noBuilds.style.display = "hidden";
-            } else {
+            noBuilds.classList.add("jenkins-hidden");
+            if (!params.search) {
               noBuildsYet.classList.add("jenkins-hidden");
               card.classList.remove("jenkins-hidden");
             }

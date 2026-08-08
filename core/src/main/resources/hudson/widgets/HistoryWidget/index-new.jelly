@@ -48,9 +48,12 @@ THE SOFTWARE.
           </j:forEach>
         </div>
 
-        <div id="no-builds" style="display:none" class="app-temporary-list__placeholder">
-          ${%No builds}
-        </div>
+        <l:notice id="no-builds"
+                  icon="symbol-search"
+                  title="${%No results found}"
+                  clazz="jenkins-hidden">
+          ${%Try adjusting your search or filters.}
+        </l:notice>
 
         <div id="jenkins-build-history">
         </div>
