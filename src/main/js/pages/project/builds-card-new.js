@@ -78,6 +78,7 @@ BehaviorShim.specify(
         if (rsp.ok) {
           rsp.text().then((responseText) => {
             container.classList.remove("app-temporary-list--loading");
+            debouncedSpinner.cancel();
             pageSearch.classList.remove("jenkins-search--loading");
 
             // Show the 'No results found' notice if there are no builds
@@ -175,13 +176,19 @@ BehaviorShim.specify(
       }
     }
 
+    // Only show the search bar's spinner if a load takes a while - avoids a
+    // flash of the spinner for fast responses, same as the command palette.
+    const debouncedSpinner = debounce(() => {
+      pageSearch.classList.add("jenkins-search--loading");
+    }, 150);
+
     const debouncedLoad = debounce(() => {
       load();
     }, 150);
 
     pageSearchInput.addEventListener("input", function () {
       container.classList.add("app-temporary-list--loading");
-      pageSearch.classList.add("jenkins-search--loading");
+      debouncedSpinner();
       debouncedLoad();
     });
 
@@ -240,7 +247,7 @@ BehaviorShim.specify(
 
         renderStatusSelection();
         container.classList.add("app-temporary-list--loading");
-        pageSearch.classList.add("jenkins-search--loading");
+        debouncedSpinner();
         load();
       });
 
@@ -250,7 +257,7 @@ BehaviorShim.specify(
         selectedStatuses = new Set();
         renderStatusSelection();
         container.classList.add("app-temporary-list--loading");
-        pageSearch.classList.add("jenkins-search--loading");
+        debouncedSpinner();
         load();
       });
 
