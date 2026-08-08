@@ -17,6 +17,9 @@ BehaviorShim.specify(
     // rather than inside #buildHistoryPage, so look them up from the document.
     const pageSearchInput = document.querySelector("#build-history-search");
     const pageSearch = pageSearchInput.closest(".jenkins-search");
+    const pageSearchContainer = pageSearchInput.closest(
+      ".jenkins-search-container",
+    );
     const statusFilterButton = document.querySelector(
       "#build-status-filter-button",
     );
@@ -28,8 +31,8 @@ BehaviorShim.specify(
     const contents = card.querySelector("#jenkins-build-history");
     const container = card.querySelector(".app-temporary-list");
     const loadingBuilds = card.querySelector("#loading-builds");
-    const noBuilds = card.querySelector("#no-builds");
-    const noBuildsYet = document.querySelector("#no-builds-yet");
+    const noBuilds = buildHistoryPage.querySelector("#no-builds");
+    const noBuildsYet = buildHistoryPage.querySelector("#no-builds-yet");
 
     // Pagination controls
     const paginationControls = document.querySelector("#controls");
@@ -42,6 +45,16 @@ BehaviorShim.specify(
 
     // Status filter state. Empty means "show everything".
     let selectedStatuses = new Set();
+
+    /**
+     * There's nothing to search/filter until the job has had a first build, so
+     * hide the controls entirely until then.
+     * @param {boolean}  visible
+     */
+    function setSearchControlsVisible(visible) {
+      pageSearchContainer.classList.toggle("jenkins-hidden", !visible);
+      statusFilterButton.classList.toggle("jenkins-hidden", !visible);
+    }
 
     /**
      * Refresh the 'Builds' card
@@ -81,14 +94,19 @@ BehaviorShim.specify(
             debouncedSpinner.cancel();
             pageSearch.classList.remove("jenkins-search--loading");
 
+            // A search term or an active status filter narrows the results, so an
+            // empty response then means "no results", not "no builds ever"
+            const isFiltered = Boolean(params.search) || Boolean(params.status);
+
             // Show the 'No results found' notice if there are no builds
             if (responseText.trim() === "") {
               contents.innerHTML = "";
-              if (params.search) {
+              card.classList.add("jenkins-hidden");
+              if (isFiltered) {
                 noBuilds.classList.remove("jenkins-hidden");
               } else {
                 noBuildsYet.classList.remove("jenkins-hidden");
-                card.classList.add("jenkins-hidden");
+                setSearchControlsVisible(false);
               }
               loadingBuilds.style.display = "none";
               updateCardControls({
@@ -102,10 +120,11 @@ BehaviorShim.specify(
 
             // Show the refreshed builds list
             contents.innerHTML = responseText;
+            card.classList.remove("jenkins-hidden");
             noBuilds.classList.add("jenkins-hidden");
-            if (!params.search) {
+            if (!isFiltered) {
               noBuildsYet.classList.add("jenkins-hidden");
-              card.classList.remove("jenkins-hidden");
+              setSearchControlsVisible(true);
             }
             loadingBuilds.style.display = "none";
             BehaviorShim.applySubtree(contents);
