@@ -49,6 +49,7 @@ THE SOFTWARE.
       <div class="jenkins-search__icon">
         <l:icon src="symbol-search" />
       </div>
+
       <input value="${attrs.value}"
              id="${attrs.id}"
              class="jenkins-input jenkins-search__input"
@@ -60,14 +61,17 @@ THE SOFTWARE.
              autocapitalize="off"
              spellcheck="false"
              disabled="${attrs.enabled == false ? true : null}" />
-      <div class="jenkins-search__charms">
-        <j:if test="${attrs.filter != null}">
-          <j:out value="${attrs.filter}" />
-        </j:if>
-        <j:if test="${attrs.hasKeyboardShortcut != 'false' and attrs.filter == null}">
-          <l:keyboard-shortcut shortcut="symbol-search-shortcut" message="${%shortcut}" />
-        </j:if>
-      </div>
+
+      <j:if test="${attrs.hasKeyboardShortcut != 'false' or attrs.filter != null}">
+        <div class="jenkins-search__charms">
+          <j:if test="${attrs.filter != null}">
+            <j:out value="${attrs.filter}" />
+          </j:if>
+          <j:if test="${attrs.hasKeyboardShortcut != 'false' and attrs.filter == null}">
+            <l:keyboard-shortcut shortcut="symbol-search-shortcut" message="${%shortcut}" />
+          </j:if>
+        </div>
+      </j:if>
     </div>
   </div>
 </j:jelly>
