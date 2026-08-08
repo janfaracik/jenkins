@@ -200,36 +200,10 @@
   animation: pulse-skeleton 2s both ease-in-out infinite;
 }
 
-.app-temporary-list__filters__status-button {
-  flex-shrink: 0;
-
-  &--active {
-    background: var(--warning-color);
-    color: var(--background) !important;
-
-    &:hover,
-    &:focus {
-      background: var(--warning-color) !important;
-    }
-  }
-}
-
 .app-temporary-list__filter-panel {
   display: flex;
   flex-direction: column;
   min-width: 220px;
-
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.375rem 0.625rem;
-    border-bottom: var(--jenkins-border);
-
-    .jenkins-dropdown__heading {
-      margin: 0;
-    }
-  }
 
   &__reset {
     appearance: none;

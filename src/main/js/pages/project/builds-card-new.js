@@ -212,7 +212,11 @@ BehaviorShim.specify(
         .classList.toggle("jenkins-hidden", !hasSelection);
 
       statusFilterButton.classList.toggle(
-        "app-temporary-list__filters__status-button--active",
+        "jenkins-button--tertiary",
+        !hasSelection,
+      );
+      statusFilterButton.classList.toggle(
+        "jenkins-!-accent-color",
         hasSelection,
       );
     }

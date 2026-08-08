@@ -29,34 +29,37 @@ THE SOFTWARE.
     <j:set var="it" value="${it.object}" />
 
     <l:app-bar title="Builds">
-      <l:search-bar id="build-history-search" placeholder="${%find}" />
-      <button type="button"
-              class="jenkins-button jenkins-button--tertiary app-temporary-list__filters__status-button"
-              id="build-status-filter-button"
-              tooltip="${%Filter}">
-        <l:icon src="symbol-filter" />
-      </button>
-
-      <template id="build-status-filter-template">
-        <div class="app-temporary-list__filter-panel">
-          <div class="app-temporary-list__filter-panel__header">
-            <span class="jenkins-dropdown__heading">${%Filter}</span>
-            <button type="button" class="app-temporary-list__filter-panel__reset jenkins-hidden">${%Reset}</button>
-          </div>
-          <div class="jenkins-dropdown app-temporary-list__filter-panel__items">
-            <j:forEach var="filter" items="${tab.statusFilters}">
-              <button type="button" class="jenkins-dropdown__item" data-status="${filter.value}">
-                <div class="jenkins-dropdown__item__icon">
-                  <l:icon src="${filter.iconClassName}" />
-                </div>
-                <span>${filter.displayName}</span>
-              </button>
-            </j:forEach>
-          </div>
-        </div>
-      </template>
-
       <l:details-bar it="${it}">
+        <j:set var="filter">
+          <button type="button"
+                  class="jenkins-button jenkins-button--tertiary"
+                  id="build-status-filter-button"
+                  tooltip="${%Filter}">
+            <l:icon src="symbol-filter" />
+          </button>
+
+          <template id="build-status-filter-template">
+            <div class="app-temporary-list__filter-panel">
+              <div class="jenkins-dropdown app-temporary-list__filter-panel__items">
+                <span class="jenkins-dropdown__heading">
+                  ${%Filter}
+                  <button type="button" class="app-temporary-list__filter-panel__reset jenkins-hidden">${%Reset}</button>
+                </span>
+                <j:forEach var="filter" items="${tab.statusFilters}">
+                  <button type="button" class="jenkins-dropdown__item" data-status="${filter.value}">
+                    <div class="jenkins-dropdown__item__icon">
+                      <l:icon src="${filter.icon}" />
+                    </div>
+                    <span>${filter.displayName}</span>
+                  </button>
+                </j:forEach>
+              </div>
+            </div>
+          </template>
+        </j:set>
+
+        <l:search-bar id="build-history-search" placeholder="${%Search}" filter="${filter}" />
+
         <t:editDescriptionButton permission="${it.CONFIGURE}" compact="true" />
       </l:details-bar>
     </l:app-bar>
