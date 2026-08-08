@@ -1,5 +1,11 @@
 import debounce from "lodash/debounce";
+import tippy from "tippy.js";
 import BehaviorShim from "@/util/behavior-shim";
+import Templates from "@/components/dropdowns/templates";
+
+const SELECTED_STATUS_ITEM_CLASS = "jenkins-dropdown__item--selected";
+const MUTED_STATUS_ITEM_CLASS =
+  "app-temporary-list__filter-panel__items__item--muted";
 
 BehaviorShim.specify(
   "#buildHistoryPage",
@@ -7,8 +13,16 @@ BehaviorShim.specify(
   1000,
   (buildHistoryPage) => {
     // Card/item controls
-    const pageSearch = buildHistoryPage.querySelector(".jenkins-search");
-    const pageSearchInput = buildHistoryPage.querySelector("input");
+    // These now live in the app bar (jenkins/job/OverviewTab/index.jelly)
+    // rather than inside #buildHistoryPage, so look them up from the document.
+    const pageSearchInput = document.querySelector("#build-history-search");
+    const pageSearch = pageSearchInput.closest(".jenkins-search");
+    const statusFilterButton = document.querySelector(
+      "#build-status-filter-button",
+    );
+    const statusFilterTemplate = document.querySelector(
+      "#build-status-filter-template",
+    );
     const ajaxUrl = buildHistoryPage.getAttribute("page-ajax");
     const card = document.querySelector("#jenkins-builds");
     const contents = card.querySelector("#jenkins-build-history");
@@ -26,6 +40,9 @@ BehaviorShim.specify(
     let buildRefreshTimeout;
     const updateBuildsRefreshInterval = 50000;
 
+    // Status filter state. Empty means "show everything".
+    let selectedStatuses = new Set();
+
     /**
      * Refresh the 'Builds' card
      * @param {QueryParameters}  options
@@ -35,6 +52,7 @@ BehaviorShim.specify(
       cancelRefreshTimeout();
       const params = Object.assign({}, options, {
         search: pageSearchInput.value,
+        status: Array.from(selectedStatuses).join(","),
       });
       const paginationOrFirst =
         buildHistoryPage.dataset.pageHasUp === "false" ||
@@ -167,6 +185,78 @@ BehaviorShim.specify(
       pageSearch.classList.add("jenkins-search--loading");
       debouncedLoad();
     });
+
+    // Build the filter panel once and keep it around for the lifetime of the
+    // page - tippy just shows/hides it, so listeners are only attached once.
+    const statusFilterPanel =
+      statusFilterTemplate.content.cloneNode(true).firstElementChild;
+
+    /**
+     * Applies the current selection to the filter panel's rows, the Reset link,
+     * and the funnel trigger button.
+     */
+    function renderStatusSelection() {
+      const hasSelection = selectedStatuses.size > 0;
+
+      statusFilterPanel.querySelectorAll("[data-status]").forEach((item) => {
+        const isSelected = selectedStatuses.has(item.dataset.status);
+        item.classList.toggle(SELECTED_STATUS_ITEM_CLASS, isSelected);
+        item.classList.toggle(
+          MUTED_STATUS_ITEM_CLASS,
+          hasSelection && !isSelected,
+        );
+      });
+
+      statusFilterPanel
+        .querySelector(".app-temporary-list__filter-panel__reset")
+        .classList.toggle("jenkins-hidden", !hasSelection);
+
+      statusFilterButton.classList.toggle(
+        "app-temporary-list__filters__status-button--active",
+        hasSelection,
+      );
+    }
+
+    statusFilterPanel
+      .querySelector(".app-temporary-list__filter-panel__items")
+      .addEventListener("click", (event) => {
+        const item = event.target.closest("[data-status]");
+        if (!item) {
+          return;
+        }
+
+        const status = item.dataset.status;
+        if (selectedStatuses.size === 0) {
+          // Nothing selected yet (i.e. everything shown) - isolate to just this one
+          selectedStatuses = new Set([status]);
+        } else if (selectedStatuses.has(status)) {
+          selectedStatuses.delete(status);
+        } else {
+          selectedStatuses.add(status);
+        }
+
+        renderStatusSelection();
+        container.classList.add("app-temporary-list--loading");
+        pageSearch.classList.add("jenkins-search--loading");
+        load();
+      });
+
+    statusFilterPanel
+      .querySelector(".app-temporary-list__filter-panel__reset")
+      .addEventListener("click", () => {
+        selectedStatuses = new Set();
+        renderStatusSelection();
+        container.classList.add("app-temporary-list--loading");
+        pageSearch.classList.add("jenkins-search--loading");
+        load();
+      });
+
+    tippy(
+      statusFilterButton,
+      Object.assign({}, Templates.dropdown(), {
+        content: statusFilterPanel,
+      }),
+    );
 
     container.classList.add("app-temporary-list--loading");
     load();

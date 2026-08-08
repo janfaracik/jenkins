@@ -41,12 +41,6 @@ THE SOFTWARE.
        data-page-has-up="${page.hasUpPage}"
        data-page-has-down="${page.hasDownPage}">
     <div id="jenkins-builds">
-      <div style="display: none">
-        <l:search-bar placeholder="${%find}"
-                      clazz="${page.runs.isEmpty() and page.queueItems.isEmpty() ? 'jenkins-hidden' : ''}"/>
-        <button>Only successful</button>
-      </div>
-
       <div class="app-temporary-list">
         <div id="loading-builds" class="app-temporary-list__placeholder">
           <j:forEach begin="1" end="10" var="i">
