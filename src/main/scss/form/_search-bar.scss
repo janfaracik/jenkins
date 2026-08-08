@@ -151,8 +151,12 @@
     }
 
     & > .jenkins-keyboard-shortcut {
-      min-width: 1.375rem;
-      min-height: 1.375rem;
+      $size: 1.375rem;
+
+      width: $size;
+      height: $size;
+      margin-top: calc((var(--search-bar-height) - $size) / 2);
+      margin-right: calc((var(--search-bar-height) - $size) / 2);
       padding: 0;
       color: var(--text-color-secondary);
     }
