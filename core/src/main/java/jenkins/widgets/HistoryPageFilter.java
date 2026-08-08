@@ -115,10 +115,11 @@ public class HistoryPageFilter<T> {
     }
 
     /**
-     * Set the build statuses to narrow the filtered set of builds to. A build (or queue item)
-     * matching any one of the given statuses is included (i.e. the statuses are OR'd together).
-     * Each status is one of the {@link hudson.model.Result} names (e.g. {@code SUCCESS}, {@code FAILURE}),
-     * {@code BUILDING} to match builds currently in progress, or {@code QUEUED} to match queue items.
+     * Set the build statuses to narrow the filtered set of builds to. A build matching any
+     * one of the given statuses is included (i.e. the statuses are OR'd together). Each
+     * status is one of the {@link hudson.model.Result} names (e.g. {@code SUCCESS},
+     * {@code FAILURE}), or {@code BUILDING} to match builds currently in progress. Queue
+     * items never have a build status, so setting any statuses excludes them entirely.
      * @param statuses The statuses to filter by.
      */
     public void setStatuses(@NonNull Set<String> statuses) {
@@ -291,7 +292,8 @@ public class HistoryPageFilter<T> {
             if (searchString != null && !fitsSearchParams(item)) {
                 return false;
             }
-            if (statuses != null && !statuses.isEmpty() && !statuses.contains(BuildStatusFilter.QUEUED.getValue())) {
+            // Queue items don't have a build status, so they never match a status filter.
+            if (statuses != null && !statuses.isEmpty()) {
                 return false;
             }
             addQueueItem(item);
