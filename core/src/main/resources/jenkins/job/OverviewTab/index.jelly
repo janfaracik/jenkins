@@ -58,7 +58,7 @@ THE SOFTWARE.
           </template>
         </j:set>
 
-        <l:search-bar id="build-history-search" placeholder="${%Search}" filter="${filter}" />
+        <l:search-bar id="build-history-search" placeholder="${%Search}" charms="${filter}" />
 
         <t:editDescriptionButton permission="${it.CONFIGURE}" compact="true" />
       </l:details-bar>

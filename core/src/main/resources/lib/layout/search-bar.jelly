@@ -33,8 +33,8 @@ THE SOFTWARE.
     <st:attribute name="hasKeyboardShortcut">
       If false the default keyboard shortcut for the input is disabled. Defaults to true.
     </st:attribute>
-    <st:attribute name="filter" since="TODO">
-      TODO
+    <st:attribute name="charms" since="TODO">
+      Custom content shown at the trailing edge of the input, replacing the default keyboard shortcut hint.
     </st:attribute>
     <st:attribute name="enabled" since="2.420">
       Defaults to true. Sets whether the search bar is enabled or not.
@@ -62,12 +62,12 @@ THE SOFTWARE.
              spellcheck="false"
              disabled="${attrs.enabled == false ? true : null}" />
 
-      <j:if test="${attrs.hasKeyboardShortcut != 'false' or attrs.filter != null}">
+      <j:if test="${attrs.hasKeyboardShortcut != 'false' or attrs.charms != null}">
         <div class="jenkins-search__charms">
-          <j:if test="${attrs.filter != null}">
-            <j:out value="${attrs.filter}" />
+          <j:if test="${attrs.charms != null}">
+            <j:out value="${attrs.charms}" />
           </j:if>
-          <j:if test="${attrs.hasKeyboardShortcut != 'false' and attrs.filter == null}">
+          <j:if test="${attrs.hasKeyboardShortcut != 'false' and attrs.charms == null}">
             <l:keyboard-shortcut shortcut="symbol-search-shortcut" message="${%shortcut}" />
           </j:if>
         </div>
