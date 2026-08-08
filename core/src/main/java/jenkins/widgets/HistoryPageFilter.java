@@ -291,7 +291,7 @@ public class HistoryPageFilter<T> {
             if (searchString != null && !fitsSearchParams(item)) {
                 return false;
             }
-            if (statuses != null && !statuses.isEmpty() && !statuses.contains("QUEUED")) {
+            if (statuses != null && !statuses.isEmpty() && !statuses.contains(BuildStatusFilter.QUEUED.getValue())) {
                 return false;
             }
             addQueueItem(item);
@@ -311,7 +311,7 @@ public class HistoryPageFilter<T> {
 
     private boolean fitsStatus(@NonNull HistoricalBuild run) {
         for (String status : statuses) {
-            if ("BUILDING".equals(status)) {
+            if (BuildStatusFilter.BUILDING.getValue().equals(status)) {
                 if (run.isBuilding()) {
                     return true;
                 }

@@ -25,6 +25,7 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <l:job-subpage>
+    <j:set var="tab" value="${it}" />
     <j:set var="it" value="${it.object}" />
 
     <l:app-bar title="Builds">
@@ -43,34 +44,14 @@ THE SOFTWARE.
             <button type="button" class="app-temporary-list__filter-panel__reset jenkins-hidden">${%Reset}</button>
           </div>
           <div class="jenkins-dropdown app-temporary-list__filter-panel__items">
-            <button type="button" class="jenkins-dropdown__item" data-status="BUILDING">
-              <l:icon src="symbol-status-blue-anime" />
-              <span>${%Running}</span>
-            </button>
-            <button type="button" class="jenkins-dropdown__item" data-status="QUEUED">
-              <l:icon src="symbol-hourglass" />
-              <span>${%Queued}</span>
-            </button>
-            <button type="button" class="jenkins-dropdown__item" data-status="SUCCESS">
-              <l:icon src="symbol-status-blue" />
-              <span>${%Successful}</span>
-            </button>
-            <button type="button" class="jenkins-dropdown__item" data-status="FAILURE">
-              <l:icon src="symbol-status-red" />
-              <span>${%Failed}</span>
-            </button>
-            <button type="button" class="jenkins-dropdown__item" data-status="UNSTABLE">
-              <l:icon src="symbol-status-yellow" />
-              <span>${%Unstable}</span>
-            </button>
-            <button type="button" class="jenkins-dropdown__item" data-status="ABORTED">
-              <l:icon src="symbol-status-aborted" />
-              <span>${%Aborted}</span>
-            </button>
-            <button type="button" class="jenkins-dropdown__item" data-status="NOT_BUILT">
-              <l:icon src="symbol-status-nobuilt" />
-              <span>${%Not built}</span>
-            </button>
+            <j:forEach var="filter" items="${tab.statusFilters}">
+              <button type="button" class="jenkins-dropdown__item" data-status="${filter.value}">
+                <div class="jenkins-dropdown__item__icon">
+                  <l:icon src="${filter.iconClassName}" />
+                </div>
+                <span>${filter.displayName}</span>
+              </button>
+            </j:forEach>
           </div>
         </div>
       </template>
