@@ -47,7 +47,7 @@ THE SOFTWARE.
           <j:set var="jobBaseUrl" value="${relativeLinkToJob.substring(0, relativeLinkToJob.length() - job.shortUrl.length())}"/>
           <div class="app-temporary-list__item">
             <div class="app-build-item">
-              <a href="${jobBaseUrl}${job.shortUrl}" class="app-build-item__icon">
+              <div class="app-build-item__icon">
                 <j:choose>
                   <j:when test="${job.iconColor.iconName != null}">
                     <l:icon src="symbol-status-${job.iconColor.iconName}" tooltip="${job.iconColor.description}" />
@@ -57,7 +57,7 @@ THE SOFTWARE.
                     <l:icon src="${job.iconColor.iconClassName}" />
                   </j:otherwise>
                 </j:choose>
-              </a>
+              </div>
 
               <div class="app-temporary-list__item__details" href="${jobBaseUrl}${job.shortUrl}">
                 <div class="app-temporary-list__item__details__text">
