@@ -63,16 +63,12 @@ THE SOFTWARE.
                 <div class="app-temporary-list__item__details__text">
                   <a class="app-temporary-list__item__label" href="${jobBaseUrl}${job.shortUrl}">${job.displayName}</a>
 
-                  <div class="app-temporary-list__item__description">
-                    <l:details-bar it="${job}">
-                      <j:set var="lastBuild" value="${job.lastBuild}" />
-                      <j:if test="${lastBuild != null}">
-                        <div class="jenkins-details__item">
-                          ${%Description(lastBuild.timestampString, lastBuild.durationString)}
-                        </div>
-                      </j:if>
-                    </l:details-bar>
-                  </div>
+                  <j:set var="lastBuild" value="${job.lastBuild}" />
+                  <j:if test="${lastBuild != null}">
+                    <div class="app-temporary-list__item__description">
+                      ${%Description(lastBuild.timestampString, lastBuild.durationString)}
+                    </div>
+                  </j:if>
                 </div>
               </div>
 
