@@ -272,8 +272,8 @@ $jenkins-split-button-border-radius: 0.2rem;
     border-bottom-right-radius: $jenkins-split-button-border-radius;
   }
 
-  & > * + * {
-    padding: 0 5px;
+  & > * + button {
+    padding: 0 0.3125rem;
     border-top-left-radius: $jenkins-split-button-border-radius;
     border-bottom-left-radius: $jenkins-split-button-border-radius;
 
