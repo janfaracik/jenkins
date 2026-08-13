@@ -3,9 +3,11 @@
 .app-page-body {
   position: relative;
   display: grid;
+  align-items: stretch;
   border: var(--jenkins-border);
   margin-inline: var(--page-inset);
-  height: calc(100vh - var(--header-height) - var(--page-inset));
+  margin-bottom: var(--page-inset);
+  flex-grow: 1;
   border-radius: var(--form-input-border-radius);
   overflow: hidden;
 
@@ -33,7 +35,6 @@
 
     @media (width >= 740px) {
       width: 280px;
-      min-height: calc(100vh - var(--header-height) - var(--page-inset));
     }
 
     @media (width > breakpoints.$tablet-breakpoint) {
@@ -99,12 +100,6 @@
     flex-direction: column;
     min-height: 100vh;
   }
-}
-
-#page-body.clear::after {
-  clear: both;
-  content: "";
-  display: table;
 }
 
 // Clearfixes extracted from responsive-grid.css as they essential

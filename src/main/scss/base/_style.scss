@@ -62,30 +62,23 @@ td.no-wrap {
   border-collapse: collapse;
 }
 
-#safe-restart-msg {
-  font-weight: bold;
-  color: var(--background) !important;
-  background-color: var(--warning-color);
-  text-align: center;
-  margin-bottom: var(--section-padding);
-  padding: 0.5em;
-  -moz-border-radius: 0.5em;
-  border-radius: var(--form-input-border-radius);
-  position: relative;
+#safe-restart-msg, #shutdown-msg {
   z-index: 103;
-}
+  margin-inline: var(--page-inset);
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 
-#shutdown-msg {
-  font-weight: bold;
-  color: var(--background) !important;
-  background-color: var(--destructive-color);
-  text-align: center;
-  margin-bottom: var(--section-padding);
-  padding: 0.5em;
-  -moz-border-radius: 0.5em;
-  border-radius: var(--form-input-border-radius);
-  position: relative;
-  z-index: 103;
+  svg {
+    translate: 0 0.25rem;
+    margin-right: 0.5rem;
+  }
+
+  & + .app-page-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+  }
 }
 
 a.lowkey:link {
