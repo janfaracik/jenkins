@@ -41,7 +41,7 @@ BehaviorShim.specify(
 
     // Refresh variables
     let buildRefreshTimeout;
-    const updateBuildsRefreshInterval = 50000;
+    const updateBuildsRefreshInterval = 5000;
 
     // Status filter state. Empty means "show everything".
     let selectedStatuses = new Set();
@@ -158,14 +158,8 @@ BehaviorShim.specify(
         "jenkins-hidden",
         !parameters.pageHasUp && !parameters.pageHasDown,
       );
-      paginationPrevious.classList.toggle(
-        "app-temporary-list__button--disabled",
-        !parameters.pageHasUp,
-      );
-      paginationNext.classList.toggle(
-        "app-temporary-list__button--disabled",
-        !parameters.pageHasDown,
-      );
+      paginationPrevious.disabled = !parameters.pageHasUp;
+      paginationNext.disabled = !parameters.pageHasDown;
 
       buildHistoryPage.dataset.pageEntryNewest = parameters.pageEntryNewest;
       buildHistoryPage.dataset.pageEntryOldest = parameters.pageEntryOldest;
