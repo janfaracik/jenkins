@@ -35,10 +35,8 @@ THE SOFTWARE.
        data-page-has-down="${page.hasDownPage}">
     <l:notice id="no-builds-yet"
               icon="symbol-play"
-              title="No builds yet"
-              clazz="jenkins-hidden">
-      Start the first build to see run history here.
-    </l:notice>
+              title="${%No builds yet}"
+              clazz="jenkins-hidden" />
 
     <l:notice id="no-builds"
               icon="symbol-search"
