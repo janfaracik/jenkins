@@ -2,6 +2,7 @@ package jenkins.model.run;
 
 import hudson.Extension;
 import hudson.model.Action;
+import hudson.model.Item;
 import hudson.model.Run;
 import java.util.Collection;
 import java.util.Set;
@@ -30,6 +31,10 @@ public class StopRunAction extends TransientActionFactory<Run> {
         }
 
         if (!target.isBuilding()) {
+            return Set.of();
+        }
+
+        if (!target.hasPermission(Item.CANCEL)) {
             return Set.of();
         }
 

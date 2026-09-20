@@ -18,10 +18,6 @@ public class EditRunAction extends TransientActionFactory<Run> {
 
     @Override
     public Collection<? extends Action> createFor(Run target) {
-        if (!target.hasPermission(Run.UPDATE)) {
-            return Set.of();
-        }
-
         return Set.of(new Action() {
             @Override
             public String getDisplayName() {
