@@ -265,7 +265,7 @@
     border-radius: 100px;
     aspect-ratio: 1;
     padding: 0;
-    margin-inline: -0.875rem;
+    margin-inline: -0.8125rem;
 
     &:not(:hover) {
       color: var(--text-color-secondary) !important;
@@ -278,7 +278,7 @@
 
     &::before,
     &::after {
-      inset: 7px;
+      inset: 0.4375rem;
     }
 
     svg {
@@ -292,7 +292,7 @@
   }
 
   .app-build__navigation-previous {
-    margin-left: -0.5rem;
+    margin-left: -0.4375rem;
   }
 }
 
