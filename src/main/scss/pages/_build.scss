@@ -259,6 +259,7 @@
     margin-bottom: 0;
     font-size: 1.1875rem;
     font-weight: 550;
+    font-variant-numeric: tabular-nums;
   }
 
   .jenkins-button {
@@ -286,8 +287,8 @@
     }
 
     svg {
-      width: 0.875rem;
-      height: 0.875rem;
+      width: 1rem;
+      height: 1rem;
 
       * {
         stroke-width: 45px;
