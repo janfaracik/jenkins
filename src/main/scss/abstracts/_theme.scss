@@ -105,6 +105,13 @@ $semantics: (
           var(--elevation-1-background)
   );
 
+  // Body
+  --body-background-top: color-mix(
+    in oklch,
+    white 1.5%,
+    var(--card-background)
+  );
+
   // Header
   --header-background: color-mix(
     in sRGB,
