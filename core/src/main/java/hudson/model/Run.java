@@ -121,6 +121,7 @@ import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.model.RunAction2;
 import jenkins.model.StandardArtifactManager;
 import jenkins.model.Tab;
+import jenkins.model.TabPlaceholder;
 import jenkins.model.details.CauseDetail;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
@@ -2701,5 +2702,26 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
     @Restricted(NoExternalUse.class)
     public List<Tab> getRunTabs() {
         return getActions(Tab.class).stream().filter(e -> e.getIconFileName() != null).toList();
+    }
+
+    @Restricted(NoExternalUse.class)
+    public List<Tab> getRunTabsWithPlaceholders() {
+        List<Tab> tabs = getRunTabs();
+        if (!isBuilding()) {
+            return tabs;
+        }
+
+        Run<?, ?> previousBuild = getPreviousCompletedBuild();
+        if (previousBuild == null) {
+            return tabs;
+        }
+
+        List<Tab> result = new ArrayList<>();
+        for (Tab previousTab : previousBuild.getRunTabs()) {
+            Tab tab = tabs.stream().filter(e -> e.getClass() == previousTab.getClass()).findFirst().orElse(null);
+            result.add(tab != null ? tab : new TabPlaceholder(this, previousTab));
+        }
+        tabs.stream().filter(e -> !result.contains(e)).forEach(result::add);
+        return result;
     }
 }

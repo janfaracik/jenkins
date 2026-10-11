@@ -157,4 +157,25 @@ $border-radius: 19px;
       margin-right: -0.25rem;
     }
   }
+
+  &__placeholder {
+    border-radius: 100px;
+    color: var(--text-color-secondary) !important;
+    pointer-events: none;
+    opacity: 0.5;
+
+    &::before,
+    &::after {
+      display: none;
+    }
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+
+      * {
+        stroke-width: 40px;
+      }
+    }
+  }
 }

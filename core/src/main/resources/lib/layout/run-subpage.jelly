@@ -64,7 +64,7 @@ THE SOFTWARE.
             <j:set var="url" value="${h.getNearestAncestorUrl(request2, it.object)}"/>
 
             <div class="app-build-bar__tabs">
-              <l:tabs items="${it.object.runTabs}" />
+              <l:tabs items="${it.object.runTabsWithPlaceholders}" />
             </div>
 
             <div class="app-build-bar__controls">

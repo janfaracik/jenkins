@@ -35,14 +35,26 @@ THE SOFTWARE.
   <j:if test="${items.size() gt 1}">
     <div class="app-build-tabs">
       <j:forEach var="tab" items="${items}">
-        <a href="${url}/${tab.urlName}"
-           class="jenkins-button ${h.hyperlinkMatchesCurrentPage(tab.urlName ?: url) ? '' : 'jenkins-button--tertiary'}">
-          <j:if test="${tab.iconFileName != null}">
-            <l:icon src="${tab.iconFileName}" />
-          </j:if>
-          ${tab.displayName}
-          <l:badge badge="${tab.badge}" />
-        </a>
+        <j:choose>
+          <j:when test="${tab.placeholder}">
+            <span class="jenkins-button jenkins-button--tertiary app-build-tabs__placeholder" aria-hidden="true">
+              <j:if test="${tab.iconFileName != null}">
+                <l:icon src="${tab.iconFileName}" />
+              </j:if>
+              ${tab.displayName}
+            </span>
+          </j:when>
+          <j:otherwise>
+            <a href="${url}/${tab.urlName}"
+               class="jenkins-button ${h.hyperlinkMatchesCurrentPage(tab.urlName ?: url) ? '' : 'jenkins-button--tertiary'}">
+              <j:if test="${tab.iconFileName != null}">
+                <l:icon src="${tab.iconFileName}" />
+              </j:if>
+              ${tab.displayName}
+              <l:badge badge="${tab.badge}" />
+            </a>
+          </j:otherwise>
+        </j:choose>
       </j:forEach>
     </div>
   </j:if>
