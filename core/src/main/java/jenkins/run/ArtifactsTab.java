@@ -40,7 +40,7 @@ public class ArtifactsTab extends Tab {
 
     @Override
     public String getDisplayName() {
-        return "Artifacts";
+        return Messages.ArtifactsTab_DisplayName();
     }
 
     @Override
