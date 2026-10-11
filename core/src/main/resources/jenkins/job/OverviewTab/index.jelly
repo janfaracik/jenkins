@@ -71,12 +71,8 @@ THE SOFTWARE.
       </j:choose>
     </j:forEach>
 
-    <l:card title="${%Legacy}">
-      <div>
-        <st:include page="jobpropertysummaries.jelly" />
+    <st:include page="jobpropertysummaries.jelly" />
 
-        <st:include page="main.jelly" />
-      </div>
-    </l:card>
+    <st:include page="main.jelly" />
   </l:job-subpage>
 </j:jelly>

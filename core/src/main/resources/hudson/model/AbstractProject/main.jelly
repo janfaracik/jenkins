@@ -30,7 +30,7 @@ THE SOFTWARE.
 
   <p:projectActionFloatingBox />
 
-  <table style="margin-top: 1em; margin-left:1em;">
+  <table>
     <j:forEach var="act" items="${it.prominentActions}">
       <j:set var="icon" value="${act.iconClassName != null ? act.iconClassName : act.iconFileName}"/>
       <t:summary icon="${icon}" href="${act.urlName}">

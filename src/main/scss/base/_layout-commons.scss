@@ -61,7 +61,7 @@
 }
 
 .app-main-panel {
-  margin-bottom: var(--section-padding);
+  margin-bottom: calc(var(--section-padding) + var(--page-inset));
 
   &--narrow {
     max-width: 900px;
