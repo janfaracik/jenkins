@@ -33,9 +33,7 @@ THE SOFTWARE.
   <l:ajax>
     <f:form method="post" action="configSubmit" name="config">
       <st:include page="configure-entries.jelly" />
-      <f:bottomButtonBar>
-        <f:submit value="${%Save}" />
-      </f:bottomButtonBar>
+      <f:saveBar />
     </f:form>
   </l:ajax>
 </j:jelly>
