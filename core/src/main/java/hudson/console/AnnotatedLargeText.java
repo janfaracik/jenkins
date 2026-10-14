@@ -227,7 +227,15 @@ public class AnnotatedLargeText<T> extends LargeText {
     @CheckReturnValue
     @Override
     public long writeLogTo(long start, OutputStream out) throws IOException {
-        return super.writeLogTo(start, new PlainTextConsoleOutputStream(out));
+        PlainTextConsoleOutputStream ptos = new PlainTextConsoleOutputStream(out);
+        long r = super.writeLogTo(start, ptos);
+        if (isComplete()) {
+            // The client is not expected to perform any further reads after this one. Make sure that we have flushed the line buffer.
+            ptos.forceEol();
+        }
+        // Back-track any pending bytes in the line buffer.
+        r -= ptos.lineBufferSize();
+        return r;
     }
 
     /**
@@ -241,7 +249,7 @@ public class AnnotatedLargeText<T> extends LargeText {
 
     /**
      * Extension point for intercepting writes from {@link #writeHtmlTo(long, Writer)} and directly inserting content into the output.
-     * @since TODO
+     * @since 2.569
      */
     protected long writeHtmlToFilter(long start, Writer w, ConsoleAnnotationOutputStream<T> caos) throws IOException {
         return super.writeLogTo(start, caos);
