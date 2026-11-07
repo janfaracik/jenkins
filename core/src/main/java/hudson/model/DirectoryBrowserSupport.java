@@ -95,6 +95,8 @@ public final class DirectoryBrowserSupport implements HttpResponse {
     private final boolean serveDirIndex;
     private String indexFileName = "index.html";
 
+    boolean workspace;
+
     @Restricted(NoExternalUse.class)
     public static final String CSP_PROPERTY_NAME = DirectoryBrowserSupport.class.getName() + ".CSP";
 
@@ -102,6 +104,11 @@ public final class DirectoryBrowserSupport implements HttpResponse {
      * Keeps track of whether this has been registered from use via {@link ResourceDomainRootAction}.
      */
     private ResourceDomainRootAction.Token resourceToken;
+
+    @Restricted(NoExternalUse.class)
+    public boolean isWorkspace() {
+        return workspace;
+    }
 
     /**
      * @deprecated as of 1.297

@@ -1927,7 +1927,9 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
             } else {
                 title = Messages.AbstractProject_WorkspaceTitleOnComputer(getDisplayName(), c.getDisplayName());
             }
-            return new DirectoryBrowserSupport(this, ws, title, "folder.png", true);
+            DirectoryBrowserSupport browser = new DirectoryBrowserSupport(this, ws, title, "folder.png", true);
+            browser.workspace = true;
+            return browser;
         }
     }
 

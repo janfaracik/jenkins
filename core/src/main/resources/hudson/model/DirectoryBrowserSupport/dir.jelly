@@ -29,7 +29,23 @@ THE SOFTWARE.
     <st:include page="sidepanel.jelly" it="${it.owner}"/>
     <l:breadcrumb title="${it.title}" />
     <l:main-panel>
-      <h1><l:breakable value="${it.title}"/></h1>
+      <l:app-bar title="${it.title}">
+        <j:if test="${it.workspace}">
+          <j:set var="wipeOutUrl" value="${rootURL}/${it.owner.url}doWipeOutWorkspace" />
+          <l:hasPermission it="${it.owner}" permission="${h.isWipeOutPermissionEnabled() ? it.owner.WIPEOUT : it.owner.BUILD}">
+            <l:confirmationLink href="${wipeOutUrl}"
+                                post="true"
+                                destructive="true"
+                                title="${%Wipe Out Workspace}"
+                                message="${%wipe.out.confirm}"
+                                okText="${%Wipe Out}"
+                                class="jenkins-button jenkins-!-destructive-color">
+              <l:icon src="symbol-trash" />
+              ${%Wipe Out Workspace}
+            </l:confirmationLink>
+          </l:hasPermission>
+        </j:if>
+      </l:app-bar>
       <div class="dirTree">
       <!-- parent path -->
         <div class="parentPath">
