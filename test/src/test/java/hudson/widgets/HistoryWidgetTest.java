@@ -1,6 +1,7 @@
 package hudson.widgets;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
@@ -14,8 +15,11 @@ import hudson.ExtensionList;
 import hudson.model.FreeStyleBuild;
 import hudson.model.FreeStyleProject;
 import hudson.model.Job;
+import hudson.model.User;
 import java.util.List;
+import java.util.Map;
 import jenkins.model.HistoricalBuild;
+import jenkins.model.experimentalflags.UserExperimentalFlagsProperty;
 import jenkins.widgets.DescriptionHistoryPageEntryDecorator;
 import jenkins.widgets.HistoryPageEntry;
 import jenkins.widgets.HistoryPageEntryDecorator;
@@ -117,6 +121,22 @@ class HistoryWidgetTest {
             assertThat(secondContexts.get(firstOnlyIndex), nullValue());
             return null;
         });
+    }
+
+    @Test
+    void ajaxEntriesCarryTheLatestBuildStatus() throws Exception {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        User.getOrCreateByIdOrFullName("alice").addProperty(new UserExperimentalFlagsProperty(Map.of("new-job-page.flag", "true")));
+        FreeStyleProject p = j.createFreeStyleProject();
+        j.buildAndAssertSuccess(p);
+
+        JenkinsRule.WebClient wc = j.createWebClient().withJavaScriptEnabled(false).login("alice");
+        HtmlPage page = wc.goTo("job/" + p.getName() + "/");
+        String entries = wc.goTo("job/" + p.getName() + "/buildHistory/ajax", null).getWebResponse().getContentAsString();
+
+        assertThat(page.querySelector("#app-build-bar-status a[href$='/job/" + p.getName() + "/1/']"), notNullValue());
+        assertThat(entries, containsString("data-app-bar-status=\"&lt;a tabindex=&quot;-1&quot; href=&quot;/jenkins/job/" + p.getName() + "/1/&quot;"));
+        assertThat(entries, containsString("tooltip=&quot;Success&quot;"));
     }
 
     @TestExtension("entryDecorators")

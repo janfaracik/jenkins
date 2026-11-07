@@ -26,7 +26,17 @@ THE SOFTWARE.
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
   <l:ajax>
     <j:if test="${it.size() > 0}">
-      <div data-page-entry-newest="${it.newestOnPage}"
+      <l:userExperimentalFlag var="newJobPage" flagClassName="jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag" />
+      <j:set var="lastBuild" value="${newJobPage and it.widget != null ? it.widget.owner.lastBuild : null}" />
+      <j:if test="${lastBuild != null}">
+        <j:set var="appBarStatus">
+          <a href="${rootURL + '/' + lastBuild.url}" class="jenkins-!-display-contents" tabindex="-1">
+            <l:icon src="symbol-status-${lastBuild.iconColor.iconName}" tooltip="${lastBuild.iconColor.description}" />
+          </a>
+        </j:set>
+      </j:if>
+      <div data-app-bar-status="${appBarStatus}"
+           data-page-entry-newest="${it.newestOnPage}"
            data-page-entry-oldest="${it.oldestOnPage}"
            data-page-has-up="${it.hasUpPage}"
            data-page-has-down="${it.hasDownPage}">

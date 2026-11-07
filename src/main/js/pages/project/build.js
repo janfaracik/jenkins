@@ -19,6 +19,7 @@ behaviorShim.specify(
       }).then((rsp) => {
         if (rsp.status === 201) {
           notificationBar.show(success, notificationBar.SUCCESS);
+          document.dispatchEvent(new CustomEvent("jenkins:build-scheduled"));
         } else {
           notificationBar.show(failure, notificationBar.ERROR);
         }

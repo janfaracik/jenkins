@@ -38,6 +38,10 @@ BehaviorShim.specify(
     let buildRefreshTimeout;
     const updateBuildsRefreshInterval = 5000;
 
+    // The latest build's status icon in the app bar
+    const appBarStatus = document.querySelector("#app-build-bar-status");
+    let appBarStatusHtml;
+
     // Status filter state. Empty means "show everything".
     let selectedStatuses = new Set();
 
@@ -126,6 +130,7 @@ BehaviorShim.specify(
 
             // Show the card controls
             const dataset = contents.firstElementChild.dataset;
+            updateAppBarStatus(dataset.appBarStatus);
             updateCardControls({
               pageHasUp: dataset.pageHasUp === "true",
               pageHasDown: dataset.pageHasDown === "true",
@@ -140,6 +145,19 @@ BehaviorShim.specify(
           );
         }
       });
+    }
+
+    /**
+     * Swaps in the latest build's status icon when it has changed
+     * @param {string} html
+     */
+    function updateAppBarStatus(html) {
+      if (!appBarStatus || !html || html === appBarStatusHtml) {
+        return;
+      }
+      appBarStatusHtml = html;
+      appBarStatus.innerHTML = html;
+      BehaviorShim.applySubtree(appBarStatus, true);
     }
 
     /**
@@ -307,6 +325,10 @@ BehaviorShim.specify(
     load();
 
     window.addEventListener("focus", function () {
+      load();
+    });
+
+    document.addEventListener("jenkins:build-scheduled", () => {
       load();
     });
   },
