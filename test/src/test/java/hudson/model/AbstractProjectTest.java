@@ -46,6 +46,7 @@ import hudson.scm.NullSCM;
 import hudson.scm.SCMDescriptor;
 import hudson.security.GlobalMatrixAuthorizationStrategy;
 import hudson.security.Permission;
+import hudson.tasks.ArtifactArchiver;
 import hudson.tasks.BatchFile;
 import hudson.tasks.BuildTrigger;
 import hudson.tasks.Shell;
@@ -87,6 +88,7 @@ import org.jenkinsci.plugins.matrixauth.AuthorizationType;
 import org.jenkinsci.plugins.matrixauth.PermissionEntry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.jvnet.hudson.test.CreateFileBuilder;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
@@ -180,20 +182,22 @@ class AbstractProjectTest {
     void wipeOutWorkspaceInAppBar() throws Exception {
         j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
         j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy()
-                .grant(Jenkins.READ, Item.READ, Item.WORKSPACE, Item.BUILD, Item.CONFIGURE).everywhere().to("alice", "carol")
+                .grant(Jenkins.READ, Item.READ, Item.WORKSPACE, Item.BUILD).everywhere().to("alice", "carol")
                 .grant(Jenkins.READ, Item.READ, Item.WORKSPACE).everywhere().to("bob"));
         for (String user : List.of("alice", "bob")) {
             User.getOrCreateByIdOrFullName(user).addProperty(new UserExperimentalFlagsProperty(Map.of("new-job-page.flag", "true")));
         }
         FreeStyleProject p = j.createFreeStyleProject();
+        p.getBuildersList().add(new CreateFileBuilder("a.txt", "a"));
+        p.getPublishersList().add(new ArtifactArchiver("a.txt"));
         j.buildAndAssertSuccess(p);
 
         JenkinsRule.WebClient aliceClient = j.createWebClient().login("alice");
         HtmlPage alice = aliceClient.getPage(p, "ws/");
         assertNull(alice.querySelector("#side-panel"));
         assertNull(aliceClient.getPage(p, "changes").querySelector("#side-panel"));
-        assertNotNull(aliceClient.getPage(p, "configure").querySelector("#side-panel"));
         assertNotNull(alice.querySelector(".jenkins-app-bar .confirmation-link[data-url$='/" + p.getUrl() + "doWipeOutWorkspace']"));
+        assertNull(aliceClient.getPage(p, "lastSuccessfulBuild/artifact/").querySelector(".confirmation-link[data-url$='doWipeOutWorkspace']"));
 
         HtmlPage bob = j.createWebClient().login("bob").getPage(p, "ws/");
         assertNull(bob.querySelector(".confirmation-link[data-url$='doWipeOutWorkspace']"));
