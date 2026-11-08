@@ -36,6 +36,7 @@ THE SOFTWARE.
   </l:header>
 
   <l:userExperimentalFlag var="newJobPage" flagClassName="jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag" />
+
   <j:if test="${!newJobPage}">
     <l:side-panel>
       <l:tasks>
