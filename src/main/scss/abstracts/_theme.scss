@@ -101,7 +101,7 @@ $semantics: (
     var(--text-color-secondary) 2.5%
   );
   --header-color: var(--text-color);
-  --header-height: 3.5rem;
+  --header-height: 3.375rem;
 
   // App bar
   --bottom-app-bar-padding: 0.875rem;
@@ -282,7 +282,7 @@ $semantics: (
   --panel-border-color: var(--light-grey);
 
   // Form
-  --section-padding: 1.25rem;
+  --section-padding: 1.125rem;
   --input-color: var(--white);
   --input-border: color-mix(
     in sRGB,
@@ -299,7 +299,7 @@ $semantics: (
   --form-item-max-width--small: min(35vw, 1200px);
 
   @media screen and (max-width: breakpoints.$tablet-breakpoint) {
-    --section-padding: 1rem;
+    --section-padding: 0.875rem;
     --form-item-max-width: 100%;
     --form-item-max-width--medium: 100%;
     --form-item-max-width--small: 100%;
@@ -314,7 +314,7 @@ $semantics: (
 
   // Forms
   --form-label-font-weight: var(--font-bold-weight);
-  --form-input-padding: 0.5rem 0.625rem;
+  --form-input-padding: 0.4375rem 0.625rem;
   --form-input-border-radius: 0.6875rem;
   --form-input-glow: var(--focus-ring--hidden);
   --form-input-glow--focus: 0 0 0 var(--focus-ring-width)

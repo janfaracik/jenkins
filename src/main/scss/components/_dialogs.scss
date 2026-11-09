@@ -1,6 +1,6 @@
 @use "../abstracts/mixins";
 
-$jenkins-dialog-padding: 1.25rem;
+$jenkins-dialog-padding: 1.125rem;
 
 .jenkins-dialog {
   @include mixins.overlay-surface;
@@ -99,7 +99,7 @@ $jenkins-dialog-padding: 1.25rem;
 
   .jenkins-bottom-app-bar__shadow {
     margin-bottom: calc(
-      (2.375rem + calc(var(--bottom-app-bar-padding) * 2)) * -1
+      (2.25rem + calc(var(--bottom-app-bar-padding) * 2)) * -1
     );
   }
 }

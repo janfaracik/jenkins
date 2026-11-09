@@ -38,14 +38,14 @@ $inset: 0.6875rem;
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 0.5rem $inset;
+    padding: 0.4375rem $inset;
     gap: 0.625rem;
     width: 100%;
     font-size: var(--font-size-sm);
     color: var(--text-color);
     margin: 0;
     transition: opacity var(--standard-transition);
-    min-height: 2.375rem;
+    min-height: 2.25rem;
 
     .task-icon-link {
       display: inline-flex;

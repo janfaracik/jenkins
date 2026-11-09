@@ -11,7 +11,7 @@
     background: var(--button-background);
     border: var(--jenkins-border--subtle);
     border-radius: var(--form-input-border-radius);
-    height: 2.375rem;
+    height: 2.25rem;
     animation: pulse-skeleton 2s both ease-in-out infinite;
   }
 
@@ -61,7 +61,7 @@
   }
 
   & > div {
-    height: 2.375rem;
+    height: 2.25rem;
     margin-bottom: 1rem;
   }
 }

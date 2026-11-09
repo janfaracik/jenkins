@@ -30,8 +30,8 @@
     }
 
     & > img {
-      width: 2.375rem;
-      height: 2.375rem;
+      width: 2.25rem;
+      height: 2.25rem;
       margin-left: -0.375rem;
     }
   }
@@ -132,11 +132,11 @@
 
   position: sticky;
   height: calc(
-    2.375rem + (var(--bottom-app-bar-padding) * 2) + 1px +
+    2.25rem + (var(--bottom-app-bar-padding) * 2) + 1px +
       var(--jenkins-border-width)
   );
   bottom: -1px;
-  margin-bottom: calc((2.375rem + var(--bottom-app-bar-padding)) * -1);
+  margin-bottom: calc((2.25rem + var(--bottom-app-bar-padding)) * -1);
   border-top: var(--jenkins-border-width) solid var(--jenkins-border-color);
   z-index: 997;
 
