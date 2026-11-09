@@ -6,7 +6,7 @@
 }
 
 .jenkins-search {
-  --search-bar-height: 2.25rem;
+  --search-bar-height: var(--control-height);
 
   position: relative;
   display: grid;

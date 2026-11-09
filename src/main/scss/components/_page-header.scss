@@ -101,8 +101,8 @@
   }
 
   .jenkins-button {
-    min-width: 2.25rem;
-    min-height: 2.25rem;
+    min-width: var(--control-height);
+    min-height: var(--control-height);
     padding: 0;
 
     // For customizable-header-plugin

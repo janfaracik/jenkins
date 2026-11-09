@@ -99,7 +99,7 @@ $jenkins-dialog-padding: 1.125rem;
 
   .jenkins-bottom-app-bar__shadow {
     margin-bottom: calc(
-      (2.25rem + calc(var(--bottom-app-bar-padding) * 2)) * -1
+      (var(--control-height) + calc(var(--bottom-app-bar-padding) * 2)) * -1
     );
   }
 }

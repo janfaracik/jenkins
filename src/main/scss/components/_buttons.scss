@@ -15,7 +15,7 @@
   padding: 0.4375rem 0.9375rem;
   font-size: var(--font-size-sm);
   color: var(--text-color) !important;
-  min-height: 2.25rem;
+  min-height: var(--control-height);
   white-space: nowrap;
   gap: 1ch;
   box-shadow:

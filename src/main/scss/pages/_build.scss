@@ -217,7 +217,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: start;
-    min-height: 36px;
+    min-height: var(--control-height);
     grid-column: 1;
   }
 

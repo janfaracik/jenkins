@@ -301,7 +301,7 @@ $collapsible-page-body: ".app-page-body:has(> .app-page-body__sidebar):not(:has(
 .jenkins-button.app-side-panel-toggle {
   display: none;
   flex: none;
-  width: 2.25rem;
+  width: var(--control-height);
   padding: 0;
 }
 
@@ -313,7 +313,7 @@ $collapsible-page-body: ".app-page-body:has(> .app-page-body__sidebar):not(:has(
 
     .jenkins-app-bar__content:has(> .app-side-panel-toggle) {
       position: relative;
-      padding-left: calc(2.25rem + 0.75rem);
+      padding-left: calc(var(--control-height) + 0.75rem);
 
       & > .app-side-panel-toggle {
         position: absolute;
@@ -325,7 +325,7 @@ $collapsible-page-body: ".app-page-body:has(> .app-page-body__sidebar):not(:has(
 
     #side-panel .jenkins-app-bar__content:has(> .app-side-panel-toggle) {
       padding-left: 0;
-      padding-right: calc(2.25rem + 0.75rem);
+      padding-right: calc(var(--control-height) + 0.75rem);
 
       & > .app-side-panel-toggle {
         left: auto;

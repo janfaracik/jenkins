@@ -1,6 +1,6 @@
 @use "../abstracts/mixins";
 
-$min-button-size: 2.25rem;
+$min-button-size: var(--control-height);
 
 .jenkins-icon-size {
   display: flex;
