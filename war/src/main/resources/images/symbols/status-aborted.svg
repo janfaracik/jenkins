@@ -1,4 +1,4 @@
 <svg style="color: var(--skipped-color); box-shadow: inset var(--jenkins-border--inherit-subtle-shadow); border-radius: 50%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" opacity="1" role="img" aria-label="aborted">
-  <circle cx="256" cy="256" r="256" fill="var(--skipped-color)" opacity="var(--status-background-opacity)" style="transition: var(--standard-transition);"/>
+  <circle cx="256" cy="256" r="256" fill="var(--skipped-color)" opacity="var(--status-background-opacity)"/>
   <path fill="none" stroke="var(--skipped-color)" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M192 320l128-128"/>
 </svg>
