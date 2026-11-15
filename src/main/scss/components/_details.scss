@@ -60,6 +60,10 @@ $icon-size: 1rem;
     color: var(--text-color-secondary);
     opacity: 0.5;
     margin-inline: -0.5rem;
+
+    @media (width < 740px) {
+      display: none;
+    }
   }
 
   &__button {
