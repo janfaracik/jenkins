@@ -200,18 +200,6 @@
   animation: pulse-skeleton 2s both ease-in-out infinite;
 }
 
-.app-temporary-skeleton--mobile {
-  @media (width >= 740px) {
-    display: none;
-  }
-}
-
-.app-temporary-skeleton--desktop {
-  @media (width < 740px) {
-    display: none;
-  }
-}
-
 .app-temporary-list {
   display: flex;
   flex-direction: column;

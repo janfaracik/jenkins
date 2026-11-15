@@ -35,11 +35,11 @@ THE SOFTWARE.
           <div class="app-temporary-list__item__label" style="align-items: center">
             <div style="width: 3rem; height: 1rem;" class="app-temporary-skeleton" />
           </div>
-          <div class="app-temporary-list__item__description" style="gap: 0.9375rem; flex-direction: column; align-items: start">
-            <div style="width: 100%; max-width: 20rem; height: 1rem;" class="app-temporary-skeleton app-temporary-skeleton--desktop" />
-            <div style="width: 55%; max-width: 10rem; height: 1rem;" class="app-temporary-skeleton app-temporary-skeleton--mobile" />
-            <div style="width: 100%; max-width: 15rem; height: 1rem;" class="app-temporary-skeleton app-temporary-skeleton--mobile" />
-            <div style="width: 60%; max-width: 12.5rem; height: 1rem;" class="app-temporary-skeleton app-temporary-skeleton--mobile" />
+          <div class="app-temporary-list__item__description" style="gap: 0.6875rem; flex-direction: column; align-items: start">
+            <div style="width: 100%; max-width: 20rem; height: 1rem;" class="app-temporary-skeleton jenkins-mobile-hide" />
+            <div style="width: 55%; max-width: 10rem; height: 1rem;" class="app-temporary-skeleton jenkins-mobile-show" />
+            <div style="width: 100%; max-width: 15rem; height: 1rem;" class="app-temporary-skeleton jenkins-mobile-show" />
+            <div style="width: 60%; max-width: 12.5rem; height: 1rem;" class="app-temporary-skeleton jenkins-mobile-show" />
           </div>
         </div>
       </div>
