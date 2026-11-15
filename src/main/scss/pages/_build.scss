@@ -314,6 +314,10 @@
       .jenkins-split-button > :first-child {
         flex-grow: 1;
       }
+
+      .jenkins-jumplist-link:first-child {
+        flex: 1;
+      }
     }
   }
 }
