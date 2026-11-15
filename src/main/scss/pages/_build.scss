@@ -139,6 +139,12 @@
   }
 }
 
+@keyframes app-build-bar-content-border-on-scroll {
+  to {
+    border-bottom-color: var(--jenkins-border-color);
+  }
+}
+
 @keyframes app-build-bar-border-on-scroll {
   from {
     border-bottom-color: color-mix(
@@ -204,13 +210,7 @@
   }
 
   @media (width < 740px) {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    padding-block: calc((var(--section-padding) / 2) + 0.125rem);
-    top: 0;
-    background-color: transparent;
+    display: contents;
   }
 
   .app-build-bar__content {
@@ -221,8 +221,29 @@
     grid-column: 1;
 
     @media (width < 740px) {
+      position: sticky;
+      top: var(--header-height);
+      z-index: 102;
       display: flex;
-      width: 100%;
+      min-height: calc(
+        38px + var(--section-padding) + 0.25rem + var(--jenkins-border-width)
+      );
+      margin-inline: calc(var(--section-padding) * -1);
+      padding: calc((var(--section-padding) / 2) + 0.125rem)
+        var(--section-padding);
+      background-color: color-mix(
+        in oklch,
+        transparent 25%,
+        var(--body-background-top)
+      );
+      backdrop-filter: blur(15px);
+      border-bottom: var(--jenkins-border-width) solid transparent;
+
+      @supports (animation-timeline: scroll()) {
+        animation: app-build-bar-content-border-on-scroll linear both;
+        animation-timeline: scroll(nearest block);
+        animation-range: 0 var(--header-height);
+      }
     }
   }
 
@@ -237,6 +258,7 @@
       @include mixins.overlay-surface($opacity: 75%);
 
       position: fixed;
+      z-index: 102;
       bottom: calc(var(--section-padding) / 2);
       left: 50%;
       translate: -50% 0;
@@ -275,13 +297,22 @@
     }
 
     @media (width < 740px) {
+      display: flex;
       justify-content: stretch;
-      width: 100%;
-      margin: 0.75rem 0 0.25rem;
+      margin: calc(0.625rem - (var(--section-padding) / 2))
+        calc(var(--section-padding) * -1) 0;
+      padding: 0 var(--section-padding)
+        calc((var(--section-padding) / 2) + 0.375rem);
+      border-bottom: var(--jenkins-border-width) solid
+        var(--app-build-bar-border-color);
 
       & > * {
         flex-grow: 1;
         flex-basis: 0;
+      }
+
+      .jenkins-split-button > :first-child {
+        flex-grow: 1;
       }
     }
   }
