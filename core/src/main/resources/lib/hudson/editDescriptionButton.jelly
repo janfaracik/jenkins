@@ -59,7 +59,7 @@
             </f:form>
         </template>
         <st:adjunct includes="lib.hudson.editable-description" />
-        <a class="jenkins-button jenkins-hidden ${attrs.compact ? 'jenkins-details__button' : ''}"
+        <a class="jenkins-button jenkins-hidden"
              id="description-link"
              href="editDescription"
              data-title="${label}"

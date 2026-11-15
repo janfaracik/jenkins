@@ -282,7 +282,7 @@ $semantics: (
   --panel-border-color: var(--light-grey);
 
   // Form
-  --section-padding: 1.25rem;
+  --section-padding: 1.125rem;
   --input-color: var(--white);
   --input-border: color-mix(
     in sRGB,
@@ -299,7 +299,7 @@ $semantics: (
   --form-item-max-width--small: min(35vw, 1200px);
 
   @media screen and (max-width: breakpoints.$tablet-breakpoint) {
-    --section-padding: 1rem;
+    --section-padding: 0.875rem;
     --form-item-max-width: 100%;
     --form-item-max-width--medium: 100%;
     --form-item-max-width--small: 100%;

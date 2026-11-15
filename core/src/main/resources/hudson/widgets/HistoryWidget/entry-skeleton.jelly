@@ -31,12 +31,12 @@ THE SOFTWARE.
       </div>
 
       <div class="app-temporary-list__item__details">
-        <div class="app-temporary-list__item__details__text">
+        <div class="app-temporary-list__item__details__text" style="grid-column: 1 / -1">
           <div class="app-temporary-list__item__label">
             <div style="width: 3rem; height: 1rem;" class="app-temporary-skeleton" />
           </div>
           <div class="app-temporary-list__item__description" style="gap: 0.25rem">
-            <div style="width: 20rem; height: 1rem;" class="app-temporary-skeleton" />
+            <div style="width: 100%; max-width: 20rem; height: 1rem;" class="app-temporary-skeleton" />
           </div>
         </div>
       </div>
