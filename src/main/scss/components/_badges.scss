@@ -35,6 +35,7 @@ button.jenkins-badge {
 
   &::before {
     border: var(--jenkins-border--inherit-subtle);
+    background-clip: padding-box;
   }
 
   svg {
