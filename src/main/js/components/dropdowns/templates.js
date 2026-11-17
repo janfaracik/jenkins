@@ -25,6 +25,43 @@ const hideOnPopperBlur = {
 
 const MINIMUM_HEIGHT = 150;
 
+const preferRoomierSide = {
+  name: "preferRoomierSide",
+  enabled: true,
+  phase: "main",
+  requiresIfExists: ["offset", "flip"],
+  data: { _skip: false },
+  fn({ state, name }) {
+    if (state.modifiersData[name]._skip) {
+      return;
+    }
+
+    const [side, alignment] = state.placement.split("-");
+    const content = state.elements.popper.querySelector(".tippy-content");
+    if ((side !== "top" && side !== "bottom") || !content) {
+      return;
+    }
+
+    const reference = state.elements.reference.getBoundingClientRect();
+    const above = reference.top;
+    const below = window.innerHeight - reference.bottom;
+    const preferred =
+      content.scrollHeight <= below || below >= above ? "bottom" : "top";
+
+    state.modifiersData[name]._skip = true;
+    if (preferred === side) {
+      return;
+    }
+
+    if (state.modifiersData.flip) {
+      state.modifiersData.flip._skip = true;
+    }
+
+    state.placement = alignment ? `${preferred}-${alignment}` : preferred;
+    state.reset = true;
+  },
+};
+
 const maxHeightToViewport = {
   name: "maxHeightToViewport",
   enabled: true,
@@ -36,13 +73,15 @@ const maxHeightToViewport = {
       return;
     }
 
-    const reference = state.elements.reference.getBoundingClientRect();
-    let space = window.innerHeight - reference.bottom;
-    if (state.placement.startsWith("top")) {
-      space = reference.top;
-    } else if (!state.placement.startsWith("bottom")) {
-      space = window.innerHeight - reference.top;
+    const side = state.placement.split("-")[0];
+    if (side === "left" || side === "right") {
+      box.style.maxHeight = `calc(${window.innerHeight}px - var(--section-padding) * 2)`;
+      return;
     }
+
+    const reference = state.elements.reference.getBoundingClientRect();
+    const space =
+      side === "top" ? reference.top : window.innerHeight - reference.bottom;
 
     box.style.maxHeight = `max(${MINIMUM_HEIGHT}px, calc(${space}px - var(--section-padding)))`;
   },
@@ -51,7 +90,7 @@ const maxHeightToViewport = {
 function dropdown() {
   return {
     popperOptions: {
-      modifiers: [maxHeightToViewport],
+      modifiers: [preferRoomierSide, maxHeightToViewport],
     },
     content: "<p class='jenkins-spinner'></p>",
     interactive: true,
