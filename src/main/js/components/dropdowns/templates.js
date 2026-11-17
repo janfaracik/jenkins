@@ -368,7 +368,7 @@ function tryPost(element, opt, context) {
 
 function backItem(label) {
   return createElementFromHtml(`
-    <button type="button" class="jenkins-dropdown__item jenkins-dropdown__item--back" data-dropdown-keep-open>
+    <button type="button" class="jenkins-dropdown__item" data-dropdown-keep-open>
       <div class="jenkins-dropdown__item__icon jenkins-dropdown__item__back"></div>
       <span class="jenkins-dropdown__item__label">${xmlEscape(label)}</span>
     </button>

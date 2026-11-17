@@ -88,22 +88,46 @@ function generateDropdown(element, callback, immediate, options = {}) {
 const DRILL_DOWN_QUERY = "(hover: none), (max-width: 900px)";
 
 function drillDown(menuItems, item, compact) {
-  const parentItems = [...menuItems.childNodes];
+  const parent = menuItems.closest("[data-tippy-root]")?._tippy;
+  if (!parent) {
+    return;
+  }
+
   const back = Templates.backItem(item.displayName);
   const subMenu = generateDropdownItems(item.subMenu.items, compact);
+  subMenu.prepend(back, Templates.separator());
 
-  back.addEventListener("click", () => {
-    menuItems.replaceChildren(...parentItems);
-    updateDropdownPosition(menuItems);
+  const instance = tippy(
+    document.createElement("div"),
+    Object.assign({}, Templates.dropdown(), {
+      content: subMenu,
+      trigger: "manual",
+      placement: parent.props.placement,
+      offset: parent.props.offset,
+      getReferenceClientRect: () => parent.reference.getBoundingClientRect(),
+      onShow: () => parent.reference.setAttribute("aria-expanded", "true"),
+      onHide: () => parent.reference.setAttribute("aria-expanded", "false"),
+      onHidden: (subMenuInstance) => subMenuInstance.destroy(),
+    }),
+  );
+
+  subMenu.addEventListener("click", (event) => {
+    if (event.target.closest("[data-dropdown-keep-open]")) {
+      return;
+    }
+
+    if (event.target.closest(".jenkins-dropdown__item")) {
+      instance.hide();
+    }
   });
 
-  menuItems.replaceChildren(back, Templates.separator(), ...subMenu.childNodes);
-  updateDropdownPosition(menuItems);
-  back.focus({ focusVisible: false });
-}
+  back.addEventListener("click", () => {
+    instance.hide();
+    parent.show();
+  });
 
-function updateDropdownPosition(menuItems) {
-  menuItems.closest("[data-tippy-root]")?._tippy?.popperInstance?.update();
+  parent.hide();
+  instance.show();
 }
 
 /**
