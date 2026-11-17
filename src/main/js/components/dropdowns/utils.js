@@ -42,8 +42,11 @@ function generateDropdown(element, callback, immediate, options = {}) {
               );
               // Don't close the dropdown if the user is interacting with a SELECT menu inside of it
               const isSelect = event.target.tagName === "SELECT";
+              const isSubmenuTrigger =
+                event.target.closest(".jenkins-dropdown__item")?._tippy?.props
+                  .theme === "dropdown";
 
-              if (!isClickOnReference && !isSelect) {
+              if (!isClickOnReference && !isSelect && !isSubmenuTrigger) {
                 instance.clickToHide = true;
                 instance.hide();
               }
@@ -128,6 +131,7 @@ function generateDropdownItems(items, compact = false, context = "") {
           Object.assign({}, Templates.dropdown(), {
             content: generateDropdownItems(item.subMenu.items),
             trigger: "mouseenter",
+            hideOnClick: false,
             placement: "right-start",
             offset: [-8, 0],
           }),
