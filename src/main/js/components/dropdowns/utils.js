@@ -42,11 +42,10 @@ function generateDropdown(element, callback, immediate, options = {}) {
               );
               // Don't close the dropdown if the user is interacting with a SELECT menu inside of it
               const isSelect = event.target.tagName === "SELECT";
-              const isSubmenuTrigger =
-                event.target.closest(".jenkins-dropdown__item")?._tippy?.props
-                  .theme === "dropdown";
+              const keepOpen =
+                event.target.closest("[data-dropdown-keep-open]") != null;
 
-              if (!isClickOnReference && !isSelect && !isSubmenuTrigger) {
+              if (!isClickOnReference && !isSelect && !keepOpen) {
                 instance.clickToHide = true;
                 instance.hide();
               }
@@ -84,6 +83,27 @@ function generateDropdown(element, callback, immediate, options = {}) {
       options,
     ),
   );
+}
+
+const DRILL_DOWN_QUERY = "(hover: none), (max-width: 900px)";
+
+function drillDown(menuItems, item, compact) {
+  const parentItems = [...menuItems.childNodes];
+  const back = Templates.backItem(item.displayName);
+  const subMenu = generateDropdownItems(item.subMenu.items, compact);
+
+  back.addEventListener("click", () => {
+    menuItems.replaceChildren(...parentItems);
+    updateDropdownPosition(menuItems);
+  });
+
+  menuItems.replaceChildren(back, Templates.separator(), ...subMenu.childNodes);
+  updateDropdownPosition(menuItems);
+  back.focus({ focusVisible: false });
+}
+
+function updateDropdownPosition(menuItems) {
+  menuItems.closest("[data-tippy-root]")?._tippy?.popperInstance?.update();
 }
 
 /**
@@ -126,6 +146,15 @@ function generateDropdownItems(items, compact = false, context = "") {
 
       // Split buttons only show their primary action in a dropdown, so get no submenu
       if (item.event && item.event.actions != null && !item.event.event) {
+        menuItem.dataset.dropdownKeepOpen = "";
+
+        if (window.matchMedia(DRILL_DOWN_QUERY).matches) {
+          menuItem.addEventListener("click", () =>
+            drillDown(menuItems, item, compact),
+          );
+          return menuItem;
+        }
+
         tippy(
           menuItem,
           Object.assign({}, Templates.dropdown(), {
