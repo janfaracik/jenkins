@@ -130,6 +130,7 @@ import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DurationDetail;
 import jenkins.model.details.KeptForeverDetail;
 import jenkins.model.details.TimestampDetail;
+import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 import jenkins.model.lazy.BuildReference;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.security.MasterToSlaveCallable;
@@ -508,10 +509,16 @@ public abstract class Run<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
     @Override
     public @NonNull List<BuildBadgeAction> getBadgeActions() {
         List<BuildBadgeAction> r = getActions(BuildBadgeAction.class);
-        if (isKeepLog()) {
-            r = new ArrayList<>(r);
-            r.add(new KeepLogBuildBadge());
+        if (!isKeepLog()) {
+            return r;
         }
+
+        if (new NewJobPageUserExperimentalFlag().getFlagValue()) {
+            return r;
+        }
+
+        r = new ArrayList<>(r);
+        r.add(new KeepLogBuildBadge());
         return r;
     }
 

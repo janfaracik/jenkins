@@ -43,6 +43,8 @@ import hudson.Launcher;
 import hudson.XmlFile;
 import hudson.model.listeners.SaveableListener;
 import hudson.remoting.Callable;
+import hudson.security.ACL;
+import hudson.security.ACLContext;
 import hudson.tasks.ArtifactArchiver;
 import hudson.tasks.BuildTrigger;
 import hudson.tasks.Builder;
@@ -66,6 +68,7 @@ import jenkins.model.ArtifactManagerFactory;
 import jenkins.model.ArtifactManagerFactoryDescriptor;
 import jenkins.model.Jenkins;
 import jenkins.model.Tab;
+import jenkins.model.experimentalflags.UserExperimentalFlagsProperty;
 import jenkins.util.VirtualFile;
 import org.htmlunit.ScriptResult;
 import org.htmlunit.html.HtmlPage;
@@ -127,6 +130,22 @@ class RunTest  {
         List<BuildBadgeAction> badgeActions = b.getBadgeActions();
         assertEquals(1, badgeActions.size());
         assertEquals(Run.KeepLogBuildBadge.class, badgeActions.getFirst().getClass());
+    }
+
+    @Test
+    void getBadgeActionsHidesKeepLogBadgeWithNewJobPage() throws Exception {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        User alice = User.getById("alice", true);
+        alice.addProperty(new UserExperimentalFlagsProperty(Map.of("new-job-page.flag", "true")));
+        FreeStyleBuild b = j.buildAndAssertSuccess(j.createFreeStyleProject());
+        b.keepLog();
+
+        try (ACLContext unused = ACL.as(alice)) {
+            assertEquals(0, b.getBadgeActions().size());
+        }
+        try (ACLContext unused = ACL.as(User.getById("bob", true))) {
+            assertEquals(1, b.getBadgeActions().size());
+        }
     }
 
     @Issue("JENKINS-51819")
