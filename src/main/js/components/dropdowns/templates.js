@@ -103,7 +103,7 @@ function dropdown() {
     plugins: [hideOnPopperBlur],
     offset: [0, 0],
     animation: "dropdown",
-    duration: 250,
+    duration: 200,
     onShow: (instance) => {
       // Make sure only one instance is visible at all times in case of breadcrumb
       if (
