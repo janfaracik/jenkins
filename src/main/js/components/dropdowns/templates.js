@@ -264,7 +264,6 @@ function menuItem(dropdownItem, type = "jenkins-dropdown__item", context = "") {
       false,
       {
         appendTo: "parent",
-        placement: "bottom-end",
       },
     );
     wrapper.appendChild(button);
