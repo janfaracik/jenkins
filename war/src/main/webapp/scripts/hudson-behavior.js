@@ -35,7 +35,7 @@ if (window.isRunAsTest) {
 }
 
 // create a new object whose prototype is the given object
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function object(o) {
   function F() {}
   F.prototype = o;
@@ -176,8 +176,10 @@ var crumb = {
 var isRunAsTest = undefined;
 // Be careful, this variable does not include the absolute root URL as in Java part of Jenkins,
 // but the contextPath only, like /jenkins
-var rootURL = "not-defined-yet"; // eslint-disable-line no-unused-vars
-var resURL = "not-defined-yet"; // eslint-disable-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global read by other scripts
+var rootURL = "not-defined-yet";
+// biome-ignore lint/correctness/noUnusedVariables: global read by other scripts
+var resURL = "not-defined-yet";
 
 (function initializeUnitTestAndURLs() {
   var dataUnitTest = document.head.getAttribute("data-unit-test");
@@ -501,7 +503,7 @@ function qs(owner) {
 }
 
 // @deprecated Use standard javascript method `e.closest(tagName)` instead
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function findAncestor(e, tagName) {
   console.warn(
     "Deprecated call to findAncestor - use standard javascript method `e.closest(tagName)` instead",
@@ -510,7 +512,7 @@ function findAncestor(e, tagName) {
 }
 
 // @deprecated Use standard javascript method `e.closest(className)` instead
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function findAncestorClass(e, cssClass) {
   console.warn(
     "Deprecated call to findAncestorClass - use standard javascript method `e.closest(className)` instead",
@@ -646,7 +648,7 @@ function findNextFormItem(src, name) {
 /**
  * Parse HTML into DOM.
  */
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function parseHtml(html) {
   var c = document.createElement("div");
   c.innerHTML = html;
@@ -669,7 +671,7 @@ function geval(script) {
  * @param {String} event
  *      like 'change', 'blur', etc.
  */
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function fireEvent(element, event) {
   return !element.dispatchEvent(
     new CustomEvent(event, {
@@ -767,8 +769,7 @@ function registerValidator(e) {
     if (!e.disabled) {
       FormChecker.delayedCheck(url, method, e.targetElement);
     }
-    // eslint-disable-next-line no-unused-vars
-  } catch (x) {
+  } catch {
     // this happens if the checkUrl refers to a non-existing element.
     // don't let this kill off the entire JavaScript
     console.warn(
@@ -867,7 +868,6 @@ function registerRegexpValidator(e, regexp, message) {
     return set;
   };
   e.onchange.call(e);
-  /* eslint-disable-next-line no-useless-assignment */
   e = null; // avoid memory leak
 }
 
@@ -890,7 +890,7 @@ function registerMinMaxValidator(e) {
   e.targetElement = tr;
   var checkMessage = e.getAttribute("checkMessage");
   if (checkMessage) {
-    // eslint-disable-next-line no-undef
+    // biome-ignore lint/correctness/noUndeclaredVariables: defined at runtime by another script
     message = checkMessage;
   }
   var oldOnchange = e.onchange;
@@ -970,7 +970,6 @@ function registerMinMaxValidator(e) {
     return set;
   };
   e.onchange.call(e);
-  /* eslint-disable-next-line no-useless-assignment */
   e = null; // avoid memory leak
 }
 
@@ -984,7 +983,7 @@ function preventInputEe(event) {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function escapeHTML(html) {
   return html
     .replace(/&/g, "&amp;")
@@ -1452,7 +1451,7 @@ function rowvgStartEachRow(recursive, f) {
       var cmdKeyDown = false;
       var mode = e.getAttribute("script-mode") || "text/x-groovy";
 
-      // eslint-disable-next-line no-unused-vars
+      // biome-ignore lint/correctness/noUnusedVariables: pre-existing unused variable
       var w = CodeMirror.fromTextArea(e, {
         mode: mode,
         lineNumbers: true,
@@ -1513,7 +1512,8 @@ function rowvgStartEachRow(recursive, f) {
     const resizer = document.createElement("div");
     resizer.className = "jenkins-codemirror-resizer";
 
-    let start_x; // eslint-disable-line no-unused-vars
+    // biome-ignore lint/correctness/noUnusedVariables: pre-existing unused variable
+    let start_x;
     let start_y;
     let start_h;
 
@@ -1567,7 +1567,6 @@ function rowvgStartEachRow(recursive, f) {
         return buildFormTree(this);
       };
     }
-    /* eslint-disable-next-line no-useless-assignment */
     form = null; // memory leak prevention
   });
 
@@ -1742,7 +1741,6 @@ function rowvgStartEachRow(recursive, f) {
       event.preventDefault();
       return false;
     };
-    /* eslint-disable-next-line no-useless-assignment */
     e = null; // memory leak prevention
   });
 
@@ -1842,7 +1840,6 @@ function rowvgStartEachRow(recursive, f) {
       layoutUpdateCallback.call();
       return false;
     };
-    /* eslint-disable-next-line no-useless-assignment */
     e = null; // avoid memory leak
   });
 
@@ -1860,7 +1857,6 @@ function rowvgStartEachRow(recursive, f) {
     "div-behavior-loading",
     // Useless assignment retained for consistency with preceding use in
     // Behaviour.specify("DIV.jenkins-form-skeleton" and earlier
-    /* eslint-disable-next-line no-useless-assignment */
     ++p,
     function (e) {
       console.warn(
@@ -1975,7 +1971,7 @@ var Path = {
 /**
  * Install change handlers based on the 'fillDependsOn' attribute.
  */
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function refillOnChange(e, onChange) {
   var deps = [];
 
@@ -2071,7 +2067,7 @@ function updateOptionalBlock(c) {
 // Auto-scroll support for progressive log output.
 //   See http://radio.javaranch.com/pascarello/2006/08/17/1155837038219.html
 //
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function AutoScroller(scrollContainer) {
   // get the height of the viewport.
   // See http://www.howtocreate.co.uk/tutorials/javascript/browserwindow
@@ -2148,7 +2144,7 @@ function AutoScroller(scrollContainer) {
 
 // refresh a part of the HTML specified by the given ID,
 // by using the contents fetched from the given URL.
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function refreshPart(id, url) {
   var intervalID = null;
   var f = function () {
@@ -2204,7 +2200,7 @@ function refreshPart(id, url) {
     Taken from http://www.cresc.co.jp/tech/java/URLencoding/JavaScript_URLEncoding.htm
     @deprecated Use standard javascript method "encodeURIComponent" instead
 */
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function encode(str) {
   var s, u;
   var s0 = ""; // encoded str
@@ -2260,7 +2256,7 @@ function encode(str) {
 // when there are multiple form elements of the same name,
 // this method returns the input field of the given name that pairs up
 // with the specified 'base' input element.
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function findMatchingFormInput(base, name) {
   // find the FORM element that owns us
   var f = base.closest("form");
@@ -2293,12 +2289,12 @@ function findMatchingFormInput(base, name) {
   return null; // not found
 }
 
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function toQueryString(params) {
   var query = "";
   if (params) {
     for (var paramName in params) {
-      if (Object.prototype.hasOwnProperty.call(params, paramName)) {
+      if (Object.hasOwn(params, paramName)) {
         if (query === "") {
           query = "?";
         } else {
@@ -2312,7 +2308,7 @@ function toQueryString(params) {
 }
 
 // get the cascaded computed style value. 'a' is the style name like 'backgroundColor'
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function getStyle(e, a) {
   if (document.defaultView && document.defaultView.getComputedStyle) {
     return document.defaultView
@@ -2331,7 +2327,7 @@ function getStyle(e, a) {
  * @param {HTMLElement} e
  *      The element to bring into the viewport.
  */
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function ensureVisible(e) {
   const scrollTop = document.documentElement.scrollTop;
   let Y = scrollTop;
@@ -2678,7 +2674,7 @@ function loadScript(href, callback) {
 }
 
 // logic behind <f:validateButton />
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function safeValidateButton(button) {
   var descriptorUrl = button.getAttribute(
     "data-validate-button-descriptor-url",

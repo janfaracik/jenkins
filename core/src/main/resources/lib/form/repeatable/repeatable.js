@@ -185,7 +185,6 @@ Behaviour.specify(
     button.addEventListener("click", ({ currentTarget: button }) => {
       repeatableSupport.onAdd(button);
     });
-    /* eslint-disable-next-line no-useless-assignment */
     button = null; // avoid memory leak
   },
 );

@@ -117,7 +117,7 @@ directly, so a browser reload is enough to pick up the rebuilt bundles.
 For linting we use a number of tools:
 
 - [checkstyle](https://checkstyle.sourceforge.io/)
-- [eslint](https://eslint.org/)
+- [biome](https://biomejs.dev/)
 - [prettier](https://prettier.io/)
 - [spotless](https://github.com/diffplug/spotless)
 - [stylelint](https://stylelint.io/)

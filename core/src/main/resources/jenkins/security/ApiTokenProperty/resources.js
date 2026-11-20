@@ -32,7 +32,7 @@ Behaviour.specify(
   },
 );
 
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function changeTokenCallback(newValue) {
   document.getElementById("apiToken").value = newValue;
 }

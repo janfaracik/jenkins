@@ -288,8 +288,7 @@ var createPluginSetupWizard = function (appendTarget) {
         if (document.activeElement !== e) {
           e.focus();
         }
-        // eslint-disable-next-line no-unused-vars
-      } catch (ex) {
+      } catch {
         // ignored, unable to restore focus
       }
     } else {
@@ -590,7 +589,7 @@ var createPluginSetupWizard = function (appendTarget) {
           var i, j;
           var complete = 0;
           var total = 0;
-          // eslint-disable-next-line no-unused-vars
+          // biome-ignore lint/correctness/noUnusedVariables: pre-existing unused variable
           var restartRequired = false;
 
           for (i = 0; i < jobs.length; i++) {
@@ -1319,8 +1318,8 @@ var createPluginSetupWizard = function (appendTarget) {
 
   var showInitialSetupWizard = function () {
     // check for connectivity to the configured default update site
-    /* globals defaultUpdateSiteId: true */
     jenkins.testConnectivity(
+      // biome-ignore lint/correctness/noUndeclaredVariables: defined by the setup wizard page
       defaultUpdateSiteId,
       handleGenericError(function (isConnected, isFatal, errorMessage) {
         if (!isConnected) {

@@ -5,7 +5,7 @@ Behaviour.specify(
   function (anchor) {
     anchor.onclick = function (event) {
       event.preventDefault();
-      // eslint-disable-next-line no-undef
+      // biome-ignore lint/correctness/noUndeclaredVariables: defined at runtime by another script
       const n = findNext(this, function (el) {
         return el.tagName === "PRE";
       });

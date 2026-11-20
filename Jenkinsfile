@@ -181,7 +181,7 @@ axes.values().combinations {
               skipBlames: true,
               trendChartType: 'TOOLS_ONLY',
               qualityGates: [[threshold: 1, type: 'TOTAL', unstable: true]]])
-            recordIssues([tool: esLint(pattern: '**/target/eslint-warnings.xml'),
+            recordIssues([tool: checkStyle(id: 'biome', name: 'Biome', pattern: '**/target/biome-warnings.xml'),
               sourceCodeEncoding: 'UTF-8',
               skipBlames: true,
               trendChartType: 'TOOLS_ONLY',

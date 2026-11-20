@@ -242,7 +242,7 @@ ComboBox.prototype.valueChanged = function () {
  */
 ComboBox.prototype.setItems = function (items) {
   if (typeof items != "object") {
-    alert("setItems wasn't passed a valid array: " + typeof a);
+    alert("setItems wasn't passed a valid array: " + typeof items);
     return;
   }
   this.availableItems = items;

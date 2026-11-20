@@ -82,7 +82,6 @@ Behaviour.specify(
 
       layoutUpdateCallback.call();
     });
-    /* eslint-disable-next-line no-useless-assignment */
     e = null; // avoid memory leak
   },
 );

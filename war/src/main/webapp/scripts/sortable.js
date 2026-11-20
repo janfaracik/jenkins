@@ -454,14 +454,14 @@ var Sortable = (function () {
   };
 })();
 
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function ts_makeSortable(table) {
   // backward compatibility
   return new Sortable.Sortable(table);
 }
 
 /** Calls table.sortable.refresh() in case the sortable has been initialized; otherwise does nothing. */
-// eslint-disable-next-line no-unused-vars
+// biome-ignore lint/correctness/noUnusedVariables: global function used by other scripts and views
 function ts_refresh(table) {
   var s = table.sortable;
   if (s != null) {
