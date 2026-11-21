@@ -92,15 +92,6 @@ $wizard-border: var(--jenkins-border-width) solid
     height: 100%;
   }
 
-  &__hero {
-    padding: $wizard-padding;
-
-    &--compact {
-      padding: $wizard-padding;
-      border-bottom: $wizard-border;
-    }
-  }
-
   &__lead {
     margin: 0 0 1.5rem;
     color: var(--text-color-secondary);

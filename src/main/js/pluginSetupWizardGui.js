@@ -1166,7 +1166,16 @@ var createPluginSetupWizard = function (appendTarget) {
                           }
                         }
                         setPanel(incompleteInstallationPanel, {
-                          installingPlugins: installingPlugins,
+                          installingPlugins: installingPlugins
+                            .filter(function (plugin) {
+                              return plugin.installStatus !== "success";
+                            })
+                            .map(function (plugin) {
+                              return {
+                                title: plugin.title,
+                                installStatus: plugin.installStatus,
+                              };
+                            }),
                         });
                       }),
                     );
