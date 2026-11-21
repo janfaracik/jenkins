@@ -1,7 +1,14 @@
-<div class="app-setup-wizard__body app-setup-wizard__body--frame">
-  <iframe class="app-setup-wizard__frame" src="{{baseUrl}}/setupWizard/proxy-configuration"></iframe>
-</div>
-<div class="app-setup-wizard__footer">
-  <button type="button" class="jenkins-button jenkins-button--primary save-proxy-config" disabled>{{translations.installWizard_configureProxy_save}}</button>
-  <button type="button" class="jenkins-button jenkins-button--tertiary install-home">{{translations.installWizard_goBack}}</button>
+<div class="app-setup-wizard__body app-setup-wizard__body--narrow">
+  <div class="app-setup-wizard__narrow">
+    <div class="jenkins-app-bar">
+      <div class="jenkins-app-bar__content">
+        <h1>{{title}}</h1>
+      </div>
+    </div>
+    <iframe class="app-setup-wizard__frame app-setup-wizard__frame--fit" src="{{baseUrl}}/setupWizard/proxy-configuration"></iframe>
+    <div class="app-setup-wizard__narrow-buttons">
+      <button type="button" class="jenkins-button jenkins-button--primary save-proxy-config" disabled>{{translations.installWizard_configureProxy_save}}</button>
+      <button type="button" class="jenkins-button install-home">{{translations.installWizard_goBack}}</button>
+    </div>
+  </div>
 </div>

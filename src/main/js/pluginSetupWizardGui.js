@@ -336,7 +336,16 @@ var createPluginSetupWizard = function (appendTarget) {
   };
 
   var setupFirstUser = function () {
-    setPanel(firstUserPanel, {}, enableButtonsAfterFrameLoad);
+    setPanel(
+      firstUserPanel,
+      {
+        title: translate(
+          "installWizard_firstUser_title",
+          "Create First Admin User",
+        ),
+      },
+      enableButtonsAfterFrameLoad,
+    );
   };
 
   var showConfigureInstance = function (messages) {
@@ -966,7 +975,16 @@ var createPluginSetupWizard = function (appendTarget) {
   };
 
   var setupProxy = function () {
-    setPanel(proxyConfigPanel, {}, enableButtonsAfterFrameLoad);
+    setPanel(
+      proxyConfigPanel,
+      {
+        title: translate(
+          "installWizard_configureProxy_title",
+          "HTTP Proxy Configuration",
+        ),
+      },
+      enableButtonsAfterFrameLoad,
+    );
   };
 
   var saveProxyConfig = function () {
