@@ -90,12 +90,11 @@ $wizard-border: var(--jenkins-border-width) solid
       > span:has(> .jenkins-button) {
         display: flex;
         align-self: stretch;
-        margin-block: -0.375rem;
+        margin-block: -0.625rem;
       }
 
       .jenkins-button {
         height: auto;
-        margin-block: 0;
       }
     }
 

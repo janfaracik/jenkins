@@ -16,7 +16,7 @@
                 </l:app-bar>
                 <p class="app-setup-wizard__narrow-text">${%jenkins.install.findSecurityTokenMessage}</p>
                 <div class="jenkins-quote jenkins-quote--monospace">
-                  ${it.initialAdminPasswordFile}
+                  <div><j:forEach var="part" items="${it.initialAdminPasswordFile.remote.split('(?&lt;=[/\\\\])')}">${part}<wbr/></j:forEach></div>
                   <l:copyButton text="${it.initialAdminPasswordFile}" iconOnly="true" />
                 </div>
                 <j:if test="${error}">
