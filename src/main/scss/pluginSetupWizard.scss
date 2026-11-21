@@ -197,10 +197,7 @@ $wizard-border: var(--jenkins-border-width) solid
     }
 
     &--installing::before {
-      mask-image: url("../images/svgs/setupWizard/progress.svg");
-      background: var(--accent-color);
-      opacity: 1;
-      animation: app-setup-wizard-spin 1.5s linear infinite;
+      display: none;
     }
 
     &--success {
@@ -224,6 +221,17 @@ $wizard-border: var(--jenkins-border-width) solid
         opacity: 1;
       }
     }
+  }
+
+  &__plugin-spinner {
+    position: absolute;
+    top: 0.55rem;
+    left: 0.75rem;
+    display: none;
+  }
+
+  &__plugin--installing &__plugin-spinner {
+    display: inline-flex;
   }
 
   &__console {
@@ -383,12 +391,6 @@ $wizard-border: var(--jenkins-border-width) solid
     &:empty {
       display: none;
     }
-  }
-}
-
-@keyframes app-setup-wizard-spin {
-  to {
-    rotate: 360deg;
   }
 }
 

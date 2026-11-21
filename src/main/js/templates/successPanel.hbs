@@ -11,7 +11,7 @@
   </div>
   <div class="app-setup-wizard__plugins app-setup-wizard__plugins--full">
     {{#each installingPlugins}}
-    <div class="app-setup-wizard__plugin app-setup-wizard__plugin--{{installStatus}}" data-name="{{id name}}">{{title}}</div>
+    <div class="app-setup-wizard__plugin app-setup-wizard__plugin--{{installStatus}}" data-name="{{id name}}"><span class="jenkins-spinner app-setup-wizard__plugin-spinner"></span>{{title}}</div>
     {{/each}}
   </div>
 </div>

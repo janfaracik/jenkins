@@ -239,14 +239,23 @@ var createPluginSetupWizard = function (appendTarget) {
     }
   };
 
+  var renderProgressPanel = function (data) {
+    return progressPanel(
+      Object.assign(
+        {
+          title: translate(
+            "installWizard_installingPlugins_title",
+            "Installing plugins",
+          ),
+        },
+        data,
+      ),
+    );
+  };
+
   var installPlugins = function (pluginNames) {
     selectedPluginNames = pluginNames;
-    setPanel(
-      function (data) {
-        return progressPanel(data);
-      },
-      { installingPlugins: [] },
-    );
+    setPanel(renderProgressPanel, { installingPlugins: [] });
 
     pluginManager.installPlugins(
       pluginNames,
@@ -366,7 +375,7 @@ var createPluginSetupWizard = function (appendTarget) {
 
     initInstallingPluginList();
     setPanel(
-      progressPanel,
+      renderProgressPanel,
       { installingPlugins: installingPlugins },
       attachScrollEvent,
     );
@@ -446,14 +455,21 @@ var createPluginSetupWizard = function (appendTarget) {
                   : "selected");
               installText.append(line);
             }
-
-            var itemProgress = document.getElementById(
-              "installing-" + idIfy(j.name),
-            );
-            if (itemProgress) {
-              itemProgress.classList.add("app-setup-wizard__plugin--" + state);
-            }
           }
+
+          installingPlugins.forEach(function (plugin) {
+            var item = document.getElementById(
+              "installing-" + idIfy(plugin.name),
+            );
+            if (item) {
+              item.className =
+                "app-setup-wizard__plugin app-setup-wizard__plugin--" +
+                plugin.installStatus;
+              if (plugin.errorMessage) {
+                item.title = plugin.errorMessage;
+              }
+            }
+          });
 
           var scroll = find(".app-setup-wizard__console-scroll");
           if (scroll && isVisible(scroll) && !consoleScroll.userScrolled) {
@@ -462,7 +478,6 @@ var createPluginSetupWizard = function (appendTarget) {
           }
 
           if (complete < total && data.state === "INITIAL_PLUGINS_INSTALLING") {
-            setPanel(progressPanel, { installingPlugins: installingPlugins });
             setTimeout(updateStatus, 250);
             return;
           }
