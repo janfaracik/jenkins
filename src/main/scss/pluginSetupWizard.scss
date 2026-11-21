@@ -12,7 +12,6 @@ $wizard-border: var(--jenkins-border-width) solid
   place-items: center;
   padding: 1.25rem 1.25rem 2.75rem;
   background: var(--dialog-backdrop-background);
-  backdrop-filter: var(--dialog-backdrop-backdrop-filter);
   text-align: initial;
 
   &__dialog {
@@ -20,7 +19,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
     display: flex;
     flex-direction: column;
-    width: min(992px, 100%);
+    width: min(1200px, 100%);
     height: min(780px, 100%);
     border-radius: 1rem;
     overflow: hidden;
