@@ -251,17 +251,6 @@ var createPluginSetupWizard = function (appendTarget) {
       currentPanel = panel;
       container.replaceChildren(toFragment(html));
 
-      var header = container.querySelector(".app-setup-wizard__header");
-      if (
-        header &&
-        header.classList.contains("app-setup-wizard__header--closeable")
-      ) {
-        header.insertAdjacentHTML(
-          "beforeend",
-          '<button type="button" class="jenkins-button jenkins-button--tertiary app-setup-wizard__close close" aria-label="Close">&times;</button>',
-        );
-      }
-
       if (translations.installWizard_jenkinsVersionTitle) {
         var footer = container.querySelector(".app-setup-wizard__footer");
         if (!footer) {
@@ -1119,7 +1108,7 @@ var createPluginSetupWizard = function (appendTarget) {
     },
     ".plugin-show-selected": toggleSelectedSearch,
     ".select-category": selectCategory,
-    ".close": skipFirstUserAndConfigureInstance,
+    ".skip-setup": skipFirstUserAndConfigureInstance,
     ".resume-installation": resumeInstallation,
     ".install-done-restart": restartJenkins,
     ".save-first-user:not([disabled])": saveFirstUser,

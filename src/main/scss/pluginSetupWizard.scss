@@ -46,11 +46,6 @@ $wizard-border: var(--jenkins-border-width) solid
     font-weight: var(--font-bold-weight);
   }
 
-  &__close {
-    font-size: 1.25rem;
-    line-height: 1;
-  }
-
   &__footer {
     justify-content: flex-end;
     border-top: $wizard-border;
