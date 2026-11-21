@@ -57,6 +57,12 @@ $wizard-border: var(--jenkins-border-width) solid
       text-align: center;
     }
 
+    &--unlock {
+      display: grid;
+      place-items: center;
+      padding: $wizard-padding;
+    }
+
     &--frame {
       display: flex;
       flex-direction: column;
@@ -110,6 +116,16 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__message {
     padding: $wizard-padding $wizard-padding 0;
+  }
+
+  &__unlock {
+    width: 100%;
+    max-width: 400px;
+    overflow-wrap: anywhere;
+  }
+
+  &__unlock-submit {
+    width: 100%;
   }
 
   &__frame {
