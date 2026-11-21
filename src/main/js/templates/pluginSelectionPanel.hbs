@@ -4,7 +4,10 @@
     <div class="tasks">
       {{#each categories}}
       <div class="task app-setup-wizard__category">
-        <a href="#{{id this}}" class="task-link select-category"><span class="task-link-text">{{this}}</span></a>
+        <a href="#{{id this}}" class="task-link select-category">
+          <span class="task-icon-link">{{{category-icon this}}}</span>
+          <span class="task-link-text">{{this}}</span>
+        </a>
       </div>
       {{/each}}
     </div>

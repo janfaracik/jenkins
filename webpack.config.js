@@ -122,7 +122,12 @@ module.exports = (env, argv) => ({
         ],
       },
       {
+        resourceQuery: /raw/,
+        type: "asset/source",
+      },
+      {
         test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        resourceQuery: { not: [/raw/] },
         type: "asset/resource",
         generator: {
           filename: "fonts/[name].[ext]",
