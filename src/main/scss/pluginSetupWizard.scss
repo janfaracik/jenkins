@@ -288,6 +288,7 @@ $wizard-border: var(--jenkins-border-width) solid
   &__picker-category {
     margin-inline: 0;
     font-weight: normal;
+    line-height: inherit;
   }
 
   &__picker-list &__picker-category:first-of-type {
@@ -298,6 +299,7 @@ $wizard-border: var(--jenkins-border-width) solid
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    padding-top: 0.25rem;
   }
 
   &__picker-item {
