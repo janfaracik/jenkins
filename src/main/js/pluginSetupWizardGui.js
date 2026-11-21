@@ -697,7 +697,7 @@ var createPluginSetupWizard = function (appendTarget) {
       installLabel: installLabel(),
       additionalPluginsNote: translate(
         "installWizard_installCustom_additionalPlugins",
-        "Additional plugins can be installed in Manage Jenkins once initial setup is complete.",
+        "Additional plugins can be installed once initial setup is complete.",
       ),
       hasSelection: selectedPluginNames.length > 0,
     };
