@@ -13,8 +13,8 @@
 </div>
 <div class="app-setup-wizard__footer">
   {{#if failedPlugins}}
-  <button type="button" class="jenkins-button jenkins-button--tertiary continue-with-failed-plugins">{{translations.installWizard_continue}}</button>
   <button type="button" class="jenkins-button jenkins-button--primary retry-failed-plugins">{{translations.installWizard_retry}}</button>
+  <button type="button" class="jenkins-button jenkins-button--tertiary continue-with-failed-plugins">{{translations.installWizard_continue}}</button>
   {{else}}
   <button type="button" class="jenkins-button jenkins-button--primary continue-with-failed-plugins">{{translations.installWizard_continue}}</button>
   {{/if}}
