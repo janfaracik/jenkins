@@ -34,7 +34,7 @@ function iframeDocument(iframe) {
 }
 
 var createPluginSetupWizard = function (appendTarget) {
-  Handlebars.registerHelper("pluginCountForCategory", function (cat) {
+  var categoryCount = function (cat) {
     var plugs = categorizedPlugins[cat];
     var tot = 0;
     var cnt = 0;
@@ -48,23 +48,26 @@ var createPluginSetupWizard = function (appendTarget) {
       }
     }
     return "(" + cnt + "/" + tot + ")";
-  });
+  };
 
-  Handlebars.registerHelper("totalPluginCount", function () {
+  var totalCount = function () {
     var tot = 0;
     var cnt = 0;
     for (var i = 0; i < pluginList.length; i++) {
       var a = pluginList[i];
       for (var c = 0; c < a.plugins.length; c++) {
-        var plug = a.plugins[c];
         tot++;
-        if (selectedPluginNames.indexOf(plug.name) >= 0) {
+        if (selectedPluginNames.indexOf(a.plugins[c].name) >= 0) {
           cnt++;
         }
       }
     }
     return "(" + cnt + "/" + tot + ")";
-  });
+  };
+
+  Handlebars.registerHelper("pluginCountForCategory", categoryCount);
+
+  Handlebars.registerHelper("totalPluginCount", totalCount);
 
   Handlebars.registerHelper("inSelectedPlugins", function (val, options) {
     if (selectedPluginNames.indexOf(val) >= 0) {
@@ -716,7 +719,28 @@ var createPluginSetupWizard = function (appendTarget) {
   };
 
   var refreshPluginSelectionPanel = function () {
-    setPanel(currentPanel, pluginSelectionPanelData());
+    findAll(".app-setup-wizard__picker-item input[type=checkbox]").forEach(
+      function (checkbox) {
+        var selected = selectedPluginNames.indexOf(checkbox.name) >= 0;
+        checkbox.checked = selected;
+        checkbox
+          .closest(".app-setup-wizard__picker-item")
+          .classList.toggle(
+            "app-setup-wizard__picker-item--selected",
+            selected,
+          );
+      },
+    );
+    findAll(".app-setup-wizard__picker-category").forEach(function (heading) {
+      heading.querySelector(".app-setup-wizard__category-count").textContent =
+        categoryCount(heading.dataset.category);
+    });
+    var info = find("#plugin-selected-info");
+    if (info) {
+      info.dataset.selectedPlugins = selectedPluginNames.join(",");
+      info.querySelector(".app-setup-wizard__selected-count").textContent =
+        totalCount();
+    }
     if (lastSearch !== "") {
       searchForPlugins(lastSearch, false);
     }
