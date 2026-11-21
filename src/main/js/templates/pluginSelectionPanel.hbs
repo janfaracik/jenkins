@@ -18,31 +18,38 @@
     </div>
   </nav>
   <div class="app-setup-wizard__picker">
-    <div class="app-setup-wizard__picker-controls">
-      <div class="jenkins-search-container app-setup-wizard__search">
-        <div class="jenkins-search jenkins-search--app-bar">
-          <div class="jenkins-search__icon">
-            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path d="M338.29 338.29L448 448" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/></svg>
+    <div class="app-setup-wizard__picker-list">
+      <div class="jenkins-app-bar jenkins-app-bar--sticky">
+        <div class="jenkins-app-bar__content">
+          <div class="jenkins-search-container app-setup-wizard__search">
+            <div class="jenkins-search jenkins-search--app-bar">
+              <div class="jenkins-search__icon">
+                <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path d="M338.29 338.29L448 448" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/></svg>
+              </div>
+              <input type="search" name="searchbox" class="jenkins-input jenkins-search__input app-setup-wizard__search-input" placeholder="{{translations.installWizard_installCustom_search}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+            </div>
           </div>
-          <input type="search" name="searchbox" class="jenkins-input jenkins-search__input app-setup-wizard__search-input" placeholder="{{translations.installWizard_installCustom_search}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+        <div class="jenkins-app-bar__controls">
+          <span class="app-setup-wizard__picker-actions">
+            <a href="#" class="plugin-select-all">{{translations.installWizard_installCustom_selectAll}}</a>
+            <a href="#" class="plugin-select-none">{{translations.installWizard_installCustom_selectNone}}</a>
+            <a href="#" class="plugin-select-recommended">{{translations.installWizard_installCustom_selectRecommended}}</a>
+          </span>
+          <span id="plugin-selected-info" class="app-setup-wizard__selected-info" data-selected-plugins="{{#each selectedPlugins}}{{this}},{{/each}}">
+            <a href="#" class="plugin-show-selected">{{translations.installWizard_installCustom_selected}}</a> {{totalPluginCount}}
+          </span>
         </div>
       </div>
-      <span class="app-setup-wizard__picker-actions">
-        <a href="#" class="plugin-select-all">{{translations.installWizard_installCustom_selectAll}}</a>
-        <a href="#" class="plugin-select-none">{{translations.installWizard_installCustom_selectNone}}</a>
-        <a href="#" class="plugin-select-recommended">{{translations.installWizard_installCustom_selectRecommended}}</a>
-      </span>
-      <span id="plugin-selected-info" class="app-setup-wizard__selected-info" data-selected-plugins="{{#each selectedPlugins}}{{this}},{{/each}}">
-        <a href="#" class="plugin-show-selected">{{translations.installWizard_installCustom_selected}}</a> {{totalPluginCount}}
-      </span>
-    </div>
-    <div class="app-setup-wizard__picker-list">
       <div class="app-setup-wizard__picker-note">{{{translations.installWizard_installCustom_pluginListDesc}}}</div>
       {{> pluginSelectList}}
-    </div>
-    <div class="app-setup-wizard__footer">
-      <button type="button" class="jenkins-button skip-plugin-installs">{{translations.installWizard_installCustom_skip}}</button>
-      <button type="button" class="jenkins-button jenkins-button--primary install-selected">{{translations.installWizard_goInstall}}</button>
+      <div class="jenkins-bottom-app-bar__shadow jenkins-bottom-app-bar__shadow--borderless"></div>
+      <div class="bottom-sticker">
+        <div class="bottom-sticker-inner jenkins-buttons-row app-setup-wizard__picker-actions-bar">
+          <button type="button" class="jenkins-button skip-plugin-installs">{{translations.installWizard_installCustom_skip}}</button>
+          <button type="button" class="jenkins-button jenkins-button--primary install-selected">{{translations.installWizard_goInstall}}</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

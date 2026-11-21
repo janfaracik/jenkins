@@ -615,6 +615,14 @@ var createPluginSetupWizard = function (appendTarget) {
     });
   };
 
+  var stickyOffset = function (list) {
+    var bar = list.querySelector(".jenkins-app-bar--sticky");
+    if (!bar) {
+      return 0;
+    }
+    return bar.offsetHeight + parseFloat(getComputedStyle(list).paddingTop) * 2;
+  };
+
   var pinnedCategory = null;
 
   var setActiveCategory = function (id) {
@@ -650,7 +658,7 @@ var createPluginSetupWizard = function (appendTarget) {
       }
       var active = headings[0].id;
       headings.forEach(function (heading) {
-        if (heading.offsetTop - list.scrollTop <= 10) {
+        if (heading.offsetTop - list.scrollTop <= stickyOffset(list) + 10) {
           active = heading.id;
         }
       });
@@ -663,13 +671,31 @@ var createPluginSetupWizard = function (appendTarget) {
     update();
   };
 
+  var trackBottomBar = function () {
+    var list = find(".app-setup-wizard__picker-list");
+    var shadow = find(
+      ".app-setup-wizard__picker-list .jenkins-bottom-app-bar__shadow",
+    );
+    if (!list || !shadow) {
+      return;
+    }
+    new IntersectionObserver(
+      function (entries) {
+        shadow.classList.toggle(
+          "jenkins-bottom-app-bar__shadow--stuck",
+          entries[0].intersectionRatio < 1,
+        );
+      },
+      { root: list, threshold: [1] },
+    ).observe(shadow);
+  };
+
   var loadCustomPluginPanel = function () {
     loadPluginCategories(function () {
-      setPanel(
-        pluginSelectionPanel,
-        pluginSelectionPanelData(),
-        trackActiveCategory,
-      );
+      setPanel(pluginSelectionPanel, pluginSelectionPanelData(), function () {
+        trackActiveCategory();
+        trackBottomBar();
+      });
     });
   };
 
@@ -728,7 +754,10 @@ var createPluginSetupWizard = function (appendTarget) {
     }
     findIndex = lastSearch !== term ? 0 : (findIndex + 1) % matches.length;
     var plugin = matches[findIndex];
-    list.scrollTo({ top: plugin.offsetTop, behavior: "smooth" });
+    list.scrollTo({
+      top: plugin.offsetTop - stickyOffset(list),
+      behavior: "smooth",
+    });
   };
 
   var searchForPlugins = function (text, scroll) {
@@ -840,7 +869,10 @@ var createPluginSetupWizard = function (appendTarget) {
     }
     pinnedCategory = target.id;
     setActiveCategory(target.id);
-    list.scrollTo({ top: target.offsetTop, behavior: "smooth" });
+    list.scrollTo({
+      top: target.offsetTop - stickyOffset(list),
+      behavior: "smooth",
+    });
   };
 
   var toggleInstallDetails = function () {
