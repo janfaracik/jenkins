@@ -69,7 +69,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
     &--picker {
       display: grid;
-      grid-template-columns: 15rem 1fr;
+      grid-template-columns: 17rem 1fr;
       overflow: hidden;
 
       @media (width <= 768px) {
@@ -405,5 +405,38 @@ $wizard-border: var(--jenkins-border-width) solid
 @keyframes app-setup-wizard-spin {
   to {
     rotate: 360deg;
+  }
+}
+
+:root:has(.app-setup-wizard-frame),
+:root:has(.app-setup-wizard-frame) body {
+  background: transparent;
+}
+
+.app-setup-wizard-frame {
+  padding: 3rem 4rem;
+
+  h1 {
+    margin: 0 0 2rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .jenkins-form-item {
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .has-error .jenkins-input {
+    border-color: var(--error-color);
+  }
+
+  .error-panel:not(:empty) {
+    margin-top: 0.5rem;
+  }
+
+  .jenkins-form-description {
+    margin-top: 0.75rem;
   }
 }

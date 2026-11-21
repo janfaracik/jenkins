@@ -146,7 +146,6 @@ var createPluginSetupWizard = function (appendTarget) {
   appendTarget.append(wizard);
   var container = wizard.querySelector(".app-setup-wizard__dialog");
   var currentPanel;
-  var pendingAppend = null;
 
   var self = this;
 
@@ -254,36 +253,7 @@ var createPluginSetupWizard = function (appendTarget) {
       oncomplete();
     };
 
-    var body = container.querySelector(".app-setup-wizard__body");
-    var skipFade = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
-    if (!body || (skipFade && pendingAppend === null)) {
-      append();
-      return;
-    }
-    var fading = pendingAppend !== null;
-    pendingAppend = append;
-    if (fading) {
-      return;
-    }
-    var finished = false;
-    var finishFade = function () {
-      if (finished) {
-        return;
-      }
-      finished = true;
-      var next = pendingAppend;
-      pendingAppend = null;
-      next();
-    };
-    body
-      .animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: 250,
-        fill: "forwards",
-      })
-      .finished.then(finishFade, finishFade);
-    setTimeout(finishFade, 300);
+    append();
   };
 
   var installingPlugins = [];
@@ -390,7 +360,7 @@ var createPluginSetupWizard = function (appendTarget) {
     var doc = iframeDocument(iframe);
     Object.keys(errors).forEach(function (name) {
       var inputField = doc.querySelector('[name="' + name + '"]');
-      var row = inputField ? inputField.closest("tr") : null;
+      var row = inputField ? inputField.closest(".jenkins-form-item") : null;
       if (!row) {
         return;
       }

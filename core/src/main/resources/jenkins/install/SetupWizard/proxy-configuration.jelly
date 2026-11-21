@@ -3,15 +3,8 @@
 
   <l:layout type="full-screen" title="${it.displayName}">
     <l:main-panel>
-      <style type="text/css">
-
-        #proxy-configuration {
-          margin: 8px;
-        }
-
-      </style>
-
-      <div id="proxy-configuration">
+      <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
+      <div id="proxy-configuration" class="app-setup-wizard-frame">
         <h1>${%HTTP Proxy Configuration}</h1>
         <f:form method="post" action="/pluginManager/proxyConfigure" name="proxyConfigure">
           <j:scope>

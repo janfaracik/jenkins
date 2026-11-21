@@ -3,7 +3,8 @@
 
   <l:layout type="full-screen" title="${it.displayName}">
     <l:main-panel>
-     <div class="create-admin-user">
+     <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
+     <div class="create-admin-user app-setup-wizard-frame">
        <form action="${rootURL}/setupWizard/createAdminUser" method="post">
           <local:_entryForm it="${app.securityRealm}" host="${app.securityRealm}" title="${%Create First Admin User}" xmlns:local="/hudson/security/HudsonPrivateSecurityRealm" />
        </form>
