@@ -290,6 +290,7 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__picker-category {
+    margin-inline: 0;
     font-weight: normal;
   }
 
@@ -304,7 +305,7 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__picker-item {
-    padding: 0.25rem 0.6875rem;
+    padding: 0.25rem 0;
   }
 
   &__picker-list--searching &__picker-item:not(&__picker-item--match),
