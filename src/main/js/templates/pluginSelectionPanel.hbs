@@ -39,9 +39,11 @@
           <span id="plugin-selected-info" class="app-setup-wizard__selected-info" data-selected-plugins="{{#each selectedPlugins}}{{this}},{{/each}}">
             <a href="#" class="plugin-show-selected">{{translations.installWizard_installCustom_selected}}</a> {{totalPluginCount}}
           </span>
+          <a href="https://www.jenkins.io/redirect/installation-wizard" target="_blank" rel="noopener noreferrer" class="jenkins-button jenkins-button--tertiary" title="{{translations.installWizard_installCustom_help}}" aria-label="{{translations.installWizard_installCustom_help}}">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M256 40a216 216 0 10216 216A216 216 0 00256 40z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="38"/><path d="M200 202.29s.84-17.5 19.57-32.57C230.68 160.77 244 158.18 256 158c10.93-.14 20.69 1.67 26.53 4.45 10 4.76 29.47 16.38 29.47 41.09 0 26-17 37.81-36.37 50.8S251 281.43 251 296" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="38"/><circle cx="250" cy="360" r="25" fill="currentColor"/></svg>
+          </a>
         </div>
       </div>
-      <div class="app-setup-wizard__picker-note">{{{translations.installWizard_installCustom_pluginListDesc}}}</div>
       {{> pluginSelectList}}
       <div class="jenkins-bottom-app-bar__shadow jenkins-bottom-app-bar__shadow--borderless"></div>
       <div class="bottom-sticker">
