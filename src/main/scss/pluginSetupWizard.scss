@@ -246,6 +246,10 @@ $wizard-border: var(--jenkins-border-width) solid
     .jenkins-app-bar {
       margin-inline: 0.6875rem;
     }
+
+    .jenkins-side-nav__heading:first-of-type {
+      margin-top: $wizard-padding;
+    }
   }
 
   &__picker {
@@ -291,6 +295,10 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__picker-category {
     font-weight: normal;
+  }
+
+  &__picker-list &__picker-category:first-of-type {
+    margin-top: $wizard-padding;
   }
 
   &__picker-items {
