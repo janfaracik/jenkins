@@ -372,8 +372,14 @@ var createPluginSetupWizard = function (appendTarget) {
   var showInstallProgress = function () {
     if (failedPluginNames.length > 0) {
       setPanel(pluginSuccessPanel, {
-        installingPlugins: installingPlugins,
-        failedPlugins: true,
+        installingPlugins: failedPluginNames.map(function (name) {
+          var plugin = availablePlugins[name] || {};
+          return {
+            title: plugin.title || name,
+            installStatus: "fail",
+            errorMessage: (getInstallingPlugin(name) || {}).errorMessage,
+          };
+        }),
       });
       return;
     }

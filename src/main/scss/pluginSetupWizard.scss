@@ -169,6 +169,10 @@ $wizard-border: var(--jenkins-border-width) solid
     color: var(--text-color-secondary);
   }
 
+  &__narrow &__install-items {
+    padding: 1rem 0 0;
+  }
+
   &__narrow-buttons {
     display: flex;
     flex-direction: column;

@@ -1,23 +1,15 @@
-<div class="app-setup-wizard__body app-setup-wizard__body--installing">
-  <div class="app-setup-wizard__install-header">
+<div class="app-setup-wizard__body app-setup-wizard__body--narrow">
+  <div class="app-setup-wizard__narrow">
     <div class="jenkins-app-bar">
       <div class="jenkins-app-bar__content">
         <h1>{{translations.installWizard_pluginInstallFailure_title}}</h1>
       </div>
     </div>
-    {{#if failedPlugins}}
-    <p class="app-setup-wizard__lead">{{translations.installWizard_pluginInstallFailure_message}}</p>
-    {{/if}}
-  </div>
-  <div class="app-setup-wizard__install-list">
+    <p class="app-setup-wizard__narrow-text">{{translations.installWizard_pluginInstallFailure_message}}</p>
     {{> installList}}
+    <div class="app-setup-wizard__narrow-buttons">
+      <button type="button" class="jenkins-button jenkins-button--primary retry-failed-plugins">{{translations.installWizard_retry}}</button>
+      <button type="button" class="jenkins-button continue-with-failed-plugins">{{translations.installWizard_continue}}</button>
+    </div>
   </div>
-</div>
-<div class="app-setup-wizard__footer">
-  {{#if failedPlugins}}
-  <button type="button" class="jenkins-button jenkins-button--primary retry-failed-plugins">{{translations.installWizard_retry}}</button>
-  <button type="button" class="jenkins-button jenkins-button--tertiary continue-with-failed-plugins">{{translations.installWizard_continue}}</button>
-  {{else}}
-  <button type="button" class="jenkins-button jenkins-button--primary continue-with-failed-plugins">{{translations.installWizard_continue}}</button>
-  {{/if}}
 </div>
