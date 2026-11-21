@@ -1,6 +1,6 @@
 @use "abstracts/mixins";
 
-$wizard-padding: 1.75rem;
+$wizard-padding: var(--section-padding);
 $wizard-border: var(--jenkins-border-width) solid
   var(--jenkins-border-color--subtle);
 
@@ -32,7 +32,7 @@ $wizard-border: var(--jenkins-border-width) solid
     justify-content: flex-end;
     gap: 0.75rem;
     flex-shrink: 0;
-    padding: 1rem $wizard-padding;
+    padding: $wizard-padding;
     border-top: $wizard-border;
   }
 
@@ -70,7 +70,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
     &--picker {
       display: grid;
-      grid-template-columns: 17rem 1fr;
+      grid-template-columns: 20rem 1fr;
       overflow: hidden;
 
       @media (width <= 768px) {
@@ -86,10 +86,10 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__hero {
-    padding: 3rem 4rem;
+    padding: $wizard-padding;
 
     &--compact {
-      padding: 2rem $wizard-padding;
+      padding: $wizard-padding;
       border-bottom: $wizard-border;
     }
   }
@@ -108,7 +108,7 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__message {
-    padding: 1rem $wizard-padding 0;
+    padding: $wizard-padding $wizard-padding 0;
   }
 
   &__frame {
@@ -138,7 +138,7 @@ $wizard-border: var(--jenkins-border-width) solid
     grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
     align-content: start;
     gap: 0.5rem;
-    padding: 1rem $wizard-padding;
+    padding: $wizard-padding;
     overflow-y: auto;
 
     &--full {
@@ -237,18 +237,12 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__categories {
     overflow-y: auto;
-    padding: 0.75rem;
+    padding: $wizard-padding;
     border-right: $wizard-border;
 
     @media (width <= 768px) {
       display: none;
     }
-  }
-
-  &__categories-heading {
-    margin: 0.75rem 0.6875rem 1rem;
-    font-size: 1.25rem;
-    font-weight: 550;
   }
 
   &__picker {
@@ -261,7 +255,7 @@ $wizard-border: var(--jenkins-border-width) solid
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0.75rem $wizard-padding;
+    padding: $wizard-padding;
     border-bottom: $wizard-border;
   }
 
@@ -276,6 +270,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
     .jenkins-search--app-bar {
       max-width: none;
+      margin-block: 0;
     }
   }
 
@@ -287,7 +282,7 @@ $wizard-border: var(--jenkins-border-width) solid
     position: relative;
     flex: 1;
     overflow-y: auto;
-    padding: 0 $wizard-padding 1.5rem;
+    padding: 0 $wizard-padding $wizard-padding;
   }
 
   &__picker-note {
@@ -419,7 +414,7 @@ $wizard-border: var(--jenkins-border-width) solid
 }
 
 .app-setup-wizard-frame {
-  padding: 3rem 4rem;
+  padding: var(--section-padding);
 
   h1 {
     margin: 0 0 2rem;
