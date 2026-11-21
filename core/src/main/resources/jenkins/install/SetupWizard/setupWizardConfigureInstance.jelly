@@ -27,9 +27,8 @@ THE SOFTWARE.
   <l:layout norefresh="true" type="full-screen" title="${it.displayName}">
     <l:main-panel>
      <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
-     <div class="configure-instance app-setup-wizard-frame">
+     <div class="configure-instance app-setup-wizard-frame app-setup-wizard-frame--fit">
        <form action="${rootURL}/setupWizard/configureInstance" method="post">
-         <l:app-bar title="${%Instance Configuration}" />
          <div class="jenkins-form-item">
            <label class="jenkins-form-label" for="root-url">${%Jenkins URL}</label>
            <input type="text" name="rootUrl" id="root-url" class="jenkins-input" value="" />

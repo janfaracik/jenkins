@@ -129,6 +129,13 @@ $wizard-border: var(--jenkins-border-width) solid
     flex: 1;
     width: 100%;
     border: none;
+
+    &--fit {
+      flex: none;
+      width: calc(100% + 0.5rem);
+      height: 0;
+      margin: -0.25rem;
+    }
   }
 
   &__progress {
@@ -404,6 +411,19 @@ $wizard-border: var(--jenkins-border-width) solid
 
   padding: var(--section-padding);
 
+  &--fit {
+    padding: 0.25rem;
+
+    .jenkins-form-item {
+      max-width: none;
+      margin-bottom: 0;
+    }
+
+    .jenkins-form-description {
+      line-height: 1.66;
+    }
+  }
+
   .jenkins-form-item {
     max-width: 36rem;
     margin-bottom: 1.5rem;
@@ -411,6 +431,10 @@ $wizard-border: var(--jenkins-border-width) solid
 
   .has-error .jenkins-input {
     border-color: var(--error-color);
+  }
+
+  .error-panel:empty {
+    display: none;
   }
 
   .error-panel:not(:empty) {

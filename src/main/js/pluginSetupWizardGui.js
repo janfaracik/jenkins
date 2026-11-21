@@ -155,7 +155,11 @@ var createPluginSetupWizard = function (appendTarget) {
         .querySelectorAll("[id]")
         .forEach(function (el) {
           var existing = document.getElementById(el.id);
-          if (existing && el.outerHTML !== existing.outerHTML) {
+          if (
+            existing &&
+            existing.tagName !== "IFRAME" &&
+            el.outerHTML !== existing.outerHTML
+          ) {
             existing.replaceWith(el);
           }
         });
@@ -288,9 +292,21 @@ var createPluginSetupWizard = function (appendTarget) {
     );
   };
 
+  var fitFrameToContent = function (iframe) {
+    var doc = iframeDocument(iframe);
+    var resize = function () {
+      iframe.style.height = doc.documentElement.scrollHeight + "px";
+    };
+    new ResizeObserver(resize).observe(doc.body);
+    resize();
+  };
+
   var enableButtonsAfterFrameLoad = function () {
     findAll("iframe[src]").forEach(function (iframe) {
       iframe.addEventListener("load", function () {
+        if (iframe.classList.contains("app-setup-wizard__frame--fit")) {
+          fitFrameToContent(iframe);
+        }
         setButtonsDisabled(false);
       });
     });
@@ -855,10 +871,14 @@ var createPluginSetupWizard = function (appendTarget) {
         "body$1>" + main.innerHTML + "</body",
       );
     }
-    var doc = iframeDocument(document.getElementById(iframeId));
+    var iframe = document.getElementById(iframeId);
+    var doc = iframeDocument(iframe);
     doc.open();
     doc.write(responseText);
     doc.close();
+    if (iframe.classList.contains("app-setup-wizard__frame--fit")) {
+      fitFrameToContent(iframe);
+    }
     setButtonsDisabled(false);
   };
 
