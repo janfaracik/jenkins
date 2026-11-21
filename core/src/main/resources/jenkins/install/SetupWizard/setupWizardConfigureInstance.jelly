@@ -29,7 +29,7 @@ THE SOFTWARE.
      <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
      <div class="configure-instance app-setup-wizard-frame">
        <form action="${rootURL}/setupWizard/configureInstance" method="post">
-         <h1>${%Instance Configuration}</h1>
+         <l:app-bar title="${%Instance Configuration}" />
          <div class="jenkins-form-item">
            <label class="jenkins-form-label" for="root-url">${%Jenkins URL}</label>
            <input type="text" name="rootUrl" id="root-url" class="jenkins-input" value="" />

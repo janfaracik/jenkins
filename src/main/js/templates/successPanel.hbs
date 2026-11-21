@@ -1,6 +1,10 @@
 <div class="app-setup-wizard__body app-setup-wizard__body--installing">
   <div class="app-setup-wizard__hero app-setup-wizard__hero--compact">
-    <h1 class="app-setup-wizard__heading">{{translations.installWizard_pluginInstallFailure_title}}</h1>
+    <div class="jenkins-app-bar">
+      <div class="jenkins-app-bar__content">
+        <h1>{{translations.installWizard_pluginInstallFailure_title}}</h1>
+      </div>
+    </div>
     {{#if failedPlugins}}
     <p class="app-setup-wizard__lead">{{translations.installWizard_pluginInstallFailure_message}}</p>
     {{/if}}

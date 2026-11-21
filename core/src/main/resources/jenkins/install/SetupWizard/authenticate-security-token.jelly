@@ -11,7 +11,7 @@
           <div class="app-setup-wizard__dialog">
             <div class="app-setup-wizard__body">
               <div class="app-setup-wizard__hero">
-                <h1 class="app-setup-wizard__heading">${%authenticate-security-token.unlock.jenkins}</h1>
+                <l:app-bar title="${%authenticate-security-token.unlock.jenkins}" />
                 <p class="app-setup-wizard__lead">${%jenkins.install.findSecurityTokenMessage(it.initialAdminPasswordFile)}</p>
                 <p>${%authenticate-security-token.copy.password}</p>
                 <j:if test="${error}">

@@ -5,7 +5,7 @@
     <l:main-panel>
       <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
       <div id="proxy-configuration" class="app-setup-wizard-frame">
-        <h1>${%HTTP Proxy Configuration}</h1>
+        <l:app-bar title="${%HTTP Proxy Configuration}" />
         <f:form method="post" action="/pluginManager/proxyConfigure" name="proxyConfigure">
           <j:scope>
             <j:set var="instance" value="${app.proxy}"/>

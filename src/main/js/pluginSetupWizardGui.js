@@ -241,8 +241,8 @@ var createPluginSetupWizard = function (appendTarget) {
   var installPlugins = function (pluginNames) {
     selectedPluginNames = pluginNames;
     setPanel(
-      function () {
-        return progressPanel(arguments);
+      function (data) {
+        return progressPanel(data);
       },
       { installingPlugins: [] },
     );
