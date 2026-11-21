@@ -1,5 +1,5 @@
 <div class="app-setup-wizard__body app-setup-wizard__body--installing">
-  <div class="app-setup-wizard__hero app-setup-wizard__hero--compact">
+  <div class="app-setup-wizard__install-header">
     <div class="jenkins-app-bar">
       <div class="jenkins-app-bar__content">
         <h1>{{translations.installWizard_pluginInstallFailure_title}}</h1>
@@ -9,10 +9,8 @@
     <p class="app-setup-wizard__lead">{{translations.installWizard_pluginInstallFailure_message}}</p>
     {{/if}}
   </div>
-  <div class="app-setup-wizard__plugins app-setup-wizard__plugins--full">
-    {{#each installingPlugins}}
-    <div class="app-setup-wizard__plugin app-setup-wizard__plugin--{{installStatus}}" data-name="{{id name}}"><span class="jenkins-spinner app-setup-wizard__plugin-spinner"></span>{{title}}</div>
-    {{/each}}
+  <div class="app-setup-wizard__install-list">
+    {{> installList}}
   </div>
 </div>
 <div class="app-setup-wizard__footer">

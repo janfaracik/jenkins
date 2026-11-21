@@ -1,25 +1,18 @@
 <div class="app-setup-wizard__body app-setup-wizard__body--installing">
-  <div class="app-setup-wizard__hero app-setup-wizard__hero--compact">
+  <div class="app-setup-wizard__install-header">
     <div class="jenkins-app-bar">
       <div class="jenkins-app-bar__content">
         <h1>{{title}}</h1>
       </div>
+      <div class="jenkins-app-bar__controls">
+        <span class="app-setup-wizard__install-count"></span>
+      </div>
     </div>
-    <span class="app-progress-bar app-progress-bar--large app-progress-bar--animate app-setup-wizard__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="{{title}}">
+    <span class="app-progress-bar app-setup-wizard__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="{{title}}">
       <span style="width: 0%;"></span>
     </span>
   </div>
-  <div class="app-setup-wizard__installing">
-    <div class="app-setup-wizard__plugins">
-      {{#each installingPlugins}}
-      <div class="app-setup-wizard__plugin app-setup-wizard__plugin--{{installStatus}}" id="installing-{{id name}}" {{#if errorMessage}}title="{{errorMessage}}"{{/if}}><span class="jenkins-spinner app-setup-wizard__plugin-spinner"></span>{{title}}</div>
-      {{/each}}
-    </div>
-    <div class="app-setup-wizard__console">
-      <div class="app-setup-wizard__console-scroll">
-        <div class="app-setup-wizard__console-text"></div>
-      </div>
-      <div class="app-setup-wizard__console-legend">{{translations.installWizard_installingConsole_dependencyIndicatorNote}}</div>
-    </div>
+  <div class="app-setup-wizard__install-list">
+    {{> installList}}
   </div>
 </div>

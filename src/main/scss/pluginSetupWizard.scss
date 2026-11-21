@@ -150,126 +150,112 @@ $wizard-border: var(--jenkins-border-width) solid
     width: 100%;
   }
 
-  &__installing {
-    display: grid;
-    grid-template-columns: 1fr 18rem;
+  &__install-header,
+  &__install-list {
+    padding-inline: max(
+      #{$wizard-padding},
+      calc((100% - 885px) / 2 + #{$wizard-padding})
+    );
+  }
+
+  &__install-header {
+    flex-shrink: 0;
+    padding-top: $wizard-padding;
+    padding-bottom: $wizard-padding;
+    border-bottom: $wizard-border;
+  }
+
+  &__install-count {
+    color: var(--text-color-secondary);
+  }
+
+  &__install-list {
     flex: 1;
     min-height: 0;
-
-    @media (width <= 768px) {
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr 12rem;
-    }
-  }
-
-  &__plugins {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
-    align-content: start;
-    gap: 0.5rem;
-    padding: $wizard-padding;
     overflow-y: auto;
-
-    &--full {
-      flex: 1;
-    }
   }
 
-  &__plugin {
-    position: relative;
-    padding: 0.55rem 0.75rem 0.55rem 2.25rem;
-    border-radius: 0.5rem;
-    font-size: var(--font-size-sm);
-    background: var(--card-background);
-    border: var(--jenkins-border);
+  &__install-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: $wizard-padding 0;
+    list-style: none;
+  }
+
+  &__install-item {
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+  }
+
+  &__install-icon {
+    display: grid;
+    place-items: center;
+    height: 1lh;
+
+    .jenkins-spinner {
+      display: none;
+    }
 
     &::before {
       content: "";
-      position: absolute;
-      top: 0.65rem;
-      left: 0.75rem;
-      width: 1rem;
-      height: 1rem;
-      mask: url("../images/svgs/setupWizard/circle.svg") center / contain
-        no-repeat;
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 100%;
       background: var(--text-color-secondary);
       opacity: 0.4;
     }
+  }
 
-    &--installing::before {
+  &__install-item--installing &__install-icon {
+    &::before {
       display: none;
     }
 
-    &--success {
-      border-color: color-mix(in sRGB, var(--success-color) 40%, transparent);
-      background: color-mix(in sRGB, var(--success-color) 8%, transparent);
-
-      &::before {
-        mask-image: url("../images/svgs/setupWizard/check.svg");
-        background: var(--success-color);
-        opacity: 1;
-      }
-    }
-
-    &--fail {
-      border-color: color-mix(in sRGB, var(--error-color) 40%, transparent);
-      background: color-mix(in sRGB, var(--error-color) 8%, transparent);
-
-      &::before {
-        mask-image: url("../images/svgs/setupWizard/close.svg");
-        background: var(--error-color);
-        opacity: 1;
-      }
+    .jenkins-spinner {
+      display: inline-flex;
     }
   }
 
-  &__plugin-spinner {
-    position: absolute;
-    top: 0.55rem;
-    left: 0.75rem;
-    display: none;
+  &__install-item--success &__install-icon::before,
+  &__install-item--fail &__install-icon::before {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0;
+    mask: url("../images/svgs/setupWizard/check.svg") center / contain no-repeat;
+    background: var(--success-color);
+    opacity: 1;
   }
 
-  &__plugin--installing &__plugin-spinner {
-    display: inline-flex;
+  &__install-item--fail &__install-icon::before {
+    mask-image: url("../images/svgs/setupWizard/close.svg");
+    background: var(--error-color);
   }
 
-  &__console {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    border-left: $wizard-border;
-    font-family: var(--font-family-mono);
-    font-size: 0.75rem;
-
-    &--hidden {
-      display: none;
-    }
+  &__install-name {
+    font-weight: var(--font-bold-weight);
   }
 
-  &__console-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0.5rem 0;
-  }
-
-  &__console-line {
-    padding: 0.1rem 1rem;
-
-    &--dependent {
-      color: var(--text-color-secondary);
-
-      &::before {
-        content: "** ";
-      }
-    }
-  }
-
-  &__console-legend {
-    padding: 0.5rem 1rem;
+  &__install-item--pending &__install-name {
     color: var(--text-color-secondary);
-    border-top: $wizard-border;
+  }
+
+  &__install-meta {
+    color: var(--text-color-secondary);
+  }
+
+  &__install-error {
+    color: var(--error-color);
+  }
+
+  &__install-meta,
+  &__install-error {
+    &:empty {
+      display: none;
+    }
   }
 
   &__categories {

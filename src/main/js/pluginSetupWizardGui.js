@@ -17,8 +17,10 @@ import offlinePanel from "./templates/offlinePanel.hbs";
 import pluginSetupWizard from "./templates/pluginSetupWizard.hbs";
 import incompleteInstallationPanel from "./templates/incompleteInstallationPanel.hbs";
 import pluginSelectList from "./templates/pluginSelectList.hbs";
+import installList from "./templates/installList.hbs";
 
 Handlebars.registerPartial("pluginSelectList", pluginSelectList);
+Handlebars.registerPartial("installList", installList);
 
 function toFragment(html) {
   var template = document.createElement("template");
@@ -229,12 +231,31 @@ var createPluginSetupWizard = function (appendTarget) {
     }
   };
 
+  var dependencyLabel = function (plugin) {
+    var count = (plugin.allDependencies || []).length - 1;
+    if (count < 1) {
+      return "";
+    }
+    if (count === 1) {
+      return translate("installWizard_installing_dependency", "+ 1 dependency");
+    }
+    return translate(
+      "installWizard_installing_dependencies",
+      "+ {0} dependencies",
+    ).replace("{0}", count);
+  };
+
   var initInstallingPluginList = function () {
     installingPlugins = [];
     for (var i = 0; i < selectedPluginNames.length; i++) {
       var p = availablePlugins[selectedPluginNames[i]];
       if (p) {
-        installingPlugins.push(Object.assign({ installStatus: "pending" }, p));
+        installingPlugins.push(
+          Object.assign(
+            { installStatus: "pending", dependencyLabel: dependencyLabel(p) },
+            p,
+          ),
+        );
       }
     }
   };
@@ -346,8 +367,6 @@ var createPluginSetupWizard = function (appendTarget) {
     }
   };
 
-  var consoleScroll = { userScrolled: false, wasAutoScrolled: false };
-
   var showInstallProgress = function () {
     if (failedPluginNames.length > 0) {
       setPanel(pluginSuccessPanel, {
@@ -357,28 +376,10 @@ var createPluginSetupWizard = function (appendTarget) {
       return;
     }
 
-    var attachScrollEvent = function () {
-      var scroll = find(".app-setup-wizard__console-scroll");
-      if (!scroll || scroll.dataset.scrollListener) {
-        return;
-      }
-      scroll.dataset.scrollListener = "true";
-      scroll.addEventListener("scroll", function () {
-        if (consoleScroll.wasAutoScrolled) {
-          consoleScroll.wasAutoScrolled = false;
-          return;
-        }
-        var top = scroll.scrollHeight - scroll.clientHeight;
-        consoleScroll.userScrolled = Math.abs(scroll.scrollTop - top) > 1;
-      });
-    };
-
     initInstallingPluginList();
-    setPanel(
-      renderProgressPanel,
-      { installingPlugins: installingPlugins },
-      attachScrollEvent,
-    );
+    setPanel(renderProgressPanel, { installingPlugins: installingPlugins });
+
+    var currentPlugin = null;
 
     var updateStatus = function () {
       pluginManager.installStatus(
@@ -409,73 +410,86 @@ var createPluginSetupWizard = function (appendTarget) {
             progressBar.style.width = (100.0 * complete) / total + "%";
           }
 
-          var installText = find(".app-setup-wizard__console-text");
-          if (installText) {
-            installText.replaceChildren();
-          }
+          var active = new Set();
 
           for (i = 0; i < jobs.length; i++) {
             j = jobs[i];
-            var state = false;
-
-            if (/.*Success.*/.test(j.installStatus)) {
-              state = "success";
-            } else if (/.*Install.*/.test(j.installStatus)) {
-              state = "installing";
-            } else if (/.*Fail.*/.test(j.installStatus)) {
-              state = "fail";
-            }
-
             setFailureStatus(j);
 
-            if (!state) {
+            if (/.*Install.*/.test(j.installStatus)) {
+              active.add(j.name);
+            }
+
+            var own = getInstallingPlugin(j.name);
+            if (!own) {
               continue;
             }
-
-            for (var k = 0; k < installingPlugins.length; k++) {
-              var installing = installingPlugins[k];
-              if (installing.name === j.name) {
-                installing.installStatus = state;
-              } else if (
-                installing.installStatus === "pending" &&
-                installing.allDependencies.indexOf(j.name) >= 0 &&
-                ("installing" === state || "success" === state)
-              ) {
-                installing.installStatus = "installing";
-              }
-            }
-
-            if (installText) {
-              var line = document.createElement("div");
-              line.textContent = j.title;
-              line.className =
-                "app-setup-wizard__console-line app-setup-wizard__console-line--" +
-                (selectedPluginNames.indexOf(j.name) < 0
-                  ? "dependent"
-                  : "selected");
-              installText.append(line);
+            if (/.*Success.*/.test(j.installStatus)) {
+              own.installStatus = "success";
+            } else if (/.*Fail.*/.test(j.installStatus)) {
+              own.installStatus = "fail";
+              own.errorMessage = j.errorMessage || "";
             }
           }
 
+          var current = null;
+          installingPlugins.forEach(function (plugin) {
+            if (/success|fail/.test(plugin.installStatus)) {
+              return;
+            }
+            var busy = (plugin.allDependencies || [plugin.name]).some(
+              function (name) {
+                return active.has(name);
+              },
+            );
+            if (busy && !current) {
+              current = plugin;
+              plugin.installStatus = "installing";
+              return;
+            }
+            plugin.installStatus = "pending";
+          });
+
+          var done = 0;
           installingPlugins.forEach(function (plugin) {
             var item = document.getElementById(
               "installing-" + idIfy(plugin.name),
             );
-            if (item) {
-              item.className =
-                "app-setup-wizard__plugin app-setup-wizard__plugin--" +
-                plugin.installStatus;
-              if (plugin.errorMessage) {
-                item.title = plugin.errorMessage;
-              }
+            if (/success|fail/.test(plugin.installStatus)) {
+              done++;
             }
+            if (!item) {
+              return;
+            }
+            item.className =
+              "app-setup-wizard__install-item app-setup-wizard__install-item--" +
+              plugin.installStatus;
+            item.querySelector(".app-setup-wizard__install-error").textContent =
+              plugin.errorMessage || "";
           });
 
-          var scroll = find(".app-setup-wizard__console-scroll");
-          if (scroll && isVisible(scroll) && !consoleScroll.userScrolled) {
-            consoleScroll.wasAutoScrolled = true;
-            scroll.scrollTop = scroll.scrollHeight;
+          var count = find(".app-setup-wizard__install-count");
+          if (count) {
+            count.textContent = translate(
+              "installWizard_installing_count",
+              "{0} of {1}",
+            )
+              .replace("{0}", done)
+              .replace("{1}", installingPlugins.length);
           }
+
+          if (current && current !== currentPlugin) {
+            var currentItem = document.getElementById(
+              "installing-" + idIfy(current.name),
+            );
+            if (currentItem) {
+              currentItem.scrollIntoView({
+                block: "nearest",
+                behavior: "smooth",
+              });
+            }
+          }
+          currentPlugin = current;
 
           if (complete < total && data.state === "INITIAL_PLUGINS_INSTALLING") {
             setTimeout(updateStatus, 250);
@@ -846,13 +860,6 @@ var createPluginSetupWizard = function (appendTarget) {
     });
   };
 
-  var toggleInstallDetails = function () {
-    var installConsole = find(".app-setup-wizard__console");
-    if (installConsole) {
-      installConsole.classList.toggle("app-setup-wizard__console--hidden");
-    }
-  };
-
   var handleFirstUserResponseSuccess = function (data) {
     if (data.status === "ok") {
       showStatePanel();
@@ -1043,7 +1050,6 @@ var createPluginSetupWizard = function (appendTarget) {
     ".install-selected": function () {
       installPlugins(selectedPluginNames);
     },
-    ".toggle-install-details": toggleInstallDetails,
     ".install-done": finishInstallation,
     ".select-category": selectCategory,
     ".resume-installation": resumeInstallation,
