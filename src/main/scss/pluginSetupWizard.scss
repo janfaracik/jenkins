@@ -10,7 +10,8 @@ $wizard-border: var(--jenkins-border-width) solid
   z-index: 1000;
   display: grid;
   place-items: center;
-  padding: 1.25rem 1.25rem 2.75rem;
+  padding: var(--section-padding);
+  padding-bottom: calc(var(--section-padding) + 1.5rem);
   background: var(--dialog-backdrop-background);
   text-align: initial;
 
@@ -37,7 +38,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__version {
     position: absolute;
-    right: 1.25rem;
+    right: var(--section-padding);
     bottom: 0.9rem;
     color: var(--text-color-secondary);
     font-size: var(--font-size-sm);
