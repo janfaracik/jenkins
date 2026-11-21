@@ -1,5 +1,5 @@
 {{#each categorizedPlugins}}
-<h3 id="{{id @key}}" class="app-setup-wizard__picker-category">{{@key}} {{pluginCountForCategory @key}}</h3>
+<h3 id="{{id @key}}" class="jenkins-side-nav__heading app-setup-wizard__picker-category">{{@key}} {{pluginCountForCategory @key}}</h3>
 <div class="app-setup-wizard__picker-items">
   {{#each this}}
   <div class="app-setup-wizard__picker-item {{#inSelectedPlugins plugin.name}}app-setup-wizard__picker-item--selected{{/inSelectedPlugins}} {{#ifVisibleDependency plugin.name}}app-setup-wizard__picker-item--show-dependencies{{/ifVisibleDependency}}" id="row-{{id plugin.name}}">
