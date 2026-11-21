@@ -28,6 +28,7 @@
               </div>
             </div>
           </div>
+          <div class="app-setup-wizard__version">Jenkins ${h.version}</div>
         </div>
       </form>
     </l:main-panel>
