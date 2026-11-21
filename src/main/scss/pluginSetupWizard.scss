@@ -10,7 +10,7 @@ $wizard-border: var(--jenkins-border-width) solid
   z-index: 1000;
   display: grid;
   place-items: center;
-  padding: 1.25rem;
+  padding: 1.25rem 1.25rem 2.75rem;
   background: var(--dialog-backdrop-background);
   backdrop-filter: var(--dialog-backdrop-backdrop-filter);
   text-align: initial;
@@ -26,33 +26,20 @@ $wizard-border: var(--jenkins-border-width) solid
     overflow: hidden;
   }
 
-  &__header,
   &__footer {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 0.75rem;
     flex-shrink: 0;
     padding: 1rem $wizard-padding;
-  }
-
-  &__header {
-    justify-content: space-between;
-    border-bottom: $wizard-border;
-  }
-
-  &__title {
-    margin: 0;
-    font-size: var(--font-size-base);
-    font-weight: var(--font-bold-weight);
-  }
-
-  &__footer {
-    justify-content: flex-end;
     border-top: $wizard-border;
   }
 
   &__version {
-    margin-right: auto;
+    position: absolute;
+    right: 1.25rem;
+    bottom: 0.9rem;
     color: var(--text-color-secondary);
     font-size: var(--font-size-sm);
   }
@@ -62,6 +49,12 @@ $wizard-border: var(--jenkins-border-width) solid
     flex: 1;
     min-height: 0;
     overflow-y: auto;
+
+    &--centered {
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
 
     &--frame {
       display: flex;

@@ -251,22 +251,6 @@ var createPluginSetupWizard = function (appendTarget) {
       currentPanel = panel;
       container.replaceChildren(toFragment(html));
 
-      if (translations.installWizard_jenkinsVersionTitle) {
-        var footer = container.querySelector(".app-setup-wizard__footer");
-        if (!footer) {
-          footer = document.createElement("div");
-          footer.className = "app-setup-wizard__footer";
-          container.append(footer);
-        }
-        var version = document.createElement("div");
-        version.className = "app-setup-wizard__version";
-        version.textContent =
-          translations.installWizard_jenkinsVersionTitle +
-          " " +
-          getJenkinsVersionFull();
-        footer.prepend(version);
-      }
-
       oncomplete();
     };
 
@@ -1261,6 +1245,13 @@ var createPluginSetupWizard = function (appendTarget) {
     "jenkins.install.pluginSetupWizard",
     handleGenericError(function (localizations) {
       translations = localizations;
+      var version = document.createElement("div");
+      version.className = "app-setup-wizard__version";
+      version.textContent =
+        translations.installWizard_jenkinsVersionTitle +
+        " " +
+        getJenkinsVersionFull();
+      wizard.append(version);
       extensionTranslationOverrides.forEach(function (override) {
         override(translations);
       });
