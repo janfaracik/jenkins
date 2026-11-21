@@ -259,15 +259,6 @@ $wizard-border: var(--jenkins-border-width) solid
     min-height: 0;
   }
 
-  &__search {
-    flex: 1;
-
-    .jenkins-search--app-bar {
-      max-width: none;
-      margin-block: 0;
-    }
-  }
-
   &__selected-info {
     margin-left: auto;
     color: var(--text-color-secondary);
