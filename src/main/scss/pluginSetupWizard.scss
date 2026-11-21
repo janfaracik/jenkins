@@ -14,7 +14,7 @@ $wizard-border: var(--jenkins-border-width) solid
   place-items: center;
   padding: var(--section-padding);
   padding-bottom: calc(var(--section-padding) + 1.5rem);
-  background: var(--dialog-backdrop-background);
+  background: var(--background);
   text-align: initial;
 
   &__dialog {
@@ -52,10 +52,6 @@ $wizard-border: var(--jenkins-border-width) solid
       display: grid;
       grid-template-columns: 21rem 1fr;
       overflow: hidden;
-
-      @media (width <= 768px) {
-        grid-template-columns: 1fr;
-      }
     }
   }
 
@@ -169,10 +165,6 @@ $wizard-border: var(--jenkins-border-width) solid
     overflow-y: auto;
     padding: $wizard-padding;
     border-right: $wizard-border;
-
-    @media (width <= 768px) {
-      display: none;
-    }
 
     .jenkins-app-bar {
       margin-inline: 0.6875rem;
