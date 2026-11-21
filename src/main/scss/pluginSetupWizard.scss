@@ -273,11 +273,16 @@ $wizard-border: var(--jenkins-border-width) solid
 
     position: relative;
     flex: 1;
-    width: 100%;
-    max-width: 900px;
-    margin-inline: auto;
     overflow-y: auto;
-    padding: $wizard-padding $wizard-padding 0;
+    padding: $wizard-padding 0 0;
+    padding-inline: max(
+      #{$wizard-padding},
+      calc((100% - 900px) / 2 + #{$wizard-padding})
+    );
+
+    .jenkins-search--app-bar {
+      max-width: 650px;
+    }
   }
 
   &__picker-category {
