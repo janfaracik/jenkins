@@ -94,9 +94,16 @@
   border-radius: var(--form-input-border-radius);
   outline: var(--jenkins-border);
   outline-offset: calc(var(--jenkins-border-width) * -1);
-  padding: 0 1rem;
+  min-height: 3rem;
+  padding: 0.625rem 1rem;
   gap: 1.5rem;
   overflow-wrap: anywhere;
+
+  > :has(> .jenkins-button) {
+    display: flex;
+    align-self: stretch;
+    margin-block: -0.625rem;
+  }
 
   .jenkins-button {
     margin-top: 0.25rem;
@@ -104,8 +111,13 @@
     margin-right: -0.75rem;
     padding: 0;
     width: 2.5rem;
-    height: 2.5rem;
+    height: auto;
     border-radius: calc(var(--form-input-border-radius) - 0.25rem);
+  }
+
+  > .jenkins-button {
+    align-self: stretch;
+    margin-block: -0.375rem;
   }
 
   &--full-width {

@@ -84,20 +84,6 @@ $wizard-border: var(--jenkins-border-width) solid
       margin: 0;
     }
 
-    .jenkins-quote {
-      padding-block: 0.625rem;
-
-      > span:has(> .jenkins-button) {
-        display: flex;
-        align-self: stretch;
-        margin-block: -0.625rem;
-      }
-
-      .jenkins-button {
-        height: auto;
-      }
-    }
-
     .jenkins-app-bar {
       min-height: 0;
     }
