@@ -129,51 +129,6 @@ $wizard-border: var(--jenkins-border-width) solid
     border: none;
   }
 
-  &__choices {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: 1rem;
-    padding: 0 4rem 3rem;
-  }
-
-  &__choice {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    min-height: 10rem;
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    color: var(--text-color);
-    text-decoration: none;
-    background: var(--card-background);
-    border: var(--jenkins-border);
-    transition: var(--standard-transition);
-
-    &:hover,
-    &:focus-visible {
-      background: var(--item-background--hover);
-      text-decoration: none;
-    }
-
-    &:active {
-      background: var(--item-background--active);
-    }
-
-    &--primary {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 0 1px var(--accent-color);
-    }
-  }
-
-  &__choice-title {
-    font-size: 1.35rem;
-    font-weight: var(--font-bold-weight);
-  }
-
-  &__choice-description {
-    color: var(--text-color-secondary);
-  }
-
   &__progress {
     width: 100%;
   }

@@ -5,7 +5,6 @@ import securityConfig from "./api/securityConfig";
 import idIfy from "./handlebars-helpers/id";
 import errorPanel from "./templates/errorPanel.hbs";
 import loadingPanel from "./templates/loadingPanel.hbs";
-import welcomePanel from "./templates/welcomePanel.hbs";
 import progressPanel from "./templates/progressPanel.hbs";
 import pluginSuccessPanel from "./templates/successPanel.hbs";
 import pluginSelectionPanel from "./templates/pluginSelectionPanel.hbs";
@@ -399,12 +398,6 @@ var createPluginSetupWizard = function (appendTarget) {
     );
   };
 
-  var installDefaultPlugins = function () {
-    loadPluginData(function () {
-      installPlugins(pluginManager.recommendedPluginNames());
-    });
-  };
-
   var enableButtonsAfterFrameLoad = function () {
     findAll("iframe[src]").forEach(function (iframe) {
       iframe.addEventListener("load", function () {
@@ -452,12 +445,7 @@ var createPluginSetupWizard = function (appendTarget) {
 
   var stateHandlers = {
     DEFAULT: function () {
-      setPanel(welcomePanel, {}, function () {
-        var recommended = find(".install-recommended");
-        if (recommended) {
-          recommended.focus();
-        }
-      });
+      loadCustomPluginPanel();
     },
     CREATE_ADMIN_USER: function () {
       setupFirstUser();
@@ -1109,8 +1097,6 @@ var createPluginSetupWizard = function (appendTarget) {
 
   var actions = {
     ".toggle-dependency-list": toggleDependencyList,
-    ".install-recommended": installDefaultPlugins,
-    ".install-custom": loadCustomPluginPanel,
     ".install-home": function () {
       showStatePanel();
     },
