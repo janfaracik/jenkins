@@ -350,6 +350,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__picker-description {
     margin-top: 0.25rem;
+    text-wrap: pretty;
 
     &:empty {
       display: none;
