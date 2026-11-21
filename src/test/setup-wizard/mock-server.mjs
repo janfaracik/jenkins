@@ -1,9 +1,18 @@
+import fs from "node:fs";
 import http from "node:http";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const PORT = Number(process.env.PORT || 8099);
 const TARGET = new URL(process.env.TARGET || "http://localhost:8080");
 const PREFIX = process.env.PREFIX ?? "/jenkins";
 const STEP_MS = Number(process.env.STEP_MS || 120);
+const UPDATES_JSON =
+  process.env.UPDATES_JSON ||
+  path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    "../../../war/work/updates/default.json",
+  );
 
 const SCENARIOS = {
   happy: "Everything installs",
@@ -60,13 +69,57 @@ function fetchTarget(path) {
   });
 }
 
+let updateSite;
+
+function loadUpdateSite() {
+  if (updateSite !== undefined) {
+    return updateSite;
+  }
+  try {
+    const raw = fs.readFileSync(UPDATES_JSON, "utf8");
+    updateSite = JSON.parse(
+      raw.slice(raw.indexOf("{"), raw.lastIndexOf("}") + 1),
+    ).plugins;
+  } catch {
+    console.warn(
+      `No update site data at ${UPDATES_JSON}, descriptions of installed plugins will be missing`,
+    );
+    updateSite = null;
+  }
+  return updateSite;
+}
+
+function asFreshInstall(plugin) {
+  const site = loadUpdateSite();
+  const info = site && site[plugin.name];
+  if (!plugin.installed || !info) {
+    return plugin;
+  }
+  return {
+    name: plugin.name,
+    title: info.title || plugin.title,
+    excerpt: info.excerpt,
+    website: info.wiki || plugin.website,
+    installed: false,
+    dependencies: Object.fromEntries(
+      (info.dependencies || [])
+        .filter((d) => !d.optional)
+        .map((d) => [d.name, d.version]),
+    ),
+  };
+}
+
+async function availablePlugins() {
+  const response = await fetchTarget("/pluginManager/plugins");
+  const json = await response.json();
+  return json.data.map(asFreshInstall);
+}
+
 async function loadMetadata() {
   if (metadata) {
     return metadata;
   }
-  const response = await fetchTarget("/pluginManager/plugins");
-  const json = await response.json();
-  metadata = new Map(json.data.map((p) => [p.name, p]));
+  metadata = new Map((await availablePlugins()).map((p) => [p.name, p]));
   return metadata;
 }
 
@@ -144,6 +197,7 @@ function formParam(body, name) {
 }
 
 const mocks = {
+  "GET /pluginManager/plugins": async () => ok(await availablePlugins()),
   "GET /updateCenter/connectionStatus": () => {
     const offline = state.scenario === "offline" && !state.proxyConfigured;
     const status = offline ? "ERROR" : "OK";
