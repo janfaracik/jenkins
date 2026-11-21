@@ -1,5 +1,6 @@
 import Handlebars from "handlebars";
 import jenkins from "./util/jenkins";
+import behaviorShim from "./util/behavior-shim";
 import pluginManager from "./api/pluginManager";
 import securityConfig from "./api/securityConfig";
 import idIfy from "./handlebars-helpers/id";
@@ -610,6 +611,11 @@ var createPluginSetupWizard = function (appendTarget) {
       setPanel(pluginSelectionPanel, pluginSelectionPanelData(), function () {
         trackActiveCategory();
         trackBottomBar();
+        document
+          .querySelectorAll(".app-setup-wizard__picker [tooltip]")
+          .forEach(function (element) {
+            behaviorShim.applySubtree(element, true);
+          });
       });
     });
   };
