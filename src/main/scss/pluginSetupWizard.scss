@@ -272,6 +272,10 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__search {
     flex: 1;
+
+    .jenkins-search--app-bar {
+      max-width: none;
+    }
   }
 
   &__selected-info {
