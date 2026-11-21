@@ -29,7 +29,6 @@ $wizard-border: var(--jenkins-border-width) solid
   &__footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: 0.75rem;
     flex-shrink: 0;
     padding: $wizard-padding;
@@ -287,10 +286,6 @@ $wizard-border: var(--jenkins-border-width) solid
     flex: 1;
     overflow-y: auto;
     padding: $wizard-padding $wizard-padding 0;
-  }
-
-  &__picker-actions-bar {
-    justify-content: flex-end;
   }
 
   &__picker-category {
