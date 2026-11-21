@@ -267,7 +267,6 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__picker-list {
-    --background: var(--overlay-surface-background);
     --body-background-top: var(--overlay-surface-background);
     --header-height: -1.3125rem;
     --bottom-app-bar-padding: #{$wizard-padding};
@@ -283,6 +282,10 @@ $wizard-border: var(--jenkins-border-width) solid
 
     .jenkins-search--app-bar {
       max-width: 650px;
+    }
+
+    .jenkins-bottom-app-bar__shadow {
+      --background: var(--overlay-surface-background);
     }
   }
 
@@ -332,6 +335,31 @@ $wizard-border: var(--jenkins-border-width) solid
     &:hover,
     &:focus-visible {
       background: var(--link-color);
+    }
+  }
+
+  &__suggested {
+    --color: oklch(70% 0.2 300);
+  }
+
+  &__suggested-text {
+    background-image: linear-gradient(
+      90deg,
+      oklch(65% 0.25 25),
+      oklch(75% 0.18 75),
+      oklch(70% 0.2 145),
+      oklch(65% 0.2 240),
+      oklch(60% 0.25 300),
+      oklch(65% 0.25 25)
+    );
+    background-size: 200% 100%;
+    background-clip: text;
+    color: transparent;
+    font-weight: var(--font-bold-weight);
+    animation: app-setup-wizard-shimmer 3s linear infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
     }
   }
 
@@ -387,6 +415,12 @@ $wizard-border: var(--jenkins-border-width) solid
     &:focus-visible {
       text-decoration: underline;
     }
+  }
+}
+
+@keyframes app-setup-wizard-shimmer {
+  to {
+    background-position: -200% 0;
   }
 }
 

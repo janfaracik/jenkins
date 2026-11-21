@@ -571,6 +571,7 @@ var createPluginSetupWizard = function (appendTarget) {
             category: a.category,
             plugin: Object.assign({}, plug, {
               usage: plugInfo.usage,
+              suggested: plugInfo.suggested,
               title: plugInfo.title ? plugInfo.title : plug.title,
               excerpt: plugInfo.excerpt ? plugInfo.excerpt : plug.excerpt,
               updated: new Date(plug.buildDate),
