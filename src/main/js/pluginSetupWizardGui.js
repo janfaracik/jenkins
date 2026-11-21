@@ -994,11 +994,6 @@ var createPluginSetupWizard = function (appendTarget) {
     );
   };
 
-  var skipFirstUserAndConfigureInstance = function () {
-    firstUserSkipped = true;
-    skipConfigureInstance();
-  };
-
   var skipConfigureInstance = function () {
     setButtonsDisabled(true);
 
@@ -1108,7 +1103,6 @@ var createPluginSetupWizard = function (appendTarget) {
     },
     ".plugin-show-selected": toggleSelectedSearch,
     ".select-category": selectCategory,
-    ".skip-setup": skipFirstUserAndConfigureInstance,
     ".resume-installation": resumeInstallation,
     ".install-done-restart": restartJenkins,
     ".save-first-user:not([disabled])": saveFirstUser,
