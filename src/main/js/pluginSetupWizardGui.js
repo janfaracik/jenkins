@@ -34,24 +34,6 @@ function iframeDocument(iframe) {
 }
 
 var createPluginSetupWizard = function (appendTarget) {
-  var categoryCount = function (cat) {
-    var plugs = categorizedPlugins[cat];
-    var tot = 0;
-    var cnt = 0;
-    for (var i = 0; i < plugs.length; i++) {
-      var plug = plugs[i];
-      if (plug.category === cat) {
-        tot++;
-        if (selectedPluginNames.indexOf(plug.plugin.name) >= 0) {
-          cnt++;
-        }
-      }
-    }
-    return "(" + cnt + "/" + tot + ")";
-  };
-
-  Handlebars.registerHelper("pluginCountForCategory", categoryCount);
-
   Handlebars.registerHelper("inSelectedPlugins", function (val, options) {
     if (selectedPluginNames.indexOf(val) >= 0) {
       return options.fn();
@@ -737,10 +719,6 @@ var createPluginSetupWizard = function (appendTarget) {
           );
       },
     );
-    findAll(".app-setup-wizard__picker-category").forEach(function (heading) {
-      heading.querySelector(".app-setup-wizard__category-count").textContent =
-        categoryCount(heading.dataset.category);
-    });
     var info = find("#plugin-selected-info");
     if (info) {
       info.textContent = selectedCountLabel();

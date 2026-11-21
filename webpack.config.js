@@ -146,7 +146,6 @@ module.exports = (env, argv) => ({
             // handlebars-loader will expect them when compiling the templates.
             // This helpers cannot be moved to the helpers directory because they are closures
             knownHelpers: [
-              "pluginCountForCategory",
               "inSelectedPlugins",
               "dependencyCount",
               "eachDependency",
