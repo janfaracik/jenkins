@@ -69,6 +69,12 @@ $wizard-border: var(--jenkins-border-width) solid
       overflow: hidden;
     }
 
+    &--progress {
+      display: grid;
+      place-items: center;
+      padding: $wizard-padding;
+    }
+
     &--installing {
       display: flex;
       flex-direction: column;
@@ -165,7 +171,14 @@ $wizard-border: var(--jenkins-border-width) solid
     border-bottom: $wizard-border;
   }
 
-  &__install-count {
+  &__install-progress {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  &__install-status {
+    min-height: 1lh;
+    margin: 1rem 0 0;
     color: var(--text-color-secondary);
   }
 

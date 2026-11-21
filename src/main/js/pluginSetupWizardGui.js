@@ -3,7 +3,6 @@ import jenkins from "./util/jenkins";
 import behaviorShim from "./util/behavior-shim";
 import pluginManager from "./api/pluginManager";
 import securityConfig from "./api/securityConfig";
-import idIfy from "./handlebars-helpers/id";
 import errorPanel from "./templates/errorPanel.hbs";
 import loadingPanel from "./templates/loadingPanel.hbs";
 import progressPanel from "./templates/progressPanel.hbs";
@@ -379,8 +378,6 @@ var createPluginSetupWizard = function (appendTarget) {
     initInstallingPluginList();
     setPanel(renderProgressPanel, { installingPlugins: installingPlugins });
 
-    var currentPlugin = null;
-
     var updateStatus = function () {
       pluginManager.installStatus(
         handleGenericError(function (data) {
@@ -450,46 +447,20 @@ var createPluginSetupWizard = function (appendTarget) {
             plugin.installStatus = "pending";
           });
 
-          var done = 0;
-          installingPlugins.forEach(function (plugin) {
-            var item = document.getElementById(
-              "installing-" + idIfy(plugin.name),
-            );
-            if (/success|fail/.test(plugin.installStatus)) {
-              done++;
-            }
-            if (!item) {
-              return;
-            }
-            item.className =
-              "app-setup-wizard__install-item app-setup-wizard__install-item--" +
-              plugin.installStatus;
-            item.querySelector(".app-setup-wizard__install-error").textContent =
-              plugin.errorMessage || "";
-          });
+          var done = installingPlugins.filter(function (plugin) {
+            return /success|fail/.test(plugin.installStatus);
+          }).length;
 
-          var count = find(".app-setup-wizard__install-count");
-          if (count) {
-            count.textContent = translate(
-              "installWizard_installing_count",
-              "{0} of {1}",
+          var status = find(".app-setup-wizard__install-status");
+          if (status && current) {
+            status.textContent = translate(
+              "installWizard_installing_status",
+              "Installing {0} - {1} of {2}",
             )
-              .replace("{0}", done)
-              .replace("{1}", installingPlugins.length);
+              .replace("{0}", current.title)
+              .replace("{1}", Math.min(done + 1, installingPlugins.length))
+              .replace("{2}", installingPlugins.length);
           }
-
-          if (current && current !== currentPlugin) {
-            var currentItem = document.getElementById(
-              "installing-" + idIfy(current.name),
-            );
-            if (currentItem) {
-              currentItem.scrollIntoView({
-                block: "nearest",
-                behavior: "smooth",
-              });
-            }
-          }
-          currentPlugin = current;
 
           if (complete < total && data.state === "INITIAL_PLUGINS_INSTALLING") {
             setTimeout(updateStatus, 250);
