@@ -175,6 +175,9 @@ var createPluginSetupWizard = function (appendTarget) {
     var append = function () {
       currentPanel = panel;
       container.replaceChildren(toFragment(html));
+      container.querySelectorAll("[tooltip]").forEach(function (element) {
+        behaviorShim.applySubtree(element, true);
+      });
 
       oncomplete();
     };
@@ -611,11 +614,6 @@ var createPluginSetupWizard = function (appendTarget) {
       setPanel(pluginSelectionPanel, pluginSelectionPanelData(), function () {
         trackActiveCategory();
         trackBottomBar();
-        document
-          .querySelectorAll(".app-setup-wizard__picker [tooltip]")
-          .forEach(function (element) {
-            behaviorShim.applySubtree(element, true);
-          });
       });
     });
   };

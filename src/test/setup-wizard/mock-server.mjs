@@ -6,6 +6,10 @@ import { fileURLToPath } from "node:url";
 const PORT = Number(process.env.PORT || 8099);
 const TARGET = new URL(process.env.TARGET || "http://localhost:8080");
 const PREFIX = process.env.PREFIX ?? "/jenkins";
+const WIZARD_PROPERTIES = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../../core/src/main/resources/jenkins/install/pluginSetupWizard.properties",
+);
 const PLATFORM_PLUGINS = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "../../../core/src/main/resources/jenkins/install/platform-plugins.json",
@@ -29,6 +33,21 @@ const SCENARIOS = {
   "url-error": "Instance URL fails validation",
   slow: "Every request takes 3 seconds",
   installing: "Stay on the installation screen",
+};
+
+const SCENARIO_START = {
+  failures: () => finishInstall(),
+  restart: async () => {
+    await finishInstall();
+    state.installState = "INITIAL_SETUP_COMPLETED";
+  },
+  installing: () => startInstall(suggestedPlugins()),
+  "user-error": () => {
+    state.installState = "CREATE_ADMIN_USER";
+  },
+  "url-error": () => {
+    state.installState = "CONFIGURE_INSTANCE";
+  },
 };
 
 const FAILING = new Set(["git", "gradle", "ldap", "email-ext"]);
@@ -167,6 +186,32 @@ async function startInstall(selected) {
   return correlationId;
 }
 
+async function finishInstall() {
+  await startInstall(suggestedPlugins());
+  state.startedAt = Date.now() - state.jobs.length * STEP_MS;
+}
+
+function readProperties(file) {
+  const text = fs.readFileSync(file, "utf8").replace(/\\\r?\n[ \t]*/g, "");
+  const entries = {};
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || /^[#!]/.test(trimmed)) {
+      continue;
+    }
+    const match = trimmed.match(/^((?:\\.|[^=:\s])+)\s*[=:\s]\s*(.*)$/);
+    if (!match) {
+      continue;
+    }
+    const unescape = (value) =>
+      value.replace(/\\u([0-9a-fA-F]{4})|\\(.)/g, (_, hex, ch) =>
+        hex ? String.fromCharCode(parseInt(hex, 16)) : ch,
+      );
+    entries[unescape(match[1])] = unescape(match[2]);
+  }
+  return entries;
+}
+
 function suggestedPlugins() {
   return JSON.parse(fs.readFileSync(PLATFORM_PLUGINS, "utf8")).flatMap(
     (category) =>
@@ -241,7 +286,15 @@ const mocks = {
     const status = offline ? "ERROR" : "OK";
     return ok({ updatesite: status, internet: status });
   },
-  "GET /updateCenter/installStatus": installStatus,
+  "GET /updateCenter/installStatus": () => {
+    if (state.scenario === "install-error") {
+      return {
+        status: "error",
+        message: "Mock: the update site rejected the request",
+      };
+    }
+    return installStatus();
+  },
   "GET /updateCenter/incompleteInstallStatus": () => {
     if (state.scenario !== "resume" || state.jobs.length > 0) {
       return ok({});
@@ -403,9 +456,7 @@ async function handle(req, res) {
       return;
     }
     state.unlocked = true;
-    if (state.scenario === "installing") {
-      await startInstall(suggestedPlugins());
-    }
+    await SCENARIO_START[state.scenario]?.();
     redirect(res, "/setupWizard/");
     return;
   }
@@ -437,6 +488,15 @@ async function handle(req, res) {
 
   if (req.method === "GET" && path === "/setupWizard/") {
     await serveWithWizard(res, "/setupWizard/");
+    return;
+  }
+
+  if (
+    req.method === "GET" &&
+    path === "/i18n/resourceBundle" &&
+    url.searchParams.get("baseName") === "jenkins.install.pluginSetupWizard"
+  ) {
+    sendJson(res, ok(readProperties(WIZARD_PROPERTIES)));
     return;
   }
 
