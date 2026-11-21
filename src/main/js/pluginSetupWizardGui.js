@@ -684,12 +684,25 @@ var createPluginSetupWizard = function (appendTarget) {
     });
   };
 
+  var translate = function (key, fallback) {
+    return key in translations ? translations[key] : fallback;
+  };
+
   var selectedCountLabel = function () {
-    var label =
-      "installWizard_installCustom_selectedCount" in translations
-        ? translations.installWizard_installCustom_selectedCount
-        : "{0} selected";
-    return label.replace("{0}", selectedPluginNames.length);
+    return translate(
+      "installWizard_installCustom_selectedCount",
+      "{0} selected",
+    ).replace("{0}", selectedPluginNames.length);
+  };
+
+  var installLabel = function () {
+    if (selectedPluginNames.length === 0) {
+      return translations.installWizard_continue;
+    }
+    return translate(
+      "installWizard_installCustom_installPlugins",
+      "Install plugins",
+    );
   };
 
   var pluginSelectionPanelData = function () {
@@ -698,6 +711,8 @@ var createPluginSetupWizard = function (appendTarget) {
       categorizedPlugins: categorizedPlugins,
       selectedPlugins: selectedPluginNames,
       selectedCount: selectedCountLabel(),
+      installLabel: installLabel(),
+      hasSelection: selectedPluginNames.length > 0,
     };
   };
 
@@ -729,6 +744,14 @@ var createPluginSetupWizard = function (appendTarget) {
     var info = find("#plugin-selected-info");
     if (info) {
       info.textContent = selectedCountLabel();
+    }
+    var install = find(".app-setup-wizard__picker-list .install-selected");
+    if (install) {
+      install.textContent = installLabel();
+    }
+    var skip = find(".app-setup-wizard__picker-list .skip-plugin-installs");
+    if (skip) {
+      skip.classList.toggle("jenkins-hidden", selectedPluginNames.length === 0);
     }
     if (lastSearch !== "") {
       searchForPlugins(lastSearch, false);
