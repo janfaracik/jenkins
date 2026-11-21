@@ -277,7 +277,7 @@ $wizard-border: var(--jenkins-border-width) solid
     padding: $wizard-padding 0 0;
     padding-inline: max(
       #{$wizard-padding},
-      calc((100% - 900px) / 2 + #{$wizard-padding})
+      calc((100% - 885px) / 2 + #{$wizard-padding})
     );
 
     .jenkins-search--app-bar {
