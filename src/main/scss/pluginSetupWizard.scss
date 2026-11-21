@@ -24,7 +24,7 @@ $wizard-border: var(--jenkins-border-width) solid
     flex-direction: column;
     width: min(1280px, 100%);
     height: min(760px, 100%);
-    border-radius: var(--form-input-border-radius);
+    border-radius: 1rem;
     overflow: hidden;
   }
 
