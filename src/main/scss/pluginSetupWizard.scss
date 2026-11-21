@@ -128,8 +128,12 @@ $wizard-border: var(--jenkins-border-width) solid
       padding: 0.75rem 1rem;
       border: var(--jenkins-border);
       border-radius: var(--form-input-border-radius);
-      font-size: 1.1rem;
+      font-size: inherit;
     }
+  }
+
+  &__unlock &__lead {
+    font-size: inherit;
   }
 
   &__unlock-submit {
