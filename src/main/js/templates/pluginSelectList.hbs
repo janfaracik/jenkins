@@ -2,7 +2,7 @@
 <h3 id="{{id @key}}" class="jenkins-side-nav__heading app-setup-wizard__picker-category">{{@key}}</h3>
 <div class="app-setup-wizard__picker-items">
   {{#each this}}
-  <div class="app-setup-wizard__picker-item {{#inSelectedPlugins plugin.name}}app-setup-wizard__picker-item--selected{{/inSelectedPlugins}} {{#ifVisibleDependency plugin.name}}app-setup-wizard__picker-item--show-dependencies{{/ifVisibleDependency}}" id="row-{{id plugin.name}}">
+  <div class="app-setup-wizard__picker-item {{#inSelectedPlugins plugin.name}}app-setup-wizard__picker-item--selected{{/inSelectedPlugins}}" id="row-{{id plugin.name}}">
     <div class="app-setup-wizard__picker-item-header">
       <span class="jenkins-checkbox">
         <input type="checkbox" id="chk-{{id plugin.name}}" name="{{plugin.name}}" {{#inSelectedPlugins plugin.name}}checked="checked"{{/inSelectedPlugins}}/>
@@ -15,19 +15,8 @@
         {{@root.translations.installWizard_installCustom_selectRecommended}}
       </span>
       {{/if}}
-      {{#hasDependencies plugin.name}}
-      <button type="button" class="jenkins-badge app-setup-wizard__dependency-toggle toggle-dependency-list" data-plugin-name="{{../plugin.name}}" title="{{../plugin.title}} {{../../../translations.installWizard_installIncomplete_dependenciesLabel}}">{{dependencyCount ../plugin.name}}<span class="app-setup-wizard__dependency-chevron"></span></button>
-      {{/hasDependencies}}
     </div>
     <div class="jenkins-checkbox__description app-setup-wizard__picker-description">{{{plugin.excerpt}}}</div>
-    {{#hasDependencies plugin.name}}
-    <div class="app-setup-wizard__dependencies">
-      <h4 class="app-setup-wizard__dependencies-title">{{../../../translations.installWizard_installIncomplete_dependenciesLabel}}</h4>
-      {{#eachDependency ../plugin.name}}
-      <a class="jenkins-badge app-setup-wizard__dependency" href="{{website}}" rel="noopener noreferrer" target="_blank">{{title}}</a>
-      {{/eachDependency}}
-    </div>
-    {{/hasDependencies}}
   </div>
   {{/each}}
 </div>

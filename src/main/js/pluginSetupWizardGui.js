@@ -40,48 +40,6 @@ var createPluginSetupWizard = function (appendTarget) {
     }
   });
 
-  Handlebars.registerHelper("hasDependencies", function (plugName, options) {
-    var plug = availablePlugins[plugName];
-    if (plug && plug.allDependencies && plug.allDependencies.length > 1) {
-      return options.fn();
-    }
-  });
-
-  Handlebars.registerHelper("dependencyCount", function (plugName) {
-    var plug = availablePlugins[plugName];
-    if (plug && plug.allDependencies && plug.allDependencies.length > 1) {
-      return plug.allDependencies.length - 1;
-    }
-  });
-
-  Handlebars.registerHelper("eachDependency", function (plugName, options) {
-    var plug = availablePlugins[plugName];
-    if (!plug) {
-      return "";
-    }
-    var deps = plug.allDependencies.filter(function (value) {
-      return value !== plugName;
-    });
-
-    var out = "";
-    for (var i = 0; i < deps.length; i++) {
-      var dep = availablePlugins[deps[i]];
-      if (dep) {
-        out += options.fn(dep);
-      }
-    }
-    return out;
-  });
-
-  Handlebars.registerHelper(
-    "ifVisibleDependency",
-    function (plugName, options) {
-      if (visibleDependencies[plugName]) {
-        return options.fn();
-      }
-    },
-  );
-
   var handleGenericError = function (success) {
     return function () {
       var self = this || window;
@@ -104,7 +62,6 @@ var createPluginSetupWizard = function (appendTarget) {
   var pluginList;
   var selectedPluginNames;
 
-  var visibleDependencies = {};
   var categories = [];
   var availablePlugins = {};
   var categorizedPlugins = {};
@@ -295,16 +252,6 @@ var createPluginSetupWizard = function (appendTarget) {
       handleGenericError(function () {
         showStatePanel();
       }),
-    );
-  };
-
-  var toggleDependencyList = function () {
-    var plugin = this.closest(".app-setup-wizard__picker-item");
-    var plugName = this.getAttribute("data-plugin-name");
-    visibleDependencies[plugName] = !visibleDependencies[plugName];
-    plugin.classList.toggle(
-      "app-setup-wizard__picker-item--show-dependencies",
-      visibleDependencies[plugName],
     );
   };
 
@@ -1069,7 +1016,6 @@ var createPluginSetupWizard = function (appendTarget) {
   };
 
   var actions = {
-    ".toggle-dependency-list": toggleDependencyList,
     ".install-home": function () {
       showStatePanel();
     },

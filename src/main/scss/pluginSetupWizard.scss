@@ -348,57 +348,12 @@ $wizard-border: var(--jenkins-border-width) solid
     }
   }
 
-  &__dependency-toggle {
-    margin-left: auto;
-    cursor: pointer;
-  }
-
-  &__dependency-chevron {
-    width: 0.75rem;
-    height: 0.75rem;
-    mask: url("../images/svgs/setupWizard/chevron-right.svg") center / contain
-      no-repeat;
-    background: currentColor;
-    transition: rotate var(--standard-transition);
-  }
-
   &__picker-description {
     margin-top: 0.25rem;
     text-wrap: pretty;
 
     &:empty {
       display: none;
-    }
-  }
-
-  &__dependencies {
-    display: none;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    margin: 0.75rem 0 0 34px;
-  }
-
-  &__picker-item--show-dependencies &__dependencies {
-    display: flex;
-  }
-
-  &__picker-item--show-dependencies &__dependency-chevron {
-    rotate: 90deg;
-  }
-
-  &__dependencies-title {
-    flex-basis: 100%;
-    margin: 0;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-bold-weight);
-  }
-
-  &__dependency {
-    text-decoration: none;
-
-    &:hover,
-    &:focus-visible {
-      text-decoration: underline;
     }
   }
 }
