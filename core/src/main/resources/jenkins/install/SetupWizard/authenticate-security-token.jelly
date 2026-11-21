@@ -14,7 +14,11 @@
                 <l:app-bar title="${%authenticate-security-token.unlock.jenkins}">
                   <t:help href="https://www.jenkins.io/redirect/find-jenkins-logs" tooltip="${%authenticate-security-token.help}" />
                 </l:app-bar>
-                <p class="app-setup-wizard__lead">${%jenkins.install.findSecurityTokenMessage(it.initialAdminPasswordFile)}</p>
+                <p class="app-setup-wizard__lead">${%jenkins.install.findSecurityTokenMessage}</p>
+                <div class="jenkins-quote jenkins-quote--monospace">
+                  ${it.initialAdminPasswordFile}
+                  <l:copyButton text="${it.initialAdminPasswordFile}" iconOnly="true" />
+                </div>
                 <j:if test="${error}">
                   <div class="jenkins-alert jenkins-alert-danger">
                     <strong>${%authenticate-security-token.error}</strong> ${%authenticate-security-token.password.incorrect}
