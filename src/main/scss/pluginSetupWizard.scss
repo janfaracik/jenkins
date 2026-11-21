@@ -5,6 +5,8 @@ $wizard-border: var(--jenkins-border-width) solid
   var(--jenkins-border-color--subtle);
 
 .app-setup-wizard {
+  --section-padding: 1.5rem;
+
   position: fixed;
   inset: 0;
   z-index: 1000;
@@ -401,6 +403,8 @@ $wizard-border: var(--jenkins-border-width) solid
 }
 
 .app-setup-wizard-frame {
+  --section-padding: 1.5rem;
+
   padding: var(--section-padding);
 
   h1 {
