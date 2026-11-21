@@ -286,6 +286,9 @@ $wizard-border: var(--jenkins-border-width) solid
 
     position: relative;
     flex: 1;
+    width: 100%;
+    max-width: 900px;
+    margin-inline: auto;
     overflow-y: auto;
     padding: $wizard-padding $wizard-padding 0;
   }
