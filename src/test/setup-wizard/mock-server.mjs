@@ -398,13 +398,15 @@ async function handle(req, res) {
   if (scenario) {
     reset(SCENARIOS[scenario[1]] ? scenario[1] : "happy");
     console.log(`scenario: ${state.scenario}`);
-    if (state.scenario === "installing") {
-      state.unlocked = true;
-      await startInstall(suggestedPlugins());
-      redirect(res, "/setupWizard/");
+    if (state.scenario === "happy") {
+      redirect(res, "/login");
       return;
     }
-    redirect(res, "/login");
+    state.unlocked = true;
+    if (state.scenario === "installing") {
+      await startInstall(suggestedPlugins());
+    }
+    redirect(res, "/setupWizard/");
     return;
   }
 
