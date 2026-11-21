@@ -1,20 +1,22 @@
 <div class="app-setup-wizard__body app-setup-wizard__body--picker">
   <nav class="app-setup-wizard__categories">
-    <div class="jenkins-app-bar">
-      <div class="jenkins-app-bar__content">
-        <h1>{{translations.installWizard_installCustom_pluginsTitle}}</h1>
+    <div>
+      <div class="jenkins-app-bar">
+        <div class="jenkins-app-bar__content">
+          <h1>{{translations.installWizard_installCustom_pluginsTitle}}</h1>
+        </div>
       </div>
-    </div>
-    <p class="jenkins-side-nav__heading">{{translations.installWizard_installCustom_categoriesTitle}}</p>
-    <div class="tasks">
-      {{#each categories}}
-      <div class="task app-setup-wizard__category">
-        <a href="#{{id this}}" class="task-link select-category">
-          <span class="task-icon-link">{{{category-icon this}}}</span>
-          <span class="task-link-text">{{this}}</span>
-        </a>
+      <p class="jenkins-side-nav__heading">{{translations.installWizard_installCustom_categoriesTitle}}</p>
+      <div class="tasks">
+        {{#each categories}}
+        <div class="task app-setup-wizard__category">
+          <a href="#{{id this}}" class="task-link select-category">
+            <span class="task-icon-link">{{{category-icon this}}}</span>
+            <span class="task-link-text">{{this}}</span>
+          </a>
+        </div>
+        {{/each}}
       </div>
-      {{/each}}
     </div>
     <p class="app-setup-wizard__categories-note">{{additionalPluginsNote}}</p>
   </nav>

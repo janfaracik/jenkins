@@ -261,6 +261,7 @@ $wizard-border: var(--jenkins-border-width) solid
     padding-top: $wizard-padding;
     color: var(--text-color-secondary);
     font-size: var(--font-size-sm);
+    line-height: 1.66;
   }
 
   &__picker {
