@@ -1,33 +1,27 @@
 {{#each categorizedPlugins}}
-<h2 id="{{id @key}}" class="expanded">{{@key}} {{pluginCountForCategory @key}}</h2>
-<div class="plugins-for-category">
+<h3 id="{{id @key}}" class="app-setup-wizard__picker-category">{{@key}} {{pluginCountForCategory @key}}</h3>
+<div class="app-setup-wizard__picker-items">
   {{#each this}}
-  <div class="plugin {{id plugin.name}} {{#inSelectedPlugins plugin.name}}selected{{/inSelectedPlugins}} {{#ifVisibleDependency plugin.name}}show-dependencies{{/ifVisibleDependency}}" id="row-{{plugin.name}}">
-    <label>
-      <span class="title">
-        <input type="checkbox" id="chk-{{plugin.name}}" name="{{plugin.name}}" value="{{searchTerm}}" {{#inSelectedPlugins plugin.name}}checked="checked"{{/inSelectedPlugins}}/>
-        {{plugin.title}}
-        <a href="{{plugin.website}}" target="_blank" class="website-link" rel="noopener noreferrer" title="{{plugin.title}} {{../../translations.installWizard_websiteLinkLabel}}"></a>
+  <div class="app-setup-wizard__picker-item {{#inSelectedPlugins plugin.name}}app-setup-wizard__picker-item--selected{{/inSelectedPlugins}} {{#ifVisibleDependency plugin.name}}app-setup-wizard__picker-item--show-dependencies{{/ifVisibleDependency}}" id="row-{{id plugin.name}}">
+    <div class="app-setup-wizard__picker-item-header">
+      <span class="jenkins-checkbox">
+        <input type="checkbox" id="chk-{{id plugin.name}}" name="{{plugin.name}}" {{#inSelectedPlugins plugin.name}}checked="checked"{{/inSelectedPlugins}}/>
+        <label for="chk-{{id plugin.name}}" class="app-setup-wizard__picker-name">{{plugin.title}}</label>
       </span>
+      <a href="{{plugin.website}}" target="_blank" class="app-setup-wizard__picker-website" rel="noopener noreferrer" title="{{plugin.title}} {{../../translations.installWizard_websiteLinkLabel}}"></a>
       {{#hasDependencies plugin.name}}
-        <a href="#" class="btn btn-link toggle-dependency-list" type="button" data-plugin-name="{{../plugin.name}}" title="{{../plugin.title}} {{../../../translations.installWizard_installIncomplete_dependenciesLabel}}">
-          <span class="badge">{{dependencyCount ../plugin.name}}</span>
-        </a>
+      <button type="button" class="jenkins-badge app-setup-wizard__dependency-toggle toggle-dependency-list" data-plugin-name="{{../plugin.name}}" title="{{../plugin.title}} {{../../../translations.installWizard_installIncomplete_dependenciesLabel}}">{{dependencyCount ../plugin.name}}<span class="app-setup-wizard__dependency-chevron"></span></button>
       {{/hasDependencies}}
-      <span class="description">
-        {{{plugin.excerpt}}}
-      </span>
-      {{#hasDependencies plugin.name}}
-        <div class="dep-list">
-          <h3 class="dep-title">{{../../../translations.installWizard_installIncomplete_dependenciesLabel}}</h3>
-          {{#eachDependency ../plugin.name}}
-          <a class="dep badge" href="{{website}}" rel="noopener noreferrer" target="_blank">
-          {{title}}
-          </a>
-          {{/eachDependency}}
-        </div>
-      {{/hasDependencies}}
-    </label>
+    </div>
+    <div class="app-setup-wizard__picker-description">{{{plugin.excerpt}}}</div>
+    {{#hasDependencies plugin.name}}
+    <div class="app-setup-wizard__dependencies">
+      <h4 class="app-setup-wizard__dependencies-title">{{../../../translations.installWizard_installIncomplete_dependenciesLabel}}</h4>
+      {{#eachDependency ../plugin.name}}
+      <a class="jenkins-badge app-setup-wizard__dependency" href="{{website}}" rel="noopener noreferrer" target="_blank">{{title}}</a>
+      {{/eachDependency}}
+    </div>
+    {{/hasDependencies}}
   </div>
   {{/each}}
 </div>

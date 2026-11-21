@@ -33,7 +33,6 @@ module.exports = [
       // External scripts
       ".pnp.cjs",
       ".pnp.loader.mjs",
-      "src/main/js/plugin-setup-wizard/bootstrap-detached.js",
     ],
   },
   {

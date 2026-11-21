@@ -243,22 +243,17 @@ jenkins.testConnectivity = function (siteId, handler) {
   testConnectivity();
 };
 
-function toForm(form) {
-  return form.jquery ? form[0] : form;
-}
-
 /**
  * gets the window containing a form, taking in to account top-level iframes
  */
 jenkins.getWindow = function (form) {
-  return toForm(form).ownerDocument.defaultView;
+  return form.ownerDocument.defaultView;
 };
 
 /**
  * Builds a stapler form post
  */
 jenkins.buildFormPost = function (form) {
-  form = toForm(form);
   var wnd = jenkins.getWindow(form);
   if (!wnd.buildFormTree(form)) {
     return "";
@@ -282,7 +277,6 @@ jenkins.getFormCrumb = function (form) {
  * If last parameter is an object, will be extended to the request options (e.g. pass { error: function() ... } to handle errors)
  */
 jenkins.staplerPost = function (url, form, success, options) {
-  form = toForm(form);
   var postBody = jenkins.buildFormPost(form);
   var crumb = jenkins.getFormCrumb(form);
   jenkins.post(

@@ -1,23 +1,18 @@
-<div class="modal-header">
-	<h4 class="modal-title">{{translations.installWizard_installIncomplete_title}}</h4>
+<div class="app-setup-wizard__header">
+  <h2 class="app-setup-wizard__title">{{translations.installWizard_installIncomplete_title}}</h2>
 </div>
-<div class="modal-body">
-	<div class="jumbotron welcome-panel success-panel">
-		<h1>{{translations.installWizard_installIncomplete_banner}}</h1>
-		<p>{{translations.installWizard_installIncomplete_message}}</p>
-	</div>
-
-	<div class="selected-plugin-progress success-panel">
-		{{#each installingPlugins}}
-		<div class="selected-plugin {{installStatus}}" data-name="{{id name}}">{{title}}</div>
-		{{/each}}
-	</div>
+<div class="app-setup-wizard__body app-setup-wizard__body--installing">
+  <div class="app-setup-wizard__hero app-setup-wizard__hero--compact">
+    <h1 class="app-setup-wizard__heading">{{translations.installWizard_installIncomplete_banner}}</h1>
+    <p class="app-setup-wizard__lead">{{translations.installWizard_installIncomplete_message}}</p>
+  </div>
+  <div class="app-setup-wizard__plugins app-setup-wizard__plugins--full">
+    {{#each installingPlugins}}
+    <div class="app-setup-wizard__plugin app-setup-wizard__plugin--{{installStatus}}" data-name="{{id name}}">{{title}}</div>
+    {{/each}}
+  </div>
 </div>
-<div class="modal-footer">
-	<button type="button" class="btn btn-link install-home">
-		{{translations.installWizard_goBack}}
-	</button>
-	<button type="button" class="btn btn-primary resume-installation">
-		{{translations.installWizard_installIncomplete_resumeInstallationButtonLabel}}
-	</button>
+<div class="app-setup-wizard__footer">
+  <button type="button" class="jenkins-button jenkins-button--tertiary install-home">{{translations.installWizard_goBack}}</button>
+  <button type="button" class="jenkins-button jenkins-button--primary resume-installation">{{translations.installWizard_installIncomplete_resumeInstallationButtonLabel}}</button>
 </div>

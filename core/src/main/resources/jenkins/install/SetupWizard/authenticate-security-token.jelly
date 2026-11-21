@@ -7,34 +7,30 @@
       <form action="${app.instance.securityRealm.authenticationGatewayUrl}" method="POST">
         <input type="hidden" name="from" value="${request2.getParameter('from')}" />
         <input type="hidden" name="${h.getCrumbRequestField()}" value="${h.getCrumb(request2)}"/>
-        <div class="plugin-setup-wizard bootstrap-3">
-          <div class="modal fade in" style="display: block;">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h4 class="modal-title">${%authenticate-security-token.getting.started}</h4>
-                </div>
-                <div class="modal-body setup-wizard-heading">
-                  <div class="jumbotron welcome-panel offline">
-                    <h1>${%authenticate-security-token.unlock.jenkins}</h1>
-                    <p>${%jenkins.install.findSecurityTokenMessage(it.initialAdminPasswordFile)}</p>
-                    <p>${%authenticate-security-token.copy.password}</p>
-                    <j:if test="${error}">
-                        <div class="jenkins-alert jenkins-alert-danger">
-                          <strong>${%authenticate-security-token.error}</strong> ${%authenticate-security-token.password.incorrect}
-                        </div>
-                    </j:if>
-                    <div class="form-group ${error ? 'has-error' : ''}">
-                      <label class="control-label" for="security-token">${%authenticate-security-token.password.administrator}</label>
-                      <input name="j_username" value="${app.setupWizard.initialSetupAdminUserName}" type="hidden"/>
-                      <input id="security-token" class="jenkins-input ${error ? 'danger' : ''}" type="password" name="j_password"/>
-                    </div>
+        <div class="app-setup-wizard">
+          <div class="app-setup-wizard__dialog">
+            <div class="app-setup-wizard__header">
+              <h2 class="app-setup-wizard__title">${%authenticate-security-token.getting.started}</h2>
+            </div>
+            <div class="app-setup-wizard__body">
+              <div class="app-setup-wizard__hero">
+                <h1 class="app-setup-wizard__heading">${%authenticate-security-token.unlock.jenkins}</h1>
+                <p class="app-setup-wizard__lead">${%jenkins.install.findSecurityTokenMessage(it.initialAdminPasswordFile)}</p>
+                <p>${%authenticate-security-token.copy.password}</p>
+                <j:if test="${error}">
+                  <div class="jenkins-alert jenkins-alert-danger">
+                    <strong>${%authenticate-security-token.error}</strong> ${%authenticate-security-token.password.incorrect}
                   </div>
-                </div>
-                <div class="modal-footer">
-                  <input type="submit" class="btn btn-primary set-security-key" value="${%authenticate-security-token.continue}"/>
+                </j:if>
+                <div class="jenkins-form-item">
+                  <label class="jenkins-form-label" for="security-token">${%authenticate-security-token.password.administrator}</label>
+                  <input name="j_username" value="${app.setupWizard.initialSetupAdminUserName}" type="hidden"/>
+                  <input id="security-token" class="jenkins-input ${error ? 'jenkins-input--error' : ''}" type="password" name="j_password"/>
                 </div>
               </div>
+            </div>
+            <div class="app-setup-wizard__footer">
+              <button type="submit" class="jenkins-button jenkins-button--primary set-security-key">${%authenticate-security-token.continue}</button>
             </div>
           </div>
         </div>

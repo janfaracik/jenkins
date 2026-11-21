@@ -7,10 +7,10 @@ import jenkins from "../util/jenkins";
 /*
  * Calls a stapler post method to save the first user settings
  */
-function saveFirstUser($form, success, error) {
+function saveFirstUser(form, success, error) {
   jenkins.staplerPost(
     "/setupWizard/createAdminUser",
-    $form,
+    form,
     function (response) {
       var crumbRequestField = response.data.crumbRequestField;
       if (crumbRequestField) {
@@ -24,10 +24,10 @@ function saveFirstUser($form, success, error) {
   );
 }
 
-function saveConfigureInstance($form, success, error) {
+function saveConfigureInstance(form, success, error) {
   jenkins.staplerPost(
     "/setupWizard/configureInstance",
-    $form,
+    form,
     function (response) {
       var crumbRequestField = response.data.crumbRequestField;
       if (crumbRequestField) {
@@ -44,8 +44,8 @@ function saveConfigureInstance($form, success, error) {
 /**
  * Calls a stapler post method to save the first user settings
  */
-function saveProxy($form, success, error) {
-  jenkins.staplerPost("/pluginManager/proxyConfigure", $form, success, {
+function saveProxy(form, success, error) {
+  jenkins.staplerPost("/pluginManager/proxyConfigure", form, success, {
     dataType: "html",
     error: error,
   });

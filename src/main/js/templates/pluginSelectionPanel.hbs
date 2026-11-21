@@ -1,40 +1,35 @@
-<div class="modal-header closeable">
-  <h4 class="modal-title">{{translations.installWizard_installCustom_title}}</h4>
+<div class="app-setup-wizard__header app-setup-wizard__header--closeable">
+  <h2 class="app-setup-wizard__title">{{translations.installWizard_installCustom_title}}</h2>
 </div>
-<div class="modal-body plugin-selector">
-  <div class="categories col-sm-3">
-  <ul class="nav">
-    {{#each categories}}
-    <li><a href="#{{id this}}" class="select-category">{{this}}</a></li>
-    {{/each}}
-  </ul>
-  </div>
-  <div class="plugins col-sm-9">
-    <div class="plugin-select-controls">
-      <span class="plugin-select-actions">
+<div class="app-setup-wizard__body app-setup-wizard__body--picker">
+  <nav class="app-setup-wizard__categories">
+    <ul class="app-setup-wizard__category-list">
+      {{#each categories}}
+      <li class="app-setup-wizard__category"><a href="#{{id this}}" class="app-setup-wizard__category-link select-category">{{this}}</a></li>
+      {{/each}}
+    </ul>
+  </nav>
+  <div class="app-setup-wizard__picker">
+    <div class="app-setup-wizard__picker-controls">
+      <span class="app-setup-wizard__picker-actions">
         <a href="#" class="plugin-select-all">{{translations.installWizard_installCustom_selectAll}}</a>
         <a href="#" class="plugin-select-none">{{translations.installWizard_installCustom_selectNone}}</a>
         <a href="#" class="plugin-select-recommended">{{translations.installWizard_installCustom_selectRecommended}}</a>
       </span>
-      <span class="plugin-search-controls">
-        <input type="text" name="searchbox" class="form-control" />
-        <a href="#" class="clear-search">&times;</a>
+      <span class="app-setup-wizard__search">
+        <input type="search" name="searchbox" class="jenkins-input app-setup-wizard__search-input" />
       </span>
-      <span id="plugin-selected-info" class="plugin-selected-info" data-selected-plugins="{{#each selectedPlugins}}{{this}},{{/each}}">
+      <span id="plugin-selected-info" class="app-setup-wizard__selected-info" data-selected-plugins="{{#each selectedPlugins}}{{this}},{{/each}}">
         <a href="#" class="plugin-show-selected">{{translations.installWizard_installCustom_selected}}</a> {{totalPluginCount}}
       </span>
     </div>
-        <div class="plugin-list">
-            <div class="plugin-list-description">{{{translations.installWizard_installCustom_pluginListDesc}}}</div>
-        {{> pluginSelectList}}
+    <div class="app-setup-wizard__picker-list">
+      <div class="app-setup-wizard__picker-note">{{{translations.installWizard_installCustom_pluginListDesc}}}</div>
+      {{> pluginSelectList}}
     </div>
   </div>
 </div>
-<div class="modal-footer">
-  <button type="button" class="btn btn-link install-home">
-    {{translations.installWizard_goBack}}
-  </button>
-  <button type="button" class="btn btn-primary install-selected">
-    {{translations.installWizard_goInstall}}
-  </button>
+<div class="app-setup-wizard__footer">
+  <button type="button" class="jenkins-button jenkins-button--tertiary install-home">{{translations.installWizard_goBack}}</button>
+  <button type="button" class="jenkins-button jenkins-button--primary install-selected">{{translations.installWizard_goInstall}}</button>
 </div>

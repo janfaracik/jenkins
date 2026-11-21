@@ -1,27 +1,19 @@
-<div class="modal-header closeable">
-	<h4 class="modal-title">{{translations.installWizard_welcomePanel_title}}</h4>
+<div class="app-setup-wizard__header app-setup-wizard__header--closeable">
+  <h2 class="app-setup-wizard__title">{{translations.installWizard_welcomePanel_title}}</h2>
 </div>
-<div class="modal-body setup-wizard-heading">
-  <div class="jumbotron welcome-panel">
-		 <h1>{{translations.installWizard_welcomePanel_banner}}</h1>
-	<p>
-			{{translations.installWizard_welcomePanel_message}}
-		</p>
-		<p class="button-set">
-			<a class="btn btn-primary btn-lg btn-huge install-recommended" href="#" role="button">
-				<b>{{translations.installWizard_welcomePanel_recommendedActionTitle}}</b>
-				<sub>
-					{{translations.installWizard_welcomePanel_recommendedActionDetails}}
-				</sub>
-			</a>
-
-			<a class="btn btn-default btn-lg btn-huge install-custom" href="#" role="button">
-				<b>{{translations.installWizard_welcomePanel_customizeActionTitle}}</b>
-				<sub>
-					{{translations.installWizard_welcomePanel_customizeActionDetails}}
-				</sub>
-			</a>
-		</p>
-	</div>
-
+<div class="app-setup-wizard__body">
+  <div class="app-setup-wizard__hero">
+    <h1 class="app-setup-wizard__heading">{{translations.installWizard_welcomePanel_banner}}</h1>
+    <p class="app-setup-wizard__lead">{{translations.installWizard_welcomePanel_message}}</p>
+  </div>
+  <div class="app-setup-wizard__choices">
+    <a class="app-setup-wizard__choice app-setup-wizard__choice--primary install-recommended" href="#" role="button">
+      <span class="app-setup-wizard__choice-title">{{translations.installWizard_welcomePanel_recommendedActionTitle}}</span>
+      <span class="app-setup-wizard__choice-description">{{translations.installWizard_welcomePanel_recommendedActionDetails}}</span>
+    </a>
+    <a class="app-setup-wizard__choice install-custom" href="#" role="button">
+      <span class="app-setup-wizard__choice-title">{{translations.installWizard_welcomePanel_customizeActionTitle}}</span>
+      <span class="app-setup-wizard__choice-description">{{translations.installWizard_welcomePanel_customizeActionDetails}}</span>
+    </a>
+  </div>
 </div>

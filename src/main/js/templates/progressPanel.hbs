@@ -1,26 +1,24 @@
-<div class="modal-header">
-	<h4 class="modal-title">{{translations.installWizard_installing_title}}</h4>
+<div class="app-setup-wizard__header">
+  <h2 class="app-setup-wizard__title">{{translations.installWizard_installing_title}}</h2>
 </div>
-<div class="modal-body installing-body">
-	<div class="jumbotron welcome-panel installing-panel">
-		<h1>{{translations.installWizard_installing_title}}</h1>
-		<div class="progress">
-		  <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-		    <span class="sr-only">{{translations.installWizard_installing_title}}</span>
-		  </div>
-		</div>
-	</div>
-
-	<div class="selected-plugin-progress">
-		{{#each installingPlugins}}
-		<div class="selected-plugin {{installStatus}}" id="installing-{{id name}}" data-tooltip="{{errorMessage}}">{{title}}</div>
-		{{/each}}
-	</div>
-
-	<div class="install-console">
-	  <div class="install-console-scroll">
-	    <div class="install-text"></div>
-	  </div>
-	  <div class="dependency-legend">{{translations.installWizard_installingConsole_dependencyIndicatorNote}}</div>
-	</div>
+<div class="app-setup-wizard__body app-setup-wizard__body--installing">
+  <div class="app-setup-wizard__hero app-setup-wizard__hero--compact">
+    <h1 class="app-setup-wizard__heading">{{translations.installWizard_installing_title}}</h1>
+    <span class="app-progress-bar app-progress-bar--large app-progress-bar--animate app-setup-wizard__progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="{{translations.installWizard_installing_title}}">
+      <span style="width: 0%;"></span>
+    </span>
+  </div>
+  <div class="app-setup-wizard__installing">
+    <div class="app-setup-wizard__plugins">
+      {{#each installingPlugins}}
+      <div class="app-setup-wizard__plugin app-setup-wizard__plugin--{{installStatus}}" id="installing-{{id name}}" {{#if errorMessage}}title="{{errorMessage}}"{{/if}}>{{title}}</div>
+      {{/each}}
+    </div>
+    <div class="app-setup-wizard__console">
+      <div class="app-setup-wizard__console-scroll">
+        <div class="app-setup-wizard__console-text"></div>
+      </div>
+      <div class="app-setup-wizard__console-legend">{{translations.installWizard_installingConsole_dependencyIndicatorNote}}</div>
+    </div>
+  </div>
 </div>
