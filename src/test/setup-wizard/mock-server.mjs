@@ -6,6 +6,10 @@ import { fileURLToPath } from "node:url";
 const PORT = Number(process.env.PORT || 8099);
 const TARGET = new URL(process.env.TARGET || "http://localhost:8080");
 const PREFIX = process.env.PREFIX ?? "/jenkins";
+const PLATFORM_PLUGINS = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../../core/src/main/resources/jenkins/install/platform-plugins.json",
+);
 const STEP_MS = Number(process.env.STEP_MS || 120);
 const UPDATES_JSON =
   process.env.UPDATES_JSON ||
@@ -24,6 +28,7 @@ const SCENARIOS = {
   "user-error": "Creating the first user fails validation",
   "url-error": "Instance URL fails validation",
   slow: "Every request takes 3 seconds",
+  installing: "Stay on the installation screen",
 };
 
 const FAILING = new Set(["git", "gradle", "ldap", "email-ext"]);
@@ -143,7 +148,40 @@ function withDependencies(names) {
   return ordered;
 }
 
+async function startInstall(selected) {
+  await loadMetadata();
+  const correlationId = "mock-" + Date.now();
+  const known = selected.filter((n) => metadata.has(n));
+  state.jobs = withDependencies(known).map((name) => {
+    const plugin = metadata.get(name);
+    return {
+      name,
+      version: plugin.version || "1.0",
+      title: plugin.title || name,
+      ...(selected.includes(name) ? { correlationId } : {}),
+    };
+  });
+  state.startedAt = Date.now();
+  state.installState =
+    state.jobs.length > 0 ? "INITIAL_PLUGINS_INSTALLING" : "CREATE_ADMIN_USER";
+  return correlationId;
+}
+
+function suggestedPlugins() {
+  return JSON.parse(fs.readFileSync(PLATFORM_PLUGINS, "utf8")).flatMap(
+    (category) =>
+      category.plugins.filter((p) => p.suggested).map((p) => p.name),
+  );
+}
+
 function jobStatus(index, now) {
+  if (state.scenario === "installing") {
+    const installed = Math.floor(state.jobs.length * 0.4);
+    if (index < installed) {
+      return "Success";
+    }
+    return index === installed ? "Installing" : "Pending";
+  }
   const elapsed = now - state.startedAt;
   const done = (index + 1) * STEP_MS;
   if (elapsed < index * STEP_MS) {
@@ -223,24 +261,7 @@ const mocks = {
         message: "Mock: the update site rejected the request",
       };
     }
-    await loadMetadata();
-    const selected = JSON.parse(body).plugins || [];
-    const correlationId = "mock-" + Date.now();
-    const known = selected.filter((n) => metadata.has(n));
-    state.jobs = withDependencies(known).map((name) => {
-      const plugin = metadata.get(name);
-      return {
-        name,
-        version: plugin.version || "1.0",
-        title: plugin.title || name,
-        ...(selected.includes(name) ? { correlationId } : {}),
-      };
-    });
-    state.startedAt = Date.now();
-    state.installState =
-      state.jobs.length > 0
-        ? "INITIAL_PLUGINS_INSTALLING"
-        : "CREATE_ADMIN_USER";
+    const correlationId = await startInstall(JSON.parse(body).plugins || []);
     return ok({ correlationId });
   },
   "POST /pluginManager/installPluginsDone": () => {
@@ -377,6 +398,12 @@ async function handle(req, res) {
   if (scenario) {
     reset(SCENARIOS[scenario[1]] ? scenario[1] : "happy");
     console.log(`scenario: ${state.scenario}`);
+    if (state.scenario === "installing") {
+      state.unlocked = true;
+      await startInstall(suggestedPlugins());
+      redirect(res, "/setupWizard/");
+      return;
+    }
     redirect(res, "/login");
     return;
   }
