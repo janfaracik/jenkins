@@ -10,7 +10,10 @@
       </span>
       <a href="{{plugin.website}}" target="_blank" class="app-setup-wizard__picker-website" rel="noopener noreferrer" title="{{plugin.title}} {{../../translations.installWizard_websiteLinkLabel}}"></a>
       {{#if plugin.suggested}}
-      <span class="jenkins-badge app-setup-wizard__suggested">{{@root.translations.installWizard_installCustom_selectRecommended}}</span>
+      <span class="jenkins-badge jenkins-!-color-purple">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+        {{@root.translations.installWizard_installCustom_selectRecommended}}
+      </span>
       {{/if}}
       {{#hasDependencies plugin.name}}
       <button type="button" class="jenkins-badge app-setup-wizard__dependency-toggle toggle-dependency-list" data-plugin-name="{{../plugin.name}}" title="{{../plugin.title}} {{../../../translations.installWizard_installIncomplete_dependenciesLabel}}">{{dependencyCount ../plugin.name}}<span class="app-setup-wizard__dependency-chevron"></span></button>

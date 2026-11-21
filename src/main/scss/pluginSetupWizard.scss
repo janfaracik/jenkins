@@ -338,21 +338,6 @@ $wizard-border: var(--jenkins-border-width) solid
     }
   }
 
-  &__suggested {
-    color: var(--text-color);
-
-    &::before {
-      background-image: linear-gradient(
-        90deg,
-        oklch(70% 0.2 25 / 0.3),
-        oklch(80% 0.17 85 / 0.3),
-        oklch(75% 0.18 150 / 0.3),
-        oklch(70% 0.17 240 / 0.3),
-        oklch(65% 0.2 300 / 0.3)
-      );
-    }
-  }
-
   &__dependency-toggle {
     margin-left: auto;
     cursor: pointer;
