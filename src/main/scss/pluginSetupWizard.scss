@@ -51,12 +51,6 @@ $wizard-border: var(--jenkins-border-width) solid
     min-height: 0;
     overflow-y: auto;
 
-    &--centered {
-      display: grid;
-      place-items: center;
-      text-align: center;
-    }
-
     &--unlock {
       display: grid;
       place-items: center;
@@ -105,13 +99,6 @@ $wizard-border: var(--jenkins-border-width) solid
       padding: $wizard-padding;
       border-bottom: $wizard-border;
     }
-  }
-
-  &__heading {
-    margin: 0 0 0.75rem;
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
   }
 
   &__lead {

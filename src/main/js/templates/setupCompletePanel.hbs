@@ -1,21 +1,29 @@
-<div class="app-setup-wizard__body app-setup-wizard__body--centered">
-  <div class="app-setup-wizard__hero">
-    {{#if restartRequired}}
-    <h1 class="app-setup-wizard__heading">{{translations.installWizard_installComplete_bannerRestart}}</h1>
-    {{else}}
-    <h1 class="app-setup-wizard__heading">{{translations.installWizard_installComplete_banner}}</h1>
-    {{/if}}
-    {{#if message}}<div class="app-setup-wizard__message">{{{message}}}</div>{{/if}}
+<div class="app-setup-wizard__body app-setup-wizard__body--narrow">
+  <div class="app-setup-wizard__narrow">
+    <div class="jenkins-app-bar">
+      <div class="jenkins-app-bar__content">
+        {{#if restartRequired}}
+        <h1>{{translations.installWizard_installComplete_bannerRestart}}</h1>
+        {{else}}
+        <h1>{{translations.installWizard_installComplete_banner}}</h1>
+        {{/if}}
+      </div>
+    </div>
+    {{#if message}}<div class="app-setup-wizard__narrow-text">{{{message}}}</div>{{/if}}
     {{#if restartRequired}}
       {{#if restartSupported}}
-      <p class="app-setup-wizard__lead">{{translations.installWizard_installComplete_installComplete_restartRequiredMessage}}</p>
-      <button type="button" class="jenkins-button jenkins-button--primary install-done-restart">{{translations.installWizard_installComplete_restartLabel}}</button>
+      <p class="app-setup-wizard__narrow-text">{{translations.installWizard_installComplete_installComplete_restartRequiredMessage}}</p>
+      <div class="app-setup-wizard__narrow-buttons">
+        <button type="button" class="jenkins-button jenkins-button--primary install-done-restart">{{translations.installWizard_installComplete_restartLabel}}</button>
+      </div>
       {{else}}
-      <p class="app-setup-wizard__lead">{{translations.installWizard_installComplete_installComplete_restartRequiredNotSupportedMessage}}</p>
+      <p class="app-setup-wizard__narrow-text">{{translations.installWizard_installComplete_installComplete_restartRequiredNotSupportedMessage}}</p>
       {{/if}}
     {{else}}
-    <p class="app-setup-wizard__lead">{{translations.installWizard_installComplete_message}}</p>
-    <button type="button" class="jenkins-button jenkins-button--primary install-done">{{translations.installWizard_installComplete_finishButtonLabel}}</button>
+    <p class="app-setup-wizard__narrow-text">{{translations.installWizard_installComplete_message}}</p>
+    <div class="app-setup-wizard__narrow-buttons">
+      <button type="button" class="jenkins-button jenkins-button--primary install-done">{{translations.installWizard_installComplete_finishButtonLabel}}</button>
+    </div>
     {{/if}}
   </div>
 </div>

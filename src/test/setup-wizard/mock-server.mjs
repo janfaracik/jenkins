@@ -31,7 +31,6 @@ const SCENARIOS = {
   "install-error": "Starting the install fails",
   "user-error": "Creating the first user fails validation",
   "url-error": "Instance URL fails validation",
-  slow: "Every request takes 3 seconds",
   installing: "Stay on the installation screen",
 };
 
@@ -459,14 +458,6 @@ async function handle(req, res) {
     await SCENARIO_START[state.scenario]?.();
     redirect(res, "/setupWizard/");
     return;
-  }
-
-  if (
-    state.scenario === "slow" &&
-    !path.startsWith("/jsbundles") &&
-    !path.startsWith("/static")
-  ) {
-    await new Promise((r) => setTimeout(r, 3000));
   }
 
   if (req.method === "GET" && path === "/" && !state.completed) {
