@@ -1,10 +1,13 @@
 <div class="app-setup-wizard__body app-setup-wizard__body--picker">
   <nav class="app-setup-wizard__categories">
-    <ul class="app-setup-wizard__category-list">
+    <h1 class="app-setup-wizard__categories-heading">{{translations.installWizard_installCustom_pluginsTitle}}</h1>
+    <div class="tasks">
       {{#each categories}}
-      <li class="app-setup-wizard__category"><a href="#{{id this}}" class="app-setup-wizard__category-link select-category">{{this}}</a></li>
+      <div class="task app-setup-wizard__category">
+        <a href="#{{id this}}" class="task-link select-category"><span class="task-link-text">{{this}}</span></a>
+      </div>
       {{/each}}
-    </ul>
+    </div>
   </nav>
   <div class="app-setup-wizard__picker">
     <div class="app-setup-wizard__picker-controls">

@@ -244,29 +244,10 @@ $wizard-border: var(--jenkins-border-width) solid
     }
   }
 
-  &__category-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  &__category-link {
-    display: block;
-    padding: 0.45rem 0.75rem;
-    border-radius: 0.5rem;
-    color: var(--text-color);
+  &__categories-heading {
+    margin: 0.75rem 0.6875rem 1rem;
+    font-size: 1.5rem;
     font-weight: var(--font-bold-weight);
-    text-decoration: none;
-
-    &:hover,
-    &:focus-visible {
-      background: var(--item-background--hover);
-      text-decoration: none;
-    }
-  }
-
-  &__category--active &__category-link {
-    background: var(--item-background--active);
   }
 
   &__picker {

@@ -648,10 +648,10 @@ var createPluginSetupWizard = function (appendTarget) {
   var pinnedCategory = null;
 
   var setActiveCategory = function (id) {
-    findAll(".app-setup-wizard__category").forEach(function (li) {
-      li.classList.toggle(
-        "app-setup-wizard__category--active",
-        li.querySelector("a").getAttribute("href") === "#" + id,
+    findAll(".app-setup-wizard__category .task-link").forEach(function (link) {
+      link.classList.toggle(
+        "task-link--active",
+        link.getAttribute("href") === "#" + id,
       );
     });
   };
