@@ -50,7 +50,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
     &--picker {
       display: grid;
-      grid-template-columns: 22rem 1fr;
+      grid-template-columns: 21rem 1fr;
       overflow: hidden;
 
       @media (width <= 768px) {
