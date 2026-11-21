@@ -19,9 +19,9 @@ $wizard-border: var(--jenkins-border-width) solid
 
     display: flex;
     flex-direction: column;
-    width: min(1200px, 100%);
-    height: min(780px, 100%);
-    border-radius: 1rem;
+    width: min(1300px, 100%);
+    height: min(750px, 100%);
+    border-radius: var(--form-input-border-radius);
     overflow: hidden;
   }
 
