@@ -695,6 +695,10 @@ var createPluginSetupWizard = function (appendTarget) {
       selectedPlugins: selectedPluginNames,
       selectedCount: selectedCountLabel(),
       installLabel: installLabel(),
+      additionalPluginsNote: translate(
+        "installWizard_installCustom_additionalPlugins",
+        "Additional plugins can be installed in Manage Jenkins once initial setup is complete.",
+      ),
       hasSelection: selectedPluginNames.length > 0,
     };
   };

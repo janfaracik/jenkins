@@ -237,6 +237,8 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__categories {
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     padding: $wizard-padding;
     border-right: $wizard-border;
@@ -252,6 +254,14 @@ $wizard-border: var(--jenkins-border-width) solid
     .jenkins-side-nav__heading:first-of-type {
       margin-top: $wizard-padding;
     }
+  }
+
+  &__categories-note {
+    margin: auto 0.6875rem 0;
+    padding-top: $wizard-padding;
+    color: var(--text-color-secondary);
+    font-size: var(--font-size-sm);
+    text-wrap: pretty;
   }
 
   &__picker {
