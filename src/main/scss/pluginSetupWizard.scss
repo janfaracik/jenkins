@@ -175,8 +175,11 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__narrow-buttons {
     display: flex;
-    flex-direction: column;
     gap: 0.75rem;
+
+    .jenkins-button {
+      flex: 1;
+    }
   }
 
   &__install-list {
