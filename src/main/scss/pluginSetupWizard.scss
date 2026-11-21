@@ -243,6 +243,10 @@ $wizard-border: var(--jenkins-border-width) solid
     @media (width <= 768px) {
       display: none;
     }
+
+    .jenkins-app-bar {
+      margin-inline: 0.6875rem;
+    }
   }
 
   &__picker {
