@@ -4,7 +4,7 @@
   <l:layout type="full-screen" title="${it.displayName}">
     <l:main-panel>
       <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
-      <div id="proxy-configuration" class="app-setup-wizard-frame app-setup-wizard-frame--fit">
+      <div id="proxy-configuration" class="app-setup-wizard-frame">
         <f:form method="post" action="/pluginManager/proxyConfigure" name="proxyConfigure">
           <j:scope>
             <j:set var="instance" value="${app.proxy}"/>

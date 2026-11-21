@@ -9,12 +9,12 @@
         <input type="hidden" name="${h.getCrumbRequestField()}" value="${h.getCrumb(request2)}"/>
         <div class="app-setup-wizard">
           <div class="app-setup-wizard__dialog">
-            <div class="app-setup-wizard__body app-setup-wizard__body--unlock">
-              <div class="app-setup-wizard__unlock">
+            <div class="app-setup-wizard__body app-setup-wizard__body--narrow">
+              <div class="app-setup-wizard__narrow">
                 <l:app-bar title="${%authenticate-security-token.unlock.jenkins}">
                   <t:help href="https://www.jenkins.io/redirect/find-jenkins-logs" tooltip="${%authenticate-security-token.help}" />
                 </l:app-bar>
-                <p class="app-setup-wizard__lead">${%jenkins.install.findSecurityTokenMessage}</p>
+                <p class="app-setup-wizard__narrow-text">${%jenkins.install.findSecurityTokenMessage}</p>
                 <div class="jenkins-quote jenkins-quote--monospace">
                   ${it.initialAdminPasswordFile}
                   <l:copyButton text="${it.initialAdminPasswordFile}" iconOnly="true" />
@@ -29,7 +29,9 @@
                   <input name="j_username" value="${app.setupWizard.initialSetupAdminUserName}" type="hidden"/>
                   <input id="security-token" class="jenkins-input ${error ? 'jenkins-input--error' : ''}" type="password" name="j_password"/>
                 </div>
-                <button type="submit" class="jenkins-button jenkins-button--primary app-setup-wizard__unlock-submit set-security-key">${%authenticate-security-token.continue}</button>
+                <div class="app-setup-wizard__narrow-buttons">
+                  <button type="submit" class="jenkins-button jenkins-button--primary set-security-key">${%authenticate-security-token.continue}</button>
+                </div>
               </div>
             </div>
           </div>

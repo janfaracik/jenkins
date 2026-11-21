@@ -28,15 +28,6 @@ $wizard-border: var(--jenkins-border-width) solid
     overflow: hidden;
   }
 
-  &__footer {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-shrink: 0;
-    padding: $wizard-padding;
-    border-top: $wizard-border;
-  }
-
   &__version {
     position: absolute;
     right: var(--section-padding);
@@ -51,28 +42,10 @@ $wizard-border: var(--jenkins-border-width) solid
     min-height: 0;
     overflow-y: auto;
 
-    &--unlock {
-      display: grid;
-      place-items: center;
-      padding: $wizard-padding;
-    }
-
-    &--frame {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
     &--narrow {
       display: grid;
       place-items: center;
       padding: $wizard-padding;
-    }
-
-    &--installing {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
     }
 
     &--picker {
@@ -92,69 +65,15 @@ $wizard-border: var(--jenkins-border-width) solid
     height: 100%;
   }
 
-  &__lead {
-    margin: 0 0 1.5rem;
-    color: var(--text-color-secondary);
-    font-size: 1.1rem;
-    line-height: 1.66;
-  }
-
-  &__message {
-    padding: $wizard-padding $wizard-padding 0;
-  }
-
-  &__unlock {
-    width: 100%;
-    max-width: 450px;
-    overflow-wrap: anywhere;
-
-    code {
-      font-size: inherit;
-    }
-  }
-
-  &__unlock &__lead {
-    font-size: inherit;
-  }
-
-  &__unlock .jenkins-form-item {
-    margin-block: 2rem;
-  }
-
-  &__unlock-submit {
-    width: 100%;
-  }
-
   &__frame {
-    flex: 1;
-    width: 100%;
+    width: calc(100% + 0.5rem);
+    height: 0;
+    margin: -0.25rem;
     border: none;
-
-    &--fit {
-      flex: none;
-      width: calc(100% + 0.5rem);
-      height: 0;
-      margin: -0.25rem;
-    }
   }
 
   &__progress {
     width: 100%;
-  }
-
-  &__install-header,
-  &__install-list {
-    padding-inline: max(
-      #{$wizard-padding},
-      calc((100% - 885px) / 2 + #{$wizard-padding})
-    );
-  }
-
-  &__install-header {
-    flex-shrink: 0;
-    padding-top: $wizard-padding;
-    padding-bottom: $wizard-padding;
-    border-bottom: $wizard-border;
   }
 
   &__narrow {
@@ -163,22 +82,21 @@ $wizard-border: var(--jenkins-border-width) solid
     gap: 1rem;
     width: 100%;
     max-width: 450px;
+    overflow-wrap: anywhere;
+
+    > * {
+      margin: 0;
+    }
 
     .jenkins-app-bar {
       min-height: 0;
-      margin: 0;
     }
   }
 
   &__narrow-text {
     min-height: 1lh;
-    margin: 0;
     color: var(--text-color-secondary);
     line-height: 1.66;
-  }
-
-  &__narrow &__install-items {
-    padding: 0;
   }
 
   &__narrow-buttons {
@@ -190,18 +108,11 @@ $wizard-border: var(--jenkins-border-width) solid
     }
   }
 
-  &__install-list {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-  }
-
   &__install-items {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    margin: 0;
-    padding: $wizard-padding 0;
+    padding: 0;
     list-style: none;
   }
 
@@ -217,10 +128,6 @@ $wizard-border: var(--jenkins-border-width) solid
     place-items: center;
     height: 1lh;
 
-    .jenkins-spinner {
-      display: none;
-    }
-
     &::before {
       content: "";
       width: 0.4rem;
@@ -231,29 +138,13 @@ $wizard-border: var(--jenkins-border-width) solid
     }
   }
 
-  &__install-item--installing &__install-icon {
-    &::before {
-      display: none;
-    }
-
-    .jenkins-spinner {
-      display: inline-flex;
-    }
-  }
-
-  &__install-item--success &__install-icon::before,
   &__install-item--fail &__install-icon::before {
     width: 1rem;
     height: 1rem;
     border-radius: 0;
-    mask: url("../images/svgs/setupWizard/check.svg") center / contain no-repeat;
-    background: var(--success-color);
-    opacity: 1;
-  }
-
-  &__install-item--fail &__install-icon::before {
-    mask-image: url("../images/svgs/setupWizard/close.svg");
+    mask: url("../images/svgs/setupWizard/close.svg") center / contain no-repeat;
     background: var(--error-color);
+    opacity: 1;
   }
 
   &__install-name {
@@ -264,16 +155,9 @@ $wizard-border: var(--jenkins-border-width) solid
     color: var(--text-color-secondary);
   }
 
-  &__install-meta {
-    color: var(--text-color-secondary);
-  }
-
   &__install-error {
     color: var(--error-color);
-  }
 
-  &__install-meta,
-  &__install-error {
     &:empty {
       display: none;
     }
@@ -407,26 +291,10 @@ $wizard-border: var(--jenkins-border-width) solid
 }
 
 .app-setup-wizard-frame {
-  --section-padding: 1.5rem;
-
-  padding: var(--section-padding);
-
-  &--fit {
-    padding: 0.25rem;
-
-    .jenkins-form-item {
-      max-width: none;
-      margin-bottom: 0;
-    }
-
-    .jenkins-form-description {
-      line-height: 1.66;
-    }
-  }
+  padding: 0.25rem;
 
   .jenkins-form-item {
-    max-width: 36rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
   }
 
   .has-error .jenkins-input {
@@ -443,5 +311,6 @@ $wizard-border: var(--jenkins-border-width) solid
 
   .jenkins-form-description {
     margin-top: 0.75rem;
+    line-height: 1.66;
   }
 }

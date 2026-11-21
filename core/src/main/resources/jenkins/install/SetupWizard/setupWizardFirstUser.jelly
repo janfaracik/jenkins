@@ -4,7 +4,7 @@
   <l:layout type="full-screen" title="${it.displayName}">
     <l:main-panel>
      <link rel="stylesheet" href="${resURL}/jsbundles/pluginSetupWizard.css" type="text/css" />
-     <div class="create-admin-user app-setup-wizard-frame app-setup-wizard-frame--fit">
+     <div class="create-admin-user app-setup-wizard-frame">
        <form action="${rootURL}/setupWizard/createAdminUser" method="post">
           <local:_entryForm it="${app.securityRealm}" host="${app.securityRealm}" xmlns:local="/hudson/security/HudsonPrivateSecurityRealm" />
        </form>

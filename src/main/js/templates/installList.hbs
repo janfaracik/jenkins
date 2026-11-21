@@ -1,10 +1,9 @@
 <ol class="app-setup-wizard__install-items">
   {{#each installingPlugins}}
   <li class="app-setup-wizard__install-item app-setup-wizard__install-item--{{installStatus}}">
-    <span class="app-setup-wizard__install-icon"><span class="jenkins-spinner"></span></span>
+    <span class="app-setup-wizard__install-icon"></span>
     <div>
       <div class="app-setup-wizard__install-name">{{title}}</div>
-      <div class="app-setup-wizard__install-meta">{{dependencyLabel}}</div>
       <div class="app-setup-wizard__install-error">{{errorMessage}}</div>
     </div>
   </li>

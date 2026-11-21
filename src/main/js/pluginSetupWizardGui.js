@@ -237,31 +237,12 @@ var createPluginSetupWizard = function (appendTarget) {
     }
   };
 
-  var dependencyLabel = function (plugin) {
-    var count = (plugin.allDependencies || []).length - 1;
-    if (count < 1) {
-      return "";
-    }
-    if (count === 1) {
-      return translate("installWizard_installing_dependency", "+ 1 dependency");
-    }
-    return translate(
-      "installWizard_installing_dependencies",
-      "+ {0} dependencies",
-    ).replace("{0}", count);
-  };
-
   var initInstallingPluginList = function () {
     installingPlugins = [];
     for (var i = 0; i < selectedPluginNames.length; i++) {
       var p = availablePlugins[selectedPluginNames[i]];
       if (p) {
-        installingPlugins.push(
-          Object.assign(
-            { installStatus: "pending", dependencyLabel: dependencyLabel(p) },
-            p,
-          ),
-        );
+        installingPlugins.push(Object.assign({ installStatus: "pending" }, p));
       }
     }
   };
@@ -304,7 +285,7 @@ var createPluginSetupWizard = function (appendTarget) {
   var enableButtonsAfterFrameLoad = function () {
     findAll("iframe[src]").forEach(function (iframe) {
       iframe.addEventListener("load", function () {
-        if (iframe.classList.contains("app-setup-wizard__frame--fit")) {
+        if (iframe.classList.contains("app-setup-wizard__frame")) {
           fitFrameToContent(iframe);
         }
         setButtonsDisabled(false);
@@ -885,7 +866,7 @@ var createPluginSetupWizard = function (appendTarget) {
     doc.open();
     doc.write(responseText);
     doc.close();
-    if (iframe.classList.contains("app-setup-wizard__frame--fit")) {
+    if (iframe.classList.contains("app-setup-wizard__frame")) {
       fitFrameToContent(iframe);
     }
     setButtonsDisabled(false);
