@@ -31,6 +31,7 @@ function reset(scenario = "happy") {
     restartAt: 0,
     restarted: false,
     proxyConfigured: false,
+    unlocked: false,
     completed: false,
   };
 }
@@ -247,8 +248,8 @@ function panel() {
   return `<div style="position:fixed;left:12px;bottom:12px;z-index:2147483647;background:#222;color:#fff;font:12px/1.4 system-ui;padding:10px 12px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.3)"><strong>Wizard mock</strong> · ${state.installState}${links}</div>`;
 }
 
-async function serveWizardPage(res) {
-  const response = await fetchTarget("/setupWizard/");
+async function serveWithWizard(res, targetPath) {
+  const response = await fetchTarget(targetPath);
   const html = await response.text();
   const assets =
     `<link rel="stylesheet" href="${PREFIX}/jsbundles/pluginSetupWizard.css" type="text/css" />` +
@@ -258,6 +259,11 @@ async function serveWizardPage(res) {
     : html.replace("</body>", `${assets}</body>`);
   res.writeHead(200, { "Content-Type": "text/html;charset=UTF-8" });
   res.end(injected.replace("</body>", `${panel()}</body>`));
+}
+
+function redirect(res, path) {
+  res.writeHead(302, { Location: PREFIX + path });
+  res.end();
 }
 
 function proxy(req, res) {
@@ -287,7 +293,7 @@ function proxy(req, res) {
     res.writeHead(502, { "Content-Type": "text/plain" });
     res.end(`Mock: cannot reach ${TARGET.origin} (${e.message})`);
   });
-  upstream.end();
+  req.pipe(upstream);
 }
 
 const server = http.createServer((req, res) => {
@@ -317,8 +323,7 @@ async function handle(req, res) {
   if (scenario) {
     reset(SCENARIOS[scenario[1]] ? scenario[1] : "happy");
     console.log(`scenario: ${state.scenario}`);
-    res.writeHead(302, { Location: `${PREFIX}/setupWizard/` });
-    res.end();
+    redirect(res, "/login");
     return;
   }
 
@@ -331,13 +336,24 @@ async function handle(req, res) {
   }
 
   if (req.method === "GET" && path === "/" && !state.completed) {
-    res.writeHead(302, { Location: `${PREFIX}/setupWizard/` });
-    res.end();
+    redirect(res, state.unlocked ? "/setupWizard/" : "/login");
+    return;
+  }
+
+  if (req.method === "GET" && path === "/login" && !state.unlocked) {
+    await serveWithWizard(res, "/setupWizard/authenticate-security-token");
+    return;
+  }
+
+  if (req.method === "POST" && /j_spring_security_check$/.test(path)) {
+    state.unlocked = true;
+    console.log(`mock  POST ${path}`);
+    redirect(res, "/setupWizard/");
     return;
   }
 
   if (req.method === "GET" && path === "/setupWizard/") {
-    await serveWizardPage(res);
+    await serveWithWizard(res, "/setupWizard/");
     return;
   }
 
@@ -358,7 +374,8 @@ async function handle(req, res) {
     return;
   }
 
-  if (req.method !== "GET" && req.method !== "HEAD") {
+  const validation = /^\/descriptorByName\/[^/]+\/check[A-Z]\w*$/.test(path);
+  if (req.method !== "GET" && req.method !== "HEAD" && !validation) {
     console.warn(`blocked ${req.method} ${path}`);
     sendJson(
       res,
