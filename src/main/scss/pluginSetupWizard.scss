@@ -354,8 +354,7 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__picker-description {
-    margin: 0.25rem 0 0 1.85rem;
-    color: var(--text-color-secondary);
+    margin-top: 0.25rem;
 
     &:empty {
       display: none;
@@ -366,7 +365,7 @@ $wizard-border: var(--jenkins-border-width) solid
     display: none;
     flex-wrap: wrap;
     gap: 0.35rem;
-    margin: 0.75rem 0 0 1.85rem;
+    margin: 0.75rem 0 0 34px;
   }
 
   &__picker-item--show-dependencies &__dependencies {

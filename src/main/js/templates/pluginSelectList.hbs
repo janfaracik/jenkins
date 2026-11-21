@@ -13,7 +13,7 @@
       <button type="button" class="jenkins-badge app-setup-wizard__dependency-toggle toggle-dependency-list" data-plugin-name="{{../plugin.name}}" title="{{../plugin.title}} {{../../../translations.installWizard_installIncomplete_dependenciesLabel}}">{{dependencyCount ../plugin.name}}<span class="app-setup-wizard__dependency-chevron"></span></button>
       {{/hasDependencies}}
     </div>
-    <div class="app-setup-wizard__picker-description">{{{plugin.excerpt}}}</div>
+    <div class="jenkins-checkbox__description app-setup-wizard__picker-description">{{{plugin.excerpt}}}</div>
     {{#hasDependencies plugin.name}}
     <div class="app-setup-wizard__dependencies">
       <h4 class="app-setup-wizard__dependencies-title">{{../../../translations.installWizard_installIncomplete_dependenciesLabel}}</h4>
