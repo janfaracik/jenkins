@@ -309,19 +309,6 @@ $wizard-border: var(--jenkins-border-width) solid
 
   &__picker-item {
     padding: 0.6rem 0.6875rem;
-    border-radius: 0.5rem;
-
-    &:hover {
-      background: var(--item-background--hover);
-    }
-
-    &--selected {
-      background: color-mix(in sRGB, var(--accent-color) 8%, transparent);
-
-      &:hover {
-        background: color-mix(in sRGB, var(--accent-color) 14%, transparent);
-      }
-    }
   }
 
   &__picker-list--searching &__picker-item:not(&__picker-item--match),
