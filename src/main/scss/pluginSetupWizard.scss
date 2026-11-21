@@ -339,27 +339,17 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__suggested {
-    --color: oklch(70% 0.2 300);
-  }
+    color: var(--text-color);
 
-  &__suggested-text {
-    background-image: linear-gradient(
-      90deg,
-      oklch(65% 0.25 25),
-      oklch(75% 0.18 75),
-      oklch(70% 0.2 145),
-      oklch(65% 0.2 240),
-      oklch(60% 0.25 300),
-      oklch(65% 0.25 25)
-    );
-    background-size: 200% 100%;
-    background-clip: text;
-    color: transparent;
-    font-weight: var(--font-bold-weight);
-    animation: app-setup-wizard-shimmer 3s linear infinite;
-
-    @media (prefers-reduced-motion: reduce) {
-      animation: none;
+    &::before {
+      background-image: linear-gradient(
+        90deg,
+        oklch(70% 0.2 25 / 0.3),
+        oklch(80% 0.17 85 / 0.3),
+        oklch(75% 0.18 150 / 0.3),
+        oklch(70% 0.17 240 / 0.3),
+        oklch(65% 0.2 300 / 0.3)
+      );
     }
   }
 
@@ -415,12 +405,6 @@ $wizard-border: var(--jenkins-border-width) solid
     &:focus-visible {
       text-decoration: underline;
     }
-  }
-}
-
-@keyframes app-setup-wizard-shimmer {
-  to {
-    background-position: -200% 0;
   }
 }
 
