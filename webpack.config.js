@@ -147,7 +147,6 @@ module.exports = (env, argv) => ({
             // This helpers cannot be moved to the helpers directory because they are closures
             knownHelpers: [
               "pluginCountForCategory",
-              "totalPluginCount",
               "inSelectedPlugins",
               "dependencyCount",
               "eachDependency",

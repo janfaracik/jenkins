@@ -50,24 +50,7 @@ var createPluginSetupWizard = function (appendTarget) {
     return "(" + cnt + "/" + tot + ")";
   };
 
-  var totalCount = function () {
-    var tot = 0;
-    var cnt = 0;
-    for (var i = 0; i < pluginList.length; i++) {
-      var a = pluginList[i];
-      for (var c = 0; c < a.plugins.length; c++) {
-        tot++;
-        if (selectedPluginNames.indexOf(a.plugins[c].name) >= 0) {
-          cnt++;
-        }
-      }
-    }
-    return "(" + cnt + "/" + tot + ")";
-  };
-
   Handlebars.registerHelper("pluginCountForCategory", categoryCount);
-
-  Handlebars.registerHelper("totalPluginCount", totalCount);
 
   Handlebars.registerHelper("inSelectedPlugins", function (val, options) {
     if (selectedPluginNames.indexOf(val) >= 0) {
@@ -137,7 +120,6 @@ var createPluginSetupWizard = function (appendTarget) {
   };
 
   var pluginList;
-  var allPluginNames;
   var selectedPluginNames;
 
   var visibleDependencies = {};
@@ -702,11 +684,20 @@ var createPluginSetupWizard = function (appendTarget) {
     });
   };
 
+  var selectedCountLabel = function () {
+    var label =
+      "installWizard_installCustom_selectedCount" in translations
+        ? translations.installWizard_installCustom_selectedCount
+        : "{0} selected";
+    return label.replace("{0}", selectedPluginNames.length);
+  };
+
   var pluginSelectionPanelData = function () {
     return {
       categories: categories,
       categorizedPlugins: categorizedPlugins,
       selectedPlugins: selectedPluginNames,
+      selectedCount: selectedCountLabel(),
     };
   };
 
@@ -737,9 +728,7 @@ var createPluginSetupWizard = function (appendTarget) {
     });
     var info = find("#plugin-selected-info");
     if (info) {
-      info.dataset.selectedPlugins = selectedPluginNames.join(",");
-      info.querySelector(".app-setup-wizard__selected-count").textContent =
-        totalCount();
+      info.textContent = selectedCountLabel();
     }
     if (lastSearch !== "") {
       searchForPlugins(lastSearch, false);
@@ -808,27 +797,18 @@ var createPluginSetupWizard = function (appendTarget) {
       return;
     }
 
-    var matches;
-    if (text === "show:selected") {
-      matches = plugins.filter(function (plugin) {
-        return plugin.classList.contains(
-          "app-setup-wizard__picker-item--selected",
-        );
+    var needle = text.toLowerCase();
+    var matches = plugins.filter(function (plugin) {
+      return Array.from(
+        plugin.querySelectorAll(
+          ".app-setup-wizard__picker-name, .app-setup-wizard__picker-description",
+        ),
+      ).some(function (el) {
+        return containsText(el, needle);
       });
-    } else {
-      var needle = text.toLowerCase();
-      matches = plugins.filter(function (plugin) {
-        return Array.from(
-          plugin.querySelectorAll(
-            ".app-setup-wizard__picker-name, .app-setup-wizard__picker-description",
-          ),
-        ).some(function (el) {
-          return containsText(el, needle);
-        });
-      });
-      if (lastSearch !== text && scroll) {
-        scrollPlugin(list, matches, text);
-      }
+    });
+    if (lastSearch !== text && scroll) {
+      scrollPlugin(list, matches, text);
     }
     matches.forEach(function (plugin) {
       plugin.classList.add("app-setup-wizard__picker-item--match");
@@ -873,13 +853,6 @@ var createPluginSetupWizard = function (appendTarget) {
       searchbox.value = value;
     }
     searchForPlugins(value, false);
-  };
-
-  var toggleSelectedSearch = function () {
-    var searchbox = find("input[name=searchbox]");
-    setSearch(
-      searchbox && searchbox.value === "show:selected" ? "" : "show:selected",
-    );
   };
 
   var selectCategory = function () {
@@ -1099,19 +1072,6 @@ var createPluginSetupWizard = function (appendTarget) {
     },
     ".toggle-install-details": toggleInstallDetails,
     ".install-done": finishInstallation,
-    ".plugin-select-all": function () {
-      selectedPluginNames = allPluginNames.slice();
-      refreshPluginSelectionPanel();
-    },
-    ".plugin-select-none": function () {
-      selectedPluginNames = [];
-      refreshPluginSelectionPanel();
-    },
-    ".plugin-select-recommended": function () {
-      selectedPluginNames = pluginManager.recommendedPluginNames();
-      refreshPluginSelectionPanel();
-    },
-    ".plugin-show-selected": toggleSelectedSearch,
     ".select-category": selectCategory,
     ".resume-installation": resumeInstallation,
     ".install-done-restart": restartJenkins,
@@ -1188,7 +1148,6 @@ var createPluginSetupWizard = function (appendTarget) {
         pluginManager.init(
           handleGenericError(function () {
             pluginList = pluginManager.plugins();
-            allPluginNames = pluginManager.pluginNames();
             selectedPluginNames = pluginManager.recommendedPluginNames();
 
             pluginManager.installStatus(

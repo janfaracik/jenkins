@@ -40,7 +40,7 @@ $wizard-border: var(--jenkins-border-width) solid
   &__version {
     position: absolute;
     right: var(--section-padding);
-    bottom: 0.9rem;
+    bottom: var(--section-padding);
     color: var(--text-color-secondary);
     font-size: var(--font-size-sm);
   }
@@ -71,7 +71,7 @@ $wizard-border: var(--jenkins-border-width) solid
 
     &--picker {
       display: grid;
-      grid-template-columns: 20rem 1fr;
+      grid-template-columns: 22rem 1fr;
       overflow: hidden;
 
       @media (width <= 768px) {
@@ -259,12 +259,6 @@ $wizard-border: var(--jenkins-border-width) solid
     min-height: 0;
   }
 
-  &__picker-actions {
-    display: flex;
-    gap: 0.75rem;
-    white-space: nowrap;
-  }
-
   &__search {
     flex: 1;
 
@@ -275,6 +269,8 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__selected-info {
+    margin-left: auto;
+    color: var(--text-color-secondary);
     white-space: nowrap;
   }
 
