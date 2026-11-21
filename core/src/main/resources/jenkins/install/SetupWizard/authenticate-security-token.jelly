@@ -11,9 +11,12 @@
           <div class="app-setup-wizard__dialog">
             <div class="app-setup-wizard__body app-setup-wizard__body--unlock">
               <div class="app-setup-wizard__unlock">
-                <l:app-bar title="${%authenticate-security-token.unlock.jenkins}" />
+                <l:app-bar title="${%authenticate-security-token.unlock.jenkins}">
+                  <a href="https://www.jenkins.io/redirect/find-jenkins-logs" target="_blank" rel="noopener noreferrer" class="jenkins-button" title="${%authenticate-security-token.help}" aria-label="${%authenticate-security-token.help}">
+                    <l:icon src="symbol-help-circle" />
+                  </a>
+                </l:app-bar>
                 <p class="app-setup-wizard__lead">${%jenkins.install.findSecurityTokenMessage(it.initialAdminPasswordFile)}</p>
-                <p>${%authenticate-security-token.copy.password}</p>
                 <j:if test="${error}">
                   <div class="jenkins-alert jenkins-alert-danger">
                     <strong>${%authenticate-security-token.error}</strong> ${%authenticate-security-token.password.incorrect}
