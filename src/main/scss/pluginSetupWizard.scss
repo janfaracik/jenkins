@@ -62,7 +62,7 @@ $wizard-border: var(--jenkins-border-width) solid
   }
 
   &__frame {
-    width: calc(100% + 0.5rem);
+    width: 960px;
     height: 0;
     border: none;
   }
@@ -84,7 +84,8 @@ $wizard-border: var(--jenkins-border-width) solid
     }
 
     > .app-setup-wizard__frame {
-      margin: -0.25rem;
+      margin-block: -0.25rem;
+      margin-inline: calc((100% - 960px) / 2);
     }
 
     .jenkins-form-item {
@@ -290,6 +291,9 @@ $wizard-border: var(--jenkins-border-width) solid
 }
 
 .app-setup-wizard-frame {
+  width: 100%;
+  max-width: calc(450px + 0.5rem);
+  margin-inline: auto;
   padding: 0.25rem;
 
   .jenkins-form-item {
@@ -298,12 +302,6 @@ $wizard-border: var(--jenkins-border-width) solid
 
   .jenkins-form-item + .jenkins-form-item {
     margin-top: 1rem;
-  }
-
-  input,
-  textarea,
-  select {
-    font-size: var(--font-size-sm);
   }
 
   .has-error .jenkins-input {
