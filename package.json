@@ -16,6 +16,7 @@
     "start": "yarn dev --watch",
     "test": "vitest run",
     "test:watch": "vitest",
+    "wizard:mock": "node src/test/setup-wizard/mock-server.mjs",
     "lint:js": "eslint . && prettier --check .",
     "lint:js-ci": "eslint . -f checkstyle -o target/eslint-warnings.xml",
     "lint:css": "stylelint src/main/scss",

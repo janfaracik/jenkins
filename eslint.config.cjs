@@ -110,6 +110,7 @@ module.exports = [
       "postcss.config.js",
       "webpack.config.js",
       ".stylelintrc.js",
+      "src/test/setup-wizard/**/*.mjs",
     ],
     languageOptions: {
       globals: {

@@ -1,0 +1,380 @@
+import http from "node:http";
+
+const PORT = Number(process.env.PORT || 8099);
+const TARGET = new URL(process.env.TARGET || "http://localhost:8080");
+const PREFIX = process.env.PREFIX ?? "/jenkins";
+const STEP_MS = Number(process.env.STEP_MS || 120);
+
+const SCENARIOS = {
+  happy: "Everything installs",
+  failures: "Some plugins fail to install",
+  restart: "Plugins need a restart",
+  offline: "No connection to the update site",
+  resume: "Resume an interrupted install",
+  "install-error": "Starting the install fails",
+  "user-error": "Creating the first user fails validation",
+  "url-error": "Instance URL fails validation",
+  slow: "Every request takes 3 seconds",
+};
+
+const FAILING = new Set(["git", "gradle", "ldap", "email-ext"]);
+
+let state;
+let metadata;
+
+function reset(scenario = "happy") {
+  state = {
+    scenario,
+    installState: "NEW",
+    jobs: [],
+    startedAt: 0,
+    restartAt: 0,
+    restarted: false,
+    proxyConfigured: false,
+    completed: false,
+  };
+}
+reset();
+
+function ok(data) {
+  return { status: "ok", data };
+}
+
+function sendJson(res, body, status = 200) {
+  res.writeHead(status, { "Content-Type": "application/json;charset=UTF-8" });
+  res.end(JSON.stringify(body));
+}
+
+function readBody(req) {
+  return new Promise((resolve) => {
+    let body = "";
+    req.on("data", (chunk) => (body += chunk));
+    req.on("end", () => resolve(body));
+  });
+}
+
+function fetchTarget(path) {
+  return fetch(new URL(PREFIX + path, TARGET), {
+    headers: { "Accept-Encoding": "identity" },
+  });
+}
+
+async function loadMetadata() {
+  if (metadata) {
+    return metadata;
+  }
+  const response = await fetchTarget("/pluginManager/plugins");
+  const json = await response.json();
+  metadata = new Map(json.data.map((p) => [p.name, p]));
+  return metadata;
+}
+
+function withDependencies(names) {
+  const ordered = [];
+  const seen = new Set();
+  const visit = (name) => {
+    if (seen.has(name)) {
+      return;
+    }
+    seen.add(name);
+    const plugin = metadata.get(name);
+    for (const dep of Object.keys(plugin?.dependencies || {})) {
+      if (metadata.has(dep)) {
+        visit(dep);
+      }
+    }
+    ordered.push(name);
+  };
+  names.forEach(visit);
+  return ordered;
+}
+
+function jobStatus(index, now) {
+  const elapsed = now - state.startedAt;
+  const done = (index + 1) * STEP_MS;
+  if (elapsed < index * STEP_MS) {
+    return "Pending";
+  }
+  if (elapsed < done) {
+    return "Installing";
+  }
+  const job = state.jobs[index];
+  if (state.scenario === "failures" && FAILING.has(job.name)) {
+    return "Failure";
+  }
+  if (state.scenario === "restart") {
+    return "SuccessButRequiresRestart";
+  }
+  return "Success";
+}
+
+function installStatus() {
+  const now = Date.now();
+  const jobs = state.jobs.map((job, i) => {
+    const installStatus = jobStatus(i, now);
+    return {
+      ...job,
+      installStatus,
+      requiresRestart: String(installStatus === "SuccessButRequiresRestart"),
+    };
+  });
+  const finished = jobs.every((j) => /Success|Failure/.test(j.installStatus));
+  const failed = jobs.some((j) => j.installStatus === "Failure");
+  if (
+    state.installState === "INITIAL_PLUGINS_INSTALLING" &&
+    finished &&
+    !failed
+  ) {
+    state.installState = "CREATE_ADMIN_USER";
+  }
+  return ok({ state: state.installState, jobs });
+}
+
+function restartStatus() {
+  const restartRequired =
+    state.scenario === "restart" &&
+    state.jobs.length > 0 &&
+    !(state.restartAt && Date.now() > state.restartAt);
+  return ok({ restartRequired, restartSupported: true });
+}
+
+function formParam(body, name) {
+  return new URLSearchParams(body).get(name);
+}
+
+const mocks = {
+  "GET /updateCenter/connectionStatus": () => {
+    const offline = state.scenario === "offline" && !state.proxyConfigured;
+    const status = offline ? "ERROR" : "OK";
+    return ok({ updatesite: status, internet: status });
+  },
+  "GET /updateCenter/installStatus": installStatus,
+  "GET /updateCenter/incompleteInstallStatus": () => {
+    if (state.scenario !== "resume" || state.jobs.length > 0) {
+      return ok({});
+    }
+    return ok({
+      "cloudbees-folder": "Success",
+      "antisamy-markup-formatter": "Success",
+      "build-timeout": "Pending",
+      "credentials-binding": "Pending",
+      timestamper: "Pending",
+    });
+  },
+  "POST /pluginManager/installPlugins": async (body) => {
+    if (state.scenario === "install-error") {
+      return {
+        status: "error",
+        message: "Mock: the update site rejected the request",
+      };
+    }
+    await loadMetadata();
+    const selected = JSON.parse(body).plugins || [];
+    const correlationId = "mock-" + Date.now();
+    const known = selected.filter((n) => metadata.has(n));
+    state.jobs = withDependencies(known).map((name) => {
+      const plugin = metadata.get(name);
+      return {
+        name,
+        version: plugin.version || "1.0",
+        title: plugin.title || name,
+        ...(selected.includes(name) ? { correlationId } : {}),
+      };
+    });
+    state.startedAt = Date.now();
+    state.installState =
+      state.jobs.length > 0
+        ? "INITIAL_PLUGINS_INSTALLING"
+        : "CREATE_ADMIN_USER";
+    return ok({ correlationId });
+  },
+  "POST /pluginManager/installPluginsDone": () => {
+    state.installState = "CREATE_ADMIN_USER";
+    return ok({});
+  },
+  "POST /pluginManager/proxyConfigure": () => {
+    state.proxyConfigured = true;
+    return "";
+  },
+  "POST /setupWizard/createAdminUser": async (body, res) => {
+    if (state.scenario === "user-error") {
+      const page = await (
+        await fetchTarget("/setupWizard/setupWizardFirstUser")
+      ).text();
+      const banner =
+        '<div class="error" style="margin:1rem 0">Mock: password and confirmation do not match</div>';
+      res.writeHead(422, { "Content-Type": "text/html;charset=UTF-8" });
+      res.end(page.replace(/(<form[^>]*>)/, `$1${banner}`));
+      return undefined;
+    }
+    state.installState = "CONFIGURE_INSTANCE";
+    return ok({ crumbRequestField: "Jenkins-Crumb", crumb: "mock-crumb" });
+  },
+  "POST /setupWizard/configureInstance": (body) => {
+    const json = JSON.parse(formParam(body, "json") || "{}");
+    const rootUrl = json.rootUrl ?? formParam(body, "rootUrl") ?? "";
+    if (state.scenario === "url-error" || !/^https?:\/\//.test(rootUrl)) {
+      return {
+        status: "error",
+        message: "Mock: validation failed",
+        data: { rootUrl: "Mock: please provide a valid URL" },
+      };
+    }
+    state.installState = "INITIAL_SETUP_COMPLETED";
+    return ok({ crumbRequestField: "Jenkins-Crumb", crumb: "mock-crumb" });
+  },
+  "POST /setupWizard/completeInstall": () => {
+    state.completed = true;
+    state.installState = "RUNNING";
+    return ok({});
+  },
+  "GET /setupWizard/restartStatus": restartStatus,
+  "POST /updateCenter/safeRestart": () => {
+    state.restartAt = Date.now() + 3000;
+    return "";
+  },
+};
+
+function panel() {
+  const links = Object.entries(SCENARIOS)
+    .map(
+      ([name, label]) =>
+        `<a href="${PREFIX}/__mock/scenario/${name}" title="${label}" style="display:block;padding:2px 0;color:${
+          name === state.scenario ? "#fff;font-weight:600" : "#bbb"
+        }">${name}</a>`,
+    )
+    .join("");
+  return `<div style="position:fixed;left:12px;bottom:12px;z-index:2147483647;background:#222;color:#fff;font:12px/1.4 system-ui;padding:10px 12px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.3)"><strong>Wizard mock</strong> · ${state.installState}${links}</div>`;
+}
+
+async function serveWizardPage(res) {
+  const response = await fetchTarget("/setupWizard/");
+  const html = await response.text();
+  const assets =
+    `<link rel="stylesheet" href="${PREFIX}/jsbundles/pluginSetupWizard.css" type="text/css" />` +
+    `<script src="${PREFIX}/jsbundles/pluginSetupWizard.js" type="text/javascript"></script>`;
+  const injected = html.includes("jsbundles/pluginSetupWizard.js")
+    ? html
+    : html.replace("</body>", `${assets}</body>`);
+  res.writeHead(200, { "Content-Type": "text/html;charset=UTF-8" });
+  res.end(injected.replace("</body>", `${panel()}</body>`));
+}
+
+function proxy(req, res) {
+  const headers = { ...req.headers, host: TARGET.host };
+  delete headers["accept-encoding"];
+  const upstream = http.request(
+    {
+      hostname: TARGET.hostname,
+      port: TARGET.port,
+      path: req.url,
+      method: req.method,
+      headers,
+    },
+    (up) => {
+      const out = { ...up.headers };
+      if (out.location) {
+        out.location = out.location.replace(
+          TARGET.origin,
+          `http://localhost:${PORT}`,
+        );
+      }
+      res.writeHead(up.statusCode, out);
+      up.pipe(res);
+    },
+  );
+  upstream.on("error", (e) => {
+    res.writeHead(502, { "Content-Type": "text/plain" });
+    res.end(`Mock: cannot reach ${TARGET.origin} (${e.message})`);
+  });
+  upstream.end();
+}
+
+const server = http.createServer((req, res) => {
+  handle(req, res).catch((e) => {
+    console.error(
+      `error ${req.method} ${req.url}: ${e.cause?.code || e.message}`,
+    );
+    if (!res.headersSent) {
+      res.writeHead(502, { "Content-Type": "text/plain" });
+    }
+    res.end(
+      `Mock: cannot reach ${TARGET.origin}${PREFIX} (${e.cause?.code || e.message})`,
+    );
+  });
+});
+
+async function handle(req, res) {
+  const url = new URL(req.url, `http://localhost:${PORT}`);
+  if (!url.pathname.startsWith(PREFIX)) {
+    res.writeHead(302, { Location: `${PREFIX}/setupWizard/` });
+    res.end();
+    return;
+  }
+  const path = url.pathname.slice(PREFIX.length) || "/";
+
+  const scenario = path.match(/^\/__mock\/scenario\/([\w-]+)$/);
+  if (scenario) {
+    reset(SCENARIOS[scenario[1]] ? scenario[1] : "happy");
+    console.log(`scenario: ${state.scenario}`);
+    res.writeHead(302, { Location: `${PREFIX}/setupWizard/` });
+    res.end();
+    return;
+  }
+
+  if (
+    state.scenario === "slow" &&
+    !path.startsWith("/jsbundles") &&
+    !path.startsWith("/static")
+  ) {
+    await new Promise((r) => setTimeout(r, 3000));
+  }
+
+  if (req.method === "GET" && path === "/" && !state.completed) {
+    res.writeHead(302, { Location: `${PREFIX}/setupWizard/` });
+    res.end();
+    return;
+  }
+
+  if (req.method === "GET" && path === "/setupWizard/") {
+    await serveWizardPage(res);
+    return;
+  }
+
+  const mock = mocks[`${req.method} ${path}`];
+  if (mock) {
+    const body = req.method === "POST" ? await readBody(req) : "";
+    const result = await mock(body, res);
+    console.log(`mock  ${req.method} ${path}`);
+    if (result === undefined) {
+      return;
+    }
+    if (typeof result === "string") {
+      res.writeHead(200, { "Content-Type": "text/html;charset=UTF-8" });
+      res.end(result);
+      return;
+    }
+    sendJson(res, result);
+    return;
+  }
+
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    console.warn(`blocked ${req.method} ${path}`);
+    sendJson(
+      res,
+      { status: "error", message: `Mock: ${req.method} ${path} is not mocked` },
+      501,
+    );
+    return;
+  }
+
+  proxy(req, res);
+}
+
+server.listen(PORT, () => {
+  console.log(
+    `Setup wizard mock: http://localhost:${PORT}${PREFIX}/setupWizard/`,
+  );
+  console.log(`Proxying GET requests to ${TARGET.origin}${PREFIX}`);
+  console.log(`Scenarios: ${Object.keys(SCENARIOS).join(", ")}`);
+});
