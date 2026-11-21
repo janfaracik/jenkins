@@ -13,9 +13,14 @@
         <a href="#" class="plugin-select-none">{{translations.installWizard_installCustom_selectNone}}</a>
         <a href="#" class="plugin-select-recommended">{{translations.installWizard_installCustom_selectRecommended}}</a>
       </span>
-      <span class="app-setup-wizard__search">
-        <input type="search" name="searchbox" class="jenkins-input app-setup-wizard__search-input" />
-      </span>
+      <div class="jenkins-search-container app-setup-wizard__search">
+        <div class="jenkins-search">
+          <div class="jenkins-search__icon">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M221.09 64a157.09 157.09 0 10157.09 157.09A157.1 157.1 0 00221.09 64z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/><path d="M338.29 338.29L448 448" fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32"/></svg>
+          </div>
+          <input type="search" name="searchbox" class="jenkins-input jenkins-search__input app-setup-wizard__search-input" placeholder="{{translations.installWizard_installCustom_search}}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+        </div>
+      </div>
       <span id="plugin-selected-info" class="app-setup-wizard__selected-info" data-selected-plugins="{{#each selectedPlugins}}{{this}},{{/each}}">
         <a href="#" class="plugin-show-selected">{{translations.installWizard_installCustom_selected}}</a> {{totalPluginCount}}
       </span>
