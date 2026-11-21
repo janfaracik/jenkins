@@ -23,7 +23,8 @@ const UPDATES_JSON =
   );
 
 const SCENARIOS = {
-  happy: "Everything installs",
+  unlock: "Start at the unlock page",
+  plugins: "Start at plugin selection, everything installs",
   failures: "Some plugins fail to install",
   restart: "Plugins need a restart",
   offline: "No connection to the update site",
@@ -54,7 +55,7 @@ const FAILING = new Set(["git", "gradle", "ldap", "email-ext"]);
 let state;
 let metadata;
 
-function reset(scenario = "happy") {
+function reset(scenario = "unlock") {
   state = {
     scenario,
     installState: "NEW",
@@ -448,9 +449,9 @@ async function handle(req, res) {
 
   const scenario = path.match(/^\/__mock\/scenario\/([\w-]+)$/);
   if (scenario) {
-    reset(SCENARIOS[scenario[1]] ? scenario[1] : "happy");
+    reset(SCENARIOS[scenario[1]] ? scenario[1] : "unlock");
     console.log(`scenario: ${state.scenario}`);
-    if (state.scenario === "happy") {
+    if (state.scenario === "unlock") {
       redirect(res, "/login");
       return;
     }
