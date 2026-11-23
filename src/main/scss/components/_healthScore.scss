@@ -32,6 +32,7 @@
     min-width: 2.375rem;
     min-height: 2.375rem;
     padding: 0 0.5rem;
+    border-radius: 100px;
     color: var(--healthscore-color) !important;
     font-size: var(--font-size-sm);
     font-weight: var(--font-bold-weight);
@@ -39,6 +40,10 @@
     box-shadow:
       inset 0 10px 10px color-mix(in sRGB, white 1.5%, transparent),
       var(--elevation-2-box-shadow);
+
+    &::before {
+      border: var(--jenkins-border--inherit-subtle);
+    }
   }
 
   &--top {
