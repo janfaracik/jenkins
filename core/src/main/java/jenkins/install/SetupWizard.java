@@ -629,16 +629,27 @@ public class SetupWizard extends PageDecorator implements StaplerProxy {
         }
         if (initialPluginList == null) {
             // fall back to local file
-            try {
-                ClassLoader cl = SetupWizard.class.getClassLoader();
-                URL localPluginData = cl.getResource("jenkins/install/platform-plugins.json");
-                String initialPluginJson = IOUtils.toString(localPluginData.openStream(), StandardCharsets.UTF_8);
-                initialPluginList =  JSONArray.fromObject(initialPluginJson);
-            } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            }
+            initialPluginList = loadBundledPlatformPluginList();
         }
         return initialPluginList;
+    }
+
+    /**
+     * Loads the suggested plugin list bundled with Jenkins.
+     * @return JSON array with the categorized plugin list
+     */
+    @CheckForNull
+    @Restricted(NoExternalUse.class)
+    public static JSONArray loadBundledPlatformPluginList() {
+        try {
+            ClassLoader cl = SetupWizard.class.getClassLoader();
+            URL localPluginData = cl.getResource("jenkins/install/platform-plugins.json");
+            String initialPluginJson = IOUtils.toString(localPluginData.openStream(), StandardCharsets.UTF_8);
+            return JSONArray.fromObject(initialPluginJson);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            return null;
+        }
     }
 
     /**
