@@ -86,6 +86,7 @@ import hudson.tasks.Builder;
 import hudson.tasks.Publisher;
 import hudson.tasks.UserAvatarResolver;
 import hudson.util.Area;
+import hudson.util.FormApply;
 import hudson.util.FormValidation.CheckMethod;
 import hudson.util.HudsonIsLoading;
 import hudson.util.HudsonIsRestarting;
@@ -142,7 +143,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TimeZone;
@@ -166,10 +169,14 @@ import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.SimplePageDecorator;
+import jenkins.model.Tab;
 import jenkins.model.details.Detail;
 import jenkins.model.details.DetailFactory;
 import jenkins.model.details.DetailGroup;
+import jenkins.model.menu.Group;
+import jenkins.telemetry.impl.PasswordMasking;
 import jenkins.util.SystemProperties;
+import net.sf.json.JSONObject;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyTagException;
 import org.apache.commons.jelly.Script;
@@ -178,6 +185,9 @@ import org.apache.commons.jexl.parser.ASTSizeFunction;
 import org.apache.commons.jexl.util.Introspector;
 import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconSpec;
+import org.jvnet.localizer.LocaleProvider;
+import org.jvnet.localizer.ResourceBundleHolder;
 import org.jvnet.tiger_types.Types;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
@@ -203,7 +213,18 @@ public class Functions {
     private static final AtomicLong iota = new AtomicLong();
     private static Logger LOGGER = Logger.getLogger(Functions.class.getName());
 
+    /**
+     * Escape hatch to use the non-recursive f:password masking.
+     */
+    private static /* non-final */ boolean NON_RECURSIVE_PASSWORD_MASKING_PERMISSION_CHECK = SystemProperties.getBoolean(Functions.class.getName() + ".nonRecursivePasswordMaskingPermissionCheck");
+
+
     public Functions() {
+    }
+
+    @Restricted(NoExternalUse.class)
+    public @CheckForNull FormApply.Notification getFormApplyNotification() {
+        return FormApply.getAndClearNotification(Stapler.getCurrentRequest2());
     }
 
     /**
@@ -223,6 +244,16 @@ public class Functions {
 
     public static boolean isModelWithChildren(Object o) {
         return o instanceof ModelObjectWithChildren;
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static boolean isInstanceOf(Object o, String className) {
+        try {
+            Class<?> clazz = Class.forName(className);
+            return clazz.isInstance(o);
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     @Deprecated
@@ -482,6 +513,16 @@ public class Functions {
             return base;
         }
 
+        @Restricted(NoExternalUse.class)
+        public Run getRun() {
+            return run;
+        }
+
+        @Restricted(NoExternalUse.class)
+        public String getRest() {
+            return rest;
+        }
+
         /**
          * Returns the same page in the next build.
          */
@@ -502,6 +543,34 @@ public class Functions {
             else {
                 return head + n.getNumber() + rest;
             }
+        }
+
+        /**
+         * Returns the URL of another run, relative to the context path, on the {@link Tab} the current page shows
+         * when that run has the same tab, and the run's own page otherwise.
+         * Links between related runs, such as to an upstream build, then keep the user on the view they are using.
+         *
+         * @param other the run to link to
+         * @return a URL relative to the context path, without a leading slash
+         * @since 2.591
+         */
+        public @NonNull String getSameTabUrl(@NonNull Run<?, ?> other) {
+            String tab = getTabUrlName();
+            if (tab != null) {
+                for (Action action : other.getAllActions()) {
+                    if (action instanceof Tab && tab.equals(action.getUrlName())) {
+                        return other.getUrl() + tab + '/';
+                    }
+                }
+            }
+            return other.getUrl();
+        }
+
+        private @CheckForNull String getTabUrlName() {
+            String path = rest.replaceFirst("^/+", "");
+            int slash = path.indexOf('/');
+            String segment = slash < 0 ? path : path.substring(0, slash);
+            return segment.isEmpty() ? null : segment;
         }
     }
 
@@ -571,7 +640,8 @@ public class Functions {
         String[] oldParts = prior == null ? new String[4] : logRecordPreformat(prior);
         String[] newParts = logRecordPreformat(r);
         for (int i = 0; i < /* not 4 */3; i++) {
-            newParts[i] = "<span class='" + (newParts[i].equals(oldParts[i]) ? "logrecord-metadata-old" : "logrecord-metadata-new") + "'>" + newParts[i] + "</span>";
+            String cls = newParts[i].equals(oldParts[i]) ? "logrecord-metadata-old" : "logrecord-metadata-new";
+            newParts[i] = "<span class='" + cls + "'>" + Util.xmlEscape(newParts[i]) + "</span>";
         }
         newParts[3] = Util.xmlEscape(newParts[3]);
         return newParts;
@@ -719,6 +789,41 @@ public class Functions {
 
     public static boolean isCollapsed(String paneId) {
         return PaneStatusProperties.forCurrentUser().isCollapsed(paneId);
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static long getElapsedSince(long epochMillis) {
+        return System.currentTimeMillis() - epochMillis;
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static @NonNull String formatTimeSpan(long duration) {
+        long wholeSeconds = Math.abs(duration) / 1000 * 1000;
+        if (wholeSeconds == 0) {
+            return Messages.Util_second(0);
+        }
+        return Util.getTimeSpanString(wholeSeconds);
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static @NonNull String formatTimeSpanToMinute(long duration) {
+        long minutes = Math.abs(duration) / 60_000;
+        if (minutes < 60) {
+            return Messages.Util_minute(minutes);
+        }
+        return Util.getTimeSpanString(minutes * 60_000);
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static @NonNull String getTimeSpanPatterns() {
+        Locale locale = LocaleProvider.getLocale();
+        ResourceBundle bundle = ResourceBundleHolder.get(Messages.class).get(locale);
+        JSONObject patterns = new JSONObject();
+        patterns.put("locale", locale.toLanguageTag());
+        for (String unit : List.of("second", "minute", "hour", "day", "month", "year")) {
+            patterns.put(unit, bundle.getString("Util." + unit).replace("{0}", "{0,number}"));
+        }
+        return patterns.toString();
     }
 
     @Restricted(NoExternalUse.class)
@@ -1272,11 +1377,7 @@ public class Functions {
             return hasAnyPermission((AccessControlled) object, permissions);
         else {
             AccessControlled ac = Stapler.getCurrentRequest2().findAncestorObject(AccessControlled.class);
-            if (ac != null) {
-                return hasAnyPermission(ac, permissions);
-            }
-
-            return hasAnyPermission(Jenkins.get(), permissions);
+            return hasAnyPermission(Objects.requireNonNullElseGet(ac, Jenkins::get), permissions);
         }
     }
 
@@ -1990,7 +2091,7 @@ public class Functions {
             else
                 buf.append('_');    // escape
         }
-        return String.valueOf(buf);
+        return buf.toString();
     }
 
     /**
@@ -2061,6 +2162,56 @@ public class Functions {
         if (href.endsWith("/")) href = href.substring(0, href.length() - 1);
 
         return url.endsWith(href);
+    }
+
+    /**
+     * Returns {@code true} if the current page is the page referenced by the given absolute {@code href}, or any
+     * page below it. The comparison is done on complete path segments, i.e., {@code /job/x/1/coverage} matches
+     * {@code /job/x/1/coverage/} and {@code /job/x/1/coverage/overview/}, but not {@code /job/x/1/coverage-jacoco/}.
+     * Query parameters of the current request are ignored.
+     *
+     * <p>
+     * Used in {@code tabs.jelly} to highlight a tab while one of its subpages is shown. In contrast to
+     * {@link #hyperlinkMatchesCurrentPage(String)} the given {@code href} must be an absolute path (including the
+     * context path), e.g., {@code /jenkins/job/x/1/coverage}.
+     *
+     * @param href
+     *         the absolute path of the link to check
+     *
+     * @return {@code true} if the current page is the referenced page or one of its children, {@code false} otherwise
+     */
+    @Restricted(NoExternalUse.class)
+    public boolean hyperlinkMatchesCurrentPageOrChild(String href) {
+        if (href == null || href.isEmpty()) {
+            return false;
+        }
+        String uri = Stapler.getCurrentRequest2().getRequestURI();
+        if (uri == null) {
+            return false;
+        }
+        String current = removeTrailingSlashes(decodePath(uri));
+        String link = removeTrailingSlashes(decodePath(href));
+        if (link.isEmpty()) {
+            return false;
+        }
+        return current.equals(link) || current.startsWith(link + "/");
+    }
+
+    /**
+     * Decodes the given URL path. In contrast to {@link URLDecoder#decode(String, java.nio.charset.Charset)}, which
+     * decodes {@code application/x-www-form-urlencoded} content, a literal {@code +} is preserved since it has no
+     * special meaning in a URL path.
+     */
+    private static String decodePath(String path) {
+        return URLDecoder.decode(path.replace("+", "%2B"), StandardCharsets.UTF_8);
+    }
+
+    private static String removeTrailingSlashes(String path) {
+        int end = path.length();
+        while (end > 0 && path.charAt(end - 1) == '/') {
+            end--;
+        }
+        return path.substring(0, end);
     }
 
     /**
@@ -2252,13 +2403,70 @@ public class Functions {
         StaplerRequest2 req = Stapler.getCurrentRequest2();
         if (o instanceof Secret || Secret.BLANK_NONSECRET_PASSWORD_FIELDS_WITHOUT_ITEM_CONFIGURE) {
             if (req != null) {
-                Item item = req.findAncestorObject(Item.class);
-                if (item != null && !item.hasPermission(Item.CONFIGURE)) {
-                    return "********";
-                }
-                Computer computer = req.findAncestorObject(Computer.class);
-                if (computer != null && !computer.hasPermission(Computer.CONFIGURE)) {
-                    return "********";
+                if (NON_RECURSIVE_PASSWORD_MASKING_PERMISSION_CHECK) {
+                    List<Ancestor> ancestors = req.getAncestors();
+                    String closestAncestor = ancestors.isEmpty() ? "unknown" :
+                        ancestors.getLast().getObject().getClass().getName();
+
+                    Item item = req.findAncestorObject(Item.class);
+                    if (item != null && !item.hasPermission(Item.CONFIGURE)) {
+                        PasswordMasking.recordMasking(
+                            item.getClass().getName(),
+                            closestAncestor,
+                            getJellyViewsInformationForCurrentRequest()
+                        );
+                        return "********";
+                    }
+                    Computer computer = req.findAncestorObject(Computer.class);
+                    if (computer != null && !computer.hasPermission(Computer.CONFIGURE)) {
+                        PasswordMasking.recordMasking(
+                            computer.getClass().getName(),
+                            closestAncestor,
+                            getJellyViewsInformationForCurrentRequest()
+                        );
+                        return "********";
+                    }
+                } else {
+                    List<Ancestor> ancestors = req.getAncestors();
+                    String closestAncestor = ancestors.isEmpty() ? "unknown" :
+                        ancestors.getLast().getObject().getClass().getName();
+
+                    for (Ancestor ancestor : Iterators.reverse(ancestors)) {
+                        Object type = ancestor.getObject();
+                        if (type instanceof Item item) {
+                            if (!item.hasPermission(Item.CONFIGURE)) {
+                                PasswordMasking.recordMasking(
+                                    item.getClass().getName(),
+                                    closestAncestor,
+                                    getJellyViewsInformationForCurrentRequest()
+                                );
+                                return "********";
+                            }
+                            break;
+                        }
+                        if (type instanceof Computer computer) {
+                            if (!computer.hasPermission(Computer.CONFIGURE)) {
+                                PasswordMasking.recordMasking(
+                                    computer.getClass().getName(),
+                                    closestAncestor,
+                                    getJellyViewsInformationForCurrentRequest()
+                                );
+                                return "********";
+                            }
+                            break;
+                        }
+                        if (type instanceof View view) {
+                            if (!view.hasPermission(View.CONFIGURE)) {
+                                PasswordMasking.recordMasking(
+                                    view.getClass().getName(),
+                                    closestAncestor,
+                                    getJellyViewsInformationForCurrentRequest()
+                                );
+                                return "********";
+                            }
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -2314,6 +2522,13 @@ public class Functions {
     }
 
     /**
+     * Returns true if we are in development mode.
+     */
+    public static boolean isDevelopmentMode() {
+        return Main.isDevelopmentMode;
+    }
+
+    /**
      * Returns {@code true} if the {@link Run#ARTIFACTS} permission is enabled,
      * {@code false} otherwise.
      *
@@ -2341,6 +2556,17 @@ public class Functions {
      */
     public static boolean isWipeOutPermissionEnabled() {
         return SystemProperties.getBoolean("hudson.security.WipeOutPermission");
+    }
+
+    /**
+     * Returns whether sticky positioning of UI elements should be disabled via the
+     * {@code disableStickyPositioning} cookie (primarily for UI acceptance tests).
+     * Sticky elements can otherwise float over the element under test and intercept clicks.
+     */
+    @Restricted(NoExternalUse.class)
+    public static boolean isStickyPositioningDisabled() {
+        String cookieValue = Functions.getCookie(Stapler.getCurrentRequest2(), "disableStickyPositioning", null);
+        return Boolean.valueOf(cookieValue);
     }
 
     @Deprecated
@@ -2600,10 +2826,38 @@ public class Functions {
     }
 
     /**
+     * Converts the given actions to a JSON object
+     */
+    @Restricted(NoExternalUse.class)
+    public static String convertActionsToJson(String baseUrl, List<Action> actions) {
+        ModelObjectWithContextMenu.ContextMenu contextMenu = new ModelObjectWithContextMenu.ContextMenu();
+        contextMenu.addAll(actions
+                .stream()
+                .filter(action ->
+                        action.getIconFileName() != null
+                                || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
+                ).filter(action -> action.getGroup().getOrder() < Group.FIRST_IN_MENU.getOrder())
+                .toList());
+        JSONObject jsonObject = JSONObject.fromObject(contextMenu);
+        jsonObject.put("url", Util.ensureEndsWith(baseUrl, "/"));
+        return jsonObject.toString();
+    }
+
+    /**
      * Returns a grouped list of Detail objects for the given Actionable object
      */
     @Restricted(NoExternalUse.class)
     public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object) {
+        return getDetailsFor(object, null);
+    }
+
+    /**
+     * @param context the view the details are rendered in, one of {@link Detail.Verbosity} (case-insensitive),
+     *                or {@code null} to include all details
+     */
+    @Restricted(NoExternalUse.class)
+    public static Map<DetailGroup, List<Detail>> getDetailsFor(Actionable object, @CheckForNull String context) {
+        Detail.Verbosity verbosity = context == null || context.isEmpty() ? null : Detail.Verbosity.valueOf(context.toUpperCase(Locale.ROOT));
         ExtensionList<DetailGroup> groupsExtensionList = ExtensionList.lookup(DetailGroup.class);
         List<ExtensionComponent<DetailGroup>> components = groupsExtensionList.getComponents();
         Map<String, Double> detailGroupOrdinal = components.stream()
@@ -2615,7 +2869,9 @@ public class Functions {
         Map<DetailGroup, List<Detail>> result = new TreeMap<>(Comparator.comparingDouble(d -> detailGroupOrdinal.get(d.getClass().getName())));
         for (DetailFactory taf : DetailFactory.factoriesFor(object.getClass())) {
             List<Detail> details = taf.createFor(object);
-            details.forEach(e -> result.computeIfAbsent(e.getGroup(), k -> new ArrayList<>()).add(e));
+            details.stream()
+                    .filter(e -> e.getVerbosity().isVisibleIn(verbosity))
+                    .forEach(e -> result.computeIfAbsent(e.getGroup(), k -> new ArrayList<>()).add(e));
         }
 
         for (Map.Entry<DetailGroup, List<Detail>> entry : result.entrySet()) {
@@ -2656,5 +2912,10 @@ public class Functions {
         }
 
         return MessageFormat.format(format, args);
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static String getActionEventType(Action action) {
+        return action.getEvent().getClass().getSimpleName();
     }
 }

@@ -102,6 +102,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -126,15 +127,18 @@ import jenkins.util.SystemProperties;
 import jenkins.util.ThrowingCallable;
 import jenkins.util.ThrowingRunnable;
 import jenkins.util.Timer;
+import jenkins.util.xstream.CriticalXStreamException;
 import net.jcip.annotations.GuardedBy;
 import org.jenkinsci.remoting.RoleChecker;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.Beta;
 import org.kohsuke.accmod.restrictions.DoNotUse;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
+import org.kohsuke.stapler.CancelRequestHandlingException;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -215,6 +219,16 @@ public class Queue extends ResourceController implements Saveable {
     private final ItemList<BuildableItem> pendings = new ItemList<>();
 
     private transient volatile Snapshot snapshot = new Snapshot(waitingList, blockedProjects, buildables, pendings);
+
+    /**
+     * Ids of items captured by code that cannot hold {@link #lock} at the moment of capture (e.g.
+     * {@code ParameterizedJobMixIn#makeDisabled}, which runs while holding a job's own monitor) for
+     * cancellation once {@link #lock} is next available. Tracked so {@link #scheduleInternal} can
+     * avoid folding a fresh schedule request into an item that is already on its way out --
+     * otherwise the fresh request would be canceled along with it. Entries are removed once the
+     * deferred cancellation actually runs, whether or not the item was still there to cancel.
+     */
+    private final Set<Long> itemsAwaitingDeferredCancellation = ConcurrentHashMap.newKeySet();
 
     /**
      * Items that left queue would stay here for a while to enable tracking via {@link Item#getId()}.
@@ -426,21 +440,17 @@ public class Queue extends ResourceController implements Saveable {
                     if (o instanceof Task) {
                         // backward compatibility
                         schedule((Task) o, 0);
-                    } else if (o instanceof Item) {
-                        Item item = (Item) o;
+                    } else if (o instanceof Item item) {
 
                         if (item.task == null) {
                             continue;   // botched persistence. throw this one away
                         }
 
-                        if (item instanceof WaitingItem) {
-                            item.enter(this);
-                        } else if (item instanceof BlockedItem) {
-                            item.enter(this);
-                        } else if (item instanceof BuildableItem) {
-                            item.enter(this);
-                        } else {
-                            throw new IllegalStateException("Unknown item type! " + item);
+                        switch (item) {
+                            case WaitingItem waitingItem -> item.enter(this);
+                            case BlockedItem blockedItem -> item.enter(this);
+                            case BuildableItem buildableItem -> item.enter(this);
+                            default -> throw new IllegalStateException("Unknown item type! " + item);
                         }
                     }
                 }
@@ -453,6 +463,8 @@ public class Queue extends ResourceController implements Saveable {
                 File bk = new File(queueFile.getPath() + ".bak");
                 Files.move(queueFile.toPath(), bk.toPath(), StandardCopyOption.REPLACE_EXISTING);
             }
+        } catch (CriticalXStreamException e) {
+            LOGGER.log(Level.WARNING, "Failed to load the queue file due to a security policy violation; starting with an empty queue. " + getXMLQueueFile(), e);
         } catch (IOException | InvalidPathException e) {
             LOGGER.log(Level.WARNING, "Failed to load the queue file " + getXMLQueueFile(), e);
         } finally { updateSnapshot(); } } finally {
@@ -621,6 +633,13 @@ public class Queue extends ResourceController implements Saveable {
             // Do we already have this task in the queue? Because if so, we won't schedule a new one.
             List<Item> duplicatesInQueue = new ArrayList<>();
             for (Item item : liveGetItems(p)) {
+                if (itemsAwaitingDeferredCancellation.contains(item.id)) {
+                    // Someone captured this item's id for cancellation once #lock is next available
+                    // (see #getCancellableItem) but hasn't gotten there yet. Don't fold this request
+                    // into it: a build requested now is a genuinely new request, not a continuation
+                    // of whatever is about to be canceled.
+                    continue;
+                }
                 boolean shouldScheduleItem = false;
                 for (QueueAction action : item.getActions(QueueAction.class)) {
                     shouldScheduleItem |= action.shouldSchedule(actions);
@@ -673,7 +692,7 @@ public class Queue extends ResourceController implements Saveable {
             // whether the new one should affect all existing ones or not is debatable. I for myself
             // thought this would only affect one, so the code was bit of surprise, but I'm keeping the current
             // behaviour.
-            return ScheduleResult.existing(duplicatesInQueue.get(0));
+            return ScheduleResult.existing(duplicatesInQueue.getFirst());
         } finally { updateSnapshot(); } } finally {
             lock.unlock();
         }
@@ -828,8 +847,7 @@ public class Queue extends ResourceController implements Saveable {
     }
 
     private static boolean hasReadPermission(Queue.Task t, boolean valueIfNotAccessControlled) {
-        if (t instanceof AccessControlled) {
-            AccessControlled taskAC = (AccessControlled) t;
+        if (t instanceof AccessControlled taskAC) {
             if (taskAC.hasPermission(hudson.model.Item.READ)
                     || taskAC.hasPermission(Permission.READ)) { // TODO should be unnecessary given the 'implies' relationship
                 return true;
@@ -869,8 +887,7 @@ public class Queue extends ResourceController implements Saveable {
     }
 
     private List<StubItem> filterDiscoverableItemListBasedOnPermissions(List<StubItem> r, Item t) {
-        if (t.task instanceof hudson.model.Item) {
-            hudson.model.Item taskAsItem = (hudson.model.Item) t.task;
+        if (t.task instanceof hudson.model.Item taskAsItem) {
             if (!taskAsItem.hasPermission(hudson.model.Item.READ)
                     && taskAsItem.hasPermission(hudson.model.Item.DISCOVER)) {
                 r.add(new StubItem(new StubTask(t.task)));
@@ -1106,6 +1123,68 @@ public class Queue extends ResourceController implements Saveable {
     }
 
     /**
+     * Finds the queue item for {@code t}, if any, that {@link #cancel(Task)} would cancel: the
+     * first match in {@link #waitingList}, else the first match among {@link #blockedProjects} or
+     * {@link #buildables}. Unlike {@link #getItem(Task)}, never returns a {@link #pendings} item --
+     * cancelling one of those is a no-op, so preferring it over a genuinely cancelable item (as
+     * {@link #getItem(Task)} does, for display purposes) would silently fail to cancel anything.
+     *
+     * <p>Reads the lock-free {@link #snapshot}, so safe to call without {@link #lock} held -- e.g.
+     * from code that must not acquire {@link #lock} while holding some other lock also taken in
+     * the opposite order elsewhere (see {@code ParameterizedJobMixIn#makeDisabled}).
+     *
+     * Skips any item already captured for deferred cancellation ({@link #markPendingCancellation}):
+     * it is still present in this lock-free snapshot until its own deferred task actually runs, so
+     * without this exclusion a second disable (e.g. disable, re-enable, reschedule, disable again,
+     * all before either deferred task gets {@link #lock}) would keep re-selecting that same stale
+     * item instead of the newer live one that the second disable actually needs to cancel.
+     *
+     * @return null if there is nothing cancelable queued for {@code t}.
+     */
+    @Restricted(NoExternalUse.class)
+    public @CheckForNull Item getCancellableItem(Task t) {
+        Snapshot snapshot = this.snapshot;
+        for (Item item : snapshot.waitingList) {
+            if (item.task.equals(t) && !itemsAwaitingDeferredCancellation.contains(item.id)) {
+                return item;
+            }
+        }
+        for (Item item : snapshot.blockedProjects) {
+            if (item.task.equals(t) && !itemsAwaitingDeferredCancellation.contains(item.id)) {
+                return item;
+            }
+        }
+        for (Item item : snapshot.buildables) {
+            if (item.task.equals(t) && !itemsAwaitingDeferredCancellation.contains(item.id)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Marks {@code id} so {@link #scheduleInternal} will not fold a new schedule request into it.
+     * Call right after capturing an item's id for deferred cancellation (see
+     * {@link #getCancellableItem}), before {@link #lock} is available to actually cancel it, so a
+     * build requested in the meantime gets a genuinely new item instead of reusing the one that is
+     * about to be canceled.
+     */
+    @Restricted(NoExternalUse.class)
+    public void markPendingCancellation(long id) {
+        itemsAwaitingDeferredCancellation.add(id);
+    }
+
+    /**
+     * Reverses {@link #markPendingCancellation}. Call once the deferred cancellation this id was
+     * captured for has actually run, whether or not the item was still there to cancel --
+     * otherwise the id would stay excluded from deduplication forever.
+     */
+    @Restricted(NoExternalUse.class)
+    public void clearPendingCancellation(long id) {
+        itemsAwaitingDeferredCancellation.remove(id);
+    }
+
+    /**
      * Gets the information about the queue item for the given project.
      *
      * @return null if the project is not in the queue.
@@ -1278,7 +1357,7 @@ public class Queue extends ResourceController implements Saveable {
      * than locking directly on Queue in order to allow for future refactoring.
      * @param runnable the operation to perform.
      * @throws T if the runnable throws an exception.
-     * @since TODO
+     * @since 2.534
      */
     public static <T extends Throwable> void runWithLock(ThrowingRunnable<T> runnable) throws T {
         final Jenkins jenkins = Jenkins.getInstanceOrNull();
@@ -1315,7 +1394,7 @@ public class Queue extends ResourceController implements Saveable {
      * @param <T>      the type of exception.
      * @return the result of the callable.
      * @throws T the exception of the callable
-     * @since TODO
+     * @since 2.534
      */
     public static <V, T extends Throwable> V callWithLock(ThrowingCallable<V, T> callable) throws T {
         final Jenkins jenkins = Jenkins.getInstanceOrNull();
@@ -1454,7 +1533,7 @@ public class Queue extends ResourceController implements Saveable {
      * @param runnable the operation to perform.
      * @param <T>      the type of exception.
      * @throws T the exception of the runnable
-     * @since TODO
+     * @since 2.534
      */
     @Override
     protected <T extends Throwable> void _runWithLock(ThrowingRunnable<T> runnable) throws T {
@@ -1531,7 +1610,7 @@ public class Queue extends ResourceController implements Saveable {
      * @param <T>      the type of exception.
      * @return the result of the callable.
      * @throws T the exception of the callable
-     * @since TODO
+     * @since 2.534
      */
     @Override
     protected <V, T extends Throwable> V _callWithLock(ThrowingCallable<V, T> callable) throws T {
@@ -2263,7 +2342,7 @@ public class Queue extends ResourceController implements Saveable {
      * Item in a queue.
      */
     @ExportedBean(defaultVisibility = 999)
-    public abstract static class Item extends Actionable implements QueueItem {
+    public abstract static class Item extends Actionable implements QueueItem, StaplerProxy {
 
         private final long id;
 
@@ -2405,14 +2484,25 @@ public class Queue extends ResourceController implements Saveable {
             return Collections.emptyList();
         }
 
+        private Map<Cause, Integer> getCauseCounts() {
+            CauseAction ca = getAction(CauseAction.class);
+            if (ca != null)
+                return ca.getCauseCounts();
+            return Collections.emptyMap();
+        }
+
         @Restricted(DoNotUse.class) // used from Jelly
         @Override
         public String getCausesDescription() {
-            List<Cause> causes = getCauses();
+            Map<Cause, Integer> causeCounts = getCauseCounts();
             StringBuilder s = new StringBuilder();
-            for (Cause c : causes) {
-                s.append(c.getShortDescription()).append('\n');
-            }
+            causeCounts.forEach((ca, count) -> {
+                s.append(ca.getShortDescription());
+                if (count > 1) {
+                    s.append(" ").append(Messages._Queue_Ntimes(count));
+                }
+                s.append('\n');
+            });
             return s.toString();
         }
 
@@ -2486,6 +2576,9 @@ public class Queue extends ResourceController implements Saveable {
         @Deprecated
         @RequirePOST
         public HttpResponse doCancelQueue() {
+            if (!hasReadPermission(this, true)) {
+                throw new CancelRequestHandlingException();
+            }
             if (hasCancelPermission()) {
                 Jenkins.get().getQueue().cancel(this);
             }
@@ -2521,10 +2614,24 @@ public class Queue extends ResourceController implements Saveable {
             return org.acegisecurity.Authentication.fromSpring(authenticate2());
         }
 
+        @Restricted(DoNotUse.class) // Stapler
+        @Override
+        public Object getTarget() {
+            if (!(task instanceof AccessControlled ac)) {
+                return this;
+            }
+            if (!ac.hasPermission(hudson.model.Item.DISCOVER)) {
+                return null;
+            }
+            if (!ac.hasPermission(hudson.model.Item.READ)) {
+                throw new AccessDeniedException("Please log in to access " + task.getUrl());
+            }
+            return this;
+        }
+
         @Restricted(DoNotUse.class) // only for Stapler export
         public Api getApi() throws AccessDeniedException {
-            if (task instanceof AccessControlled) {
-                AccessControlled ac = (AccessControlled) task;
+            if (task instanceof AccessControlled ac) {
                 if (!ac.hasPermission(hudson.model.Item.DISCOVER)) {
                     return null; // same as getItem(long) returning null (details are printed only in case of -Dstapler.trace=true)
                 } else if (!ac.hasPermission(hudson.model.Item.READ)) {

@@ -661,7 +661,6 @@ public abstract class SecurityRealm implements Describable<SecurityRealm>, Exten
             BasicAuthenticationEntryPoint basicAuthenticationEntryPoint = new BasicAuthenticationEntryPoint();
             basicAuthenticationEntryPoint.setRealmName("Jenkins");
             bhp.setAuthenticationEntryPoint(basicAuthenticationEntryPoint);
-            bhp.setRememberMeServices(sc.rememberMe2);
             filters.add(bhp);
         }
         {
@@ -678,7 +677,9 @@ public abstract class SecurityRealm implements Describable<SecurityRealm>, Exten
             apf.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler("/loginError"));
             filters.add(apf);
         }
-        filters.add(new RememberMeAuthenticationFilter(sc.manager2, sc.rememberMe2));
+        final RememberMeAuthenticationFilter rememberMe = new RememberMeAuthenticationFilter(sc.manager2, sc.rememberMe2);
+        rememberMe.setSessionAuthenticationStrategy(new SessionFixationProtectionStrategy());
+        filters.add(rememberMe);
         filters.addAll(commonFilters());
         return new ChainedServletFilter2(filters);
     }
@@ -757,16 +758,8 @@ public abstract class SecurityRealm implements Describable<SecurityRealm>, Exten
     private static class None extends SecurityRealm {
         @Override
         public SecurityComponents createSecurityComponents() {
-            return new SecurityComponents(new AuthenticationManager() {
-                @Override
-                public Authentication authenticate(Authentication authentication) {
-                    return authentication;
-                }
-            }, new UserDetailsService() {
-                @Override
-                public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                    throw new UsernameNotFoundException(username);
-                }
+            return new SecurityComponents((AuthenticationManager) authentication -> authentication, username -> {
+                throw new UsernameNotFoundException(username);
             });
         }
 

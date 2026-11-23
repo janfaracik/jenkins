@@ -67,7 +67,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 import java.util.logging.Level;
@@ -86,7 +85,6 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
-import org.kohsuke.accmod.restrictions.DoNotUse;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.HttpResponse;
@@ -194,11 +192,7 @@ public class UpdateSite {
     @Deprecated
     public @CheckForNull Future<FormValidation> updateDirectly(final boolean signatureCheck) {
         if (! getDataFile().exists() || isDue()) {
-            return Jenkins.get().getUpdateCenter().updateService.submit(new Callable<>() {
-                @Override public FormValidation call() throws Exception {
-                    return updateDirectlyNow(signatureCheck);
-                }
-            });
+            return Jenkins.get().getUpdateCenter().updateService.submit(() -> updateDirectlyNow(signatureCheck));
         } else {
             return null;
         }
@@ -294,7 +288,29 @@ public class UpdateSite {
      */
     @Restricted(NoExternalUse.class)
     public final FormValidation verifySignatureInternal(JSONObject o) throws IOException {
-        return getJsonSignatureValidator().verifySignature(o);
+        FormValidation result = getJsonSignatureValidator(null).verifySignature(o);
+
+        if (result.kind == FormValidation.Kind.ERROR) {
+            String message = result.getMessage();
+            if (message != null) {
+//                String siteUrl = getUrl();
+                String updatedMessage;
+
+                if (message.contains("update site") && message.contains(" Path") && !message.contains(url)) {
+                    // Ensure the update site URL is included in error messages by replacing the site identifier in messages of the 'update site … Path' pattern or appending it otherwise.
+                    updatedMessage = message.replaceAll(
+                            "(update site\\s+).*?(\\s+Path)",
+                            "$1" + url + "$2"
+                    );
+                } else {
+                    // Do not alter message structure; only add URL context
+                    updatedMessage = message + " (URL: " + url + ")";
+                }
+                return FormValidation.error(updatedMessage);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -1048,9 +1064,7 @@ public class UpdateSite {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Warning)) return false;
-
-            Warning warning = (Warning) o;
+            if (!(o instanceof Warning warning)) return false;
 
             return id.equals(warning.id);
         }
@@ -1178,8 +1192,7 @@ public class UpdateSite {
         }
 
         private static IssueTracker createFromJSONObject(Object o) {
-            if (o instanceof JSONObject) {
-                JSONObject jsonObject = (JSONObject) o;
+            if (o instanceof JSONObject jsonObject) {
                 if (jsonObject.has("type") && jsonObject.has("viewUrl") && jsonObject.has("reportUrl")) {
                     return new IssueTracker(jsonObject.getString("type"), jsonObject.getString("viewUrl"), jsonObject.getString("reportUrl"));
                 }
@@ -1208,6 +1221,12 @@ public class UpdateSite {
          */
         @Exported
         public final String excerpt;
+        /**
+         * {@link #name} and {@link #title} normalized by {@link UpdateSite#normalizeForSearch(String)}.
+         * Computed once when update site data is loaded rather than on every search.
+         */
+        private final String searchName;
+        private final String searchTitle;
         /**
          * Optional version # from which this plugin release is configuration-compatible.
          */
@@ -1279,6 +1298,8 @@ public class UpdateSite {
             this.wiki = get(o, "wiki");
             this.title = get(o, "title");
             this.excerpt = get(o, "excerpt");
+            this.searchName = normalizeForSearch(name);
+            this.searchTitle = normalizeForSearch(getDisplayName());
             this.compatibleSinceVersion = Util.intern(get(o, "compatibleSinceVersion"));
             this.requiredCore = Util.intern(get(o, "requiredCore"));
             final String releaseTimestamp = get(o, "releaseTimestamp");
@@ -1329,6 +1350,32 @@ public class UpdateSite {
                 }
             }
 
+        }
+
+        /**
+         * Counts how many of the given words appear in this plugin's name or title.
+         *
+         * @param normalizedWords words already normalized by {@link UpdateSite#normalizeForSearch(String)}
+         */
+        @Restricted(NoExternalUse.class)
+        public int countSearchMatches(String[] normalizedWords) {
+            int matches = 0;
+            for (String word : normalizedWords) {
+                if (searchName.contains(word) || searchTitle.contains(word)) {
+                    matches++;
+                }
+            }
+            return matches;
+        }
+
+        /**
+         * Whether this plugin's name or title is exactly the given query, ignoring case and punctuation.
+         *
+         * @param normalizedQuery a query already normalized by {@link UpdateSite#normalizeForSearch(String)}
+         */
+        @Restricted(NoExternalUse.class)
+        public boolean isExactSearchMatch(String normalizedQuery) {
+            return searchName.equals(normalizedQuery) || searchTitle.equals(normalizedQuery);
         }
 
         @Restricted(NoExternalUse.class)
@@ -1622,7 +1669,7 @@ public class UpdateSite {
         /**
          * @since 2.40
          */
-        @Restricted(DoNotUse.class)
+        @Restricted(NoExternalUse.class)
         public boolean hasWarnings() {
             return !getWarnings().isEmpty();
         }
@@ -1740,6 +1787,20 @@ public class UpdateSite {
             deployBackup();
             return HttpResponses.redirectTo("../..");
         }
+    }
+
+    private static final Pattern SEARCH_SEPARATORS = Pattern.compile("[^\\p{L}\\p{N}]+");
+
+    /**
+     * Lower-cases text and collapses everything other than letters and digits into single spaces,
+     * so that {@code workflow-cps} and {@code Pipeline: Groovy} become {@code workflow cps} and {@code pipeline groovy}.
+     */
+    @Restricted(NoExternalUse.class)
+    public static String normalizeForSearch(@CheckForNull String text) {
+        if (text == null) {
+            return "";
+        }
+        return SEARCH_SEPARATORS.matcher(text.toLowerCase(Locale.ROOT)).replaceAll(" ").strip();
     }
 
     private static final long DAY = DAYS.toMillis(1);

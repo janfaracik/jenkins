@@ -27,7 +27,6 @@ package jenkins.security.stapler;
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.TestExtension;
 import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
@@ -59,8 +58,6 @@ class PreventRoutingTest extends StaplerAbstractTest {
     }
 
     @Test
-    // TODO un-ignore once we use a Stapler release with the fix for this
-    @Disabled("Does not behave as intended before https://github.com/stapler/stapler/pull/149")
     void getTargetNull_isNotRoutable() {
         assertNotReachable("target-null/legitRoutable");
     }
@@ -110,7 +107,7 @@ class PreventRoutingTest extends StaplerAbstractTest {
         StaplerRequest2 req = Stapler.getCurrentRequest2();
         if (req != null) {
             List<Ancestor> ancestors = req.getAncestors();
-            if (!ancestors.isEmpty() && ancestors.get(ancestors.size() - 1).getObject() == o) {
+            if (!ancestors.isEmpty() && ancestors.getLast().getObject() == o) {
                 throw HttpResponses.notFound();
             }
         }

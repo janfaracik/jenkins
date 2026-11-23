@@ -6,20 +6,21 @@
  */
 
 def failFast = false
+def numBuildToKeep = env.CHANGE_ID ? '10' : '50'
 
 properties([
-  buildDiscarder(logRotator(numToKeepStr: '50', artifactNumToKeepStr: '3')),
+  buildDiscarder(logRotator(numToKeepStr: numBuildToKeep, artifactNumToKeepStr: '3')),
   disableConcurrentBuilds(abortPrevious: true)
 ])
 
 def axes = [
   platforms: ['linux', 'windows'],
-  jdks: [17, 21, 25],
+  jdks: [21, 25],
 ]
 
 stage('Record build') {
   retry(conditions: [kubernetesAgent(handleNonKubernetes: true), nonresumable()], count: 2) {
-    node('maven-17') {
+    node('maven-21-nonspot') {
       infra.checkoutSCM()
 
       /*
@@ -69,13 +70,8 @@ axes.values().combinations {
     if (platform == 'windows') {
       agentContainerLabel += '-windows'
     }
-    int retryCount = 0
+    agentContainerLabel += '-nonspot'
     retry(conditions: [kubernetesAgent(handleNonKubernetes: true), nonresumable()], count: 2) {
-      if (retryCount == 1 && platform == 'windows' ) {
-        agentContainerLabel = agentContainerLabel + '-nonspot'
-      }
-      // Increment before allocating the node in case it fails
-      retryCount++
       node(agentContainerLabel) {
         // First stage is actually checking out the source. Since we're using Multibranch
         // currently, we can use "checkout scm".
@@ -85,7 +81,7 @@ axes.values().combinations {
 
         def tmpDir = pwd(tmp: true)
         def changelistF = "${tmpDir}/changelist"
-        def m2repo = "${tmpDir}/m2repo"
+        def m2repo = "${env.HOME}/.m2/repository"
         def session
 
         // Now run the actual build.
@@ -127,12 +123,17 @@ axes.values().combinations {
               mavenOptions.add(0, "-Dsurefire.excludesFile=${excludesFile}")
             }
             withChecks(name: 'Tests', includeStage: true) {
-              realtimeJUnit(healthScaleFactor: 20.0, testResults: '*/target/surefire-reports/*.xml') {
+              // Stream JUnit Platform results live; passed to the forked test JVMs by Surefire rather than JAVA_TOOL_OPTIONS,
+              // which would print to stderr in every JVM launched during the build
+              withOpenTestReporting(healthScaleFactor: 20.0, javaToolOptions: false) {
+                mavenOptions.add(0, '-Djunit.platform.reporting.open.xml.enabled=true')
+                mavenOptions.add(0, "-Djunit.platform.reporting.open.xml.socket=${env.JUNIT_OTR_SOCKET_PORT}")
                 infra.runMaven(mavenOptions, jdk)
                 if (isUnix()) {
                   sh 'git add . && git diff --exit-code HEAD'
                 }
               }
+              junit healthScaleFactor: 20.0, testResults: 'target/vitest-reports/*.xml'
             }
           }
         }
@@ -218,7 +219,7 @@ axes.values().combinations {
 
 def athAxes = [
   platforms: ['linux'],
-  jdks: [17],
+  jdks: [25],
   browsers: ['firefox'],
 ]
 athAxes.values().combinations {

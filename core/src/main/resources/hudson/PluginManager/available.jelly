@@ -27,17 +27,14 @@ THE SOFTWARE.
 -->
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:f="/lib/form" xmlns:dd="/lib/layout/dropdowns">
-  <l:layout title="${%Available plugins} - ${%Plugins}" permission="${app.SYSTEM_READ}">
-    <st:include page="sidepanel.jelly"/>
-    <!-- no need for additional breadcrumb here as the side panel offers enough functionality to browse between different pages -->
-
-    <l:main-panel>
+  <l:settings-subpage permission="${app.SYSTEM_READ}" header="${null}" includeSidepanel="true" width="wide">
       <div class="jenkins-app-bar jenkins-app-bar--sticky">
         <div class="jenkins-app-bar__content">
           <l:search-bar clazz="jenkins-search--app-bar"
                         placeholder="${%Search available plugins}"
                         id="filter-box"
                         autofocus="true"
+                        hasKeyboardShortcut="false"
                         value="${request2.getParameter('filter')}" />
         </div>
         <div class="jenkins-app-bar__controls">
@@ -65,13 +62,14 @@ THE SOFTWARE.
             </div>
           </l:isAdmin>
           <st:include page="check.jelly"/>
+          <st:include page="overflow.jelly" />
         </div>
       </div>
 
       <script src="${resURL}/jsbundles/plugin-manager-ui.js" type="text/javascript"/>
 
       <form id="form" method="post" action="install">
-        <table id="plugins" class="jenkins-table sortable update-table"
+        <table id="plugins" class="jenkins-table sortable"
                data-hasAdmin="${h.hasPermission(app.ADMINISTER)}"
                data-health="${app.updateCenter.healthScoresAvailable}">
           <thead>
@@ -95,7 +93,5 @@ THE SOFTWARE.
           <tbody/>
         </table>
       </form>
-    </l:main-panel>
-  </l:layout>
-
+  </l:settings-subpage>
 </j:jelly>

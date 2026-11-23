@@ -45,6 +45,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -88,10 +90,9 @@ import jakarta.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.management.ManagementFactory;
 import java.net.HttpURLConnection;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,7 +113,6 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.model.BlockedBecauseOfBuildInProgress;
 import jenkins.model.Jenkins;
@@ -130,9 +130,9 @@ import org.htmlunit.xml.XmlPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.LogRecorder;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
 import org.jvnet.hudson.test.MockQueueItemAuthenticator;
 import org.jvnet.hudson.test.SequenceLock;
@@ -149,8 +149,6 @@ import org.springframework.security.core.Authentication;
  */
 @WithJenkins
 public class QueueTest {
-
-    private final LogRecorder logging = new LogRecorder().record(Queue.class, Level.FINE);
 
     private JenkinsRule r;
 
@@ -172,8 +170,6 @@ public class QueueTest {
         FreeStyleProject testProject = r.createFreeStyleProject("test");
         assertNotNull(testProject.scheduleBuild2(0, new UserIdCause()));
         q.save();
-
-        System.out.println(Files.readString(r.jenkins.getRootDir().toPath().resolve("queue.xml"), StandardCharsets.UTF_8));
 
         assertEquals(1, q.getItems().length);
         q.clear();
@@ -227,8 +223,6 @@ public class QueueTest {
         FreeStyleProject testProject = r.createFreeStyleProject("test");
         assertNotNull(testProject.scheduleBuild2(0, new UserIdCause()));
         q.save();
-
-        System.out.println(Files.readString(r.jenkins.getRootDir().toPath().resolve("queue.xml"), StandardCharsets.UTF_8));
 
         assertEquals(1, q.getItems().length);
         q.clear();
@@ -298,6 +292,96 @@ public class QueueTest {
         assertTrue(q.cancel(items[0]));
         seq.done();
         r.assertBuildStatusSuccess(r.waitForCompletion(b1));
+    }
+
+    /**
+     * Reproduces a lock-ordering deadlock between {@link Queue#lock} and the
+     * {@link AbstractProject} monitor.
+     * <p>
+     * {@link Job#doConfigSubmit} (which disabling a project through the config form goes through)
+     * is {@code synchronized} on the project and, while holding that monitor, calls
+     * {@link ParameterizedJobMixIn#makeDisabled} which calls {@link Queue#cancel(Queue.Task)},
+     * which needs {@link Queue#lock}. Meanwhile {@link Executor#run} acquires {@link Queue#lock}
+     * (via {@link Queue#callWithLock} in production code) and, while still holding it, calls
+     * {@link SubTask#createExecutable} which for an {@link AbstractProject} calls the
+     * {@code synchronized} {@link AbstractProject#newBuild}. The two call chains take the same two
+     * locks in opposite order.
+     * <p>
+     * The executor side calls {@link AbstractProject#newBuild} directly, modeling an executor that
+     * already passed the {@link AbstractProject#isDisabled} check in {@link SubTask#createExecutable}
+     * before the disable landed, which is the window in which the deadlock occurs.
+     * <p>
+     * The "disable" side holds {@code synchronized (p)} directly rather than going through an
+     * actual HTTP config-form submission: {@code doConfigSubmit} is itself a plain
+     * {@code synchronized} instance method, so acquiring the same monitor by hand and then calling
+     * the real {@link ParameterizedJobMixIn#makeDisabled} reproduces the identical lock-acquisition
+     * shape without HtmlUnit's browser-side machinery in the way.
+     */
+    @Test
+    @Timeout(10)
+    void disablingProjectDoesNotDeadlockWithConcurrentQueueMaintenance() throws Exception {
+        FreeStyleProject p = r.createFreeStyleProject();
+        // Without something actually queued, makeDisabled's queued-item branch -- the new
+        // deferred-cancellation code path this test exists to cover -- is never entered at all,
+        // and the test would only prove the (already-trivial) no-op path is deadlock-free.
+        p.setAssignedLabel(r.jenkins.getLabel("nonExist"));
+        p.scheduleBuild2(0);
+
+        CountDownLatch projectMonitorHeld = new CountDownLatch(1);
+        CountDownLatch queueLockHeld = new CountDownLatch(1);
+
+        Thread disablingThread = new Thread(() -> {
+            synchronized (p) { // what Job#doConfigSubmit does
+                projectMonitorHeld.countDown();
+                try {
+                    queueLockHeld.await();
+                    p.makeDisabled(true); // calls Queue#cancel, which needs Queue#lock
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        }, "simulated doConfigSubmit disabling " + p.getName());
+
+        Thread executorThread = new Thread(() ->
+            Queue.callWithLock(() -> { // what Executor#run does to grab Queue#lock
+                queueLockHeld.countDown();
+                try {
+                    projectMonitorHeld.await();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return null;
+                }
+                try {
+                    // Not createExecutable(): it returns null without touching the project monitor once
+                    // the disable has set the flag, letting the test pass without any lock contention.
+                    return p.newBuild();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }), "simulated Executor building " + p.getName());
+
+        executorThread.setDaemon(true); // never leave a real deadlock holding up the JVM on failure
+        disablingThread.setDaemon(true);
+
+        executorThread.start();
+        disablingThread.start();
+
+        // Kept well inside @Timeout so a deadlock reports the thread ids below rather than a bare timeout.
+        disablingThread.join(3000);
+        executorThread.join(3000);
+
+        if (disablingThread.isAlive() || executorThread.isAlive()) {
+            long[] deadlocked = ManagementFactory.getThreadMXBean().findDeadlockedThreads();
+            String message = "disabling a project deadlocked against concurrent queue/executor build creation "
+                    + "(Queue#lock and the AbstractProject monitor acquired in opposite order); "
+                    + "JVM-reported deadlocked thread ids: " + Arrays.toString(deadlocked);
+            // The deadlocked threads hold Queue#lock forever, so JenkinsRule teardown hangs and the fork is
+            // killed before surefire writes a report; print first so the cause still reaches the build log.
+            System.err.println(message);
+            fail(message);
+        }
     }
 
     @Issue("JENKINS-33467")
@@ -372,7 +456,6 @@ public class QueueTest {
                         Started by remote host 4.3.2.1 with note: test
                         Started by remote host 1.2.3.4 with note: foo"""),
                    "Build page should combine duplicates and show counts: " + buildPage);
-        System.out.println(new XmlFile(new File(build.getRootDir(), "build.xml")).asString());
     }
 
     @Issue("JENKINS-8790")
@@ -480,18 +563,14 @@ public class QueueTest {
 
             // Create a task that will need to wait until the first task is complete that will fail to acquire.
             final AtomicBoolean task2Result = new AtomicBoolean(false);
-            boolean acquired = Queue.tryWithLock(() -> {
-                task2Result.set(true);
-            }, Duration.ofMillis(10));
+            boolean acquired = Queue.tryWithLock(() -> task2Result.set(true), Duration.ofMillis(10));
             assertFalse(acquired);
             assertFalse(task2Result.get());
 
             // Now release the first task and wait (with a long timeout) and we should succeed at getting the lock.
             final AtomicBoolean task3Result = new AtomicBoolean(false);
             task1Release.countDown();
-            acquired = Queue.tryWithLock(() -> {
-                task3Result.set(true);
-            }, Duration.ofSeconds(30));
+            acquired = Queue.tryWithLock(() -> task3Result.set(true), Duration.ofSeconds(30));
 
             // First task should complete
             task1.get();
@@ -526,9 +605,7 @@ public class QueueTest {
 
             // Try to acquire lock with 50ms timeout, expecting that it cannot be acquired
             final AtomicBoolean task2Complete = new AtomicBoolean(false);
-            boolean result = Queue.tryWithLock(() -> {
-                task2Complete.set(true);
-            }, Duration.ofMillis(50));
+            boolean result = Queue.tryWithLock(() -> task2Complete.set(true), Duration.ofMillis(50));
 
             // Results should indicate the task did not run
             assertFalse(result);
@@ -548,9 +625,7 @@ public class QueueTest {
         ExecutorService executor = Executors.newFixedThreadPool(2);
         try {
             final AtomicBoolean taskComplete = new AtomicBoolean(false);
-            boolean result = Queue.tryWithLock(() -> {
-                taskComplete.set(true);
-            }, Duration.ofMillis(1));
+            boolean result = Queue.tryWithLock(() -> taskComplete.set(true), Duration.ofMillis(1));
             assertTrue(result);
             assertTrue(taskComplete.get());
         } finally {
@@ -569,12 +644,7 @@ public class QueueTest {
         p.setAssignedLabel(label);
         p.scheduleBuild2(0);
 
-        // Wait 3 seconds if job is not already in the queue, reduce test flakes
-        if (!p.isInQueue()) {
-            Thread.sleep(3000);
-        }
-
-        assertTrue(p.isInQueue(), "Build not queued");
+        await().untilAsserted(() -> assertTrue(p.isInQueue(), "Build not queued"));
 
         JenkinsRule.WebClient webclient = r.createWebClient();
 
@@ -593,6 +663,7 @@ public class QueueTest {
     @Issue("JENKINS-28926")
     @Test
     void upstreamDownstreamCycle() throws Exception {
+        assumeFalse(Functions.isWindows() && System.getenv("CI") != null, "Low value, high cost on Windows");
         FreeStyleProject trigger = r.createFreeStyleProject();
         FreeStyleProject chain1 = r.createFreeStyleProject();
         FreeStyleProject chain2a = r.createFreeStyleProject();
@@ -686,18 +757,15 @@ public class QueueTest {
         await().until(() -> buildFuture.getStartCondition().isCancelled());
     }
 
-    private void waitUntilWaitingListIsEmpty(Queue q) throws InterruptedException {
-        boolean waitingItemsPresent = true;
-        while (waitingItemsPresent) {
-            waitingItemsPresent = false;
+    private void waitUntilWaitingListIsEmpty(Queue q) {
+        await().until(() -> {
             for (Queue.Item i : q.getItems()) {
                 if (i instanceof WaitingItem) {
-                    waitingItemsPresent = true;
-                    break;
+                    return false;
                 }
             }
-            Thread.sleep(1000);
-        }
+            return true;
+        });
     }
 
     @Issue("JENKINS-68780")
@@ -1033,7 +1101,7 @@ public class QueueTest {
         project1.scheduleBuild2(0);
         QueueTaskFuture<FreeStyleBuild> v = project2.scheduleBuild2(0);
         projectError.scheduleBuild2(0);
-        Executor e = r.jenkins.toComputer().getExecutors().get(0);
+        Executor e = r.jenkins.toComputer().getExecutors().getFirst();
         Thread.sleep(2000);
         while (project2.getLastBuild() == null) {
              if (!e.isAlive()) {
@@ -1090,6 +1158,7 @@ public class QueueTest {
 
     @Test
     void waitForStartAndCancelBeforeStart() throws Exception {
+        assumeFalse(Functions.isWindows() && System.getenv("CI") != null, "Low value, high cost on Windows");
         FreeStyleProject p = r.createFreeStyleProject();
 
         QueueTaskFuture<FreeStyleBuild> f = p.scheduleBuild2(30);
@@ -1199,7 +1268,7 @@ public class QueueTest {
         //james has DISCOVER permission on the project and will only be able to see the task name.
         List projects = p3.getByXPath("/queue/discoverableItem/task/name/text()");
         assertEquals(1, projects.size());
-        assertEquals("project", projects.get(0).toString());
+        assertEquals("project", projects.getFirst().toString());
 
         // Also check individual item exports.
         String url = project.getQueueItem().getUrl() + "api/xml";
@@ -1238,12 +1307,27 @@ public class QueueTest {
         queue.maintain();
 
         assertEquals(1, r.jenkins.getQueue().getBlockedItems().size());
-        CauseOfBlockage actual = r.jenkins.getQueue().getBlockedItems().get(0).getCauseOfBlockage();
+        CauseOfBlockage actual = r.jenkins.getQueue().getBlockedItems().getFirst().getCauseOfBlockage();
         CauseOfBlockage expected = new BlockedBecauseOfBuildInProgress(t1.getFirstBuild());
 
         assertEquals(expected.getShortDescription(), actual.getShortDescription());
-        Queue.getInstance().doCancelItem(r.jenkins.getQueue().getBlockedItems().get(0).getId());
-        r.assertBuildStatusSuccess(r.waitForCompletion(build));
+        Queue.getInstance().doCancelItem(r.jenkins.getQueue().getBlockedItems().getFirst().getId());
+
+        build.doStop(); // Stop build 1 early
+        r.waitForCompletion(build);
+        build.delete(); // Delete build 1
+
+        // Stop and delete build 2 if it is running.  Seen running on slower Windows computers
+        if (t1.isBuilding()) {
+            FreeStyleBuild build2 = t1.getLastBuild();
+            build2.doStop();
+            r.waitForCompletion(build2);
+            build2.delete();
+        }
+
+        assertFalse(t1.isBuilding(), "Job unexpectedly building");
+        assertNull(t1.getQueueItem(), "Job unexpectedly has non-null entry in queue " + t1.getQueueItem());
+        assertFalse(t1.isInQueue(), "Job unexpectedly in queue");
     }
 
     @Test
@@ -1304,7 +1388,7 @@ public class QueueTest {
         r.jenkins.setSecurityRealm(r.createDummySecurityRealm());
         r.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy()
                 .grant(Jenkins.READ, Item.READ, Item.CANCEL).everywhere().to("admin")
-                .grant(Jenkins.READ).everywhere().to("user")
+                .grant(Jenkins.READ, Item.READ).everywhere().to("user")
         );
 
         // prevent execution to push stuff into the queue
@@ -1529,7 +1613,7 @@ public class QueueTest {
         var computer = onlineSlave.toComputer();
         Timer.get().execute(() -> {
             // Simulate a computer failure just after the executor is created
-            while (computer.getExecutors().get(0).getStartTime() == 0) {
+            while (computer.getExecutors().getFirst().getStartTime() == 0) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
@@ -1546,6 +1630,9 @@ public class QueueTest {
         r.waitOnline(onlineSlave);
         r.assertBuildStatusSuccess(f);
         assertTrue(r.jenkins.getQueue().isEmpty());
+        // clean up
+        computer.disconnect(null).get();
+        r.jenkins.removeNode(onlineSlave);
     }
 
     private static class Cancelled extends CauseOfBlockage {

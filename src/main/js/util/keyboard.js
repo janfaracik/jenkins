@@ -82,22 +82,22 @@ export default function makeKeyboardNavigable(
 
 function scrollAndSelect(selectedItem, selectedClass, items) {
   if (selectedItem) {
-    if (!isInViewport(selectedItem)) {
-      selectedItem.scrollIntoView(false);
-    }
+    selectedItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
     selectedItem.classList.add(selectedClass);
-    if (items.includes(document.activeElement)) {
+    // Move focus so screen readers announce the item, unless the user is typing in a field (e.g. search)
+    if (
+      items.includes(document.activeElement) ||
+      !isTextField(document.activeElement)
+    ) {
       selectedItem.focus();
     }
   }
 }
 
-function isInViewport(element) {
-  const rect = element.getBoundingClientRect();
+function isTextField(element) {
   return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= window.innerHeight &&
-    rect.right <= window.innerWidth
+    element instanceof HTMLInputElement ||
+    element instanceof HTMLTextAreaElement ||
+    element?.isContentEditable === true
   );
 }

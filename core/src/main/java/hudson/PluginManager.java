@@ -583,56 +583,47 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
 
                     // schedule execution of loading plugins
                     for (final PluginWrapper p : activePlugins.toArray(new PluginWrapper[0])) {
-                        g.followedBy().notFatal().attains(PLUGINS_PREPARED).add(String.format("Loading plugin %s v%s (%s)", p.getLongName(), p.getVersion(), p.getShortName()), new Executable() {
-                            @Override
-                            public void run(Reactor session) throws Exception {
-                                try {
-                                    p.resolvePluginDependencies();
-                                    strategy.load(p);
-                                } catch (MissingDependencyException e) {
-                                    failedPlugins.add(new FailedPlugin(p, e));
-                                    activePlugins.remove(p);
-                                    plugins.remove(p);
-                                    p.releaseClassLoader();
-                                    LOGGER.log(Level.SEVERE, "Failed to install {0}: {1}", new Object[] { p.getShortName(), e.getMessage() });
-                                } catch (IOException e) {
-                                    failedPlugins.add(new FailedPlugin(p, e));
-                                    activePlugins.remove(p);
-                                    plugins.remove(p);
-                                    p.releaseClassLoader();
-                                    throw e;
-                                }
+                        g.followedBy().notFatal().attains(PLUGINS_PREPARED).add(String.format("Loading plugin %s v%s (%s)", p.getLongName(), p.getVersion(), p.getShortName()), reactor -> {
+                            try {
+                                p.resolvePluginDependencies();
+                                strategy.load(p);
+                            } catch (MissingDependencyException e) {
+                                failedPlugins.add(new FailedPlugin(p, e));
+                                activePlugins.remove(p);
+                                plugins.remove(p);
+                                p.releaseClassLoader();
+                                LOGGER.log(Level.SEVERE, "Failed to install {0}: {1}", new Object[] { p.getShortName(), e.getMessage() });
+                            } catch (IOException e) {
+                                failedPlugins.add(new FailedPlugin(p, e));
+                                activePlugins.remove(p);
+                                plugins.remove(p);
+                                p.releaseClassLoader();
+                                throw e;
                             }
                         });
                     }
 
                     // schedule execution of initializing plugins
                     for (final PluginWrapper p : activePlugins.toArray(new PluginWrapper[0])) {
-                        g.followedBy().notFatal().attains(PLUGINS_STARTED).add("Initializing plugin " + p.getShortName(), new Executable() {
-                            @Override
-                            public void run(Reactor session) throws Exception {
-                                if (!activePlugins.contains(p)) {
-                                    return;
-                                }
-                                try {
-                                    p.getPluginOrFail().postInitialize();
-                                } catch (Exception e) {
-                                    failedPlugins.add(new FailedPlugin(p, e));
-                                    activePlugins.remove(p);
-                                    plugins.remove(p);
-                                    p.releaseClassLoader();
-                                    throw e;
-                                }
+                        g.followedBy().notFatal().attains(PLUGINS_STARTED).add("Initializing plugin " + p.getShortName(), reactor -> {
+                            if (!activePlugins.contains(p)) {
+                                return;
+                            }
+                            try {
+                                p.getPluginOrFail().postInitialize();
+                            } catch (Exception e) {
+                                failedPlugins.add(new FailedPlugin(p, e));
+                                activePlugins.remove(p);
+                                plugins.remove(p);
+                                p.releaseClassLoader();
+                                throw e;
                             }
                         });
                     }
 
-                    g.followedBy().attains(PLUGINS_STARTED).add("Discovering plugin initialization tasks", new Executable() {
-                        @Override
-                        public void run(Reactor reactor) throws Exception {
-                            // rescan to find plugin-contributed @Initializer
-                            reactor.addAll(initializerFinder.discoverTasks(reactor));
-                        }
+                    g.followedBy().attains(PLUGINS_STARTED).add("Discovering plugin initialization tasks", reactor -> {
+                        // rescan to find plugin-contributed @Initializer
+                        reactor.addAll(initializerFinder.discoverTasks(reactor));
                     });
 
                     // register them all
@@ -641,12 +632,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             });
 
             // All plugins are loaded. Now we can figure out who depends on who.
-            requires(PLUGINS_PREPARED).attains(COMPLETED).add("Resolving Dependent Plugins Graph", new Executable() {
-                @Override
-                public void run(Reactor reactor) throws Exception {
-                    resolveDependentPlugins();
-                }
-            });
+            requires(PLUGINS_PREPARED).attains(COMPLETED).add("Resolving Dependent Plugins Graph", reactor -> resolveDependentPlugins());
         }});
     }
 
@@ -813,35 +799,32 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
 
             final List<DetachedPluginsUtil.DetachedPlugin> detachedPlugins = DetachedPluginsUtil.getDetachedPlugins(lastExecVersion);
 
-            Set<String> loadedDetached = loadPluginsFromWar(getDetachedLocation(), new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    name = normalisePluginName(name);
+            Set<String> loadedDetached = loadPluginsFromWar(getDetachedLocation(), (dir, name) -> {
+                name = normalisePluginName(name);
 
-                    // If this was a plugin that was detached some time in the past i.e. not just one of the
-                    // plugins that was bundled "for fun".
-                    if (DetachedPluginsUtil.isDetachedPlugin(name)) {
-                        VersionNumber installedVersion = getPluginVersion(rootDir, name);
-                        VersionNumber bundledVersion = getPluginVersion(dir, name);
-                        // If the plugin is already installed, we need to decide whether to replace it with the bundled version.
-                        if (installedVersion != null && bundledVersion != null) {
-                            // If the installed version is older than the bundled version, then it MUST be upgraded.
-                            // If the installed version is newer than the bundled version, then it MUST NOT be upgraded.
-                            // If the versions are equal we just keep the installed version.
-                            return installedVersion.isOlderThan(bundledVersion);
-                        }
+                // If this was a plugin that was detached some time in the past i.e. not just one of the
+                // plugins that was bundled "for fun".
+                if (DetachedPluginsUtil.isDetachedPlugin(name)) {
+                    VersionNumber installedVersion = getPluginVersion(rootDir, name);
+                    VersionNumber bundledVersion = getPluginVersion(dir, name);
+                    // If the plugin is already installed, we need to decide whether to replace it with the bundled version.
+                    if (installedVersion != null && bundledVersion != null) {
+                        // If the installed version is older than the bundled version, then it MUST be upgraded.
+                        // If the installed version is newer than the bundled version, then it MUST NOT be upgraded.
+                        // If the versions are equal we just keep the installed version.
+                        return installedVersion.isOlderThan(bundledVersion);
                     }
-
-                    // If it's a plugin that was detached since the last running version.
-                    for (DetachedPluginsUtil.DetachedPlugin detachedPlugin : detachedPlugins) {
-                        if (detachedPlugin.getShortName().equals(name)) {
-                            return true;
-                        }
-                    }
-
-                    // Otherwise skip this and do not install.
-                    return false;
                 }
+
+                // If it's a plugin that was detached since the last running version.
+                for (DetachedPluginsUtil.DetachedPlugin detachedPlugin : detachedPlugins) {
+                    if (detachedPlugin.getShortName().equals(name)) {
+                        return true;
+                    }
+                }
+
+                // Otherwise skip this and do not install.
+                return false;
             });
 
             LOGGER.log(INFO, "Upgraded Jenkins from version {0} to version {1}. Loaded detached plugins (and dependencies): {2}",
@@ -860,17 +843,14 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                 }
             }
             if (!forceUpgrade.isEmpty()) {
-                Set<String> loadedDetached = loadPluginsFromWar(getDetachedLocation(), new FilenameFilter() {
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        name = normalisePluginName(name);
-                        for (DetachedPluginsUtil.DetachedPlugin detachedPlugin : forceUpgrade) {
-                            if (detachedPlugin.getShortName().equals(name)) {
-                                return true;
-                            }
+                Set<String> loadedDetached = loadPluginsFromWar(getDetachedLocation(), (dir, name) -> {
+                    name = normalisePluginName(name);
+                    for (DetachedPluginsUtil.DetachedPlugin detachedPlugin : forceUpgrade) {
+                        if (detachedPlugin.getShortName().equals(name)) {
+                            return true;
                         }
-                        return false;
                     }
+                    return false;
                 });
                 LOGGER.log(INFO, "Upgraded detached plugins (and dependencies): {0}",
                         new Object[]{loadedDetached});
@@ -1170,8 +1150,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         InputStream in = null;
         // Magic, which allows to avoid using stream generated for JarURLConnection.
         // It prevents getting into JENKINS-37332 due to the file descriptor leak
-        if (uc instanceof JarURLConnection) {
-            final JarURLConnection jarURLConnection = (JarURLConnection) uc;
+        if (uc instanceof JarURLConnection jarURLConnection) {
             final String entryName = jarURLConnection.getEntryName();
 
             try (JarFile jarFile = jarURLConnection.getJarFile()) {
@@ -1211,8 +1190,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         // It prevents file descriptor leak if the URL references a file within JAR
         // See JENKINS-37332  for more info
         // The code idea is taken from https://github.com/jknack/handlebars.java/pull/394
-        if (uc instanceof JarURLConnection) {
-            final JarURLConnection connection = (JarURLConnection) uc;
+        if (uc instanceof JarURLConnection connection) {
             final URL jarURL = connection.getJarFileURL();
             if (jarURL.getProtocol().equals("file")) {
                 String file = jarURL.getFile();
@@ -1477,42 +1455,16 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
 
     @Restricted(NoExternalUse.class)
     public HttpResponse doPluginsSearch(@QueryParameter String query, @QueryParameter Integer limit) {
-        List<JSONObject> plugins = new ArrayList<>();
+        List<UpdateSite.Plugin> available = new ArrayList<>();
         for (UpdateSite site : Jenkins.get().getUpdateCenter().getSiteList()) {
-            List<JSONObject> sitePlugins = site.getAvailables().stream()
-                .filter(plugin -> {
-                    if (query == null || query.isBlank()) {
-                        return true;
-                    }
-                    return (plugin.name != null && plugin.name.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
-                        (plugin.title != null && plugin.title.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
-                        (plugin.excerpt != null && plugin.excerpt.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
-                        plugin.hasCategory(query) ||
-                        plugin.getCategoriesStream()
-                            .map(UpdateCenter::getCategoryDisplayName)
-                            .anyMatch(category -> category != null && category.toLowerCase(Locale.ROOT).contains(query.toLowerCase(Locale.ROOT))) ||
-                        plugin.hasWarnings() && query.equalsIgnoreCase("warning:");
-                })
-                .limit(Math.max(limit - plugins.size(), 1))
-                .sorted((o1, o2) -> {
-                    String o1DisplayName = o1.getDisplayName();
-                    if (o1.name.equalsIgnoreCase(query) ||
-                        o1DisplayName.equalsIgnoreCase(query)) {
-                        return -1;
-                    }
-                    String o2DisplayName = o2.getDisplayName();
-                    if (o2.name.equalsIgnoreCase(query) || o2DisplayName.equalsIgnoreCase(query)) {
-                        return 1;
-                    }
-                    if (o1.name.equals(o2.name)) {
-                        return 0;
-                    }
-                    final int pop = Double.compare(o2.popularity, o1.popularity);
-                    if (pop != 0) {
-                        return pop; // highest popularity first
-                    }
-                    return o1DisplayName.compareTo(o2DisplayName);
-                })
+            available.addAll(site.getAvailables());
+        }
+
+        // getAvailables() is already ordered by popularity, so a blank query needs no further ranking
+        List<UpdateSite.Plugin> results = query == null || query.isBlank() ? available : searchAvailablePlugins(query, available);
+
+        List<JSONObject> plugins = results.stream()
+                .limit(Math.max(limit, 1))
                 .map(plugin -> {
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("name", plugin.name);
@@ -1572,16 +1524,70 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     return jsonObject;
                 })
                 .collect(toList());
-            plugins.addAll(sitePlugins);
-            if (plugins.size() >= limit) {
-                break;
-            }
-        }
 
         JSONArray mappedPlugins = new JSONArray();
         mappedPlugins.addAll(plugins);
 
         return hudson.util.HttpResponses.okJSON(mappedPlugins);
+    }
+
+    /**
+     * Finds and ranks the available plugins matching a search query.
+     * A plugin matches if every word of the query appears in its name or title, or if the whole query appears in its
+     * name, title, excerpt or categories. Only if no plugin matches that way are plugins matching some of the words returned.
+     */
+    private static List<UpdateSite.Plugin> searchAvailablePlugins(String query, List<UpdateSite.Plugin> available) {
+        if (query.equalsIgnoreCase("warning:")) {
+            return available.stream().filter(UpdateSite.Plugin::hasWarnings).collect(toList());
+        }
+
+        String normalizedQuery = UpdateSite.normalizeForSearch(query);
+        String[] tokens = normalizedQuery.isEmpty() ? new String[0] : normalizedQuery.split(" ");
+        String lQuery = query.toLowerCase(Locale.ROOT);
+
+        List<SearchResult> allTokensMatched = new ArrayList<>();
+        List<SearchResult> someTokensMatched = new ArrayList<>();
+        for (UpdateSite.Plugin plugin : available) {
+            int matchedTokens = plugin.countSearchMatches(tokens);
+            boolean allMatched = tokens.length > 0 && matchedTokens == tokens.length;
+            if (allMatched || searchQueryMatches(query, plugin, lQuery)) {
+                allTokensMatched.add(new SearchResult(plugin, normalizedQuery, matchedTokens));
+            } else if (matchedTokens > 0 && allTokensMatched.isEmpty()) {
+                someTokensMatched.add(new SearchResult(plugin, normalizedQuery, matchedTokens));
+            }
+        }
+
+        List<SearchResult> results = allTokensMatched.isEmpty() ? someTokensMatched : allTokensMatched;
+        return results.stream()
+                .sorted(SEARCH_RESULT_ORDER)
+                .map(SearchResult::plugin)
+                .collect(toList());
+    }
+
+    private record SearchResult(UpdateSite.Plugin plugin, boolean exactMatch, boolean deprecated, int matchedTokens) {
+        SearchResult(UpdateSite.Plugin plugin, String normalizedQuery, int matchedTokens) {
+            this(plugin,
+                    plugin.isExactSearchMatch(normalizedQuery),
+                    plugin.isDeprecated(),
+                    matchedTokens);
+        }
+    }
+
+    private static final Comparator<SearchResult> SEARCH_RESULT_ORDER = Comparator
+            .comparing((SearchResult result) -> !result.exactMatch())
+            .thenComparing(SearchResult::deprecated)
+            .thenComparing(Comparator.comparingInt(SearchResult::matchedTokens).reversed())
+            .thenComparing(result -> result.plugin().popularity, Comparator.reverseOrder())
+            .thenComparing(result -> result.plugin().getDisplayName());
+
+    private static boolean searchQueryMatches(String query, UpdateSite.Plugin plugin, String lQuery) {
+        return (plugin.name != null && plugin.name.toLowerCase(Locale.ROOT).contains(lQuery)) ||
+                (plugin.title != null && plugin.title.toLowerCase(Locale.ROOT).contains(lQuery)) ||
+                (plugin.excerpt != null && plugin.excerpt.toLowerCase(Locale.ROOT).contains(lQuery)) ||
+                plugin.hasCategory(query) ||
+                plugin.getCategoriesStream()
+                        .map(UpdateCenter::getCategoryDisplayName)
+                        .anyMatch(category -> category != null && category.toLowerCase(Locale.ROOT).contains(lQuery));
     }
 
     /**
@@ -1793,37 +1799,34 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         if (!jenkins.getInstallState().isSetupComplete()) {
             jenkins.setInstallState(InstallState.INITIAL_PLUGINS_INSTALLING);
             updateCenter.persistInstallStatus();
-            new Thread() {
-                @Override
-                public void run() {
-                    boolean failures = false;
-                    INSTALLING: while (true) {
-                        try {
-                            updateCenter.persistInstallStatus();
-                            Thread.sleep(500);
-                            failures = false;
-                            for (Future<UpdateCenter.UpdateCenterJob> jobFuture : installJobs) {
-                                if (!jobFuture.isDone() && !jobFuture.isCancelled()) {
-                                    continue INSTALLING;
-                                }
-                                UpdateCenter.UpdateCenterJob job = jobFuture.get();
-                                if (job instanceof InstallationJob && ((InstallationJob) job).status instanceof DownloadJob.Failure) {
-                                    failures = true;
-                                }
+            new Thread(() -> {
+                boolean failures = false;
+                INSTALLING: while (true) {
+                    try {
+                        updateCenter.persistInstallStatus();
+                        Thread.sleep(500);
+                        failures = false;
+                        for (Future<UpdateCenter.UpdateCenterJob> jobFuture : installJobs) {
+                            if (!jobFuture.isDone() && !jobFuture.isCancelled()) {
+                                continue INSTALLING;
                             }
-                        } catch (Exception e) {
-                            LOGGER.log(WARNING, "Unexpected error while waiting for initial plugin set to install.", e);
+                            UpdateCenter.UpdateCenterJob job = jobFuture.get();
+                            if (job instanceof InstallationJob && ((InstallationJob) job).status instanceof DownloadJob.Failure) {
+                                failures = true;
+                            }
                         }
-                        break;
+                    } catch (Exception e) {
+                        LOGGER.log(WARNING, "Unexpected error while waiting for initial plugin set to install.", e);
                     }
-                    updateCenter.persistInstallStatus();
-                    if (!failures) {
-                        try (ACLContext acl = ACL.as2(currentAuth)) {
-                            InstallUtil.proceedToNextStateFrom(InstallState.INITIAL_PLUGINS_INSTALLING);
-                        }
+                    break;
+                }
+                updateCenter.persistInstallStatus();
+                if (!failures) {
+                    try (ACLContext acl = ACL.as2(currentAuth)) {
+                        InstallUtil.proceedToNextStateFrom(InstallState.INITIAL_PLUGINS_INSTALLING);
                     }
                 }
-            }.start();
+            }).start();
         }
 
         return installJobs;
@@ -1956,7 +1959,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                 copier = new UrlPluginCopier(fileName);
             } else {
                 // this is a file upload
-                FileItem fileItem = items.get(0);
+                FileItem fileItem = items.getFirst();
                 fileName = Util.getFileName(fileItem.getName());
                 copier = new FileUploadPluginCopier(fileItem);
             }
@@ -2480,22 +2483,6 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             // only for debugging purpose
             return "classLoader " +  getClass().getName();
         }
-
-        // TODO Remove this once we require post 2024-07 remoting minimum version and deleted ClassLoaderProxy#fetchJar(URL)
-        @SuppressFBWarnings(
-                value = "DMI_COLLECTION_OF_URLS",
-                justification = "All URLs point to local files, so no DNS lookup.")
-        @Restricted(NoExternalUse.class)
-        public boolean isPluginJar(URL jarUrl) {
-            for (PluginWrapper plugin : activePlugins) {
-                if (plugin.classLoader instanceof URLClassLoader) {
-                    if (Set.of(((URLClassLoader) plugin.classLoader).getURLs()).contains(jarUrl)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
     }
 
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "for script console")
@@ -2675,7 +2662,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     .filter(PluginWrapper::isDeprecated)
                     .sorted(Comparator.comparing(PluginWrapper::getDisplayName)) // Sort by plugin name
                     .collect(LinkedHashMap::new,
-                            (map, plugin) -> map.put(plugin, plugin.getDeprecations().get(0).url),
+                            (map, plugin) -> map.put(plugin, plugin.getDeprecations().getFirst().url),
                             Map::putAll);
         }
     }

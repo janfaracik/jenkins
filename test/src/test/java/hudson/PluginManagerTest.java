@@ -28,6 +28,8 @@ import static java.nio.file.attribute.PosixFilePermission.OWNER_EXECUTE;
 import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
 import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.empty;
@@ -64,6 +66,7 @@ import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -84,6 +87,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import jenkins.ClassLoaderReflectionToolkit;
 import jenkins.RestartRequiredException;
 import jenkins.model.Jenkins;
@@ -92,7 +96,6 @@ import net.sf.json.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.htmlunit.AlertHandler;
 import org.htmlunit.Page;
-import org.htmlunit.html.HtmlAnchor;
 import org.htmlunit.html.HtmlForm;
 import org.htmlunit.html.HtmlPage;
 import org.junit.jupiter.api.AfterEach;
@@ -316,7 +319,7 @@ class PluginManagerTest {
             assertNull(r.jenkins.getPluginManager().getPlugin("htmlpublisher"));
             List<Future<UpdateCenterJob>> jobs = r.jenkins.getPluginManager().prevalidateConfig(new ByteArrayInputStream("<whatever><htmlpublisher plugin=\"htmlpublisher@0.7\"/></whatever>".getBytes(StandardCharsets.UTF_8)));
             assertEquals(1, jobs.size());
-            UpdateCenterJob job = jobs.get(0).get(); // blocks for completion
+            UpdateCenterJob job = jobs.getFirst().get(); // blocks for completion
             assertEquals("InstallationJob", job.getType());
             UpdateCenter.InstallationJob ijob = (UpdateCenter.InstallationJob) job;
             assertEquals("htmlpublisher", ijob.plugin.name);
@@ -689,6 +692,72 @@ class PluginManagerTest {
 
     @Test
     @Issue("JENKINS-64840")
+    void filteringMultipleTokens() throws Throwable {
+        session.then(r -> {
+            PersistedList<UpdateSite> sites = r.jenkins.getUpdateCenter().getSites();
+            sites.clear();
+            // UpdateSite appends a query string, which cannot be read as a file URL on Windows.
+            URL url = new URL(r.getURL(), "searchTokensUpdateCenter/update-center.json");
+            UpdateSite site = new UpdateSite(UpdateCenter.ID_DEFAULT, url.toString());
+            sites.add(site);
+            assertEquals(FormValidation.ok(), site.updateDirectly(false).get());
+            assertNotNull(site.getData());
+
+            // words match across the plugin ID and title, ignoring punctuation
+            assertThat(searchResults(r, "build token").get(0), is("build-token-root"));
+            assertThat(searchResults(r, "Pipeline Groovy").get(0), is("workflow-cps"));
+            assertThat(searchResults(r, "pipeline cps").get(0), is("workflow-cps"));
+            assertThat(searchResults(r, "workflow cps").get(0), is("workflow-cps"));
+            assertThat(searchResults(r, "build  token").get(0), is("build-token-root"));
+
+            // plugins matching only some of the words are left out when others match all of them
+            assertThat(searchResults(r, "build token"), not(hasItem("token-macro")));
+
+            // all matches are ranked before the limit is applied, so the best match is kept even if less popular
+            assertThat(searchResults(r, "build token", 1), is(List.of("build-token-root")));
+
+            // but are returned, best match first, when nothing matches all of the words
+            assertThat(searchResults(r, "build-token-root zzznomatch").get(0), is("build-token-root"));
+        });
+    }
+
+    @TestExtension("filteringMultipleTokens")
+    public static final class SearchTokensUpdateCenter implements RootAction {
+        @Override
+        public String getIconFileName() {
+            return null;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return null;
+        }
+
+        @Override
+        public String getUrlName() {
+            return "searchTokensUpdateCenter";
+        }
+
+        public void doDynamic(StaplerRequest2 request, StaplerResponse2 response) throws ServletException, IOException {
+            response.serveFile(request, PluginManagerTest.class.getResource("/plugins/search-tokens-update-center.json"));
+        }
+    }
+
+    private static List<String> searchResults(JenkinsRule r, String query) throws Exception {
+        return searchResults(r, query, 50);
+    }
+
+    private static List<String> searchResults(JenkinsRule r, String query, int limit) throws Exception {
+        JenkinsRule.JSONWebResponse response = r.getJSON("pluginManager/pluginsSearch?query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&limit=" + limit);
+        JSONObject json = response.getJSONObject();
+        assertTrue(json.has("data"));
+        return json.getJSONArray("data").stream()
+                .map(obj -> ((JSONObject) obj).getString("name"))
+                .collect(Collectors.toList());
+    }
+
+    @Test
+    @Issue("JENKINS-64840")
     void searchMultipleUpdateSites() throws Throwable {
         session.then(r -> {
             assumeFalse(Functions.isWindows(), "TODO: Implement this test for Windows");
@@ -764,7 +833,7 @@ class PluginManagerTest {
             assertEquals(200, responseGet.statusCode(), "Bad response for crumb issuer");
             String body = responseGet.body();
             assertTrue(body.contains("crumbRequestField"), "crumbRequestField not in response");
-            org.json.JSONObject jsonObject = new org.json.JSONObject(body);
+            JSONObject jsonObject = JSONObject.fromObject(body);
             String crumb = (String) jsonObject.get("crumb");
             String crumbRequestField = (String) jsonObject.get("crumbRequestField");
 
@@ -855,11 +924,34 @@ class PluginManagerTest {
                         .getTextContent().contains("This plugin is built for Jenkins 9999999"));
                 wc.waitForBackgroundJavaScript(100);
 
-                HtmlAnchor anchor = available.querySelector(".jenkins-table__link");
-                anchor.click(true, false, false);
+                assertNull(available.querySelector(".jenkins-table__link"));
                 wc.waitForBackgroundJavaScript(100);
                 assertTrue(alertHandler.messages.isEmpty());
             }
+        });
+    }
+
+    @Test
+    @Issue("JENKINS-70794")
+    void pluginsSearchReturnsAvailablePluginWithoutWikiUrl() throws Throwable {
+        session.then(r -> {
+            DownloadService.signatureCheck = false;
+            Jenkins.get().getUpdateCenter().getSites().clear();
+            UpdateSite us = new UpdateSite("NoWiki", Jenkins.get().getRootUrl() + "noWikiUpdateCenter/update-center.json");
+            Jenkins.get().getUpdateCenter().getSites().add(us);
+            assertEquals(FormValidation.ok(), us.updateDirectly(false).get());
+            assertNotNull(us.getData());
+
+            JenkinsRule.JSONWebResponse response = r.getJSON("pluginManager/pluginsSearch?query=plugin-without-wiki&limit=5");
+            JSONObject json = response.getJSONObject();
+            assertTrue(json.has("data"));
+            JSONArray data = json.getJSONArray("data");
+            assertEquals(1, data.size(), "Should be one search hit for plugin-without-wiki");
+            JSONObject plugin = data.getJSONObject(0);
+            assertEquals("plugin-without-wiki", plugin.getString("name"));
+            assertEquals("Plugin Without Wiki", plugin.getString("displayName"));
+            assertEquals("", plugin.getString("wiki"));
+            assertEquals(100, plugin.getInt("healthScore"));
         });
     }
 
@@ -933,6 +1025,31 @@ class PluginManagerTest {
             staplerResponse.setContentType("application/json");
             staplerResponse.setStatus(200);
             staplerResponse.serveFile(staplerRequest, PluginManagerTest.class.getResource("/plugins/security3037-update-center.json"));
+        }
+    }
+
+    @TestExtension("pluginsSearchReturnsAvailablePluginWithoutWikiUrl")
+    public static final class NoWikiUpdateCenter implements RootAction {
+
+        @Override
+        public String getIconFileName() {
+            return "gear2.png";
+        }
+
+        @Override
+        public String getDisplayName() {
+            return "no-wiki-update-center";
+        }
+
+        @Override
+        public String getUrlName() {
+            return "noWikiUpdateCenter";
+        }
+
+        public void doDynamic(StaplerRequest2 staplerRequest, StaplerResponse2 staplerResponse) throws ServletException, IOException {
+            staplerResponse.setContentType("application/json");
+            staplerResponse.setStatus(200);
+            staplerResponse.serveFile(staplerRequest, PluginManagerTest.class.getResource("/plugins/no-wiki-update-center.json"));
         }
     }
 

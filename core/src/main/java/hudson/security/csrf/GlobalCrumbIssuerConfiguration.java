@@ -73,10 +73,16 @@ public class GlobalCrumbIssuerConfiguration extends GlobalConfiguration {
         if (DISABLE_CSRF_PROTECTION) {
             return null;
         }
-        return new DefaultCrumbIssuer(SystemProperties.getBoolean(Jenkins.class.getName() + ".crumbIssuerProxyCompatibility", false));
+        return new DefaultCrumbIssuer();
     }
 
     @Restricted(NoExternalUse.class)
     @SuppressFBWarnings(value = "MS_SHOULD_BE_FINAL", justification = "for script console")
     public static /* non-final */ boolean DISABLE_CSRF_PROTECTION = SystemProperties.getBoolean(GlobalCrumbIssuerConfiguration.class.getName() + ".DISABLE_CSRF_PROTECTION");
+
+    /** Whether CSRF protection is disabled by {@link #DISABLE_CSRF_PROTECTION}, for {@code config.jelly}. */
+    @Restricted(NoExternalUse.class)
+    public boolean isCsrfProtectionDisabled() {
+        return DISABLE_CSRF_PROTECTION;
+    }
 }

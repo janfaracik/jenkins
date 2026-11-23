@@ -1,50 +1,58 @@
-.update-table {
+#plugins {
+  thead th {
+    padding-left: 1rem !important;
+    padding-right: 0 !important;
+    vertical-align: top !important;
+
+    &:last-of-type {
+      padding-right: 2rem !important;
+    }
+  }
+
+  tbody td {
+    vertical-align: top !important;
+    padding: 1rem 0 1rem 1rem !important;
+
+    &:last-of-type {
+      padding-right: 2rem !important;
+    }
+  }
+
   tbody * {
     text-box: cap alphabetic;
   }
 
-  thead {
-    th {
-      padding-left: 1rem !important;
-      padding-right: 0 !important;
-      vertical-align: top !important;
+  tbody td > .jenkins-checkbox,
+  tbody td > .jenkins-table__cell__button-wrapper,
+  tbody td > :has(> .jenkins-healthScore--badge) {
+    display: flex;
+    align-items: center;
+    height: 1cap;
+  }
 
-      &:last-of-type {
-        padding-right: 2rem !important;
-      }
+  .jenkins-healthScore--badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-plugin-manager__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+
+    .jenkins-alert {
+      margin: 0;
     }
   }
 
-  tbody {
-    td {
-      vertical-align: top !important;
-      padding: 1rem 0 1rem 1rem !important;
-
-      .jenkins-alert {
-        margin: 0;
-      }
-
-      &:last-of-type {
-        padding-right: 2rem !important;
-      }
-    }
-  }
-}
-
-.TODOINSTALL {
-  display: flex;
-  flex-direction: column;
-  gap: 0.875rem;
-}
-
-#plugins {
   .app-plugin-manager__update-label {
     margin-left: 1ch;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.625rem;
-    mask-image: linear-gradient(90deg, rgba(0 0 0 / 0.8), white);
+    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.8), white);
 
     svg {
       width: 0.875rem;
@@ -60,6 +68,10 @@
     display: flex;
     gap: 0.4375rem;
     flex-wrap: wrap;
+
+    .jenkins-badge {
+      margin: 0;
+    }
 
     &:empty {
       display: none;

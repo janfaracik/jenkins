@@ -107,8 +107,10 @@ import jenkins.scm.DefaultSCMCheckoutStrategyImpl;
 import jenkins.scm.SCMCheckoutStrategy;
 import jenkins.scm.SCMCheckoutStrategyDescriptor;
 import jenkins.scm.SCMDecisionHandler;
+import jenkins.security.XStreamNotDeserializable;
 import jenkins.triggers.SCMTriggerItem;
 import jenkins.util.TimeDuration;
+import jenkins.util.Timer;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
@@ -156,6 +158,7 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
      */
     private transient volatile SCMRevisionState pollingBaseline = null;
 
+    @XStreamNotDeserializable
     private transient LazyBuildMixIn<P, R> buildMixIn;
 
     /**
@@ -165,6 +168,7 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
      * {@link Run#getPreviousBuild()}
      */
     @Restricted(NoExternalUse.class)
+    @XStreamNotDeserializable
     protected transient RunMap<R> builds;
 
     /**
@@ -244,6 +248,7 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
      * come and go as configuration change, so it's kept separate.
      */
     @CopyOnWrite
+    @XStreamNotDeserializable
     protected transient volatile List<Action> transientActions = new Vector<>();
 
     private boolean concurrentBuild;
@@ -355,7 +360,25 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
         // prevent a new build while a delete operation is in progress
         if (supportsMakeDisabled()) {
             setDisabled(true);
-            Jenkins.get().getQueue().cancel(this);
+            // Dispatched rather than called synchronously: AbstractItem#delete holds
+            // synchronized (this) around performDelete(), and Queue#cancel needs Queue#lock --
+            // see the identical reasoning, and why this captures a specific item by id rather
+            // than canceling by task, in ParameterizedJobMixIn#makeDisabled.
+            Queue.Item queued = Jenkins.get().getQueue().getCancellableItem(this);
+            if (queued != null) {
+                long id = queued.getId();
+                Jenkins.get().getQueue().markPendingCancellation(id);
+                Timer.get().execute(() -> Queue.runWithLock(() -> {
+                    try {
+                        Queue.Item stillQueued = Jenkins.get().getQueue().getItem(id);
+                        if (stillQueued != null) {
+                            Jenkins.get().getQueue().cancel(stillQueued);
+                        }
+                    } finally {
+                        Jenkins.get().getQueue().clearPendingCancellation(id);
+                    }
+                }));
+            }
         }
         FilePath ws = getWorkspace();
         if (ws != null) {
@@ -972,8 +995,14 @@ public abstract class AbstractProject<P extends AbstractProject<P, R>, R extends
 
     /**
      * Creates a new build of this project for immediate execution.
+     *
+     * <p>Must not be {@code synchronized}: the caller (an executor, via {@link Queue#callWithLock})
+     * holds {@link Queue#lock}, and acquiring the project's monitor here too would deadlock against
+     * any code that acquires those two locks in the opposite order while holding the monitor.
+     * Build-number assignment, formerly the reason this needed the project's monitor, now uses a
+     * dedicated lock instead (see {@link Job#nextBuildNumberLock}).
      */
-    protected synchronized R newBuild() throws IOException {
+    protected R newBuild() throws IOException {
         return buildMixIn.newBuild();
     }
 

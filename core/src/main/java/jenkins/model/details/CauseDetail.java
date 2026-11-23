@@ -1,8 +1,10 @@
 package jenkins.model.details;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Run;
+import java.util.Collections;
 import java.util.Map;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
@@ -24,6 +26,14 @@ public class CauseDetail extends Detail {
     @Restricted(NoExternalUse.class)
     public Map<Cause, Integer> getCauseCounts() {
         CauseAction causeAction = getObject().getAction(CauseAction.class);
+        if (causeAction == null) {
+            return Collections.emptyMap();
+        }
         return causeAction.getCauseCounts();
+    }
+
+    @Override
+    public @NonNull Verbosity getVerbosity() {
+        return Verbosity.BOTH;
     }
 }

@@ -340,6 +340,7 @@ public abstract class VirtualFile implements Comparable<VirtualFile>, Serializab
         List<TokenizedPattern> r = new ArrayList<>();
         if (patts != null) {
             for (String patt : patts.split(",")) {
+                patt = patt.trim();
                 if (patt.endsWith("/")) {
                     patt += SelectorUtils.DEEP_TREE_MATCH;
                 }
@@ -396,13 +397,15 @@ public abstract class VirtualFile implements Comparable<VirtualFile>, Serializab
         ZipEntry e = new ZipEntry(zipEntryName);
 
         e.setTime(vf.lastModified());
-        zos.putNextEntry(e);
+        // Open the file before writing its ZIP header so an unreadable file does not leave an empty entry.
         try (InputStream in = vf.open(openOptions)) {
-            // hudson.util.IOUtils is already present
-            org.apache.commons.io.IOUtils.copy(in, zos);
-        }
-        finally {
-            zos.closeEntry();
+            zos.putNextEntry(e);
+            try {
+                // hudson.util.IOUtils is already present
+                org.apache.commons.io.IOUtils.copy(in, zos);
+            } finally {
+                zos.closeEntry();
+            }
         }
     }
 

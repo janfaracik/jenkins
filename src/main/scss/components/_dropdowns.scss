@@ -4,19 +4,25 @@ $dropdown-border-radius: 1rem;
 $dropdown-padding: 0.375rem;
 
 .tippy-box[data-theme~="dropdown"] {
+  @include mixins.overlay-surface($opacity: 85%);
+
+  display: flex;
+  flex-direction: column;
   border-radius: $dropdown-border-radius;
-  box-shadow: var(--dropdown-box-shadow);
-  outline: none !important;
-  background: color-mix(in sRGB, var(--card-background) 85%, transparent);
-  backdrop-filter: var(--dropdown-backdrop-filter);
-  max-width: unset !important;
+  max-width: 400px !important;
   max-height: 60vh;
-  overflow-y: auto;
+
+  @media (width <= 410px) {
+    max-width: calc(100vw - 10px) !important;
+  }
 
   .tippy-content {
     display: flex;
     flex-direction: column;
+    min-height: 0;
     padding: 0;
+    overflow-y: auto;
+    border-radius: inherit;
 
     .jenkins-spinner {
       margin: 1rem;
@@ -25,8 +31,8 @@ $dropdown-padding: 0.375rem;
 }
 
 .tippy-box[data-animation="dropdown"][data-state="hidden"] {
-  $translate: 5px;
-  $scale: 0.99;
+  $translate: 6px;
+  $scale: 0.97;
 
   opacity: 0;
   transform: scale($scale);
@@ -96,6 +102,8 @@ $dropdown-padding: 0.375rem;
   }
 
   &__heading {
+    display: grid;
+    grid-template-columns: 1fr auto;
     color: var(--text-color-secondary) !important;
     margin: $dropdown-padding 0.65rem;
     font-size: 0.8125rem;
@@ -134,7 +142,7 @@ $dropdown-padding: 0.375rem;
     border: none;
     outline: none;
     margin: 0;
-    padding: $dropdown-padding 1.75rem $dropdown-padding 0.6rem;
+    padding: $dropdown-padding 1.75rem $dropdown-padding 0.625rem;
     font-size: 0.8125rem;
     font-weight: normal;
     text-decoration: none !important;
@@ -142,11 +150,32 @@ $dropdown-padding: 0.375rem;
     color: var(--text-color) !important;
     border-radius: calc($dropdown-border-radius - $dropdown-padding);
     cursor: pointer;
-    min-height: 36px;
+    min-height: 2.375rem;
     white-space: nowrap;
-    gap: 1.2ch;
+    gap: 0.625rem;
     min-width: 180px;
+    max-width: 100%;
     user-select: none;
+
+    &__label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:has(.jenkins-dropdown__item__description) {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      row-gap: 0.25rem;
+      text-align: left;
+      text-wrap: wrap;
+
+      .jenkins-dropdown__item__description {
+        color: var(--text-color-secondary);
+        grid-area: 2 / 2;
+        line-height: 1.5;
+      }
+    }
 
     &__icon {
       display: inline-flex;
@@ -194,7 +223,7 @@ $dropdown-padding: 0.375rem;
       bottom: 0;
       background: var(--text-color-secondary);
       width: 1rem;
-      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'%3E%3Ctitle%3EChevron Forward%3C/title%3E%3Cpath fill='none' stroke='currentColor' stroke-linecap='round' stroke-linejoin='round' stroke-width='48' d='M184 112l144 144-144 144'/%3E%3C/svg%3E");
+      mask-image: url("../images/svgs/mask-dropdowns__chevron.svg");
       mask-size: contain;
       mask-repeat: no-repeat;
       mask-position: center;
@@ -214,7 +243,7 @@ $dropdown-padding: 0.375rem;
 .jenkins-dropdown__item--selected {
   &::before {
     background: var(--item-background--hover);
-    border: var(--jenkins-border--subtle) !important;
+    border: var(--jenkins-border) !important;
     animation: pulse 1s ease-in-out forwards;
   }
 
@@ -276,12 +305,4 @@ $dropdown-padding: 0.375rem;
       border-left: var(--jenkins-border--subtle);
     }
   }
-}
-
-.jenkins-breadcrumbs__overflow-item {
-  display: block;
-  overflow: hidden;
-  max-width: 25ch;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }

@@ -625,6 +625,7 @@ public class SlaveComputer extends Computer {
      * @param listener Channel event listener to be attached (if not {@code null})
      * @since 1.444
      */
+    @SuppressFBWarnings(value = "NN_NAKED_NOTIFY", justification = "False positive, the warning isn't for this scenario")
     public void setChannel(@NonNull Channel channel,
                            @CheckForNull OutputStream launchLog,
                            @CheckForNull Channel.Listener listener) throws IOException, InterruptedException {
@@ -817,15 +818,12 @@ public class SlaveComputer extends Computer {
     @Override
     public Future<?> disconnect(OfflineCause cause) {
         super.disconnect(cause);
-        return Computer.threadPoolForRemoting.submit(new Runnable() {
-            @Override
-            public void run() {
-                // do this on another thread so that any lengthy disconnect operation
-                // (which could be typical) won't block UI thread.
-                launcher.beforeDisconnect(SlaveComputer.this, taskListener);
-                closeChannel();
-                launcher.afterDisconnect(SlaveComputer.this, taskListener);
-            }
+        return Computer.threadPoolForRemoting.submit(() -> {
+            // do this on another thread so that any lengthy disconnect operation
+            // (which could be typical) won't block UI thread.
+            launcher.beforeDisconnect(SlaveComputer.this, taskListener);
+            closeChannel();
+            launcher.afterDisconnect(SlaveComputer.this, taskListener);
         });
     }
 
@@ -882,10 +880,10 @@ public class SlaveComputer extends Computer {
     public HttpResponse doJenkinsAgentJnlp(StaplerRequest2 req, StaplerResponse2 res) {
         LOGGER.log(
                 Level.WARNING,
-                "Agent \"" + getName()
-                        + "\" is connecting with the \"-jnlpUrl\" argument, which is deprecated."
-                        + " Use \"-url\" and \"-name\" instead, potentially also passing in"
-                        + " \"-webSocket\", \"-tunnel\", and/or work directory options as needed.");
+                "The JNLP file endpoint (jenkins-agent.jnlp) is deprecated."
+                        + " Launch agents with \"-url\" and \"-name\" instead, and retrieve the connection secret"
+                        + " through a supported API once available"
+                        + " (https://www.jenkins.io/doc/book/operating/agents/).");
         return new EncryptedSlaveAgentJnlpFile(this, "jenkins-agent.jnlp.jelly", getName(), CONNECT);
     }
 
