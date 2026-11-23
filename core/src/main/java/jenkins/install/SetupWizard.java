@@ -558,16 +558,6 @@ public class SetupWizard extends PageDecorator implements StaplerProxy {
     @CheckForNull
     /*package*/ JSONArray getPlatformPluginList() {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
-        return loadPlatformPluginList();
-    }
-
-    /**
-     * Loads the suggested plugin list from the update sites, falling back to a local version, without a permission check.
-     * @return JSON array with the categorized plugin list
-     */
-    @CheckForNull
-    @Restricted(NoExternalUse.class)
-    public static JSONArray loadPlatformPluginList() {
         JSONArray initialPluginList = null;
         updateSiteList: for (UpdateSite updateSite : Jenkins.get().getUpdateCenter().getSiteList()) {
             String suggestedPluginUrl = updateSite.getSuggestedPluginsUrl();
@@ -579,7 +569,6 @@ public class SetupWizard extends PageDecorator implements StaplerProxy {
             }
             try {
                 URLConnection connection = ProxyConfiguration.open(new URI(suggestedPluginUrl).toURL());
-                connection.setReadTimeout(connection.getConnectTimeout());
 
                 try {
                     String initialPluginJson = IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);
@@ -630,27 +619,16 @@ public class SetupWizard extends PageDecorator implements StaplerProxy {
         }
         if (initialPluginList == null) {
             // fall back to local file
-            initialPluginList = loadBundledPlatformPluginList();
+            try {
+                ClassLoader cl = getClass().getClassLoader();
+                URL localPluginData = cl.getResource("jenkins/install/platform-plugins.json");
+                String initialPluginJson = IOUtils.toString(localPluginData.openStream(), StandardCharsets.UTF_8);
+                initialPluginList =  JSONArray.fromObject(initialPluginJson);
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, e.getMessage(), e);
+            }
         }
         return initialPluginList;
-    }
-
-    /**
-     * Loads the suggested plugin list bundled with Jenkins.
-     * @return JSON array with the categorized plugin list
-     */
-    @CheckForNull
-    @Restricted(NoExternalUse.class)
-    public static JSONArray loadBundledPlatformPluginList() {
-        try {
-            ClassLoader cl = SetupWizard.class.getClassLoader();
-            URL localPluginData = cl.getResource("jenkins/install/platform-plugins.json");
-            String initialPluginJson = IOUtils.toString(localPluginData.openStream(), StandardCharsets.UTF_8);
-            return JSONArray.fromObject(initialPluginJson);
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, e.getMessage(), e);
-            return null;
-        }
     }
 
     /**

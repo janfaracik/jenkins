@@ -1,78 +1,44 @@
 package jenkins.plugins;
 
-import hudson.model.Computer;
-import hudson.model.UpdateSite;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.atomic.AtomicBoolean;
-import jenkins.install.SetupWizard;
-import jenkins.model.Jenkins;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 
 /**
- * The plugins the setup wizard suggests installing, as returned by {@link SetupWizard#loadPlatformPluginList()}.
- * Starts from the bundled list and refreshes in the background whenever the update site data changes.
+ * The plugins the setup wizard suggests installing, as listed in the bundled {@code jenkins/install/platform-plugins.json}.
  */
 @Restricted(NoExternalUse.class)
 public final class SuggestedPlugins {
 
-    private record Snapshot(long dataTimestamp, Set<String> names) {}
-
-    private static volatile Snapshot snapshot = new Snapshot(Long.MIN_VALUE, parse(SetupWizard.loadBundledPlatformPluginList()));
-
-    private static final AtomicBoolean refreshing = new AtomicBoolean();
+    private static final Set<String> NAMES = load();
 
     private SuggestedPlugins() {}
 
-    public static Set<String> names() {
-        long dataTimestamp = Jenkins.get().getUpdateCenter().getSiteList().stream()
-                .mapToLong(UpdateSite::getDataTimestamp)
-                .max()
-                .orElse(-1);
-        Snapshot current = snapshot;
-        if (current.dataTimestamp() != dataTimestamp && refreshing.compareAndSet(false, true)) {
-            try {
-                Computer.threadPoolForRemoting.submit(() -> refresh(dataTimestamp));
-            } catch (RejectedExecutionException e) {
-                refreshing.set(false);
-            }
-        }
-        return current.names();
+    public static boolean contains(String pluginName) {
+        return NAMES.contains(pluginName);
     }
 
-    private static void refresh(long dataTimestamp) {
-        try {
-            JSONArray categories = SetupWizard.loadPlatformPluginList();
-            Set<String> names = categories == null ? snapshot.names() : parse(categories);
-            snapshot = new Snapshot(dataTimestamp, names);
-        } finally {
-            refreshing.set(false);
-        }
-    }
-
-    private static Set<String> parse(JSONArray categories) {
-        if (categories == null) {
-            return Set.of();
-        }
-        Set<String> names = new HashSet<>();
-        for (Object category : categories) {
-            if (!(category instanceof JSONObject c)) {
-                continue;
-            }
-            JSONArray plugins = c.optJSONArray("plugins");
-            if (plugins == null) {
-                continue;
-            }
-            for (Object plugin : plugins) {
-                if (plugin instanceof JSONObject p && p.optBoolean("suggested", false) && p.optString("name", null) != null) {
-                    names.add(p.getString("name"));
+    private static Set<String> load() {
+        try (InputStream in = SuggestedPlugins.class.getResourceAsStream("/jenkins/install/platform-plugins.json")) {
+            Set<String> names = new HashSet<>();
+            for (Object category : JSONArray.fromObject(new String(in.readAllBytes(), StandardCharsets.UTF_8))) {
+                for (Object plugin : ((JSONObject) category).getJSONArray("plugins")) {
+                    JSONObject p = (JSONObject) plugin;
+                    if (p.optBoolean("suggested")) {
+                        names.add(p.getString("name"));
+                    }
                 }
             }
+            return names;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load platform-plugins.json", e);
         }
-        return Set.copyOf(names);
     }
 }
