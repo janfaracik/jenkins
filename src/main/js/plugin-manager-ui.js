@@ -56,9 +56,13 @@ function applyFilter(searchQuery) {
         suggestedTooltip: pluginsTable.dataset.suggestedTooltip,
       });
 
+      var keptRowCount = tbody.children.length;
       tbody.insertAdjacentHTML("beforeend", rows);
 
-      Behaviour.applySubtree(tbody);
+      Behaviour.applySubtree(
+        Array.from(tbody.children).slice(keptRowCount),
+        true,
+      );
 
       updateInstallButtonState();
     },

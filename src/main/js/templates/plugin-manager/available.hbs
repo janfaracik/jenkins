@@ -25,17 +25,17 @@
                 {{/if}}
             </div>
             <div class="app-plugin-manager__categories">
-                {{#if this.suggested }}
+                {{~#if this.suggested }}
                     <a href="?filter=suggested" tooltip="{{ @root.suggestedTooltip }}" class="jenkins-badge jenkins-!-color-purple">
                         <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
                         {{ @root.suggestedLabel }}
                     </a>
-                {{/if}}
+                {{/if~}}
                 {{#each this.categories }}
                     <a href="?filter={{ this }}" class="jenkins-badge">
                     {{ this }}
                     </a>
-                {{/each}}
+                {{/each~}}
             </div>
             {{#if this.excerpt }}
                 <div class="except">

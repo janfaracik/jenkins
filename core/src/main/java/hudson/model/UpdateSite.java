@@ -76,7 +76,6 @@ import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 import jenkins.model.Jenkins;
 import jenkins.plugins.DetachedPluginsUtil;
-import jenkins.plugins.SuggestedPlugins;
 import jenkins.security.UpdateSiteWarningsConfiguration;
 import jenkins.security.UpdateSiteWarningsMonitor;
 import jenkins.util.JSONSignatureValidator;
@@ -1287,12 +1286,6 @@ public class UpdateSite {
         @Restricted(NoExternalUse.class)
         public IssueTracker[] issueTrackers;
 
-        /**
-         * Whether this plugin is one of the suggested plugins offered by the setup wizard.
-         */
-        @Exported
-        public final boolean suggested;
-
         @Restricted(NoExternalUse.class)
         public final Integer healthScore;
 
@@ -1309,7 +1302,6 @@ public class UpdateSite {
             this.searchTitle = normalizeForSearch(getDisplayName());
             this.compatibleSinceVersion = Util.intern(get(o, "compatibleSinceVersion"));
             this.requiredCore = Util.intern(get(o, "requiredCore"));
-            this.suggested = SuggestedPlugins.isSuggested(name);
             final String releaseTimestamp = get(o, "releaseTimestamp");
             Date date = null;
             if (releaseTimestamp != null) {

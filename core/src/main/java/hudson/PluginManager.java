@@ -122,6 +122,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParserFactory;
@@ -135,6 +136,7 @@ import jenkins.install.InstallState;
 import jenkins.install.InstallUtil;
 import jenkins.model.Jenkins;
 import jenkins.plugins.DetachedPluginsUtil;
+import jenkins.plugins.SuggestedPlugins;
 import jenkins.security.CustomClassFilter;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.SystemProperties;
@@ -1460,7 +1462,8 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             available.addAll(site.getAvailables());
         }
 
-        List<UpdateSite.Plugin> results = query == null || query.isBlank() ? suggestedFirst(available) : searchAvailablePlugins(query, available);
+        Set<String> suggested = SuggestedPlugins.names();
+        List<UpdateSite.Plugin> results = query == null || query.isBlank() ? suggestedFirst(available, suggested) : searchAvailablePlugins(query, available, suggested);
 
         List<JSONObject> plugins = results.stream()
                 .limit(Math.max(limit, 1))
@@ -1475,7 +1478,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
                     } else {
                         jsonObject.put("wiki", plugin.wiki);
                     }
-                    jsonObject.put("suggested", plugin.suggested);
+                    jsonObject.put("suggested", suggested.contains(plugin.name));
                     jsonObject.put("categories", plugin.getCategoriesStream()
                         .filter(PluginManager::isNonMetaLabel)
                         .map(UpdateCenter::getCategoryDisplayName)
@@ -1536,7 +1539,7 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
      * A plugin matches if every word of the query appears in its name or title, or if the whole query appears in its
      * name, title, excerpt or categories. Only if no plugin matches that way are plugins matching some of the words returned.
      */
-    private static List<UpdateSite.Plugin> searchAvailablePlugins(String query, List<UpdateSite.Plugin> available) {
+    private static List<UpdateSite.Plugin> searchAvailablePlugins(String query, List<UpdateSite.Plugin> available, Set<String> suggested) {
         if (query.equalsIgnoreCase("warning:")) {
             return available.stream().filter(UpdateSite.Plugin::hasWarnings).collect(toList());
         }
@@ -1550,10 +1553,11 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
         for (UpdateSite.Plugin plugin : available) {
             int matchedTokens = plugin.countSearchMatches(tokens);
             boolean allMatched = tokens.length > 0 && matchedTokens == tokens.length;
-            if (allMatched || searchQueryMatches(query, plugin, lQuery)) {
-                allTokensMatched.add(new SearchResult(plugin, normalizedQuery, matchedTokens));
+            boolean isSuggested = suggested.contains(plugin.name);
+            if (allMatched || searchQueryMatches(query, plugin, lQuery, isSuggested)) {
+                allTokensMatched.add(new SearchResult(plugin, normalizedQuery, matchedTokens, isSuggested));
             } else if (matchedTokens > 0 && allTokensMatched.isEmpty()) {
-                someTokensMatched.add(new SearchResult(plugin, normalizedQuery, matchedTokens));
+                someTokensMatched.add(new SearchResult(plugin, normalizedQuery, matchedTokens, isSuggested));
             }
         }
 
@@ -1567,18 +1571,20 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
     /**
      * Moves suggested plugins to the front, keeping the existing popularity order within each group.
      */
-    private static List<UpdateSite.Plugin> suggestedFirst(List<UpdateSite.Plugin> available) {
-        return available.stream()
-                .sorted(Comparator.comparing((UpdateSite.Plugin plugin) -> !plugin.suggested))
+    private static List<UpdateSite.Plugin> suggestedFirst(List<UpdateSite.Plugin> available, Set<String> suggested) {
+        return Stream.concat(
+                available.stream().filter(plugin -> suggested.contains(plugin.name)),
+                available.stream().filter(plugin -> !suggested.contains(plugin.name)))
                 .collect(toList());
     }
 
-    private record SearchResult(UpdateSite.Plugin plugin, boolean exactMatch, boolean deprecated, int matchedTokens) {
-        SearchResult(UpdateSite.Plugin plugin, String normalizedQuery, int matchedTokens) {
+    private record SearchResult(UpdateSite.Plugin plugin, boolean exactMatch, boolean deprecated, int matchedTokens, boolean suggested) {
+        SearchResult(UpdateSite.Plugin plugin, String normalizedQuery, int matchedTokens, boolean suggested) {
             this(plugin,
                     plugin.isExactSearchMatch(normalizedQuery),
                     plugin.isDeprecated(),
-                    matchedTokens);
+                    matchedTokens,
+                    suggested);
         }
     }
 
@@ -1586,16 +1592,16 @@ public abstract class PluginManager extends AbstractModelObject implements OnMas
             .comparing((SearchResult result) -> !result.exactMatch())
             .thenComparing(SearchResult::deprecated)
             .thenComparing(Comparator.comparingInt(SearchResult::matchedTokens).reversed())
-            .thenComparing(result -> !result.plugin().suggested)
+            .thenComparing(result -> !result.suggested())
             .thenComparing(result -> result.plugin().popularity, Comparator.reverseOrder())
             .thenComparing(result -> result.plugin().getDisplayName());
 
-    private static boolean searchQueryMatches(String query, UpdateSite.Plugin plugin, String lQuery) {
-        return (plugin.name != null && plugin.name.toLowerCase(Locale.ROOT).contains(lQuery)) ||
+    private static boolean searchQueryMatches(String query, UpdateSite.Plugin plugin, String lQuery, boolean suggested) {
+        return (suggested && lQuery.equals("suggested")) ||
+                (plugin.name != null && plugin.name.toLowerCase(Locale.ROOT).contains(lQuery)) ||
                 (plugin.title != null && plugin.title.toLowerCase(Locale.ROOT).contains(lQuery)) ||
                 (plugin.excerpt != null && plugin.excerpt.toLowerCase(Locale.ROOT).contains(lQuery)) ||
                 plugin.hasCategory(query) ||
-                (plugin.suggested && lQuery.equals("suggested")) ||
                 plugin.getCategoriesStream()
                         .map(UpdateCenter::getCategoryDisplayName)
                         .anyMatch(category -> category != null && category.toLowerCase(Locale.ROOT).contains(lQuery));
