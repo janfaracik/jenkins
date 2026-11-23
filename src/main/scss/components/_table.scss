@@ -171,14 +171,6 @@
 
   .jenkins-button {
     margin: -10px 0;
-    padding: 0.5rem 0.75rem;
-    min-height: 1.75rem;
-
-    // Increase the size of symbols compared to regular buttons
-    svg {
-      width: 1.5rem !important;
-      height: 1.5rem !important;
-    }
   }
 
   &__button,
