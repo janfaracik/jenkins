@@ -32,13 +32,57 @@ function init() {
 
   const hoverClass = "jenkins-command-palette__results__item--hover";
 
+  const scopes = [];
+  const renderedResults = new WeakMap();
+  let latestRequest = 0;
+
+  const scopesContainer = document.createElement("div");
+  scopesContainer.className = "jenkins-command-palette__scopes";
+  commandPaletteInput.before(scopesContainer);
+
   makeKeyboardNavigable(
     searchResultsContainer,
     () => searchResults.querySelectorAll("a"),
     hoverClass,
-    () => {},
+    (selectedItem, key, e) => {
+      if (key !== "Tab" || e.shiftKey) {
+        return;
+      }
+
+      const result = selectedItem && renderedResults.get(selectedItem);
+      if (!result?.drillable) {
+        return;
+      }
+
+      e.preventDefault();
+      drillInto(result);
+    },
     () => commandPalette.open,
   );
+
+  commandPaletteInput.addEventListener("keydown", (e) => {
+    if (e.key !== "Backspace" || commandPaletteInput.value !== "") {
+      return;
+    }
+
+    if (scopes.length === 0) {
+      return;
+    }
+
+    e.preventDefault();
+    scopes.pop();
+    updateScopes();
+  });
+
+  commandPalette.addEventListener("cancel", (e) => {
+    if (scopes.length === 0) {
+      return;
+    }
+
+    e.preventDefault();
+    scopes.pop();
+    updateScopes();
+  });
 
   // Events
   headerCommandPaletteButton.addEventListener("click", function () {
@@ -57,11 +101,39 @@ function init() {
     hideCommandPalette();
   });
 
+  function drillInto(result) {
+    scopes.push({
+      label: result.label,
+      url: result.url.endsWith("/") ? result.url : result.url + "/",
+    });
+    commandPaletteInput.value = "";
+    updateScopes();
+  }
+
+  function updateScopes() {
+    scopesContainer.innerHTML = "";
+    scopes.forEach((scope) => {
+      const chip = document.createElement("span");
+      chip.className = "jenkins-command-palette__scope";
+      chip.textContent = scope.label;
+      scopesContainer.append(chip);
+    });
+
+    debouncedLoad.cancel();
+    renderResults();
+  }
+
   function renderResults() {
     const query = commandPaletteInput.value;
+    const scope = scopes.at(-1);
+    const request = ++latestRequest;
     let results;
 
-    if (query.length === 0) {
+    if (scope) {
+      results = Promise.all(
+        datasources.map((ds) => ds.execute(query, scope)),
+      ).then((e) => e.flat());
+    } else if (query.length === 0) {
       results = Promise.all([
         LinkResult({
           icon: Symbols.HELP,
@@ -79,12 +151,16 @@ function init() {
     }
 
     results.then((results) => {
+      if (request !== latestRequest) {
+        return;
+      }
+
       results = groupResultsByCategory(results);
 
       // Clear current search results
       searchResults.innerHTML = "";
 
-      if (query.length === 0 || Object.keys(results).length > 0) {
+      if ((!scope && query.length === 0) || Object.keys(results).length > 0) {
         for (const [group, items] of Object.entries(results)) {
           if (group !== "null") {
             const heading = document.createElement("p");
@@ -95,6 +171,7 @@ function init() {
 
           items.forEach(function (obj) {
             const link = createElementFromHtml(obj.render());
+            renderedResults.set(link, obj);
             link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
             searchResults.append(link);
           });
@@ -135,6 +212,8 @@ function init() {
 
   // Helper methods for visibility of command palette
   function showCommandPalette() {
+    scopes.length = 0;
+    scopesContainer.innerHTML = "";
     commandPalette.showModal();
     commandPaletteInput.focus();
     commandPaletteInput.setSelectionRange(0, commandPaletteInput.value.length);

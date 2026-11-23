@@ -32,6 +32,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.ExtensionComponent;
 import hudson.ExtensionList;
 import hudson.Util;
+import hudson.model.ItemGroup;
+import hudson.model.Job;
+import hudson.model.ManageJenkinsAction;
+import hudson.model.Run;
 import hudson.util.EditDistance;
 import io.jenkins.servlet.ServletExceptionWrapper;
 import jakarta.servlet.ServletException;
@@ -42,6 +46,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -165,6 +170,8 @@ public class Search implements StaplerProxy {
      */
     public void doSuggest(StaplerRequest2 req, StaplerResponse2 rsp, @QueryParameter String query) throws IOException, ServletException {
         Result r = new Result();
+        boolean scoped = isScoped(req);
+        String scopePrefix = scoped ? scopePrefix(req) : null;
         for (SuggestedItem curItem : getSuggestions(req, query)) {
             String iconName = curItem.item.getSearchIcon();
 
@@ -174,12 +181,20 @@ public class Search implements StaplerProxy {
                 iconName = "symbol-search";
             }
 
-            if (iconName.startsWith("symbol")) {
-                r.suggestions.add(new Item(curItem.getPath(), curItem.getUrl(),
-                        Symbol.get(new SymbolRequest.Builder().withRaw(iconName).build()), "symbol", curItem.item.getSearchGroup().getDisplayName()));
-            } else {
-                r.suggestions.add(new Item(curItem.getPath(), curItem.getUrl(), iconName, "image", curItem.item.getSearchGroup().getDisplayName()));
+            String name = curItem.getPath();
+            if (scopePrefix != null && name.startsWith(scopePrefix)) {
+                name = name.substring(scopePrefix.length());
             }
+
+            Item item;
+            if (iconName.startsWith("symbol")) {
+                item = new Item(name, curItem.getUrl(),
+                        Symbol.get(new SymbolRequest.Builder().withRaw(iconName).build()), "symbol", curItem.item.getSearchGroup().getDisplayName());
+            } else {
+                item = new Item(name, curItem.getUrl(), iconName, "image", curItem.item.getSearchGroup().getDisplayName());
+            }
+            item.drillable = isDrillable(curItem.item);
+            r.suggestions.add(item);
         }
 
         // Sort results by group
@@ -190,11 +205,9 @@ public class Search implements StaplerProxy {
                         (k) -> k.getInstance().getDisplayName(),
                         ExtensionComponent::ordinal
                 ));
-        r.suggestions.sort(
-                Comparator.comparingDouble((Item item) -> searchGroupOrdinal.getOrDefault(item.getGroup(), Double.MAX_VALUE))
-                        .reversed()
-                        .thenComparing(item -> item.name)
-        );
+        Comparator<Item> byGroup = Comparator.comparingDouble((Item item) -> searchGroupOrdinal.getOrDefault(item.getGroup(), Double.MAX_VALUE))
+                .reversed();
+        r.suggestions.sort(scoped ? byGroup : byGroup.thenComparing(item -> item.name));
 
         rsp.serveExposedBean(req, r, new ExportConfig());
     }
@@ -230,7 +243,10 @@ public class Search implements StaplerProxy {
                 MAX_SEARCH_SIZE
         );
         SearchableModelObject smo = findClosestSearchableModelObject(req);
-        for (SuggestedItem i : suggest(makeSuggestIndex(req), query, smo)) {
+        List<SuggestedItem> suggestions = isScoped(req) && smo != null
+                ? suggestScoped(smo, query)
+                : suggest(makeSuggestIndex(req), query, smo);
+        for (SuggestedItem i : suggestions) {
             if (r.size() >= max) {
                 r.hasMoreResults = true;
                 break;
@@ -239,6 +255,57 @@ public class Search implements StaplerProxy {
                 r.add(i);
         }
         return r;
+    }
+
+    private static boolean isScoped(StaplerRequest2 req) {
+        return Boolean.parseBoolean(req.getParameter("scoped"));
+    }
+
+    private @CheckForNull String scopePrefix(StaplerRequest2 req) {
+        SearchableModelObject smo = findClosestSearchableModelObject(req);
+        if (smo == null) {
+            return null;
+        }
+        return SuggestedItem.build(null, smo).getPath() + " » ";
+    }
+
+    private static boolean isDrillable(SearchItem item) {
+        return item instanceof ItemGroup || item instanceof Job || item instanceof ManageJenkinsAction;
+    }
+
+    private static List<SuggestedItem> suggestScoped(SearchableModelObject scope, String query) {
+        SearchIndex index = scope instanceof Job<?, ?> job ? new RunSearchIndex(job) : scope.getSearchIndex();
+        List<SearchItem> items = new ArrayList<>();
+        index.suggest(query == null ? "" : query.trim(), items);
+
+        SuggestedItem scopeItem = SuggestedItem.build(null, scope);
+        List<SuggestedItem> result = new ArrayList<>();
+        for (SearchItem item : items) {
+            result.add(item instanceof hudson.model.Item ? SuggestedItem.build(scope, item) : new SuggestedItem(scopeItem, item));
+        }
+        return result;
+    }
+
+    private static final class RunSearchIndex implements SearchIndex {
+        private final Job<?, ?> job;
+
+        RunSearchIndex(Job<?, ?> job) {
+            this.job = job;
+        }
+
+        @Override
+        public void find(String token, List<SearchItem> result) {
+        }
+
+        @Override
+        public void suggest(String token, List<SearchItem> result) {
+            String needle = token.toLowerCase(Locale.ROOT);
+            for (Run<?, ?> run : job.getBuilds().limit(MAX_SEARCH_SIZE)) {
+                if (run.getDisplayName().toLowerCase(Locale.ROOT).contains(needle)) {
+                    result.add(run);
+                }
+            }
+        }
     }
 
     public int getMaxSearchSize() {
@@ -291,6 +358,9 @@ public class Search implements StaplerProxy {
 
         @Exported
         public String name;
+
+        @Exported
+        public boolean drillable;
 
         private final String url;
 
