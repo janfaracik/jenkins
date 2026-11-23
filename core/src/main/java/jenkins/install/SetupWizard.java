@@ -579,6 +579,7 @@ public class SetupWizard extends PageDecorator implements StaplerProxy {
             }
             try {
                 URLConnection connection = ProxyConfiguration.open(new URI(suggestedPluginUrl).toURL());
+                connection.setReadTimeout(connection.getConnectTimeout());
 
                 try {
                     String initialPluginJson = IOUtils.toString(connection.getInputStream(), StandardCharsets.UTF_8);

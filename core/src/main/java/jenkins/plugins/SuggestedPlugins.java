@@ -1,12 +1,13 @@
 package jenkins.plugins;
 
+import hudson.model.Computer;
 import hudson.model.UpdateSite;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import jenkins.install.SetupWizard;
 import jenkins.model.Jenkins;
-import jenkins.util.Timer;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.kohsuke.accmod.Restricted;
@@ -34,7 +35,11 @@ public final class SuggestedPlugins {
                 .orElse(-1);
         Snapshot current = snapshot;
         if (current.dataTimestamp() != dataTimestamp && refreshing.compareAndSet(false, true)) {
-            Timer.get().submit(() -> refresh(dataTimestamp));
+            try {
+                Computer.threadPoolForRemoting.submit(() -> refresh(dataTimestamp));
+            } catch (RejectedExecutionException e) {
+                refreshing.set(false);
+            }
         }
         return current.names();
     }
