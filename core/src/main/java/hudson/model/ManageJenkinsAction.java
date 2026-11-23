@@ -107,7 +107,7 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, Searcha
         Jenkins.get().getCategorizedManagementLinks().forEach((category, links) -> {
             SearchGroup group = category::getLabel;
             for (ManagementLink link : links) {
-                if (link.getRequiresPOST() || link.getUrlName() == null) {
+                if (link.getRequiresPOST() || link.getRequiresConfirmation() || link.getUrlName() == null) {
                     continue;
                 }
                 items.add(new ManagementLinkSearchItem(link, group));
@@ -130,6 +130,11 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, Searcha
         @Override
         public String getSearchIcon() {
             return link.getIconFileName();
+        }
+
+        @Override
+        public String getSearchDescription() {
+            return link.getSearchDescription();
         }
 
         @Override

@@ -44,6 +44,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -177,6 +178,8 @@ public class Search implements StaplerProxy {
         SearchableModelObject scope = scoped ? findClosestSearchableModelObject(req) : null;
         for (SuggestedItem curItem : getSuggestions(req, query)) {
             String iconName = curItem.item.getSearchIcon();
+            String group = curItem.item.getSearchGroup().getDisplayName();
+            String description = curItem.item.getSearchDescription();
 
             if (iconName == null ||
                     (!iconName.startsWith("symbol-") && !iconName.startsWith("http"))
@@ -190,9 +193,9 @@ public class Search implements StaplerProxy {
             Item item;
             if (iconName.startsWith("symbol")) {
                 item = new Item(name, curItem.getUrl(),
-                        Symbol.get(new SymbolRequest.Builder().withRaw(iconName).build()), "symbol", curItem.item.getSearchGroup().getDisplayName());
+                        Symbol.get(new SymbolRequest.Builder().withRaw(iconName).build()), "symbol", group, description);
             } else {
-                item = new Item(name, curItem.getUrl(), iconName, "image", curItem.item.getSearchGroup().getDisplayName());
+                item = new Item(name, curItem.getUrl(), iconName, "image", group, description);
             }
             item.drillable = isDrillable(curItem.item);
             item.parent = segments.isEmpty() ? null : String.join(" / ", segments);
@@ -244,17 +247,29 @@ public class Search implements StaplerProxy {
                 req.hasParameter("max") ? Integer.parseInt(req.getParameter("max")) : 100,
                 MAX_SEARCH_SIZE
         );
+        Map<String, Integer> groupSizes = new HashMap<>();
         SearchableModelObject smo = findClosestSearchableModelObject(req);
         List<SuggestedItem> suggestions = isScoped(req) && smo != null
                 ? suggestScoped(smo, query)
                 : suggest(makeSuggestIndex(req), query, smo);
         for (SuggestedItem i : suggestions) {
-            if (r.size() >= max) {
+            if (r.size() >= MAX_SEARCH_SIZE) {
                 r.hasMoreResults = true;
                 break;
             }
-            if (paths.add(i.getPath()))
-                r.add(i);
+            // Dedupe on name and URL
+            String path = i.getPath() + " " + i.getUrl();
+            if (paths.contains(path)) {
+                continue;
+            }
+            String group = i.item.getSearchGroup().getDisplayName();
+            if (groupSizes.getOrDefault(group, 0) >= max) {
+                r.hasMoreResults = true;
+                continue;
+            }
+            paths.add(path);
+            groupSizes.merge(group, 1, Integer::sum);
+            r.add(i);
         }
         return r;
     }
@@ -406,17 +421,23 @@ public class Search implements StaplerProxy {
 
         private final String group;
 
+        private final String description;
+
         public Item(String name) {
             this(name, null, null, "symbol", null);
         }
 
         public Item(String name, String url, String icon, String type, String group) {
+            this(name, url, icon, type, group, null);
+        }
+
+        public Item(String name, String url, String icon, String type, String group, String description) {
             this.name = name;
             this.url = url;
             this.icon = icon;
-            this.name = name;
             this.type = type;
             this.group = group;
+            this.description = description;
         }
 
         @Exported
@@ -437,6 +458,11 @@ public class Search implements StaplerProxy {
         @Exported
         public String getGroup() {
             return group;
+        }
+
+        @Exported
+        public String getDescription() {
+            return description;
         }
     }
 
@@ -525,6 +551,7 @@ public class Search implements StaplerProxy {
      * @since 1.527
      */
     public static List<SuggestedItem> suggest(SearchIndex index, final String tokenList, SearchableModelObject searchContext) {
+        final boolean caseInsensitive = UserSearchProperty.isCaseInsensitive();
 
         class Tag implements Comparable<Tag> {
             final SuggestedItem item;
@@ -535,7 +562,7 @@ public class Search implements StaplerProxy {
             Tag(SuggestedItem i) {
                 item = i;
                 distance = EditDistance.editDistance(i.getPath(), tokenList);
-                prefixMatch = i.getPath().startsWith(tokenList) ? 1 : 0;
+                prefixMatch = i.getPath().regionMatches(caseInsensitive, 0, tokenList, 0, tokenList.length()) ? 1 : 0;
             }
 
             @Override
