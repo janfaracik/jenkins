@@ -1,6 +1,6 @@
 .jenkins-toggle-switch {
-  --toggle-switch-height: 30px;
-  --toggle-switch-padding: 4px;
+  --toggle-switch-height: 1.875rem;
+  --toggle-switch-padding: 0.25rem;
 
   position: relative;
   display: inline-block;
@@ -45,7 +45,7 @@
   &:checked + label::before {
     background-color: var(--focus-input-border);
     box-shadow:
-      inset 0 0 0 1.5px
+      inset 0 0 0 1px
         color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
       inset 0 10px 10px color-mix(in sRGB, white 1.5%, transparent),
       0 2px 2px color-mix(in sRGB, var(--focus-input-border) 4%, transparent),
@@ -63,7 +63,7 @@
       &:focus {
         &::before {
           box-shadow:
-            inset 0 0 0 1.5px
+            inset 0 0 0 1px
               color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
             inset 0 10px 10px color-mix(in sRGB, white 1.5%, transparent),
             0 2px 2px
@@ -119,7 +119,7 @@
     transition: var(--standard-transition);
     margin-right: 1rem;
     box-shadow:
-      inset 0 0 0 1.5px
+      inset 0 0 0 1px
         color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
       var(--form-input-glow);
   }
@@ -143,7 +143,7 @@
     mask-position: center;
     border-radius: 100px;
     transition: var(--standard-transition);
-    box-shadow: 0 0 0 1.5px
+    box-shadow: 0 0 0 1px
       color-mix(in sRGB, var(--text-color-secondary) 9%, transparent);
   }
 
@@ -155,7 +155,7 @@
   &:focus {
     &::before {
       box-shadow:
-        inset 0 0 0 1.5px
+        inset 0 0 0 1px
           color-mix(in sRGB, var(--text-color-secondary) 9%, transparent),
         0 0 0 var(--focus-ring-width)
           color-mix(in sRGB, var(--text-color-secondary) 25%, transparent);
