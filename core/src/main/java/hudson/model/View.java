@@ -84,21 +84,26 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import jenkins.model.Badgeable;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu;
+import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.item_category.Categories;
 import jenkins.model.item_category.Category;
 import jenkins.model.item_category.ItemCategory;
+import jenkins.model.menu.action.BaseUrlAction;
 import jenkins.search.SearchGroup;
 import jenkins.security.ExtendedReadRedaction;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.xml.XMLUtils;
+import jenkins.widgets.BuildListTable;
 import jenkins.widgets.HasWidgets;
 import net.sf.json.JSONObject;
 import org.jenkins.ui.icon.Icon;
@@ -107,6 +112,7 @@ import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.HttpResponses;
@@ -120,6 +126,7 @@ import org.kohsuke.stapler.WebMethod;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 import org.kohsuke.stapler.interceptor.RequirePOST;
+import org.kohsuke.stapler.verb.GET;
 import org.kohsuke.stapler.verb.POST;
 import org.xml.sax.SAXException;
 
@@ -144,7 +151,7 @@ import org.xml.sax.SAXException;
  * @see ViewGroup
  */
 @ExportedBean
-public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets {
+public abstract class View extends AbstractModelObject implements AccessControlled, Describable<View>, ExtensionPoint, Saveable, ModelObjectWithChildren, DescriptorByNameOwner, HasWidgets, Badgeable {
 
     /**
      * Container of this view. Set right after the construction
@@ -368,6 +375,19 @@ public abstract class View extends AbstractModelObject implements AccessControll
         return getViewName();
     }
 
+    /**
+     * Returns the icon file name for this action.
+     * <p>
+     * Only displays if {@link jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag} is enabled.
+     * <p>
+     * This behaves similarly to {@link Action#getIconFileName()}, except that
+     * returning {@code null} here does not hide the associated view; the view
+     * will still be displayed even when this method returns {@code null}.
+     */
+    public String getIconFileName() {
+        return null;
+    }
+
     public String getNewPronoun() {
         return AlternativeUiTextProvider.get(NEW_PRONOUN, this, Messages.AbstractItem_Pronoun());
     }
@@ -575,18 +595,41 @@ public abstract class View extends AbstractModelObject implements AccessControll
 
     /**
      * Returns the transient {@link Action}s associated with the top page.
-     *
-     * <p>
-     * If views don't want to show top-level actions, this method
-     * can be overridden to return different objects.
-     *
-     * @see Jenkins#getActions()
      */
     public List<Action> getActions() {
-        List<Action> result = new ArrayList<>();
-        result.addAll(getOwner().getViewActions());
-        result.addAll(TransientViewActionFactory.createAllFor(this));
-        return result;
+        return TransientViewActionFactory.createAllFor(this);
+    }
+
+    /**
+     * Collects the actions to display in the app bar of this view, along with those of its owner if it's an item,
+     * e.g. a folder. Each action resolves its URLs against the object it belongs to.
+     */
+    @Restricted(NoExternalUse.class)
+    public List<Action> getAppBarActions() {
+        String viewUrl = getViewUrl();
+        Stream<Action> viewActions = getActions().stream()
+                .filter(Actionable::isAppBarAction)
+                .map(action -> new BaseUrlAction(action, viewUrl));
+
+        if (!(owner instanceof Actionable actionable)) {
+            return viewActions.sorted(Actionable.APP_BAR_ORDER).toList();
+        }
+
+        String ownerUrl = owner.getUrl();
+        Stream<Action> ownerActions = actionable.getAllActions().stream()
+                .filter(Actionable::isAppBarAction)
+                .map(action -> new BaseUrlAction(action, ownerUrl));
+
+        return Stream.concat(viewActions, ownerActions).sorted(Actionable.APP_BAR_ORDER).toList();
+    }
+
+    @Restricted(NoExternalUse.class)
+    public ModelObjectWithContextMenu.ContextMenu doContextMenu(StaplerRequest2 request) {
+        if (!new NewDashboardPageUserExperimentalFlag().getFlagValue()) {
+            throw HttpResponses.notFound();
+        }
+
+        return new ModelObjectWithContextMenu.ContextMenu().addAppBarActions(getAppBarActions(), request);
     }
 
     /**
@@ -943,6 +986,15 @@ public abstract class View extends AbstractModelObject implements AccessControll
         return new RunList(this);
     }
 
+    /**
+     * Serves a page of {@link #getBuilds()} as JSON for {@code buildListTable.jelly}.
+     */
+    @GET
+    @Restricted(NoExternalUse.class)
+    public HttpResponse doBuildList(@QueryParameter String olderThan, @QueryParameter String limit) {
+        return new BuildListTable().serve(getBuilds(), olderThan, limit);
+    }
+
     @Deprecated
     @Restricted(DoNotUse.class)
     public BuildTimelineWidget getTimeline() {
@@ -1243,6 +1295,12 @@ public abstract class View extends AbstractModelObject implements AccessControll
         } catch (StreamException | ConversionException | Error e) { // mostly reflection errors
             throw new IOException("Unable to read", e);
         }
+    }
+
+    // for Jelly
+    @Restricted(DoNotUse.class)
+    public boolean isMyViewsProperty() {
+        return getOwner() instanceof MyViewsProperty;
     }
 
     public static class PropertyList extends DescribableList<ViewProperty, ViewPropertyDescriptor> {

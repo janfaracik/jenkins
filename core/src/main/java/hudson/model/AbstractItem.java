@@ -43,16 +43,19 @@ import hudson.security.ACLContext;
 import hudson.security.AccessControlled;
 import hudson.util.AlternativeUiTextProvider;
 import hudson.util.AlternativeUiTextProvider.Message;
-import hudson.util.AtomicFileWriter;
 import hudson.util.FormValidation;
-import hudson.util.IOUtils;
 import hudson.util.Secret;
+import hudson.util.XStream2;
+import hudson.widgets.Widget;
 import io.jenkins.servlet.ServletExceptionWrapper;
 import jakarta.servlet.ServletException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collection;
 import java.util.List;
@@ -69,7 +72,7 @@ import jenkins.model.Jenkins;
 import jenkins.model.Loadable;
 import jenkins.model.queue.ItemDeletion;
 import jenkins.security.ExtendedReadRedaction;
-import jenkins.security.NotReallyRoleSensitiveCallable;
+import jenkins.security.XStreamNotDeserializable;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.SystemProperties;
 import jenkins.util.xml.XMLUtils;
@@ -113,6 +116,7 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
     /**
      * Project name.
      */
+    @XStreamNotDeserializable
     protected /*final*/ transient String name;
 
     /**
@@ -120,6 +124,7 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
      */
     protected volatile String description;
 
+    @XStreamNotDeserializable
     private transient ItemGroup parent;
 
     protected String displayName;
@@ -129,6 +134,7 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
         doSetName(name);
     }
 
+    @NonNull
     @Override
     @Exported(visibility = 999)
     public String getName() {
@@ -346,6 +352,22 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
     }
 
     /**
+     * Additional lock held by {@link #renameTo} (inside this item's own monitor) while the root
+     * directory is being moved, for subclasses that write into the root directory under some other
+     * lock. Code holding the returned lock must never acquire this item's or its parent's monitor.
+     */
+    Object getRenameLock() {
+        return this;
+    }
+
+    /**
+     * Called by {@link #renameTo} with {@link #getRenameLock} held, before anything is changed, to refuse
+     * the rename if something is about to write into the current root directory.
+     */
+    void checkRootDirMovable() {
+    }
+
+    /**
      * Renames this item.
      * Not all the Items need to support this operation, but if you decide to do so,
      * you can use this method.
@@ -376,72 +398,98 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
                 // see http://www.nabble.com/error-on-renaming-project-tt18061629.html
                 Items.verifyItemDoesNotAlreadyExist(parent, newName, this);
 
-                File oldRoot = this.getRootDir();
+                // Kept to the directory move only: the fallback copy below overwrites, so nothing may
+                // write into either root directory meanwhile, and no parent/plugin code may run here.
+                synchronized (getRenameLock()) {
+                    checkRootDirMovable();
+                    File oldRoot = this.getRootDir();
 
-                doSetName(newName);
-                File newRoot = this.getRootDir();
+                    doSetName(newName);
+                    File newRoot = this.getRootDir();
 
-                boolean success = false;
+                    boolean success = false;
 
-                try { // rename data files
-                    boolean interrupted = false;
-                    boolean renamed = false;
+                    try { // rename data files
+                        boolean interrupted = false;
+                        boolean renamed = false;
 
-                    // try to rename the job directory.
-                    // this may fail on Windows due to some other processes
-                    // accessing a file.
-                    // so retry few times before we fall back to copy.
-                    for (int retry = 0; retry < 5; retry++) {
-                        if (oldRoot.renameTo(newRoot)) {
-                            renamed = true;
-                            break; // succeeded
+                        // try to rename the job directory.
+                        // this may fail on Windows due to some other processes
+                        // accessing a file.
+                        // so retry few times before we fall back to copy.
+                        for (int retry = 0; retry < 5; retry++) {
+                            try {
+                                Files.move(Util.fileToPath(oldRoot), Util.fileToPath(newRoot));
+                                renamed = true;
+                                break;
+                            } catch (java.nio.file.AccessDeniedException e) { // use FQN as we already imported one from spring here.
+                                if (!Functions.isWindows()) {
+                                    throw e;
+                                }
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException ie) {
+                                    // process the interruption later
+                                    interrupted = true;
+                                }
+                            }
                         }
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            // process the interruption later
-                            interrupted = true;
+
+                        if (interrupted)
+                            Thread.currentThread().interrupt();
+
+                        // Since changing the renaming api from java.io.File#renameTo to java.nio.file.Files#move,
+                        // no failure in Unix is retryable, control can only reach here on Windows.
+                        if (!renamed) {
+                            // failed to rename. it must be that some lengthy
+                            // process is going on
+                            // to prevent a rename operation. So do a copy. Ideally
+                            // we'd like to
+                            // later delete the old copy, but we can't reliably do
+                            // so, as before the VM
+                            // shuts down there might be a new job created under the
+                            // old name.
+
+                            // [SECURITY-4187] Refuse to copy if the directory contains symlinks,
+                            // as the Ant Copy task dereferences them into regular files.
+                            // As mentioned above, this only happens on Windows on rare occasion, so this is fine.
+                            try (var stream = Files.walk(Util.fileToPath(oldRoot))) {
+                                if (stream.anyMatch(Files::isSymbolicLink)) {
+                                    throw new IOException("""
+                                            Rename of %s failed, possibly because another process has files \
+                                            open in the directory. Cannot fall back to recursive-copy for security reasons \
+                                            because the directory contains symbolic links. Retry may succeed \
+                                            once the other process releases its lock.""".formatted(oldRoot));
+                                }
+                            }
+
+                            Copy cp = new Copy();
+                            cp.setProject(new Project());
+                            cp.setTodir(newRoot);
+                            FileSet src = new FileSet();
+                            src.setDir(oldRoot);
+                            cp.addFileset(src);
+                            cp.setOverwrite(true);
+                            cp.setPreserveLastModified(true);
+                            cp.setFailOnError(false); // keep going even if
+                                                        // there's an error
+                            cp.execute();
+
+                            // try to delete as much as possible
+                            try {
+                                Util.deleteRecursive(oldRoot);
+                            } catch (IOException e) {
+                                // but ignore the error, since we expect that
+                                LOGGER.log(Level.WARNING, "Ignoring IOException while deleting", e);
+                            }
                         }
+
+                        success = true;
+                    } finally {
+                        // if failed, back out the rename.
+                        if (!success)
+                            doSetName(oldName);
                     }
-
-                    if (interrupted)
-                        Thread.currentThread().interrupt();
-
-                    if (!renamed) {
-                        // failed to rename. it must be that some lengthy
-                        // process is going on
-                        // to prevent a rename operation. So do a copy. Ideally
-                        // we'd like to
-                        // later delete the old copy, but we can't reliably do
-                        // so, as before the VM
-                        // shuts down there might be a new job created under the
-                        // old name.
-                        Copy cp = new Copy();
-                        cp.setProject(new Project());
-                        cp.setTodir(newRoot);
-                        FileSet src = new FileSet();
-                        src.setDir(oldRoot);
-                        cp.addFileset(src);
-                        cp.setOverwrite(true);
-                        cp.setPreserveLastModified(true);
-                        cp.setFailOnError(false); // keep going even if
-                                                    // there's an error
-                        cp.execute();
-
-                        // try to delete as much as possible
-                        try {
-                            Util.deleteRecursive(oldRoot);
-                        } catch (IOException e) {
-                            // but ignore the error, since we expect that
-                            LOGGER.log(Level.WARNING, "Ignoring IOException while deleting", e);
-                        }
-                    }
-
-                    success = true;
-                } finally {
-                    // if failed, back out the rename.
-                    if (!success)
-                        doSetName(oldName);
                 }
 
                 parent.onRenamed(this, oldName, newName);
@@ -470,6 +518,7 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
     @Override
     public abstract Collection<? extends Job> getAllJobs();
 
+    @NonNull
     @Override
     @Exported
     public final String getFullName() {
@@ -545,7 +594,11 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
             }
             List<Ancestor> ancestors = req.getAncestors();
             if (!ancestors.isEmpty()) {
-                Ancestor last = ancestors.get(ancestors.size() - 1);
+                Ancestor last = ancestors.getLast();
+                if (last.getObject() instanceof Widget) {
+                    // likely loaded via ajax so get the previous one which should be the view
+                    last = last.getPrev();
+                }
                 if (last.getObject() instanceof View view) {
                     if (view.getOwner().getItemGroup() == getParent() && !view.isDefault()) {
                         // Showing something inside a view, so should use that as the base URL.
@@ -882,10 +935,13 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
         checkPermission(EXTENDED_READ);
         XmlFile configFile = getConfigFile();
         if (hasPermission(CONFIGURE)) {
-            IOUtils.copy(configFile.getFile(), os);
+            Items.XSTREAM2.toXMLUTF8(this, os);
         } else {
+            var baos = new ByteArrayOutputStream();
+            Items.XSTREAM2.toXMLUTF8(this, baos);
+            String xml = baos.toString(StandardCharsets.UTF_8);
+
             String encoding = configFile.sniffEncoding();
-            String xml = Files.readString(Util.fileToPath(configFile.getFile()), Charset.forName(encoding));
 
             for (ExtendedReadRedaction redaction : ExtendedReadRedaction.all()) {
                 LOGGER.log(Level.FINE, () -> "Applying redaction " + redaction.getClass().getName());
@@ -912,42 +968,33 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
      *               sources may not be handled.
      * @since 1.473
      */
+    @SuppressWarnings("unchecked")
     public void updateByXml(Source source) throws IOException {
         checkPermission(CONFIGURE);
         XmlFile configXmlFile = getConfigFile();
-        final AtomicFileWriter out = new AtomicFileWriter(configXmlFile.getFile());
+        final StringWriter out = new StringWriter();
         try {
-            try {
-                XMLUtils.safeTransform(source, new StreamResult(out));
-                out.close();
-            } catch (TransformerException | SAXException e) {
-                throw new IOException("Failed to persist config.xml", e);
-            }
-
-            // try to reflect the changes by reloading
-            Object o = new XmlFile(Items.XSTREAM, out.getTemporaryPath().toFile()).unmarshalNullingOut(this);
-            if (o != this) {
-                // ensure that we've got the same job type. extending this code to support updating
-                // to different job type requires destroying & creating a new job type
-                throw new IOException("Expecting " + this.getClass() + " but got " + o.getClass() + " instead");
-            }
-
-            Items.whileUpdatingByXml(new NotReallyRoleSensitiveCallable<Void, IOException>() {
-                @Override public Void call() throws IOException {
-                    onLoad(getParent(), getRootDir().getName());
-                    return null;
-                }
-            });
-            Jenkins.get().rebuildDependencyGraphAsync();
-
-            // if everything went well, commit this new version
-            out.commit();
-            SaveableListener.fireOnChange(this, getConfigFile());
-            ItemListener.fireOnUpdated(this);
-
-        } finally {
-            out.abort(); // don't leave anything behind
+            XMLUtils.safeTransform(source, new StreamResult(out));
+            out.close();
+        } catch (TransformerException | SAXException e) {
+            throw new IOException("Failed to process config.xml", e);
         }
+
+        // try to reflect the changes by reloading
+        Object o = Items.XSTREAM2.unmarshal(XStream2.getDefaultDriver().createReader(new StringReader(out.getBuffer().toString())), this, null, true);
+        if (o != this) {
+            // ensure that we've got the same job type. extending this code to support updating
+            // to different job type requires destroying & creating a new job type
+            throw new IOException("Expecting " + this.getClass() + " but got " + o.getClass() + " instead");
+        }
+
+        Items.runWhileUpdatingByXml(() -> onLoad(getParent(), getRootDir().getName()));
+        Jenkins.get().rebuildDependencyGraphAsync();
+
+        // if everything went well, re-serialize from memory to encrypt secrets submitted in plaintext
+        configXmlFile.write(this);
+        SaveableListener.fireOnChange(this, getConfigFile());
+        ItemListener.fireOnUpdated(this);
     }
 
     /**
@@ -965,18 +1012,13 @@ public abstract class AbstractItem extends Actionable implements Loadable, Item,
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void load() throws IOException {
         checkPermission(CONFIGURE);
 
         // try to reflect the changes by reloading
         getConfigFile().unmarshal(this);
-        Items.whileUpdatingByXml(new NotReallyRoleSensitiveCallable<Void, IOException>() {
-            @Override
-            public Void call() throws IOException {
-                onLoad(getParent(), getParent().getItemName(getRootDir(), AbstractItem.this));
-                return null;
-            }
-        });
+        Items.runWhileUpdatingByXml(() -> onLoad(getParent(), getParent().getItemName(getRootDir(), this)));
         Jenkins.get().rebuildDependencyGraphAsync();
     }
 

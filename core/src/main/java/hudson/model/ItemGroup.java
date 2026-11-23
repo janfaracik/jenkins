@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import jenkins.model.FullyNamed;
+import jenkins.model.FullyNamedModelObject;
 import org.springframework.security.access.AccessDeniedException;
 
 /**
@@ -41,19 +43,7 @@ import org.springframework.security.access.AccessDeniedException;
  * @author Kohsuke Kawaguchi
  * @see ItemGroupMixIn
  */
-public interface ItemGroup<T extends Item> extends PersistenceRoot, ModelObject {
-    /**
-     * Gets the full name of this {@link ItemGroup}.
-     *
-     * @see Item#getFullName()
-     */
-    String getFullName();
-
-    /**
-     * @see Item#getFullDisplayName()
-     */
-    String getFullDisplayName();
-
+public interface ItemGroup<T extends Item> extends FullyNamed, FullyNamedModelObject, PersistenceRoot {
     /**
      * Gets all the items in this collection in a read-only view.
      */
@@ -105,6 +95,19 @@ public interface ItemGroup<T extends Item> extends PersistenceRoot, ModelObject 
      * @throws AccessDeniedException if the current user has {@link Item#DISCOVER} but not {@link Item#READ} on this item
      */
     @CheckForNull T getItem(String name) throws AccessDeniedException;
+
+    /**
+     * Like {@link #getItem(String)}, but returns null instead of throwing {@link AccessDeniedException}
+     * when the current user has {@link Item#DISCOVER} but not {@link Item#READ}.
+     * @since 2.591
+     */
+    default @CheckForNull T getItemOrNull(String name) {
+        try {
+            return getItem(name);
+        } catch (AccessDeniedException x) {
+            return null;
+        }
+    }
 
     /**
      * Assigns the {@link Item#getRootDir() root directory} for children.

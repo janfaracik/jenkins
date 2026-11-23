@@ -64,22 +64,50 @@ $semantics: (
   --primary-active: var(--accent-color);
 
   // Status icon colors
+  --status-background-opacity: 0.125;
+  --status-border-opacity: 0.25;
+
+  @media (prefers-contrast: more) {
+    --status-background-opacity: 0;
+    --status-border-opacity: 1;
+  }
+
   --weather-icon-color: var(--accent-color);
   --unstable-build-icon-color: var(--orange);
 
   // Background colors
-  --background: var(--white);
+  --background: rgb(254 254 254);
+
+  // Elevation
+  --elevation-1-box-shadow: 0 2px 2px
+    color-mix(in sRGB, var(--black) 3.5%, transparent);
+  --elevation-2-box-shadow: var(--elevation-1-box-shadow);
+  --elevation-3-box-shadow:
+    0 0 0 1px color-mix(in sRGB, var(--black) 5%, transparent),
+    0 15px 40px color-mix(in sRGB, var(--black) 15%, transparent),
+    0 2px 8px color-mix(in sRGB, var(--black) 7.5%, transparent);
+
+  // Body
+  --body-background-top: color-mix(
+    in oklch,
+    white 1.5%,
+    var(--card-background)
+  );
 
   // Header
-  --header-background: var(--background);
-  --header-border: var(--text-color-secondary);
+  --header-background: color-mix(
+    in sRGB,
+    var(--background),
+    var(--text-color-secondary) 2.5%
+  );
   --header-color: var(--text-color);
-  --header-height: 4.125rem;
+  --header-height: 3.5rem;
 
   // App bar
+  --bottom-app-bar-padding: 0.875rem;
   --bottom-app-bar-shadow: color-mix(
     in sRGB,
-    var(--text-color-secondary) 7.5%,
+    var(--text-color-secondary) 8%,
     transparent
   );
 
@@ -87,17 +115,15 @@ $semantics: (
   --alert-success-text-color: var(--success-color);
   --alert-success-bg-color: color-mix(
     in sRGB,
-    var(--success-color) 10%,
+    var(--success-color) 4%,
     transparent
   );
-  --alert-success-border-color: color-mix(
+  --alert-info-text-color: var(--accent-color);
+  --alert-info-bg-color: color-mix(
     in sRGB,
-    var(--success-color) 5%,
+    var(--accent-color) 4%,
     transparent
   );
-  --alert-info-text-color: var(--blue);
-  --alert-info-bg-color: color-mix(in sRGB, var(--blue) 10%, transparent);
-  --alert-info-border-color: color-mix(in sRGB, var(--blue) 5%, transparent);
   --alert-warning-text-color: color-mix(
     in sRGB,
     var(--warning-color) 80%,
@@ -105,23 +131,13 @@ $semantics: (
   );
   --alert-warning-bg-color: color-mix(
     in sRGB,
-    var(--warning-color) 10%,
-    transparent
-  );
-  --alert-warning-border-color: color-mix(
-    in sRGB,
-    var(--warning-color) 5%,
+    var(--warning-color) 4%,
     transparent
   );
   --alert-danger-text-color: var(--error-color);
   --alert-danger-bg-color: color-mix(
     in sRGB,
-    var(--error-color) 10%,
-    transparent
-  );
-  --alert-danger-border-color: color-mix(
-    in sRGB,
-    var(--error-color) 5%,
+    var(--error-color) 4%,
     transparent
   );
 
@@ -129,17 +145,18 @@ $semantics: (
   --text-color-secondary: var(--secondary);
 
   // Borders
-  --jenkins-border-width: 1.5px;
+  --jenkins-border-width: 1px;
   --jenkins-border-color: color-mix(
     in sRGB,
-    var(--text-color-secondary) 15%,
-    var(--card-background)
+    var(--text-color-secondary) 17.5%,
+    transparent
   );
   --jenkins-border-color--subtle: color-mix(
     in sRGB,
-    currentColor 1.5%,
+    var(--text-color) 3.5%,
     transparent
   );
+  --jenkins-border-color--inherit-subtle: oklch(from currentColor l c h / 0.2);
 
   /* This is a harsher border - for dividers, content blocks and more */
   --jenkins-border: var(--jenkins-border-width) solid
@@ -148,26 +165,28 @@ $semantics: (
   /* This is a subtle border - for increasing contrast on elements, such as buttons, menu and more */
   --jenkins-border--subtle: var(--jenkins-border-width) solid
     var(--jenkins-border-color--subtle);
-  --jenkins-border--subtle-shadow: 0 0 0 1.5px
+  --jenkins-border--inherit-subtle: var(--jenkins-border-width) solid
+    var(--jenkins-border-color--inherit-subtle);
+  --jenkins-border--subtle-shadow: 0 0 0 var(--jenkins-border-width)
     var(--jenkins-border-color--subtle);
 
-  @media (resolution <= 1x) {
-    --jenkins-border-width: 2px;
-  }
-
   @media (prefers-contrast: more) {
-    --header-border: var(--text-color);
     --focus-input-border: var(--text-color);
     --jenkins-border-color: var(--text-color);
     --jenkins-border-color--subtle: var(--text-color);
+    --jenkins-border-color--inherit-subtle: var(--text-color);
   }
 
   // Table
-  --table-background: oklch(from var(--text-color-secondary) l c h / 0.075);
+  --table-background: color-mix(
+    in oklch,
+    var(--text-color-secondary) 7.5%,
+    var(--white)
+  );
   --table-header-foreground: var(--text-color);
   --table-body-background: var(--background);
   --table-body-foreground: var(--text-color);
-  --table-border-radius: 0.75rem;
+  --table-border-radius: var(--form-input-border-radius);
   --table-row-border-radius: 0.3125rem;
 
   // Deprecated
@@ -192,42 +211,24 @@ $semantics: (
   --link-text-decoration--active: underline;
   --link-font-weight: var(--font-bold-weight);
 
-  // Command Palette
-  --command-palette-results-backdrop-filter: saturate(1.5) blur(5px);
-  --command-palette-inset-shadow:
-    inset 0 0 2px 2px rgb(255 255 255 / 0.1),
-    var(--jenkins-border--subtle-shadow),
-    0 5px 10px var(--jenkins-border-color--subtle);
+  // Tooltips
+  --tooltip-color: var(--text-color);
+
+  // Overlay surfaces
+  --overlay-surface-background: color-mix(
+    in sRGB,
+    var(--card-background),
+    var(--white) 2.5%
+  );
 
   ::backdrop {
-    --command-palette-backdrop-background: color-mix(
+    --dialog-backdrop-backdrop-filter: blur(0.25px);
+    --dialog-backdrop-background: color-mix(
       in sRGB,
-      var(--black) 17.5%,
-      transparent
+      var(--black) 10%,
+      color-mix(in sRGB, var(--background) 55%, transparent)
     );
   }
-
-  // Tooltips
-  --tooltip-backdrop-filter: contrast(1.1) saturate(2) blur(20px);
-  --tooltip-color: var(--text-color);
-  --tooltip-box-shadow:
-    0 0 8px 2px rgb(0 0 50 / 0.05), var(--jenkins-border--subtle-shadow),
-    0 10px 50px rgb(0 0 20 / 0.1), inset 0 -1px 2px rgb(255 255 255 / 0.025);
-
-  // Dropdowns
-  --dropdown-backdrop-filter: contrast(1.1) saturate(2) blur(20px);
-  --dropdown-box-shadow:
-    var(--jenkins-border--subtle-shadow), 0 10px 30px rgb(0 0 20 / 0.1),
-    0 2px 10px rgb(0 0 20 / 0.05), inset 0 -1px 2px rgb(255 255 255 / 0.025);
-
-  // Dialogs
-  ::backdrop {
-    --dialog-backdrop-background: hsl(240 10% 20% / 0.8);
-  }
-
-  --dialog-box-shadow:
-    var(--jenkins-border--subtle-shadow), 0 10px 40px rgb(0 0 20 / 0.15),
-    0 2px 15px rgb(0 0 20 / 0.05), inset 0 0 2px 2px rgb(255 255 255 / 0.025);
 
   // Dark link
   --link-dark-color: var(--text-color);
@@ -251,10 +252,10 @@ $semantics: (
   --pane-link-color--visited: black;
 
   // Cards
-  --card-background: var(--background);
+  --card-background: var(--white);
   --card-background--hover: transparent;
   --card-background--active: transparent;
-  --card-border-color: oklch(from var(--text-color-secondary) l c h / 0.15);
+  --card-border-color: var(--jenkins-border-color);
   --card-border-color--hover: oklch(
     from var(--text-color-secondary) l c h / 0.3
   );
@@ -268,20 +269,12 @@ $semantics: (
   }
 
   // Tab bar
-  --tabs-background: oklch(from var(--text-color-secondary) l c h / 0.1);
-  --tabs-item-background: transparent;
   --tabs-item-foreground: color-mix(
     in sRGB,
     var(--text-color-secondary),
     var(--text-color)
   );
-  --tabs-item-background--hover: rgb(0 0 0 / 0.05);
-  --tabs-item-foreground--hover: var(--text-color);
-  --tabs-item-background--active: rgb(0 0 0 / 0.1);
-  --tabs-item-foreground--active: var(--text-color);
-  --tabs-item-background--selected: white;
-  --tabs-item-foreground--selected: var(--link-color);
-  --tabs-border-radius: calc((10px + 34px) / 2);
+  --tabs-item-background--selected: var(--white);
 
   // Side panel
   --side-panel-width: 340px;
@@ -289,12 +282,8 @@ $semantics: (
   --panel-border-color: var(--light-grey);
 
   // Form
-  --section-padding: 1.625rem;
-  --input-color: color-mix(
-    in sRGB,
-    var(--text-color-secondary) 1.5%,
-    var(--background)
-  );
+  --section-padding: 1.25rem;
+  --input-color: var(--white);
   --input-border: color-mix(
     in sRGB,
     var(--text-color-secondary) 25%,
@@ -310,17 +299,26 @@ $semantics: (
   --form-item-max-width--small: min(35vw, 1200px);
 
   @media screen and (max-width: breakpoints.$tablet-breakpoint) {
-    --section-padding: 1.25rem;
+    --section-padding: 1rem;
     --form-item-max-width: 100%;
     --form-item-max-width--medium: 100%;
     --form-item-max-width--small: 100%;
   }
 
+  // Focus
+  --focus-ring-width: 0.1875rem;
+  --focus-ring--hidden: 0 0 0 0.375rem transparent;
+  --focus-ring-width--keyboard: 0.2rem;
+  --focus-ring--keyboard: 0 0 0 var(--focus-ring-width--keyboard)
+    var(--text-color);
+
+  // Forms
   --form-label-font-weight: var(--font-bold-weight);
   --form-input-padding: 0.5rem 0.625rem;
-  --form-input-border-radius: 0.625rem;
-  --form-input-glow: 0 0 0 0.5rem transparent;
-  --form-input-glow--focus: 0 0 0 0.25rem var(--focus-input-glow);
+  --form-input-border-radius: 0.6875rem;
+  --form-input-glow: var(--focus-ring--hidden);
+  --form-input-glow--focus: 0 0 0 var(--focus-ring-width)
+    var(--focus-input-glow);
   --pre-background: var(--button-background);
   --pre-color: var(--text-color);
   --selection-color: oklch(from var(--accent-color) l c h / 0.2);
@@ -328,7 +326,7 @@ $semantics: (
   @media (prefers-contrast: more) {
     --input-border: var(--text-color) !important;
     --input-border-hover: var(--text-color) !important;
-    --form-input-glow--focus: 0 0 0 4px
+    --form-input-glow--focus: 0 0 0 var(--focus-ring-width)
       color-mix(in sRGB, var(--text-color), transparent);
   }
 
@@ -358,6 +356,13 @@ $semantics: (
     from var(--text-color-secondary) l c h / 0.15
   );
   --item-box-shadow--focus: oklch(from var(--text-color-secondary) l c h / 0.1);
+
+  // Page
+  --page-inset: 0.3125rem;
+
+  @media (width < 740px) {
+    --page-inset: 0px;
+  }
 
   // Deprecated
   --primary: var(--accent-color); // Use var(--accent-color) instead

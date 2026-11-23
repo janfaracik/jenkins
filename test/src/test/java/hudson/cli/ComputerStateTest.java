@@ -27,13 +27,12 @@ package hudson.cli;
 import static hudson.cli.CLICommandInvoker.Matcher.succeededSilently;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import hudson.cli.CLICommandInvoker.Result;
 import hudson.model.Computer;
@@ -42,21 +41,30 @@ import hudson.slaves.DumbSlave;
 import hudson.slaves.OfflineCause;
 import jenkins.model.Jenkins;
 import org.htmlunit.ElementNotFoundException;
+import org.htmlunit.html.HtmlElement;
 import org.htmlunit.html.HtmlPage;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.JenkinsRule.WebClient;
+import org.jvnet.hudson.test.MockAuthorizationStrategy;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
 /**
  * @author ogondza
  */
-public class ComputerStateTest {
+@WithJenkins
+class ComputerStateTest {
 
-    @Rule public JenkinsRule j = new JenkinsRule();
+    private JenkinsRule j;
+
+    @BeforeEach
+    void setUp(JenkinsRule rule) {
+        j = rule;
+    }
 
     @Test
-    public void connect() throws Exception {
+    void connect() throws Exception {
         CLICommandInvoker command = new CLICommandInvoker(j, "connect-node");
 
         Slave slave = j.createSlave();
@@ -64,7 +72,7 @@ public class ComputerStateTest {
 
         Result result = command.authorizedTo(Jenkins.READ, Computer.CONNECT)
                 .invokeWithArgs(slave.getNodeName())
-        ;
+                ;
 
         assertThat(result, succeededSilently());
         slave.toComputer().waitUntilOnline();
@@ -72,7 +80,7 @@ public class ComputerStateTest {
     }
 
     @Test
-    public void online() throws Exception {
+    void online() throws Exception {
         CLICommandInvoker command = new CLICommandInvoker(j, "online-node");
 
         Slave slave = j.createSlave();
@@ -80,7 +88,7 @@ public class ComputerStateTest {
 
         Result result = command.authorizedTo(Jenkins.READ, Computer.CONNECT)
                 .invokeWithArgs(slave.getNodeName())
-        ;
+                ;
 
         assertThat(result, succeededSilently());
         slave.toComputer().waitUntilOnline();
@@ -88,7 +96,7 @@ public class ComputerStateTest {
     }
 
     @Test
-    public void disconnect() throws Exception {
+    void disconnect() throws Exception {
         CLICommandInvoker command = new CLICommandInvoker(j, "disconnect-node");
 
         Slave slave = j.createOnlineSlave();
@@ -111,7 +119,7 @@ public class ComputerStateTest {
     }
 
     @Test
-    public void offline() throws Exception {
+    void offline() throws Exception {
         CLICommandInvoker command = new CLICommandInvoker(j, "offline-node");
 
         Slave slave = j.createOnlineSlave();
@@ -134,11 +142,16 @@ public class ComputerStateTest {
     }
 
     @Test
-    public void testUiForConnected() throws Exception {
+    void testUiForConnected() throws Exception {
+        JenkinsRule.DummySecurityRealm securityRealm = j.createDummySecurityRealm();
+        j.jenkins.setSecurityRealm(securityRealm);
+        MockAuthorizationStrategy strategy = new MockAuthorizationStrategy();
+        strategy.grant(Jenkins.READ, Computer.DISCONNECT).everywhere().to("user");
+        j.jenkins.setAuthorizationStrategy(strategy);
         DumbSlave slave = j.createOnlineSlave();
         Computer computer = slave.toComputer();
 
-        WebClient wc = j.createWebClient();
+        WebClient wc = j.createWebClient().login("user");
         assertConnected(wc, slave);
 
         computer.setTemporarilyOffline(true, null);
@@ -147,36 +160,47 @@ public class ComputerStateTest {
 
         slave.toComputer().disconnect(null);
 
+        // Test fails sometimes because agent is not yet disconnected
+        // Wait 1 second for disconnect to complete
+        Thread.sleep(1009);
         HtmlPage page = wc.getPage(slave);
 
-        assertLinkDoesNotExist(page, "Disconnect");
+        page.getElementById("agent-offline-overflow-button").click();
+        assertButtonDoesNotExist(page, "Disconnect");
 
-        assertLinkDoesNotExist(page, "Script Console");
-        HtmlPage script = wc.getPage(slave, "script");
-        assertThat(script.getByXPath("//form[@action='script']"), empty());
-
-        assertLinkDoesNotExist(page, "System Information");
         HtmlPage info = wc.getPage(slave, "systemInfo");
-        assertThat(info.asNormalizedText(), not(containsString("Environment Variables")));
+        assertThat(info.asNormalizedText(), containsString("System Information is unavailable when agent is offline."));
     }
 
     private void assertConnected(WebClient wc, DumbSlave slave) throws Exception {
         HtmlPage main = wc.getPage(slave);
-        main.getAnchorByText("Disconnect");
+        main.getElementById("agent-offline-overflow-button").click();
+        getButtonByText(main, "Disconnect");
 
-        main.getAnchorByText("Script Console");
-        HtmlPage script = wc.getPage(slave, "script");
-        assertThat(script.getByXPath("//form[@action='script']"), not(empty()));
-
-        main.getAnchorByText("System Information");
         HtmlPage info = wc.getPage(slave, "systemInfo");
-        assertThat(info.asNormalizedText(), containsString("Environment Variables"));
+        assertThat(info.asNormalizedText(), not(containsString("System Information is unavailable when agent is offline.")));
     }
 
     private void assertLinkDoesNotExist(HtmlPage page, String text) {
         assertThrows(
-                text + " link should not exist",
                 ElementNotFoundException.class,
-                () -> page.getAnchorByText(text));
+                () -> page.getAnchorByText(text),
+                text + " link should not exist");
+    }
+
+    private void getButtonByText(HtmlPage page, String text) {
+        for (final HtmlElement button : page.getDocumentElement().getElementsByTagName("button")) {
+            if (text.equals(button.asNormalizedText())) {
+                return;
+            }
+        }
+        throw new ElementNotFoundException("button", "<text>", text);
+    }
+
+    private void assertButtonDoesNotExist(HtmlPage page, String text) {
+        assertThrows(
+                ElementNotFoundException.class,
+                () -> getButtonByText(page, text),
+                text + " button should not exist");
     }
 }

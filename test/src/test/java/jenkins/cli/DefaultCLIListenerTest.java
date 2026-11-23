@@ -32,31 +32,30 @@ import static org.hamcrest.Matchers.notNullValue;
 import hudson.cli.CLICommand;
 import hudson.cli.CLICommandInvoker;
 import hudson.cli.ListJobsCommand;
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import jenkins.cli.listeners.DefaultCLIListener;
 import jenkins.model.Jenkins;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
-import org.jvnet.hudson.test.LoggerRule;
+import org.jvnet.hudson.test.LogRecorder;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
 import org.jvnet.hudson.test.TestExtension;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-public class DefaultCLIListenerTest {
+@WithJenkins
+class DefaultCLIListenerTest {
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
-
-    @Rule
-    public LoggerRule logging = new LoggerRule();
+    private final LogRecorder logging = new LogRecorder();
 
     private static final String USER = "cli-user";
 
-    @Before
-    public void setUp() throws IOException {
+    private JenkinsRule j;
+
+    @BeforeEach
+    void setUp(JenkinsRule rule) throws Exception {
+        j = rule;
         j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
         j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy()
                 .grant(Jenkins.ADMINISTER)
@@ -67,7 +66,7 @@ public class DefaultCLIListenerTest {
     }
 
     @Test
-    public void commandOnCompletedIsLogged() throws Exception {
+    void commandOnCompletedIsLogged() {
         CLICommandInvoker command = new CLICommandInvoker(j, new ListJobsCommand());
         command.asUser(USER).invoke();
 
@@ -83,7 +82,7 @@ public class DefaultCLIListenerTest {
     }
 
     @Test
-    public void commandOnThrowableIsLogged() throws Exception {
+    void commandOnThrowableIsLogged() {
         CLICommandInvoker command = new CLICommandInvoker(j, new ListJobsCommand());
         command.asUser(USER).invokeWithArgs("view-not-found");
 
@@ -96,12 +95,12 @@ public class DefaultCLIListenerTest {
                 messages.get(1),
                 containsString("Failed call to CLI command list-jobs, with 1 arguments, as user %s.".formatted(USER)));
         assertThat(
-                logging.getRecords().get(0).getThrown().getMessage(),
+                logging.getRecords().getFirst().getThrown().getMessage(),
                 containsString("No view or item group with the given name 'view-not-found' found"));
     }
 
     @Test
-    public void commandOnThrowableUnexpectedIsLogged() throws Exception {
+    void commandOnThrowableUnexpectedIsLogged() {
         CLICommandInvoker command = new CLICommandInvoker(j, new ThrowsTestCommand());
         command.asUser(USER).invoke();
 
@@ -114,11 +113,11 @@ public class DefaultCLIListenerTest {
         assertThat(
                 messages.get(1),
                 containsString("Unexpected exception occurred while performing throws-test-command command."));
-        assertThat(logging.getRecords().get(0).getThrown().getMessage(), containsString("unexpected"));
+        assertThat(logging.getRecords().getFirst().getThrown().getMessage(), containsString("unexpected"));
     }
 
     @Test
-    public void methodOnCompletedIsLogged() throws Exception {
+    void methodOnCompletedIsLogged() {
         CLICommandInvoker command = new CLICommandInvoker(j, "disable-job");
         command.asUser(USER).invokeWithArgs("p");
 
@@ -134,7 +133,7 @@ public class DefaultCLIListenerTest {
     }
 
     @Test
-    public void methodOnThrowableIsLogged() throws Exception {
+    void methodOnThrowableIsLogged() {
         CLICommandInvoker command = new CLICommandInvoker(j, "disable-job");
         command.asUser(USER).invokeWithArgs("job-not-found");
 
@@ -148,12 +147,12 @@ public class DefaultCLIListenerTest {
                 containsString(
                         "Failed call to CLI command disable-job, with 1 arguments, as user %s.".formatted(USER)));
         assertThat(
-                logging.getRecords().get(0).getThrown().getMessage(),
+                logging.getRecords().getFirst().getThrown().getMessage(),
                 containsString("No such job ‘job-not-found’ exists."));
     }
 
     @Test
-    public void methodOnThrowableUnexpectedIsLogged() throws Exception {
+    void methodOnThrowableUnexpectedIsLogged() {
         CLICommandInvoker command = new CLICommandInvoker(j, "restart");
         command.asUser(USER).invoke();
 
@@ -163,7 +162,7 @@ public class DefaultCLIListenerTest {
                 messages.get(0),
                 containsString("Invoking CLI command restart, with 0 arguments, as user %s.".formatted(USER)));
         assertThat(messages.get(1), containsString("Unexpected exception occurred while performing restart command."));
-        assertThat(logging.getRecords().get(0).getThrown(), notNullValue());
+        assertThat(logging.getRecords().getFirst().getThrown(), notNullValue());
     }
 
     @TestExtension

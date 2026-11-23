@@ -10,21 +10,29 @@
         {{/if}}
         <td>
             <div>
-                <a href="{{ this.wiki }}" class="jenkins-table__link" target="_blank" rel="noopener noreferrer">
-                    {{ this.displayName }}
-                    <span class="jenkins-visually-hidden">Version</span>
-                    <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">{{ this.version }}</span>
-                </a>
+                {{#if this.wiki }}
+                    <a href="{{ this.wiki }}" class="jenkins-table__link" target="_blank" rel="noopener noreferrer">
+                        {{ this.displayName }}
+                        <span class="jenkins-visually-hidden">Version</span>
+                        <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">{{ this.version }}</span>
+                    </a>
+                {{else}}
+                    <span>
+                        {{ this.displayName }}
+                        <span class="jenkins-visually-hidden">Version</span>
+                        <span class="jenkins-label jenkins-label--tertiary" style="margin-left: 1ch;">{{ this.version }}</span>
+                    </span>
+                {{/if}}
             </div>
             <div class="app-plugin-manager__categories">
-                {{# if this.suggested }}
-                  <a href="?filter=Suggested" tooltip="This is a popular plugin with Jenkins users" class="jenkins-badge jenkins-!-color-purple">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
-                    Suggested
-                  </a>
+                {{#if this.suggested }}
+                    <a href="?filter=suggested" tooltip="{{ @root.suggestedTooltip }}" class="jenkins-badge jenkins-!-color-purple">
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 512 512"><path d="M480 208H308L256 48l-52 160H32l140 96-54 160 138-100 138 100-54-160z" fill="currentColor" stroke="currentColor" stroke-linejoin="round" stroke-width="32"/></svg>
+                        {{ @root.suggestedLabel }}
+                    </a>
                 {{/if}}
                 {{#each this.categories }}
-                    <a href="?filter={{ this }}" class="jenkins-badge jenkins-!-accent-color">
+                    <a href="?filter={{ this }}" class="jenkins-badge">
                     {{ this }}
                     </a>
                 {{/each}}
@@ -77,11 +85,17 @@
         <td style="width: 15%">
             <div>
                 {{#if this.healthScore }}
-                    <a href="{{ this.wiki }}/healthScore"
-                       class="jenkins-healthScore--badge jenkins-healthScore--{{ this.healthScoreClass }}"
-                       target="_blank" rel="noopener noreferrer">
-                        {{ this.healthScore }}
-                    </a>
+                    {{#if this.wiki }}
+                        <a href="{{ this.wiki }}/healthScore"
+                           class="jenkins-healthScore--badge jenkins-healthScore--{{ this.healthScoreClass }}"
+                           target="_blank" rel="noopener noreferrer">
+                            {{ this.healthScore }}
+                        </a>
+                    {{else}}
+                        <span class="jenkins-healthScore--badge jenkins-healthScore--{{ this.healthScoreClass }}">
+                            {{ this.healthScore }}
+                        </span>
+                    {{/if}}
                 {{else}}
                   <div class="icon-lg">
                     <!-- symbol: status-aborted -->

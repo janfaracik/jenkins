@@ -25,20 +25,20 @@ THE SOFTWARE.
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout" xmlns:t="/lib/hudson">
   <j:set var="object" value="${it.object}" />
-  <div class="jenkins-card__details__item">
-    <div class="jenkins-card__details__item__icon">
+  <div class="jenkins-details__item">
+    <div class="jenkins-details__item__icon">
       <l:icon src="symbol-timer" />
     </div>
     <div>
       <j:choose>
         <j:when test="${object.building}">
-          ${%beingExecuted(object.executor.timestampString)}
+          <l:relative-time value="${object.startTimeInMillis}" template="${%beingExecuted('{0}')}" />
         </j:when>
         <j:otherwise>
           ${%Took} ${object.durationString}
         </j:otherwise>
       </j:choose>
-      <j:if test="${!empty(app.nodes) or (object.builtOnStr != null and object.builtOnStr != '')}">
+      <j:if test="${detailContext != 'compact' and (!empty(app.nodes) or (object.builtOnStr != null and object.builtOnStr != ''))}">
         ${%on} <t:node value="${object.builtOn}" valueStr="${object.builtOnStr}"/>
       </j:if>
       <st:include page="details.jelly" optional="true" />

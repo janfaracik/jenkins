@@ -1,5 +1,5 @@
 /**
- * Public method to be called by progressiveRendering's callback
+ * Appends rows for a page of runs; used as the data-runs-renderer of the build time trend table
  */
 window.buildTimeTrend_displayBuilds = function (data) {
   const p = document.getElementById("trend");
@@ -46,6 +46,7 @@ window.buildTimeTrend_displayBuilds = function (data) {
 
     tr.appendChild(td);
     if (showAgent) {
+      /* eslint-disable-next-line no-useless-assignment */
       let buildInfo = null;
       let buildInfoStr = escapeHTML(e.builtOnStr || "");
       if (e.builtOn) {
@@ -93,7 +94,7 @@ function generateSVGIcon(iconName) {
 }
 
 /**
- * Public method to be called by progressiveRendering's callback
+ * Appends rows for a page of runs; used as the data-runs-renderer of the build list table
  */
 window.displayBuilds = function (data) {
   var rootUrl = document.head.getAttribute("data-rooturl");
@@ -123,12 +124,7 @@ window.displayBuilds = function (data) {
     a1.appendChild(span1);
     td2.appendChild(a1);
     var a2 = document.createElement("a");
-    a2.classList.add(
-      "jenkins-table__link",
-      "jenkins-table__badge",
-      "model-link",
-      "inside",
-    );
+    a2.classList.add("jenkins-badge", "model-link");
     a2.href = rootUrl + "/" + e.url;
     a2.textContent = e.displayName;
     td2.appendChild(a2);
@@ -163,3 +159,78 @@ window.displayBuilds = function (data) {
   }
   ts_refresh(p);
 };
+
+/**
+ * Loads pages of runs from the endpoint in data-runs-url and renders them with the
+ * function named by data-runs-renderer. Further pages are loaded on request.
+ */
+Behaviour.specify(
+  ".jenkins-runs[data-runs-url]",
+  "jenkins-runs",
+  0,
+  function (container) {
+    const url = container.dataset.runsUrl;
+    const render = window[container.dataset.runsRenderer];
+    const loading = container.querySelector(".jenkins-runs__loading");
+    const more = container.querySelector(".jenkins-runs__more");
+    let next = null;
+    // rows of the current page loaded so far, kept if loading the rest fails so that a retry asks only for the rest
+    let loaded = 0;
+    let pageSize = null;
+
+    function fetchPage() {
+      const params = new URLSearchParams();
+      if (next !== null) {
+        params.set("olderThan", next);
+      }
+      if (loaded > 0) {
+        params.set("limit", pageSize - loaded);
+      }
+      const query = params.toString();
+      return fetch(query ? url + "?" + query : url)
+        .then(function (rsp) {
+          if (!rsp.ok) {
+            throw new Error(rsp.status + " " + rsp.statusText);
+          }
+          return rsp.json();
+        })
+        .then(function (json) {
+          const page = json.data;
+          render(page.builds);
+          next = page.next;
+          loaded += page.builds.length;
+          pageSize = page.pageSize;
+          // the server stopped early to bound its scan time, so the page is not full yet
+          if (page.partial && next !== null && loaded < pageSize) {
+            return fetchPage();
+          }
+          loaded = 0;
+        });
+    }
+
+    function load() {
+      more.disabled = true;
+      loading.classList.remove("jenkins-hidden");
+      fetchPage()
+        .then(function () {
+          more.classList.toggle("jenkins-hidden", next === null);
+        })
+        .catch(function (e) {
+          console.error("Failed to load builds from " + url, e);
+          // offer to retry, loading the rest of the page
+          more.classList.remove("jenkins-hidden");
+          notificationBar.show(
+            container.dataset.loadError,
+            notificationBar.ERROR,
+          );
+        })
+        .finally(function () {
+          loading.classList.add("jenkins-hidden");
+          more.disabled = false;
+        });
+    }
+
+    more.addEventListener("click", load);
+    load();
+  },
+);

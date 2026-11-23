@@ -378,8 +378,7 @@ public class UpdateCenter extends AbstractModelObject implements Loadable, Savea
         List<UpdateCenterJob> jobList = getJobs();
         Collections.reverse(jobList);
         for (UpdateCenterJob job : jobList)
-            if (job instanceof InstallationJob) {
-                InstallationJob ij = (InstallationJob) job;
+            if (job instanceof InstallationJob ij) {
                 if (ij.plugin.name.equals(plugin.name) && ij.plugin.sourceId.equals(plugin.sourceId))
                     return ij;
             }
@@ -392,7 +391,13 @@ public class UpdateCenter extends AbstractModelObject implements Loadable, Savea
             // Do not display message during this page load, but possibly later.
             return null;
         }
-        List<Plugin> plugins = getUpdates();
+        // Match the updates page, which disables successfully installed versions awaiting restart.
+        List<Plugin> plugins = getUpdates().stream()
+                .filter(plugin -> {
+                    InstallationJob job = getJob(plugin);
+                    return job == null || !job.status.isSuccess() || !job.plugin.version.equals(plugin.version);
+                })
+                .toList();
         int size = plugins.size();
         if (size > 0) {
             StringBuilder tooltip = new StringBuilder();
@@ -535,8 +540,7 @@ public class UpdateCenter extends AbstractModelObject implements Loadable, Savea
 
         boolean activeInstalls = false;
         for (UpdateCenterJob job : jobs) {
-            if (job instanceof InstallationJob) {
-                InstallationJob installationJob = (InstallationJob) job;
+            if (job instanceof InstallationJob installationJob) {
                 if (!installationJob.status.isSuccess()) {
             activeInstalls = true;
                 }
@@ -571,10 +575,9 @@ public class UpdateCenter extends AbstractModelObject implements Loadable, Savea
             List<UpdateCenterJob> jobCopy = getJobs();
 
             for (UpdateCenterJob job : jobCopy) {
-                if (job instanceof InstallationJob) {
+                if (job instanceof InstallationJob installationJob) {
                     UUID jobCorrelationId = job.getCorrelationId();
                     if (correlationId == null || (jobCorrelationId != null && correlationId.equals(jobCorrelationId.toString()))) {
-                        InstallationJob installationJob = (InstallationJob) job;
                         Map<String, String> pluginInfo = new LinkedHashMap<>();
                         pluginInfo.put("name", installationJob.plugin.name);
                         pluginInfo.put("version", installationJob.plugin.version);
@@ -1715,21 +1718,18 @@ public class UpdateCenter extends AbstractModelObject implements Loadable, Savea
                     connectionStates.put(ConnectionStatus.INTERNET, ConnectionStatus.CHECKING);
                     statuses.add(Messages.UpdateCenter_Status_CheckingInternet());
                     // Run the internet check in parallel
-                    internetCheck = updateService.submit(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                config.checkConnection(ConnectionCheckJob.this, connectionCheckUrl);
-                            } catch (Exception e) {
-                                if (e.getMessage().contains("Connection timed out")) {
-                                    // Google can't be down, so this is probably a proxy issue
-                                    connectionStates.put(ConnectionStatus.INTERNET, ConnectionStatus.FAILED);
-                                    statuses.add(Messages.UpdateCenter_Status_ConnectionFailed(Functions.xmlEscape(connectionCheckUrl), Jenkins.get().getRootUrl()));
-                                    return;
-                                }
+                    internetCheck = updateService.submit(() -> {
+                        try {
+                            config.checkConnection(ConnectionCheckJob.this, connectionCheckUrl);
+                        } catch (Exception e) {
+                            if (e.getMessage().contains("Connection timed out")) {
+                                // Google can't be down, so this is probably a proxy issue
+                                connectionStates.put(ConnectionStatus.INTERNET, ConnectionStatus.FAILED);
+                                statuses.add(Messages.UpdateCenter_Status_ConnectionFailed(Functions.xmlEscape(connectionCheckUrl), Jenkins.get().getRootUrl()));
+                                return;
                             }
-                            connectionStates.put(ConnectionStatus.INTERNET, ConnectionStatus.OK);
                         }
+                        connectionStates.put(ConnectionStatus.INTERNET, ConnectionStatus.OK);
                     });
                 } else {
                     LOGGER.log(WARNING, "Update site ''{0}'' does not declare the connection check URL. "
@@ -2486,8 +2486,7 @@ public class UpdateCenter extends AbstractModelObject implements Loadable, Savea
                         // we need it to continue installing
                         return false;
                     }
-                    if (job instanceof InstallationJob) {
-                        InstallationJob ij = (InstallationJob) job;
+                    if (job instanceof InstallationJob ij) {
                         if (ij.plugin.equals(plugin) && ij.plugin.version.equals(plugin.version)) {
                             // wait until other install is completed
                             synchronized (ij) {

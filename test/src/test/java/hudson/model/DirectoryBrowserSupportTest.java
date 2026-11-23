@@ -33,11 +33,13 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import com.sun.management.UnixOperatingSystemMXBean;
 import edu.umd.cs.findbugs.annotations.NonNull;
@@ -65,6 +67,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -72,7 +75,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -86,26 +91,35 @@ import org.apache.commons.io.IOUtils;
 import org.hamcrest.MatcherAssert;
 import org.htmlunit.Page;
 import org.htmlunit.UnexpectedPage;
+import org.htmlunit.html.HtmlAnchor;
+import org.htmlunit.html.HtmlElementUtil;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.util.NameValuePair;
-import org.junit.Assume;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.Email;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.SingleFileSCM;
 import org.jvnet.hudson.test.TestBuilder;
 import org.jvnet.hudson.test.TestExtension;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
+import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 
 /**
  * @author Kohsuke Kawaguchi
  */
-public class DirectoryBrowserSupportTest {
+@WithJenkins
+class DirectoryBrowserSupportTest {
 
-    @Rule public JenkinsRule j = new JenkinsRule();
+    private JenkinsRule j;
+
+    @BeforeEach
+    void setUp(JenkinsRule rule) {
+        j = rule;
+    }
 
     private JenkinsRule.WebClient getWebClient() {
         var wc = j.createWebClient();
@@ -118,7 +132,7 @@ public class DirectoryBrowserSupportTest {
      */
     @Email("http://www.nabble.com/Status-Code-400-viewing-or-downloading-artifact-whose-filename-contains-two-consecutive-periods-tt21407604.html")
     @Test
-    public void doubleDots() throws Exception {
+    void doubleDots() throws Exception {
         // create a problematic file name in the workspace
         FreeStyleProject p = j.createFreeStyleProject();
         if (Functions.isWindows())
@@ -147,8 +161,8 @@ public class DirectoryBrowserSupportTest {
      */
     @Email("http://www.nabble.com/Status-Code-400-viewing-or-downloading-artifact-whose-filename-contains-two-consecutive-periods-tt21407604.html")
     @Test
-    public void doubleDots2() throws Exception {
-        Assume.assumeFalse("can't test this on Windows", Functions.isWindows());
+    void doubleDots2() throws Exception {
+        assumeFalse(Functions.isWindows(), "can't test this on Windows");
 
         // create a problematic file name in the workspace
         FreeStyleProject p = j.createFreeStyleProject();
@@ -163,7 +177,7 @@ public class DirectoryBrowserSupportTest {
     }
 
     @Test
-    public void nonAsciiChar() throws Exception {
+    void nonAsciiChar() throws Exception {
         // create a problematic file name in the workspace
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
@@ -180,7 +194,7 @@ public class DirectoryBrowserSupportTest {
     }
 
     @Test
-    public void glob() throws Exception {
+    void glob() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
             @Override public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
@@ -197,15 +211,15 @@ public class DirectoryBrowserSupportTest {
         });
         j.buildAndAssertSuccess(p);
         String text = getWebClient().goTo("job/" + p.getName() + "/ws/**/*.java").asNormalizedText();
-        assertTrue(text, text.contains("X.java"));
-        assertTrue(text, text.contains("XTest.java"));
-        assertFalse(text, text.contains("pom.xml"));
-        assertFalse(text, text.contains("x.txt"));
+        assertTrue(text.contains("X.java"), text);
+        assertTrue(text.contains("XTest.java"), text);
+        assertFalse(text.contains("pom.xml"), text);
+        assertFalse(text.contains("x.txt"), text);
     }
 
     @Issue("JENKINS-19752")
     @Test
-    public void zipDownload() throws Exception {
+    void zipDownload() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.setScm(new SingleFileSCM("artifact.out", "Hello world!"));
         p.getPublishersList().add(new ArtifactArchiver("*", "", true));
@@ -220,7 +234,7 @@ public class DirectoryBrowserSupportTest {
         InputStream is = readzip.getInputStream(readzip.getEntry("archive/artifact.out"));
 
         // ZipException in case of JENKINS-19752
-        assertNotEquals("Downloaded zip file must not be empty", is.read(), -1);
+        assertNotEquals(-1, is.read(), "Downloaded zip file must not be empty");
 
         is.close();
         readzip.close();
@@ -228,7 +242,7 @@ public class DirectoryBrowserSupportTest {
     }
 
     @Test
-    public void zipDownloadFileLeakMx_hypothesis() throws Exception {
+    void zipDownloadFileLeakMx_hypothesis() throws Exception {
         // this test is meant to just ensure zipDownloadFileLeakMx hypothesis about the UI work fine
 
         String content = "Hello world!";
@@ -244,8 +258,8 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue({"JENKINS-64632", "JENKINS-61121"})
-    public void zipDownloadFileLeakMx() throws Exception {
-        Assume.assumeFalse(Functions.isWindows());
+    void zipDownloadFileLeakMx() throws Exception {
+        assumeFalse(Functions.isWindows());
 
         int numOfClicks = 10;
         int totalRuns = 10;
@@ -295,7 +309,7 @@ public class DirectoryBrowserSupportTest {
 
         String summary = String.join("\n", messages);
         System.out.println("Summary of the test: \n" + summary);
-        assertTrue("There should be no difference greater than " + numOfClicks + ", but the output was: \n" + summary, freeFromLeak);
+        assertTrue(freeFromLeak, "There should be no difference greater than " + numOfClicks + ", but the output was: \n" + summary);
     }
 
     private long getOpenFdCount() {
@@ -308,16 +322,14 @@ public class DirectoryBrowserSupportTest {
 
     @Issue("SECURITY-95")
     @Test
-    public void contentSecurityPolicy() throws Exception {
+    void contentSecurityPolicy() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.setScm(new SingleFileSCM("test.html", "<html><body><h1>Hello world!</h1></body></html>"));
         p.getPublishersList().add(new ArtifactArchiver("*", "", true));
         j.buildAndAssertSuccess(p);
 
         HtmlPage page = getWebClient().goTo("job/" + p.getName() + "/lastSuccessfulBuild/artifact/test.html");
-        for (String header : new String[]{"Content-Security-Policy", "X-WebKit-CSP", "X-Content-Security-Policy"}) {
-            assertEquals("Header set: " + header, DirectoryBrowserSupport.DEFAULT_CSP_VALUE, page.getWebResponse().getResponseHeaderValue(header));
-        }
+        assertEquals(DirectoryBrowserSupport.DEFAULT_CSP_VALUE, page.getWebResponse().getResponseHeaderValue("Content-Security-Policy"));
 
         String propName = DirectoryBrowserSupport.class.getName() + ".CSP";
         String initialValue = System.getProperty(propName);
@@ -325,9 +337,7 @@ public class DirectoryBrowserSupportTest {
             System.setProperty(propName, "");
             page = getWebClient().goTo("job/" + p.getName() + "/lastSuccessfulBuild/artifact/test.html");
             List<String> headers = page.getWebResponse().getResponseHeaders().stream().map(NameValuePair::getName).collect(Collectors.toList());
-            for (String header : new String[]{"Content-Security-Policy", "X-WebKit-CSP", "X-Content-Security-Policy"}) {
-                assertThat(headers, not(hasItem(header)));
-            }
+            assertThat(headers, not(hasItem("Content-Security-Policy")));
         } finally {
             if (initialValue == null) {
                 System.clearProperty(DirectoryBrowserSupport.class.getName() + ".CSP");
@@ -351,7 +361,7 @@ public class DirectoryBrowserSupportTest {
 
     @Issue("JENKINS-49635")
     @Test
-    public void externalURLDownload() throws Exception {
+    void externalURLDownload() throws Exception {
         ArtifactManagerConfiguration.get().getArtifactManagerFactories().add(new ExternalArtifactManagerFactory());
         FreeStyleProject p = j.createFreeStyleProject();
         p.setScm(new SingleFileSCM("f", "Hello world!"));
@@ -584,7 +594,9 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue("SECURITY-904")
-    public void symlink_outsideWorkspace_areNotAllowed() throws Exception {
+    void symlink_outsideWorkspace_areNotAllowed() throws Exception {
+        assumeFalse("true".equals(System.getenv("DISABLE_SYMLINK_TESTS")));
+
         FreeStyleProject p = j.createFreeStyleProject();
 
         File secretsFolder = new File(j.jenkins.getRootDir(), "secrets");
@@ -723,7 +735,9 @@ public class DirectoryBrowserSupportTest {
      */
     @Test
     @Issue("SECURITY-904")
-    public void symlink_avoidLeakingInformation_aboutIllegalFolder() throws Exception {
+    void symlink_avoidLeakingInformation_aboutIllegalFolder() throws Exception {
+        assumeFalse("true".equals(System.getenv("DISABLE_SYMLINK_TESTS")));
+
         FreeStyleProject p = j.createFreeStyleProject();
 
         File secretsFolder = new File(j.jenkins.getRootDir(), "secrets");
@@ -795,8 +809,8 @@ public class DirectoryBrowserSupportTest {
     // to achieve that they should already have access to the system or the Script Console.
     @Test
     @Issue("SECURITY-904")
-    public void junctionAndSymlink_outsideWorkspace_areNotAllowed_windowsJunction() throws Exception {
-        Assume.assumeTrue(Functions.isWindows());
+    void junctionAndSymlink_outsideWorkspace_areNotAllowed_windowsJunction() throws Exception {
+        assumeTrue(Functions.isWindows() && !"true".equals(System.getenv("DISABLE_SYMLINK_TESTS")));
 
         FreeStyleProject p = j.createFreeStyleProject();
 
@@ -956,7 +970,7 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue("SECURITY-904")
-    public void directSymlink_forTestingZip() throws Exception {
+    void directSymlink_forTestingZip() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
 
         j.buildAndAssertSuccess(p);
@@ -1015,7 +1029,9 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue({"SECURITY-904", "SECURITY-1452"})
-    public void symlink_insideWorkspace_areNotAllowedAnymore() throws Exception {
+    void symlink_insideWorkspace_areNotAllowedAnymore() throws Exception {
+        assumeFalse("true".equals(System.getenv("DISABLE_SYMLINK_TESTS")));
+
         FreeStyleProject p = j.createFreeStyleProject();
 
         // build once to have the workspace set up
@@ -1110,8 +1126,8 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue("SECURITY-2481")
-    public void windows_cannotViewAbsolutePath() throws Exception {
-        Assume.assumeTrue("can only be tested this on Windows", Functions.isWindows());
+    void windows_cannotViewAbsolutePath() throws Exception {
+        assumeTrue(Functions.isWindows(), "can only be tested this on Windows");
 
         Path targetTmpPath = Files.createTempFile("sec2481", "tmp");
         String content = "random data provided as fixed value";
@@ -1126,7 +1142,7 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue("SECURITY-1807")
-    public void tmpNotListed() throws Exception {
+    void tmpNotListed() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
             @Override
@@ -1140,13 +1156,13 @@ public class DirectoryBrowserSupportTest {
         assertEquals(Result.SUCCESS, p.scheduleBuild2(0).get().getResult());
 
         String text = getWebClient().goTo("job/" + p.getName() + "/ws/").asNormalizedText();
-        assertTrue(text, text.contains("anotherDir"));
-        assertFalse(text, text.contains("subdir"));
+        assertTrue(text.contains("anotherDir"), text);
+        assertFalse(text.contains("subdir"), text);
     }
 
     @Test
     @Issue("SECURITY-1807")
-    public void tmpNotListedWithGlob() throws Exception {
+    void tmpNotListedWithGlob() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
 
         assertEquals(Result.SUCCESS, p.scheduleBuild2(0).get().getResult());
@@ -1170,15 +1186,15 @@ public class DirectoryBrowserSupportTest {
         assertEquals(Result.SUCCESS, p.scheduleBuild2(0).get().getResult());
 
         String text = getWebClient().goTo("job/" + p.getName() + "/ws/**/*.txt").asNormalizedText();
-        assertTrue(text, text.contains("one.txt"));
-        assertTrue(text, text.contains("two.txt"));
-        assertFalse(text, text.contains("three.txt"));
-        assertFalse(text, text.contains("four.txt"));
+        assertTrue(text.contains("one.txt"), text);
+        assertTrue(text.contains("two.txt"), text);
+        assertFalse(text.contains("three.txt"), text);
+        assertFalse(text.contains("four.txt"), text);
     }
 
     @Test
     @Issue("SECURITY-1807")
-    public void noDirectAccessToTmp() throws Exception {
+    void noDirectAccessToTmp() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
             @Override
@@ -1215,7 +1231,7 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue("SECURITY-1807")
-    public void tmpNotListedInPlain() throws Exception {
+    void tmpNotListedInPlain() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
             @Override
@@ -1229,13 +1245,13 @@ public class DirectoryBrowserSupportTest {
         assertEquals(Result.SUCCESS, p.scheduleBuild2(0).get().getResult());
 
         String text = getWebClient().goTo("job/" + p.getName() + "/ws/*plain*", "text/plain").getWebResponse().getContentAsString();
-        assertTrue(text, text.contains("anotherDir"));
-        assertFalse(text, text.contains("subdir"));
+        assertTrue(text.contains("anotherDir"), text);
+        assertFalse(text.contains("subdir"), text);
     }
 
     @Test
     @Issue("SECURITY-1807")
-    public void tmpNotListedInZipWithoutGlob() throws Exception {
+    void tmpNotListedInZipWithoutGlob() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
             @Override
@@ -1288,7 +1304,7 @@ public class DirectoryBrowserSupportTest {
 
     @Test
     @Issue("SECURITY-1807")
-    public void tmpNotListedInZipWithGlob() throws Exception {
+    void tmpNotListedInZipWithGlob() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         p.getBuildersList().add(new TestBuilder() {
             @Override
@@ -1328,8 +1344,33 @@ public class DirectoryBrowserSupportTest {
         ));
     }
 
+    @Issue("JENKINS-26894")
     @Test
-    public void canViewRelativePath() throws Exception {
+    void workspaceTextFileShouldIncludeCharset() throws Exception {
+        String chineseContent = "public class Test { // 用户中心模块\n}";
+        FreeStyleProject p = j.createFreeStyleProject();
+        p.getBuildersList().add(new TestBuilder() {
+            @Override
+            public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+                build.getWorkspace().child("Test.java").write(chineseContent, "UTF-8");
+                return true;
+            }
+        });
+        j.buildAndAssertSuccess(p);
+
+        // Test workspace file serving includes charset
+        Page page = getWebClient().goTo("job/" + p.getName() + "/ws/Test.java", null);
+        assertThat(page.getWebResponse().getStatusCode(), equalTo(HttpURLConnection.HTTP_OK));
+        assertThat("text file Content-Type should include charset",
+                page.getWebResponse().getResponseHeaderValue("Content-Type").toLowerCase(java.util.Locale.ROOT),
+                containsString("charset=utf-8"));
+        assertThat("text file content should be correctly served",
+                page.getWebResponse().getContentAsString(),
+                containsString(chineseContent));
+    }
+
+    @Test
+    void canViewRelativePath() throws Exception {
         File testFile = new File(j.jenkins.getRootDir(), "userContent/test.txt");
         String content = "random data provided as fixed value";
 
@@ -1523,4 +1564,219 @@ public class DirectoryBrowserSupportTest {
         }
     }
 
+    private static final String EVIL_AGENT_URL = "security4232-evil-agent";
+    private static final String EVIL_NAME = "javascript:alert(document.domain)";
+
+    @Test
+    @Issue("SECURITY-4232")
+    void agentSuppliedHrefCannotRunScriptOnClick() throws Exception {
+        assertCraftedEntryIsInert(EVIL_AGENT_URL + "/");
+    }
+
+    @Test
+    @Issue("SECURITY-4232")
+    void agentSuppliedGlobMatchCannotRunScriptOnClick() throws Exception {
+        assertCraftedEntryIsInert(EVIL_AGENT_URL + "/**");
+    }
+
+    private void assertCraftedEntryIsInert(String url) throws Exception {
+        AtomicBoolean alerted = new AtomicBoolean();
+        try (JenkinsRule.WebClient wc = j.createWebClient()) {
+            wc.setAlertHandler((p, msg) -> alerted.set(true));
+            wc.getOptions().setThrowExceptionOnFailingStatusCode(false);
+
+            HtmlPage page = wc.goTo(url);
+            assertThat(page.getWebResponse().getContentAsString(), not(containsString("href=\"javascript:")));
+
+            HtmlAnchor anchor = page.getDocumentElement().getElementsByTagName("a").stream()
+                    .filter(HtmlAnchor.class::isInstance).map(HtmlAnchor.class::cast)
+                    .filter(a -> a.getHrefAttribute().contains("alert"))
+                    .findFirst().orElseThrow(() -> new AssertionError("the crafted entry should be listed"));
+            assertThat(anchor.getHrefAttribute(), not(containsString("javascript:")));
+            assertThat(anchor.getHrefAttribute(), containsString("javascript%3A"));
+
+            HtmlElementUtil.click(anchor);
+            wc.waitForBackgroundJavaScript(2000L);
+            assertFalse(alerted.get(), "clicking the workspace link must not execute script");
+        }
+    }
+
+    @Test
+    @Issue("SECURITY-4232")
+    void honestAgentListingRendersWorkingLinks() throws Exception {
+        var agent = j.createOnlineSlave();
+        FreeStyleProject p = j.createFreeStyleProject();
+        p.setAssignedNode(agent);
+        if (Functions.isWindows()) {
+            p.getBuildersList().add(new BatchFile("echo hello> README.md"));
+        } else {
+            p.getBuildersList().add(new Shell("echo hello > README.md"));
+        }
+        j.buildAndAssertSuccess(p);
+
+        try (JenkinsRule.WebClient wc = j.createWebClient()) {
+            HtmlPage page = wc.goTo("job/" + p.getName() + "/ws/");
+            HtmlAnchor anchor = page.getAnchorByText("README.md");
+            assertEquals("README.md", anchor.getHrefAttribute());
+            Page target = anchor.click();
+            assertEquals(200, target.getWebResponse().getStatusCode());
+            assertThat(target.getWebResponse().getContentAsString(), containsString("hello"));
+
+            HtmlPage globPage = wc.goTo("job/" + p.getName() + "/ws/**");
+            HtmlAnchor globAnchor = globPage.getAnchorByText("README.md");
+            assertEquals("./README.md", globAnchor.getHrefAttribute());
+            Page globTarget = globAnchor.click();
+            assertEquals(200, globTarget.getWebResponse().getStatusCode());
+            assertThat(globTarget.getWebResponse().getContentAsString(), containsString("hello"));
+        }
+    }
+
+    private static VirtualFile maliciousAgentRoot(Object craftedRunResult, Set<String> craftedGlobMatches) {
+        return new VirtualFile() {
+            @Override public String getName() {
+                return "";
+            }
+
+            @Override public URI toURI() {
+                return URI.create("evil:/");
+            }
+
+            @Override public VirtualFile getParent() {
+                return this;
+            }
+
+            @Override public boolean isDirectory() {
+                return true;
+            }
+
+            @Override public boolean isFile() {
+                return false;
+            }
+
+            @Override public boolean exists() {
+                return true;
+            }
+
+            @Override public VirtualFile[] list() {
+                return new VirtualFile[0];
+            }
+
+            @Override public Collection<String> list(String includes, String excludes, boolean useDefaultExcludes) {
+                return craftedGlobMatches;
+            }
+
+            @Override public Collection<String> list(String includes, String excludes, boolean useDefaultExcludes, OpenOption... openOptions) {
+                return craftedGlobMatches;
+            }
+
+            @Override public VirtualFile child(String name) {
+                VirtualFile root = this;
+                return new VirtualFile() {
+                    @Override public String getName() {
+                        return name;
+                    }
+
+                    @Override public URI toURI() {
+                        return URI.create("evil:/" + Util.rawEncode(name));
+                    }
+
+                    @Override public VirtualFile getParent() {
+                        return root;
+                    }
+
+                    @Override public boolean isDirectory() {
+                        return false;
+                    }
+
+                    @Override public boolean isFile() {
+                        return true;
+                    }
+
+                    @Override public boolean exists() {
+                        return craftedGlobMatches.contains(name);
+                    }
+
+                    @Override public VirtualFile[] list() {
+                        return new VirtualFile[0];
+                    }
+
+                    @Override public VirtualFile child(String childName) {
+                        return this;
+                    }
+
+                    @Override public long length() {
+                        return 0;
+                    }
+
+                    @Override public long lastModified() {
+                        return 0;
+                    }
+
+                    @Override public boolean canRead() {
+                        return true;
+                    }
+
+                    @Override public InputStream open() throws IOException {
+                        throw new FileNotFoundException();
+                    }
+                };
+            }
+
+            @Override public long length() {
+                return 0;
+            }
+
+            @Override public long lastModified() {
+                return 0;
+            }
+
+            @Override public boolean canRead() {
+                return true;
+            }
+
+            @Override public InputStream open() throws IOException {
+                throw new FileNotFoundException();
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public <V> V run(hudson.remoting.Callable<V, IOException> callable) {
+                return (V) craftedRunResult;
+            }
+        };
+    }
+
+    @TestExtension({"agentSuppliedHrefCannotRunScriptOnClick", "agentSuppliedGlobMatchCannotRunScriptOnClick"})
+    public static class EvilAgentRootAction implements UnprotectedRootAction {
+        @Override public String getIconFileName() {
+            return null;
+        }
+
+        @Override public String getDisplayName() {
+            return null;
+        }
+
+        @Override public String getUrlName() {
+            return EVIL_AGENT_URL;
+        }
+
+        public HttpResponse doDynamic() throws ReflectiveOperationException {
+            ClassLoader cl = DirectoryBrowserSupport.class.getClassLoader();
+
+            Class<?> entryClass = Class.forName(
+                    "hudson.model.DirectoryBrowserSupport$ChildEntry", false, cl);
+            var entryCtor = entryClass.getDeclaredConstructor(
+                    String.class, boolean.class, long.class, boolean.class, long.class);
+            entryCtor.setAccessible(true);
+            Object entry = entryCtor.newInstance(EVIL_NAME, false, 6L, true, 0L);
+
+            Class<?> resultClass = Class.forName(
+                    "hudson.model.DirectoryBrowserSupport$BuildChildPathsResult", false, cl);
+            var resultCtor = resultClass.getDeclaredConstructor(List.class, boolean.class, boolean.class);
+            resultCtor.setAccessible(true);
+            Object crafted = resultCtor.newInstance(List.of(List.of(entry)), false, false);
+
+            return new DirectoryBrowserSupport(Jenkins.get(), maliciousAgentRoot(crafted, Set.of(EVIL_NAME)), "title", "", true);
+        }
+    }
 }

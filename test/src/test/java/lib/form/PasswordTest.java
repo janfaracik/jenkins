@@ -29,16 +29,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.Functions;
 import hudson.Launcher;
 import hudson.cli.CopyJobCommand;
 import hudson.cli.GetJobCommand;
@@ -68,17 +70,21 @@ import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
 import hudson.util.Secret;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.StringReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
+import javax.xml.transform.stream.StreamSource;
 import jenkins.model.GlobalConfiguration;
 import jenkins.model.Jenkins;
 import jenkins.model.TransientActionFactory;
@@ -94,13 +100,14 @@ import org.htmlunit.html.HtmlHiddenInput;
 import org.htmlunit.html.HtmlInput;
 import org.htmlunit.html.HtmlPage;
 import org.htmlunit.html.HtmlTextInput;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.For;
 import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockAuthorizationStrategy;
 import org.jvnet.hudson.test.TestExtension;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
@@ -108,17 +115,22 @@ import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.springframework.security.core.Authentication;
 
-public class PasswordTest {
+@WithJenkins
+class PasswordTest {
 
-    @Rule
-    public JenkinsRule j = new JenkinsRule();
+    private JenkinsRule j;
+
+    @BeforeEach
+    void setUp(JenkinsRule rule) {
+        j = rule;
+    }
 
     @Test
-    public void secretNotPlainText() throws Exception {
+    void secretNotPlainText() throws Exception {
         SecretNotPlainText.secret = Secret.fromString("secret");
         HtmlPage p = j.createWebClient().goTo("secretNotPlainText");
         String value = ((HtmlInput) p.getElementById("password")).getValue();
-        assertNotEquals("password shouldn't be plain text", "secret", value);
+        assertNotEquals("secret", value, "password shouldn't be plain text");
         assertEquals("secret", Secret.fromString(value).getPlainText());
     }
 
@@ -146,7 +158,7 @@ public class PasswordTest {
     @For({ExtendedReadRedaction.class, ExtendedReadSecretRedaction.class})
     @Issue("SECURITY-3495")
     @Test
-    public void testNodeSecrets() throws Exception {
+    void testNodeSecrets() throws Exception {
         Computer.EXTENDED_READ.setEnabled(true);
         j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
         j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().grant(Jenkins.ADMINISTER).everywhere().to("alice").grant(Jenkins.READ, Computer.EXTENDED_READ).everywhere().to("bob"));
@@ -204,7 +216,8 @@ public class PasswordTest {
     @For({ExtendedReadRedaction.class, ExtendedReadSecretRedaction.class})
     @Issue("SECURITY-3513")
     @Test
-    public void testCopyNodeSecrets() throws Exception {
+    void testCopyNodeSecrets() throws Exception {
+        assumeFalse(Functions.isWindows() && System.getenv("CI") != null, "Expensive to run and not Windows specific");
         Computer.EXTENDED_READ.setEnabled(true);
         j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
         MockAuthorizationStrategy mockAuthorizationStrategy = new MockAuthorizationStrategy();
@@ -256,6 +269,7 @@ public class PasswordTest {
     public static class NodePropertyWithSecret extends NodeProperty<Node> {
         private final Secret secret;
 
+        @SuppressWarnings("checkstyle:redundantmodifier")
         @DataBoundConstructor
         public NodePropertyWithSecret(Secret secret) {
             this.secret = secret;
@@ -274,7 +288,7 @@ public class PasswordTest {
     @For({ExtendedReadRedaction.class, ExtendedReadSecretRedaction.class})
     @Issue("SECURITY-3496")
     @Test
-    public void testViewSecrets() throws Exception {
+    void testViewSecrets() throws Exception {
         j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
         j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().grant(Jenkins.ADMINISTER).everywhere().to("alice").grant(Jenkins.READ, View.READ).everywhere().to("bob"));
 
@@ -331,7 +345,124 @@ public class PasswordTest {
     public static class ViewPropertyWithSecret extends ViewProperty {
         private final Secret secret;
 
+        @SuppressWarnings("checkstyle:redundantmodifier")
         public ViewPropertyWithSecret(Secret secret) {
+            this.secret = secret;
+        }
+
+        public Secret getSecret() {
+            return secret;
+        }
+    }
+
+    @Issue("SECURITY-3744")
+    @Test
+    void testJobGetConfigXmlAfterRawSubmission() throws Exception {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().grant(Jenkins.ADMINISTER).everywhere().to("alice").grant(Jenkins.READ, Item.READ, Item.EXTENDED_READ).everywhere().to("bob"));
+        final FreeStyleProject freeStyleProject = j.createFreeStyleProject();
+        freeStyleProject.getBuildersList().add(new SecretBuilder(Secret.fromString("t0ps3cr3t")));
+        String xmlString;
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("alice")) {
+            final Page page = wc.goTo(freeStyleProject.getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t")));
+        }
+        // Now write the job config with a raw string secret
+        xmlString = xmlString.replaceAll("<secret>[{][^}]+[}]</secret>", "<secret>t0ps3cr3t</secret>");
+        assertThat(xmlString, containsString("<secret>t0ps3cr3t</secret>"));
+        freeStyleProject.updateByXml(new StreamSource(new StringReader(xmlString)));
+        assertThat(freeStyleProject.getConfigFile().asString(), not(containsString("t0ps3cr3t")));
+
+        // still encrypted through the API
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("alice")) {
+            final Page page = wc.goTo(freeStyleProject.getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t")));
+        }
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("bob")) {
+            final Page page = wc.goTo(freeStyleProject.getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t")));
+            assertThat(xmlString, containsString("<secret>********</secret>"));
+        }
+    }
+
+    @Test
+    void testNodeGetConfigXmlAfterRawSubmission() throws Exception {
+        Computer.EXTENDED_READ.setEnabled(true);
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().grant(Jenkins.ADMINISTER).everywhere().to("alice").grant(Jenkins.READ, Computer.EXTENDED_READ).everywhere().to("bob"));
+
+        final DumbSlave onlineAgent = j.createOnlineSlave();
+        onlineAgent.getNodeProperties().add(new NodePropertyWithSecret(Secret.fromString("t0ps3cr3t_node")));
+        onlineAgent.save();
+
+        String xmlString;
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("alice")) {
+            final Page page = wc.goTo(onlineAgent.getComputer().getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t_node")));
+        }
+        // Now write the node config with a raw string secret
+        xmlString = xmlString.replaceAll("<secret>[{][^}]+[}]</secret>", "<secret>t0ps3cr3t_node</secret>");
+        assertThat(xmlString, containsString("<secret>t0ps3cr3t_node</secret>"));
+        onlineAgent.getComputer().updateByXml(new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8)));
+        assertThat(j.jenkins.getNodesObject().getConfigFile(onlineAgent).asString(), not(containsString("t0ps3cr3t_node")));
+
+        // still encrypted through the API
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("alice")) {
+            final Page page = wc.goTo(onlineAgent.getComputer().getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t_node")));
+        }
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("bob")) {
+            final Page page = wc.goTo(onlineAgent.getComputer().getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t_node")));
+            assertThat(xmlString, containsString("<secret>********</secret>"));
+        }
+    }
+
+    @Test
+    void testViewGetConfigXmlAfterRawSubmission() throws Exception {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        j.jenkins.setAuthorizationStrategy(new MockAuthorizationStrategy().grant(Jenkins.ADMINISTER).everywhere().to("alice").grant(Jenkins.READ, View.READ).everywhere().to("bob"));
+
+        final ListView view = new ListView("security-3744-view");
+        view.getProperties().add(new ViewPropertyWithSecret(Secret.fromString("t0ps3cr3t_view")));
+        j.jenkins.addView(view);
+
+        String xmlString;
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("alice")) {
+            final Page page = wc.goTo(view.getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t_view")));
+        }
+        // Now write the view config with a raw string secret
+        xmlString = xmlString.replaceAll("<secret>[{][^}]+[}]</secret>", "<secret>t0ps3cr3t_view</secret>");
+        assertThat(xmlString, containsString("<secret>t0ps3cr3t_view</secret>"));
+        view.updateByXml(new StreamSource(new StringReader(xmlString)));
+
+        // still encrypted through the API
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("alice")) {
+            final Page page = wc.goTo(view.getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t_view")));
+        }
+        try (JenkinsRule.WebClient wc = j.createWebClient().login("bob")) {
+            final Page page = wc.goTo(view.getUrl() + "config.xml", "application/xml");
+            xmlString = page.getWebResponse().getContentAsString();
+            assertThat(xmlString, not(containsString("t0ps3cr3t_view")));
+            assertThat(xmlString, containsString("<secret>********</secret>"));
+        }
+    }
+
+    public static class SecretBuilder extends Builder {
+        private final Secret secret;
+
+        @SuppressWarnings("checkstyle:redundantmodifier")
+        public SecretBuilder(Secret secret) {
             this.secret = secret;
         }
 
@@ -343,7 +474,7 @@ public class PasswordTest {
     @Issue({"SECURITY-266", "SECURITY-304"})
     @Test
     @For(ExtendedReadSecretRedaction.class)
-    public void testExposedCiphertext() throws Exception {
+    void testExposedCiphertext() throws Exception {
         boolean saveEnabled = Item.EXTENDED_READ.getEnabled();
         Item.EXTENDED_READ.setEnabled(true);
         try {
@@ -430,7 +561,7 @@ public class PasswordTest {
 
     @Test
     @Issue("SECURITY-616")
-    public void testCheckMethod() throws Exception {
+    void testCheckMethod() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject("p");
         p.addProperty(new VulnerableProperty(null));
         HtmlTextInput field = j.createWebClient().getPage(p, "configure").getFormByName("config").getInputByName("_.secret");
@@ -452,6 +583,7 @@ public class PasswordTest {
     public static class VulnerableProperty extends JobProperty<FreeStyleProject> {
         public final Secret secret;
 
+        @SuppressWarnings("checkstyle:redundantmodifier")
         @DataBoundConstructor
         public VulnerableProperty(Secret secret) {
             this.secret = secret;
@@ -473,7 +605,8 @@ public class PasswordTest {
     }
 
     @Test
-    public void testBackgroundSecretConversion() throws Exception {
+    void testBackgroundSecretConversion() throws Exception {
+        assumeFalse(Functions.isWindows() && System.getenv("CI") != null, "Expensive to run and not Windows specific");
         final JenkinsRule.WebClient wc = j.createWebClient();
         j.configRoundtrip();
         // empty default values
@@ -564,7 +697,7 @@ public class PasswordTest {
     }
 
     @Test
-    public void testBuildStep() throws Exception {
+    void testBuildStep() throws Exception {
         final FreeStyleProject project = j.createFreeStyleProject();
         project.getBuildersList().add(new PasswordHolderBuildStep());
         project.save();
@@ -572,7 +705,7 @@ public class PasswordTest {
         j.configRoundtrip(project);
 
         // empty default values after initial form submission
-        PasswordHolderBuildStep buildStep = (PasswordHolderBuildStep) project.getBuildersList().get(0);
+        PasswordHolderBuildStep buildStep = (PasswordHolderBuildStep) project.getBuildersList().getFirst();
         assertNotNull(buildStep);
         assertEquals("", buildStep.secretWithSecretGetterSecretSetter.getPlainText());
         assertEquals("", buildStep.secretWithSecretGetterStringSetter.getPlainText());
@@ -583,7 +716,7 @@ public class PasswordTest {
         assertEquals("", buildStep.stringWithStringGetterSecretSetter);
         assertEquals("", buildStep.stringWithStringGetterStringSetter);
 
-        buildStep = (PasswordHolderBuildStep) project.getBuildersList().get(0);
+        buildStep = (PasswordHolderBuildStep) project.getBuildersList().getFirst();
         assertNotNull(buildStep);
 
 
@@ -625,7 +758,7 @@ public class PasswordTest {
         assertTrue(i >= 8); // at least 8 password fields expected on that job config form
 
         j.configRoundtrip(project);
-        buildStep = (PasswordHolderBuildStep) project.getBuildersList().get(0);
+        buildStep = (PasswordHolderBuildStep) project.getBuildersList().getFirst();
 
         // confirm round-trip did not change effective values
         assertEquals("secretWithSecretGetterSecretSetter", buildStep.secretWithSecretGetterSecretSetter.getPlainText());
@@ -676,6 +809,7 @@ public class PasswordTest {
         private String stringWithStringGetterSecretSetter;
         private String stringWithSecretGetterSecretSetter;
 
+        @SuppressWarnings("checkstyle:redundantmodifier")
         @DataBoundConstructor
         public PasswordHolderBuildStep() {
             // data binding
@@ -769,7 +903,7 @@ public class PasswordTest {
     }
 
     @Test
-    public void testStringlyTypedSecrets() throws Exception {
+    void testStringlyTypedSecrets() throws Exception {
         final FreeStyleProject project = j.createFreeStyleProject();
         project.getBuildersList().add(new StringlyTypedSecretsBuilder(""));
         project.save();
@@ -777,7 +911,7 @@ public class PasswordTest {
         j.configRoundtrip(project);
 
         // empty default values after initial form submission
-        StringlyTypedSecretsBuilder buildStep = (StringlyTypedSecretsBuilder) project.getBuildersList().get(0);
+        StringlyTypedSecretsBuilder buildStep = (StringlyTypedSecretsBuilder) project.getBuildersList().getFirst();
         assertNotNull(buildStep);
         assertTrue(buildStep.mySecret.startsWith("{"));
         assertTrue(buildStep.mySecret.endsWith("}"));
@@ -801,7 +935,7 @@ public class PasswordTest {
         }
 
         j.configRoundtrip(project);
-        buildStep = (StringlyTypedSecretsBuilder) project.getBuildersList().get(0);
+        buildStep = (StringlyTypedSecretsBuilder) project.getBuildersList().getFirst();
 
         // confirm round-trip did not change effective values
         assertEquals("stringlyTypedSecret", Secret.fromString(buildStep.mySecret).getPlainText());
@@ -815,6 +949,7 @@ public class PasswordTest {
 
         private String mySecret;
 
+        @SuppressWarnings("checkstyle:redundantmodifier")
         @DataBoundConstructor
         public StringlyTypedSecretsBuilder(String mySecret) {
             this.mySecret = Secret.fromString(mySecret).getEncryptedValue();
@@ -840,7 +975,7 @@ public class PasswordTest {
     }
 
     @Test
-    public void testBlankoutOfStringBackedPasswordFieldWithoutItemConfigure() throws Exception {
+    void testBlankoutOfStringBackedPasswordFieldWithoutItemConfigure() throws Exception {
         FreeStyleProject p = j.createFreeStyleProject();
         JenkinsRule.WebClient wc = j.createWebClient();
         HtmlPage htmlPage = wc.goTo(p.getUrl() + "/passwordFields");
@@ -912,7 +1047,8 @@ public class PasswordTest {
     }
 
     @Test
-    public void computerExtendedReadNoSecretsRevealed() throws Exception {
+    void computerExtendedReadNoSecretsRevealed() throws Exception {
+        assumeFalse(Functions.isWindows() && System.getenv("CI") != null, "Expensive to run and not Windows specific");
         Computer computer = j.jenkins.getComputers()[0];
         computer.addAction(new SecuredAction());
 

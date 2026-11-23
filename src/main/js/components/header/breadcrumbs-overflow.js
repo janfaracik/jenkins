@@ -18,7 +18,14 @@ export default function computeBreadcrumbs() {
     document.querySelectorAll(`[data-type="breadcrumb-item"]`),
   );
 
-  const breadcrumbsOverflow = generateOverflowButton().querySelector("button");
+  const overflowButton = generateOverflowButton();
+  if (!overflowButton) {
+    return;
+  }
+  const breadcrumbsOverflow = overflowButton.querySelector("button");
+  if (!breadcrumbsOverflow) {
+    return;
+  }
 
   while (breadcrumbsBarOverflows()) {
     const item = breadcrumbs.shift();
@@ -36,14 +43,19 @@ export default function computeBreadcrumbs() {
     (instance) => {
       const mappedItems = items.map((e) => {
         let href = e.querySelector("a");
+        let tooltip;
         if (href) {
           href = href.href;
+        }
+        if (e.textContent.length > 26) {
+          tooltip = e.textContent;
         }
 
         return {
           type: "link",
-          label: e.textContent,
-          url: href,
+          displayName: e.textContent,
+          event: href ? { url: href, type: "GET" } : undefined,
+          tooltip,
         };
       });
 
@@ -51,7 +63,7 @@ export default function computeBreadcrumbs() {
     },
     true,
     {
-      trigger: "mouseenter focus",
+      trigger: "click focus",
       offset: [0, 10],
       animation: "tooltip",
     },
@@ -60,6 +72,9 @@ export default function computeBreadcrumbs() {
 
 function breadcrumbsBarOverflows() {
   const breadcrumbsBar = document.querySelector("#breadcrumbBar");
+  if (!breadcrumbsBar) {
+    return false;
+  }
   return breadcrumbsBar.scrollWidth > breadcrumbsBar.offsetWidth;
 }
 
@@ -74,6 +89,9 @@ function generateOverflowButton() {
 
   // Generate an overflow menu to store breadcrumbs
   const logo = document.querySelector(".jenkins-breadcrumbs__list-item");
+  if (!logo) {
+    return null;
+  }
   const element =
     createElementFromHtml(`<li class="jenkins-breadcrumbs__list-item"><button class="jenkins-button jenkins-button--tertiary"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
     <circle cx="256" cy="256" r="45" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/>
@@ -90,7 +108,7 @@ function removeOverflowButton() {
     ".jenkins-breadcrumbs__list-item .jenkins-button",
   );
 
-  if (breadcrumbsOverflow) {
+  if (breadcrumbsOverflow && breadcrumbsOverflow.parentNode) {
     breadcrumbsOverflow.parentNode.remove();
   }
 }

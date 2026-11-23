@@ -1,5 +1,6 @@
 package jenkins.model.details;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.model.Run;
 
 /**
@@ -9,5 +10,15 @@ public class TimestampDetail extends Detail {
 
     public TimestampDetail(Run<?, ?> run) {
         super(run);
+    }
+
+    @Override
+    public int getOrder() {
+        return Integer.MAX_VALUE - 1;
+    }
+
+    @Override
+    public @NonNull Verbosity getVerbosity() {
+        return Verbosity.BOTH;
     }
 }

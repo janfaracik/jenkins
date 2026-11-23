@@ -22,22 +22,29 @@ function generateDropdown(element, callback, immediate, options = {}) {
       {},
       Templates.dropdown(),
       {
-        hideOnClick:
-          element.dataset["hideOnClick"] !== "false" ? "toggle" : false,
         onCreate(instance) {
+          // Suggestion dropdowns on inputs and hover-only dropdowns are not menu buttons
+          if (
+            instance.props.trigger.includes("click") &&
+            instance.reference.tagName !== "INPUT"
+          ) {
+            instance.reference.setAttribute("aria-haspopup", "menu");
+          }
+
           const onload = () => {
             if (instance.loaded) {
               return;
             }
 
             document.addEventListener("click", (event) => {
-              const isClickInAnyDropdown =
-                !!event.target.closest("[data-tippy-root]");
               const isClickOnReference = instance.reference.contains(
                 event.target,
               );
+              // Don't close the dropdown if the user is interacting with a SELECT menu inside of it
+              const isSelect = event.target.tagName === "SELECT";
 
-              if (!isClickInAnyDropdown && !isClickOnReference) {
+              if (!isClickOnReference && !isSelect) {
+                instance.clickToHide = true;
                 instance.hide();
               }
             });
@@ -52,18 +59,40 @@ function generateDropdown(element, callback, immediate, options = {}) {
             });
           }
         },
+        onHide(instance) {
+          const referenceParent = instance.reference.parentNode;
+          referenceParent.classList.remove("model-link--open");
+          if (
+            instance.props.trigger === "mouseenter" &&
+            !instance.clickToHide
+          ) {
+            const dropdowns = document.querySelectorAll("[data-tippy-root]");
+            const isMouseOverAnyDropdown = Array.from(dropdowns).some(
+              (dropdown) => dropdown.matches(":hover"),
+            );
+
+            return !isMouseOverAnyDropdown;
+          }
+
+          instance.clickToHide = false;
+          return true;
+        },
       },
       options,
     ),
   );
 }
 
-/*
+/**
  * Generates the contents for the dropdown
+ * @param {DropdownItem[]}  items
+ * @param {boolean}  compact
+ * @param {string}  context
  */
-function generateDropdownItems(items, compact) {
+function generateDropdownItems(items, compact = false, context = "") {
   const menuItems = document.createElement("div");
   menuItems.classList.add("jenkins-dropdown");
+  menuItems.setAttribute("role", "menu");
   if (compact === true) {
     menuItems.classList.add("jenkins-dropdown--compact");
   }
@@ -75,7 +104,7 @@ function generateDropdownItems(items, compact) {
       }
 
       if (item.type === "HEADER") {
-        return Templates.heading(item.label);
+        return Templates.heading(item.displayName);
       }
 
       if (item.type === "SEPARATOR") {
@@ -83,16 +112,21 @@ function generateDropdownItems(items, compact) {
       }
 
       if (item.type === "DISABLED") {
-        return Templates.disabled(item.label);
+        return Templates.disabled(item.displayName);
       }
 
-      const menuItem = Templates.menuItem(item);
+      const menuItem = Templates.menuItem(
+        item,
+        "jenkins-dropdown__item",
+        context,
+      );
 
-      if (item.subMenu != null) {
+      // Split buttons only show their primary action in a dropdown, so get no submenu
+      if (item.event && item.event.actions != null && !item.event.event) {
         tippy(
           menuItem,
           Object.assign({}, Templates.dropdown(), {
-            content: generateDropdownItems(item.subMenu()),
+            content: generateDropdownItems(item.subMenu.items, false, context),
             trigger: "mouseenter",
             placement: "right-start",
             offset: [-8, 0],
@@ -173,55 +207,6 @@ function generateDropdownItems(items, compact) {
   return menuItems;
 }
 
-function convertHtmlToItems(children) {
-  const items = [];
-  Array.from(children).forEach((child) => {
-    const attributes = child.dataset;
-    const type = child.dataset.dropdownType;
-
-    switch (type) {
-      case "ITEM": {
-        const item = {
-          label: attributes.dropdownText,
-          id: attributes.dropdownId,
-          icon: attributes.dropdownIcon,
-          iconXml: attributes.dropdownIcon,
-          clazz: attributes.dropdownClazz,
-        };
-
-        if (attributes.dropdownHref) {
-          item.url = attributes.dropdownHref;
-          item.type = "link";
-        } else {
-          item.type = "button";
-        }
-
-        items.push(item);
-        break;
-      }
-      case "SUBMENU":
-        items.push({
-          type: "ITEM",
-          label: attributes.dropdownText,
-          icon: attributes.dropdownIcon,
-          iconXml: attributes.dropdownIcon,
-          subMenu: () => convertHtmlToItems(child.content.children),
-        });
-        break;
-      case "SEPARATOR":
-        items.push({ type: type });
-        break;
-      case "HEADER":
-        items.push({ type: type, label: attributes.dropdownText });
-        break;
-      case "CUSTOM":
-        items.push({ type: type, contents: child.content.cloneNode(true) });
-        break;
-    }
-  });
-  return items;
-}
-
 function validateDropdown(e) {
   if (e.targetUrl) {
     const method = e.getAttribute("checkMethod") || "post";
@@ -250,11 +235,126 @@ function debounce(callback) {
   };
 }
 
+/**
+ * Generates the contents for the dropdown
+ * @param {DropdownItem[]}  items
+ * @return {DropdownItem[]}
+ */
+function mapChildrenItemsToDropdownItems(items) {
+  /** @type {number | null} */
+  let initialGroup = null;
+
+  return items.flatMap((item) => {
+    if (item.type === "HEADER") {
+      return {
+        type: "HEADER",
+        displayName: item.displayName,
+      };
+    }
+
+    if (item.type === "SEPARATOR") {
+      return {
+        type: "SEPARATOR",
+      };
+    }
+
+    const response = [];
+
+    if (
+      initialGroup != null &&
+      item.group?.order !== initialGroup &&
+      item.group.order > 2
+    ) {
+      response.push({
+        type: "SEPARATOR",
+      });
+    }
+    initialGroup = item.group?.order;
+
+    response.push(item);
+    return response;
+  });
+}
+
+/**
+ * @param {HTMLElement[]} children
+ * @return {DropdownItem[]}
+ */
+function convertHtmlToItems(children) {
+  return Array.from(children).map((child) => {
+    const attributes = child.dataset;
+
+    /** @type {DropdownItemType} */
+    const type = child.dataset.dropdownType;
+
+    switch (type) {
+      case "ITEM": {
+        /** @type {MenuItemDropdownItem} */
+        const item = {
+          type: "ITEM",
+          displayName: attributes.dropdownText,
+          id: attributes.dropdownId,
+          icon: attributes.dropdownIcon,
+          iconXml: attributes.dropdownIcon,
+          clazz: attributes.dropdownClazz,
+          semantic: attributes.dropdownSemantic,
+        };
+
+        if (attributes.dropdownConfirmationTitle) {
+          item.event = {
+            title: attributes.dropdownConfirmationTitle,
+            description: attributes.dropdownConfirmationDescription,
+            postTo: attributes.dropdownConfirmationUrl,
+          };
+        }
+
+        if (attributes.dropdownHref) {
+          item.event = {
+            url: attributes.dropdownHref,
+            type: "GET",
+          };
+        }
+
+        if (attributes.dropdownBadgeSeverity) {
+          item.badge = {
+            text: attributes.dropdownBadgeText,
+            tooltip: attributes.dropdownBadgeTooltip,
+            severity: attributes.dropdownBadgeSeverity,
+          };
+        }
+
+        return item;
+      }
+      case "SUBMENU":
+        /** @type {MenuItemDropdownItem} */
+        return {
+          type: "ITEM",
+          displayName: attributes.dropdownText,
+          icon: attributes.dropdownIcon,
+          iconXml: attributes.dropdownIcon,
+          event: {
+            actions: [],
+          },
+          subMenu: {
+            items: convertHtmlToItems(child.content.children),
+          },
+        };
+      case "SEPARATOR":
+        return { type: type };
+      case "HEADER":
+        return { type: type, displayName: attributes.dropdownText };
+      case "CUSTOM":
+        return { type: type, contents: child.content.cloneNode(true) };
+    }
+  });
+}
+
 export default {
-  convertHtmlToItems,
   generateDropdown,
   generateDropdownItems,
   validateDropdown,
   getMaxSuggestionCount,
   debounce,
+  mapChildrenItemsToDropdownItems,
+  convertHtmlToItems,
 };

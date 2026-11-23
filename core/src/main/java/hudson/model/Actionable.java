@@ -24,20 +24,29 @@
 
 package hudson.model;
 
+import edu.umd.cs.findbugs.annotations.CheckForNull;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import edu.umd.cs.findbugs.annotations.Nullable;
 import hudson.Util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import jenkins.model.ModelObjectWithContextMenu;
+import jenkins.model.Tab;
 import jenkins.model.TransientActionFactory;
+import jenkins.model.menu.Group;
 import jenkins.security.stapler.StaplerNotDispatchable;
+import org.jenkins.ui.icon.IconSpec;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse;
@@ -113,6 +122,46 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
         return Collections.unmodifiableList(_actions);
     }
 
+    /**
+     * Collects and returns the list of actions to display in the application bar.
+     * <p>
+     * This method filters out actions that:
+     * <ul>
+     *   <li>are instances of {@link Tab}</li>
+     *   <li>lack a display name or an icon (either from {@link Action#getIconFileName()}
+     *       or, if available, {@link IconSpec#getIconClassName()})</li>
+     * </ul>
+     * <p>
+     * The resulting actions are sorted first by their {@link Group#getOrder()} value,
+     * then alphabetically by display name. The list is returned as an unmodifiable collection.
+     *
+     * @return an unmodifiable list of actions suitable for display in the app bar
+     */
+    @Restricted(NoExternalUse.class)
+    public List<Action> getAppBarActions() {
+        return getAllActions().stream()
+                .filter(Actionable::isAppBarAction)
+                .sorted(APP_BAR_ORDER)
+                .collect(Collectors.toUnmodifiableList());
+    }
+
+    static final Comparator<Action> APP_BAR_ORDER = Comparator.comparingInt((Action e) -> e.getGroup().getOrder())
+            .thenComparing(e -> Objects.requireNonNullElse(e.getDisplayName(), ""));
+
+    static boolean isAppBarAction(Action action) {
+        if (action instanceof Tab) {
+            return false;
+        }
+
+        String icon = action.getIconFileName();
+
+        if (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null) {
+            icon = iconSpec.getIconClassName();
+        }
+
+        return Util.fixEmptyAndTrim(action.getDisplayName()) != null || Util.fixEmptyAndTrim(icon) != null;
+    }
+
     private <T> Collection<? extends Action> createFor(TransientActionFactory<T> taf) {
         try {
             Collection<? extends Action> result = taf.createFor(taf.type().cast(this));
@@ -138,10 +187,11 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
      */
     @NonNull
     public <T extends Action> List<T> getActions(Class<T> type) {
-        List<T> _actions = Util.filter(getActions(), type);
+        List<T> _actions = new ArrayList<>();
         for (TransientActionFactory<?> taf : TransientActionFactory.factoriesFor(getClass(), type)) {
             _actions.addAll(Util.filter(createFor(taf), type));
         }
+        _actions.addAll(Util.filter(getActions(), type));
         return Collections.unmodifiableList(_actions);
     }
 
@@ -310,8 +360,12 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
         return !(old.isEmpty() && found);
     }
 
-    /** @deprecated No clear purpose, since subclasses may have overridden {@link #getActions}, and does not consider {@link TransientActionFactory}. */
+    /**
+     * @return the action at {@code index}, or {@code null} if the persisted action list has not been initialized
+     * @deprecated No clear purpose, since subclasses may have overridden {@link #getActions}, and does not consider {@link TransientActionFactory}.
+     */
     @Deprecated
+    @CheckForNull
     public Action getAction(int index) {
         if (actions == null)   return null;
         return actions.get(index);
@@ -323,6 +377,7 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
      * @return The action or {@code null} if no such actions exist.
      * @see #getActions(Class)
      */
+    @CheckForNull
     public <T extends Action> T getAction(Class<T> type) {
         // Shortcut: if the persisted list has one, return it.
         for (Action a : getActions()) {
@@ -344,6 +399,7 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
     /**
      * @since 2.475
      */
+    @CheckForNull
     public Object getDynamic(String token, StaplerRequest2 req, StaplerResponse2 rsp) {
         if (Util.isOverridden(Actionable.class, getClass(), "getDynamic", String.class, StaplerRequest.class, StaplerResponse.class)) {
             return getDynamic(token, StaplerRequest.fromStaplerRequest2(req), StaplerResponse.fromStaplerResponse2(rsp));
@@ -356,10 +412,12 @@ public abstract class Actionable extends AbstractModelObject implements ModelObj
      * @deprecated use {@link #getDynamic(String, StaplerRequest2, StaplerResponse2)}
      */
     @Deprecated
+    @CheckForNull
     public Object getDynamic(String token, StaplerRequest req, StaplerResponse rsp) {
         return getDynamicImpl(token, StaplerRequest.toStaplerRequest2(req), StaplerResponse.toStaplerResponse2(rsp));
     }
 
+    @CheckForNull
     private Object getDynamicImpl(String token, StaplerRequest2 req, StaplerResponse2 rsp) {
         for (Action a : getAllActions()) {
             if (a == null)

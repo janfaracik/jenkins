@@ -34,6 +34,7 @@ import hudson.model.userproperty.UserPropertyCategory;
 import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
+import hudson.views.DefaultViewsTabBar;
 import hudson.views.MyViewsTabBar;
 import hudson.views.ViewsTabBar;
 import jakarta.servlet.ServletException;
@@ -81,6 +82,8 @@ public class MyViewsProperty extends UserProperty implements ModifiableViewGroup
     @CheckForNull
     private String primaryViewName;
 
+    private ViewsTabBar viewsTabBar = new DefaultViewsTabBar();
+
     /**
      * Always hold at least one view.
      */
@@ -124,6 +127,9 @@ public class MyViewsProperty extends UserProperty implements ModifiableViewGroup
             protected void primaryView(String name) { primaryViewName = name; }
         };
 
+        if (viewsTabBar == null) {
+            viewsTabBar = new DefaultViewsTabBar();
+        }
         return this;
     }
 
@@ -281,9 +287,12 @@ public class MyViewsProperty extends UserProperty implements ModifiableViewGroup
             ListBoxModel items = new ListBoxModel();
             user = user == null ? User.current() : user;
             if (user != null) {
+                user.checkPermission(Jenkins.ADMINISTER);
+
                 MyViewsProperty property = user.getProperty(MyViewsProperty.class);
                 if (property == null) {
                     property = new MyViewsProperty();
+                    property.readResolve();
                     user.addProperty(property);
                 }
                 for (View view : property.views) {
@@ -303,7 +312,11 @@ public class MyViewsProperty extends UserProperty implements ModifiableViewGroup
 
     @Override
     public ViewsTabBar getViewsTabBar() {
-        return Jenkins.get().getViewsTabBar();
+        return viewsTabBar;
+    }
+
+    public void setViewsTabBar(ViewsTabBar viewsTabBar) {
+        this.viewsTabBar = viewsTabBar;
     }
 
     @Override

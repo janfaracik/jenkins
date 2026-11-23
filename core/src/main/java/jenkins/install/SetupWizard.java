@@ -69,6 +69,7 @@ import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.CompatibleFilter;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.interceptor.RequirePOST;
@@ -86,9 +87,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
  */
 @Restricted(NoExternalUse.class)
 @Extension
-public class SetupWizard extends PageDecorator {
+public class SetupWizard extends PageDecorator implements StaplerProxy {
     public SetupWizard() {
         checkFilter();
+    }
+
+    @Override
+    public Object getTarget() {
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+        return this;
     }
 
     /**
@@ -307,8 +314,7 @@ public class SetupWizard extends PageDecorator {
      */
     /*package*/ boolean isUsingSecurityDefaults() {
         Jenkins j = Jenkins.get();
-        if (j.getSecurityRealm() instanceof HudsonPrivateSecurityRealm) {
-            HudsonPrivateSecurityRealm securityRealm = (HudsonPrivateSecurityRealm) j.getSecurityRealm();
+        if (j.getSecurityRealm() instanceof HudsonPrivateSecurityRealm securityRealm) {
             try {
                 if (securityRealm.getAllUsers().size() == 1) {
                     HudsonPrivateSecurityRealm.Details details = securityRealm.load(SetupWizard.initialSetupAdminUserName);
@@ -633,14 +639,12 @@ public class SetupWizard extends PageDecorator {
         JSONArray pluginCategories = JSONArray.fromObject(getPlatformPluginList().toString());
         for (Iterator<?> categoryIterator = pluginCategories.iterator(); categoryIterator.hasNext();) {
             Object category = categoryIterator.next();
-            if (category instanceof JSONObject) {
-                JSONObject cat = (JSONObject) category;
+            if (category instanceof JSONObject cat) {
                 JSONArray plugins = cat.getJSONArray("plugins");
 
                 nextPlugin: for (Iterator<?> pluginIterator = plugins.iterator(); pluginIterator.hasNext();) {
                     Object pluginData = pluginIterator.next();
-                    if (pluginData instanceof JSONObject) {
-                        JSONObject plugin = (JSONObject) pluginData;
+                    if (pluginData instanceof JSONObject plugin) {
                         if (plugin.has("added")) {
                             String sinceVersion = plugin.getString("added");
                             if (sinceVersion != null) {
@@ -764,8 +768,7 @@ public class SetupWizard extends PageDecorator {
         @SuppressFBWarnings(value = "UNVALIDATED_REDIRECT", justification = "TODO needs triage")
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
             // Force root requests to the setup wizard
-            if (request instanceof HttpServletRequest && !Jenkins.get().getInstallState().isSetupComplete()) {
-                HttpServletRequest req = (HttpServletRequest) request;
+            if (request instanceof HttpServletRequest req && !Jenkins.get().getInstallState().isSetupComplete()) {
                 String requestURI = req.getRequestURI();
                 if (requestURI.equals(req.getContextPath()) && !requestURI.endsWith("/")) {
                     ((HttpServletResponse) response).sendRedirect(req.getContextPath() + "/");

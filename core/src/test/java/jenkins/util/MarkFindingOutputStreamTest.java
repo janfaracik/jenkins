@@ -1,34 +1,39 @@
 package jenkins.util;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import hudson.util.StreamCopyThread;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import org.junit.Test;
+import java.util.stream.IntStream;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /**
  * @author Kohsuke Kawaguchi
  */
-public class MarkFindingOutputStreamTest {
+class MarkFindingOutputStreamTest {
 
-    String mark = MarkFindingOutputStream.MARK;
-    String markHead = mark.substring(0, 5);
-    String markTail = mark.substring(5);
+    private String mark = MarkFindingOutputStream.MARK;
+    private String markHead = mark.substring(0, 5);
+    private String markTail = mark.substring(5);
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    MarkCountingOutputStream m = new MarkCountingOutputStream(baos);
+    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    private MarkCountingOutputStream m = new MarkCountingOutputStream(baos);
 
     @Test
-    public void findTwice() throws IOException {
+    void findTwice() throws IOException {
         write("foo" + mark + "bar" + mark);
         assertCount(2);
         assertOutput("foobar");
     }
 
     @Test
-    public void partialMatchTurnsOutToBeWrongIn2ndWrite() throws IOException {
+    void partialMatchTurnsOutToBeWrongIn2ndWrite() throws IOException {
         write("bar" + markHead);
         assertOutput("bar"); // at this point we should just see 'bar'
 
@@ -41,7 +46,7 @@ public class MarkFindingOutputStreamTest {
      * If a stream closes without completing a match, the partial match should be sent to the output.
      */
     @Test
-    public void closeInTheMiddle() throws IOException {
+    void closeInTheMiddle() throws IOException {
         write("foo" + markHead);
         m.close();
         assertCount(0);
@@ -49,7 +54,7 @@ public class MarkFindingOutputStreamTest {
     }
 
     @Test
-    public void oneByOne() throws IOException {
+    void oneByOne() throws IOException {
         m.write('1');
         writeOneByOne(mark);
         m.write('2');
@@ -58,7 +63,7 @@ public class MarkFindingOutputStreamTest {
     }
 
     @Test
-    public void writeOneHoldOff() throws IOException {
+    void writeOneHoldOff() throws IOException {
         writeOneByOne(markHead);
         assertOutput("");
         writeOneByOne("x");
@@ -66,7 +71,65 @@ public class MarkFindingOutputStreamTest {
         assertCount(0);
     }
 
-    private void assertOutput(String s) throws IOException {
+    @ParameterizedTest
+    @MethodSource("markerSplitPoints")
+    void findMarkerAcrossTwoWrites(int split) throws IOException {
+        byte[] bytes = mark.getBytes(StandardCharsets.UTF_8);
+        write("before");
+        m.write(bytes, 0, split);
+        m.write(bytes, split, bytes.length - split);
+        write("after");
+        assertCount(1);
+        assertOutput("beforeafter");
+    }
+
+    private static IntStream markerSplitPoints() {
+        return IntStream.range(1, MarkFindingOutputStream.MARK.length());
+    }
+
+    @Test
+    void findSplitMarkerWithOffsetsAndSurroundingOutput() throws IOException {
+        byte[] first = ("__before" + markHead + "__").getBytes(StandardCharsets.UTF_8);
+        byte[] second = ("__" + markTail + "after__").getBytes(StandardCharsets.UTF_8);
+        m.write(first, 2, first.length - 4);
+        m.write(second, 2, second.length - 4);
+        assertCount(1);
+        assertOutput("beforeafter");
+    }
+
+    @Test
+    void findMarkerAcrossSingleByteAndBulkWrites() throws IOException {
+        byte[] bytes = mark.getBytes(StandardCharsets.UTF_8);
+        m.write(bytes[0]);
+        m.write(bytes, 1, bytes.length - 1);
+        assertCount(1);
+        assertOutput("");
+    }
+
+    @Test
+    void findMarkerAcrossThreeWrites() throws IOException {
+        byte[] bytes = mark.getBytes(StandardCharsets.UTF_8);
+        m.write(bytes, 0, 5);
+        m.write(bytes, 5, 4);
+        m.write(bytes, 9, bytes.length - 9);
+        assertCount(1);
+        assertOutput("");
+    }
+
+    @Test
+    void findMarkerCopiedInSeparateChunks() {
+        ByteArrayInputStream input = new ByteArrayInputStream(("before" + mark + "after").getBytes(StandardCharsets.UTF_8)) {
+            @Override
+            public synchronized int read(byte[] buffer, int offset, int length) {
+                return super.read(buffer, offset, Math.min(length, 7));
+            }
+        };
+        new StreamCopyThread("marker regression", input, m).run();
+        assertCount(1);
+        assertOutput("beforeafter");
+    }
+
+    private void assertOutput(String s) {
         assertEquals(s, baos.toString(StandardCharsets.UTF_8));
     }
 

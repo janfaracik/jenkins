@@ -5,11 +5,13 @@ import hudson.Functions;
 import hudson.Util;
 import hudson.model.Action;
 import hudson.model.Actionable;
-import hudson.model.BallColor;
 import hudson.model.Computer;
 import hudson.model.Job;
 import hudson.model.ModelObject;
 import hudson.model.Node;
+import hudson.model.Run;
+import hudson.model.View;
+import hudson.model.ViewGroup;
 import hudson.slaves.Cloud;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
@@ -19,6 +21,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import jenkins.management.Badge;
+import jenkins.model.dashboard.Dashboard;
+import jenkins.model.experimentalflags.NewAgentPageUserExperimentalFlag;
+import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
+import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
+import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
+import jenkins.model.menu.Group;
+import jenkins.model.menu.Semantic;
+import jenkins.model.menu.action.BaseUrlAction;
+import jenkins.model.menu.event.ConfirmationEvent;
+import jenkins.model.menu.event.DropdownEvent;
+import jenkins.model.menu.event.Event;
+import jenkins.model.menu.event.LinkEvent;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import org.apache.commons.jelly.JellyContext;
 import org.apache.commons.jelly.JellyException;
@@ -27,10 +41,11 @@ import org.apache.commons.jelly.Script;
 import org.apache.commons.jelly.XMLOutput;
 import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
+import org.jenkins.ui.icon.IconSpec;
 import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
-import org.kohsuke.accmod.restrictions.DoNotUse;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpResponse;
 import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerRequest;
@@ -106,102 +121,67 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         }
 
         public ContextMenu add(String url, String text) {
-            items.add(new MenuItem(url, null, text));
+            MenuItem menuItem = new MenuItem().withUrl(url).withIcon(null).withDisplayName(text);
+            menuItem.event = LinkEvent.of(menuItem.url);
+            items.add(menuItem);
             return this;
         }
 
         public ContextMenu addAll(Collection<? extends Action> actions) {
-            for (Action a : actions)
+            for (Action a : actions) {
                 add(a);
+            }
+
             return this;
         }
 
         /**
          * @see ContextMenuVisibility
          */
-        public ContextMenu add(Action a) {
-            if (!Functions.isContextMenuVisible(a)) {
+        public ContextMenu add(Action action) {
+            MenuItem menuItem = new MenuItem()
+                    .withDisplayName(action.getDisplayName());
+
+            menuItem.semantic = action.getSemantic();
+            menuItem.description = action.getDescription();
+            menuItem.group = action.getGroup();
+            menuItem.event = action.getEvent();
+
+            if (!Functions.isContextMenuVisible(action)) {
                 return this;
             }
-            StaplerRequest2 req = Stapler.getCurrentRequest2();
-            String text = a.getDisplayName();
-            String base = Functions.getIconFilePath(a);
-            if (base == null)     return this;
-            String url =  Functions.getActionUrl(req.findAncestor(ModelObject.class).getUrl(), a);
 
-            if (base.startsWith("symbol-")) {
-                Icon icon = Functions.tryGetIcon(base);
-                return add(url, icon.getClassSpec(), text);
+            // Move actions to subMenu so we can access them from JavaScript
+            if (action.getEvent() instanceof DropdownEvent dropdownEvent) {
+                menuItem.subMenu = new ContextMenu();
+                menuItem.subMenu.addAll(dropdownEvent.getActions());
+            }
+
+            if (action instanceof BaseUrlAction baseUrlAction) {
+                menuItem.withBaseUrl(baseUrlAction.getBaseUrl());
+            }
+
+            // Set icon
+            String icon = action.getIconFileName();
+            if (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null) {
+                icon = iconSpec.getIconClassName();
             } else {
-                String icon = Stapler.getCurrentRequest2().getContextPath() + (base.startsWith("images/") ? Functions.getResourcePath() : "") + '/' + base;
-                return add(url, icon, text);
+                Icon tmpIcon = Functions.tryGetIcon(icon);
+                if (tmpIcon != null) {
+                    icon = IconSet.tryTranslateTangoIconToSymbol(tmpIcon.getClassSpec());
+                }
             }
-        }
+            menuItem.icon = icon;
 
-        public ContextMenu add(String url, String icon, String text) {
-            if (text != null && icon != null && url != null)
-                items.add(new MenuItem(url, icon, text));
-            return this;
-        }
-
-        /** @since 1.504 */
-        public ContextMenu add(String url, String icon, String text, boolean post) {
-            if (text != null && icon != null && url != null) {
-                MenuItem item = new MenuItem(url, icon, text);
-                item.post = post;
-                items.add(item);
+            // If Symbol, set iconXml
+            if (icon != null && icon.startsWith("symbol-")) {
+                menuItem.iconXml = Symbol.get(new SymbolRequest.Builder()
+                        .withName(icon.split(" ")[0].substring(7))
+                        .withPluginName(Functions.extractPluginNameFromIconSrc(icon))
+                        .build());
             }
-            return this;
-        }
 
-        /** @since 1.512 */
-        public ContextMenu add(String url, String icon, String text, boolean post, boolean requiresConfirmation) {
-            if (text != null && icon != null && url != null) {
-                MenuItem item = new MenuItem(url, icon, text);
-                item.post = post;
-                item.requiresConfirmation = requiresConfirmation;
-                items.add(item);
-            }
-            return this;
-        }
-
-        /** @since 2.335 */
-        public ContextMenu add(String url, String icon, String iconXml, String text, boolean post, boolean requiresConfirmation) {
-            if (text != null && icon != null && url != null) {
-                MenuItem item = new MenuItem(url, icon, text);
-                item.iconXml = iconXml;
-                item.post = post;
-                item.requiresConfirmation = requiresConfirmation;
-                items.add(item);
-            }
-            return this;
-        }
-
-        /** @since 2.401 */
-        public ContextMenu add(String url, String icon, String iconXml, String text, boolean post, boolean requiresConfirmation, Badge badge) {
-            if (text != null && icon != null && url != null) {
-                MenuItem item = new MenuItem(url, icon, text);
-                item.iconXml = iconXml;
-                item.post = post;
-                item.requiresConfirmation = requiresConfirmation;
-                item.badge = badge;
-                items.add(item);
-            }
-            return this;
-        }
-
-        /** @since 2.415 */
-        public ContextMenu add(String url, String icon, String iconXml, String text, boolean post, boolean requiresConfirmation, Badge badge, String message) {
-            if (text != null && icon != null && url != null) {
-                MenuItem item = new MenuItem(url, icon, text);
-                item.iconXml = iconXml;
-                item.post = post;
-                item.requiresConfirmation = requiresConfirmation;
-                item.badge = badge;
-                item.message = message;
-                items.add(item);
-            }
-            return this;
+            return add(menuItem);
         }
 
         /**
@@ -209,7 +189,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          *
          * @since 2.231
          */
-        @Restricted(DoNotUse.class) // manage.jelly only
         public ContextMenu addHeader(String title) {
             final MenuItem item = new MenuItem().withDisplayName(title);
             item.type = MenuItemType.HEADER;
@@ -245,9 +224,9 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         public ContextMenu add(Node n) {
             Computer c = n.toComputer();
             return add(new MenuItem()
-                .withDisplayName(n.getDisplayName())
-                .withStockIcon(c == null ? "computer.svg" : c.getIcon())
-                .withContextRelativeUrl(n.getSearchUrl()));
+                    .withDisplayName(n.getDisplayName())
+                    .withIconClass(c == null ? "symbol-computer" : c.getIcon())
+                    .withContextRelativeUrl(n.getSearchUrl()));
         }
 
         /**
@@ -269,9 +248,9 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          */
         public ContextMenu add(IComputer c) {
             return add(new MenuItem()
-                .withDisplayName(c.getDisplayName())
-                .withIconClass(c.getIconClassName())
-                .withContextRelativeUrl(c.getUrl()));
+                    .withDisplayName(c.getDisplayName())
+                    .withIconClass(c.getIconClassName())
+                    .withContextRelativeUrl(c.getUrl()));
         }
 
         public ContextMenu add(Cloud c) {
@@ -288,9 +267,25 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          */
         public ContextMenu add(Job job) {
             return add(new MenuItem()
-                .withDisplayName(job.getDisplayName())
-                .withIcon(job.getIconColor())
-                .withUrl(job.getSearchUrl()));
+                    .withDisplayName(job.getDisplayName())
+                    .withIcon(job.getIconColor().getImage())
+                    .withUrl(job.getSearchUrl()));
+        }
+
+        // Used in Jelly! - task.jelly
+        public ContextMenu add(String url, String icon, String iconXml, String text, boolean post, boolean requiresConfirmation, Badge badge, String message) {
+            if (text != null && icon != null && url != null) {
+                MenuItem item = new MenuItem().withUrl(url).withIcon(icon).withDisplayName(text);
+                item.iconXml = iconXml;
+                item.badge = badge;
+                if (requiresConfirmation) {
+                    item.event = ConfirmationEvent.of(message, null, item.url);
+                } else {
+                    item.event = LinkEvent.of(item.url, post ? LinkEvent.LinkEventType.POST : LinkEvent.LinkEventType.GET);
+                }
+                items.add(item);
+            }
+            return this;
         }
 
         /**
@@ -311,11 +306,13 @@ public interface ModelObjectWithContextMenu extends ModelObject {
             return from(self, request, response, "sidepanel");
         }
 
-        public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest request, StaplerResponse response) throws JellyException, IOException {
-            return from(self, StaplerRequest.toStaplerRequest2(request), StaplerResponse.toStaplerResponse2(response), "sidepanel");
-        }
-
         public ContextMenu from(ModelObjectWithContextMenu self, StaplerRequest2 request, StaplerResponse2 response, String view) throws JellyException, IOException {
+            // Use App Bar actions if the model supports them instead of pulling from sidepanel.jelly
+            List<Action> appBarActions = getAppBarActions(self);
+            if (appBarActions != null) {
+                return addAppBarActions(appBarActions, request);
+            }
+
             WebApp webApp = WebApp.getCurrent();
             final Script s = webApp.getMetaClass(self).getTearOff(JellyClassTearOff.class).findScript(view);
             if (s != null) {
@@ -342,6 +339,57 @@ public interface ModelObjectWithContextMenu extends ModelObject {
             }
 
             return this;
+        }
+
+        /**
+         * Adds the given app bar actions, or only those that belong in the overflow menu if the request has
+         * {@code menu-only=true}.
+         */
+        @Restricted(NoExternalUse.class)
+        public ContextMenu addAppBarActions(List<Action> appBarActions, StaplerRequest2 request) {
+            boolean menuOnly = Boolean.parseBoolean(request.getParameter("menu-only"));
+
+            List<Action> actions = appBarActions.stream()
+                    .filter(action ->
+                            action.getIconFileName() != null
+                                    || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
+                    )
+                    .filter(action -> !menuOnly || action.getGroup().getOrder() >= Group.FIRST_IN_MENU.getOrder())
+                    .filter(action -> menuOnly || action.isVisibleInContextMenu())
+                    .toList();
+
+            return addAll(actions);
+        }
+
+        private static List<Action> getAppBarActions(ModelObjectWithContextMenu self) {
+            if (self instanceof Job<?, ?> job && new NewJobPageUserExperimentalFlag().getFlagValue()) {
+                return job.getAppBarActions();
+            }
+
+            if (self instanceof Run<?, ?> run && new NewBuildPageUserExperimentalFlag().getFlagValue()) {
+                return run.getAppBarActions();
+            }
+
+            if (self instanceof Computer computer && new NewAgentPageUserExperimentalFlag().getFlagValue()) {
+                return computer.getAppBarActions();
+            }
+
+            if (self instanceof Jenkins && Dashboard.isEnabled()) {
+                // For these users the root URL shows the dashboard rather than the primary view, so the overflow
+                // menu, loaded from the root's contextMenu, matches the dashboard's app bar and its Views menu
+                return Dashboard.get().getAppBarActions();
+            }
+
+            if (self instanceof ViewGroup viewGroup && new NewDashboardPageUserExperimentalFlag().getFlagValue()) {
+                View primaryView = viewGroup.getPrimaryView();
+                if (primaryView != null) {
+                    return primaryView.getAppBarActions().stream()
+                            .filter(Action::isVisibleInContextMenu)
+                            .toList();
+                }
+            }
+
+            return null;
         }
     }
 
@@ -383,7 +431,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          * @since 1.504
          */
         @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public boolean post;
 
         /**
@@ -391,13 +438,19 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          * @since 1.512
          */
         @Exported
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public boolean requiresConfirmation;
-
 
         private Badge badge;
 
-        private String message;
+        private String description;
+
+        private Group group;
+
+        private Event event;
+
+        private Semantic semantic;
+
+        private String baseUrl;
 
         /**
          * The type of menu item
@@ -411,7 +464,6 @@ public interface ModelObjectWithContextMenu extends ModelObject {
          * If this is a submenu, definition of subitems.
          */
         @Exported(inline = true)
-        @SuppressFBWarnings(value = "URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD", justification = "read by Stapler")
         public ContextMenu subMenu;
 
         @Exported
@@ -429,12 +481,52 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         }
 
         @Exported
-        public String getMessage() {
-            return message;
+        public String getDescription() {
+            return description;
         }
 
-        public MenuItem(String url, String icon, String displayName) {
-            withUrl(url).withIcon(icon).withDisplayName(displayName);
+        @Exported(inline = true)
+        public Group getGroup() {
+            return group;
+        }
+
+        @Exported(inline = true)
+        public Event getEvent() {
+            return event;
+        }
+
+        @Exported
+        public Semantic getSemantic() {
+            return semantic;
+        }
+
+        /**
+         * The URL that this item's relative URLs resolve against, overriding the one of the menu it's shown in.
+         */
+        @Restricted(NoExternalUse.class)
+        @Exported
+        public String getBaseUrl() {
+            return baseUrl;
+        }
+
+        private void withBaseUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
+
+            if (subMenu == null) {
+                return;
+            }
+
+            for (MenuItem item : subMenu.items) {
+                if (item.baseUrl == null) {
+                    item.withBaseUrl(baseUrl);
+                }
+            }
+        }
+
+        @Exported
+        @Deprecated
+        public String getMessage() {
+            return null;
         }
 
         public MenuItem() {
@@ -455,6 +547,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
         public MenuItem withContextRelativeUrl(String url) {
             if (!url.startsWith("/"))   url = '/' + url;
             this.url = Stapler.getCurrentRequest2().getContextPath() + url;
+            this.event = LinkEvent.of(this.url);
             return this;
         }
 
@@ -463,8 +556,9 @@ public interface ModelObjectWithContextMenu extends ModelObject {
             return this;
         }
 
-        public MenuItem withIcon(BallColor color) {
-            return withStockIcon(color.getImage());
+        public MenuItem withIconXml(String icon) {
+            this.iconXml = icon;
+            return this;
         }
 
         /**

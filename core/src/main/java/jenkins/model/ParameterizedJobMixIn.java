@@ -24,10 +24,13 @@
 
 package jenkins.model;
 
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static jakarta.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static jakarta.servlet.http.HttpServletResponse.SC_CREATED;
 
 import edu.umd.cs.findbugs.annotations.CheckForNull;
+import edu.umd.cs.findbugs.annotations.NonNull;
+import hudson.Extension;
 import hudson.Util;
 import hudson.cli.declarative.CLIMethod;
 import hudson.cli.declarative.CLIResolver;
@@ -37,6 +40,7 @@ import hudson.model.BuildableItem;
 import hudson.model.Cause;
 import hudson.model.CauseAction;
 import hudson.model.Item;
+import hudson.model.ItemGroup;
 import hudson.model.Items;
 import hudson.model.Job;
 import hudson.model.ParameterDefinition;
@@ -59,11 +63,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import jenkins.model.details.Detail;
+import jenkins.model.details.DetailFactory;
+import jenkins.model.details.ParameterizedDetail;
 import jenkins.model.lazy.LazyBuildMixIn;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.triggers.SCMTriggerItem;
 import jenkins.triggers.TriggeredItem;
 import jenkins.util.TimeDuration;
+import jenkins.util.Timer;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.DoNotUse;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
@@ -201,7 +209,7 @@ public abstract class ParameterizedJobMixIn<JobT extends Job<JobT, RunT> & Param
         }
 
         if (!asJob().isBuildable()) {
-            throw HttpResponses.error(SC_CONFLICT, new IOException(asJob().getFullName() + " is not buildable"));
+            throw HttpResponses.errorWithoutStack(SC_CONFLICT, asJob().getFullName() + " is not buildable");
         }
 
         // if a build is parameterized, let that take over
@@ -238,12 +246,12 @@ public abstract class ParameterizedJobMixIn<JobT extends Job<JobT, RunT> & Param
 
         ParametersDefinitionProperty pp = asJob().getProperty(ParametersDefinitionProperty.class);
         if (!asJob().isBuildable()) {
-            throw HttpResponses.error(SC_CONFLICT, new IOException(asJob().getFullName() + " is not buildable!"));
+            throw HttpResponses.errorWithoutStack(SC_CONFLICT, asJob().getFullName() + " is not buildable");
         }
         if (pp != null) {
             pp.buildWithParameters(req, rsp, delay);
         } else {
-            throw new IllegalStateException("This build is not parameterized!");
+            throw HttpResponses.errorWithoutStack(SC_BAD_REQUEST, asJob().getFullName() + " is not parameterized");
         }
     }
 
@@ -523,7 +531,43 @@ public abstract class ParameterizedJobMixIn<JobT extends Job<JobT, RunT> & Param
             }
             setDisabled(b);
             if (b) {
-                Jenkins.get().getQueue().cancel(this);
+                // Dispatched rather than called synchronously: this method typically runs while
+                // the caller (e.g. Job#doConfigSubmit) is synchronized on the job, and
+                // Queue#cancel needs Queue#lock. Calling it here would acquire Queue#lock while
+                // holding the job's monitor, the opposite order from Executor#run (which holds
+                // Queue#lock and then needs the job's monitor to create the build), risking a
+                // deadlock.
+                //
+                // Queue#getCancellableItem(Task) reads a lock-free snapshot, so it's safe to call
+                // here despite holding the job's monitor. Capture the specific item (if any) queued
+                // at the moment of disabling, mark it so a fresh schedule request can't be folded
+                // into it (Queue#markPendingCancellation), then cancel it by id once Queue#lock is
+                // available: a build requested later -- e.g. after a quick re-enable -- gets a
+                // genuinely new item and is left alone, while the original item is still canceled
+                // even if the job is re-enabled again before this task runs. Queue#cancel(Task)
+                // alone can't make either guarantee, since it matches whatever is currently queued
+                // for this task, not a specific item.
+                //
+                // Best-effort, not an absolute guarantee: the lock-free read can in principle miss
+                // an item queued in the same instant (see Queue#getCancellableItem's own caveat),
+                // and an item already picked up by an executor before this deferred task acquires
+                // Queue#lock can no longer be canceled -- same inherent limitation as any other
+                // queue cancellation, just with a slightly wider window due to the deferral.
+                Queue.Item queued = Jenkins.get().getQueue().getCancellableItem(this);
+                if (queued != null) {
+                    long id = queued.getId();
+                    Jenkins.get().getQueue().markPendingCancellation(id);
+                    Timer.get().execute(() -> Queue.runWithLock(() -> {
+                        try {
+                            Queue.Item stillQueued = Jenkins.get().getQueue().getItem(id);
+                            if (stillQueued != null) {
+                                Jenkins.get().getQueue().cancel(stillQueued);
+                            }
+                        } finally {
+                            Jenkins.get().getQueue().clearPendingCancellation(id);
+                        }
+                    }));
+                }
             }
             save();
             ItemListener.fireOnUpdated(this);
@@ -556,10 +600,38 @@ public abstract class ParameterizedJobMixIn<JobT extends Job<JobT, RunT> & Param
             return null;
         }
 
+        @Override
         default boolean isBuildable() {
-            return !isDisabled() && !((Job) this).isHoldOffBuildUntilSave();
+            if (isDisabled() || ((Job) this).isHoldOffBuildUntilSave()) {
+                return false;
+            }
+            // If parent is disabled, child jobs (e.g., branch jobs) should not be buildable
+            ItemGroup<? extends Item> parentGroup = ((Job) this).getParent();
+            if (parentGroup instanceof BuildableItem bi) {
+                return bi.isBuildable();
+            }
+            return true;
         }
 
+        @Extension
+        final class ParameterizedDetailFactory extends DetailFactory<Run> {
+
+            @Override
+            public Class<Run> type() {
+                return Run.class;
+            }
+
+            @NonNull
+            @Override public List<? extends Detail> createFor(@NonNull Run target) {
+                var action = target.getAction(ParametersAction.class);
+
+                if (action == null || action.getParameters().isEmpty()) {
+                    return List.of();
+                }
+
+                return List.of(new ParameterizedDetail(target));
+            }
+        }
     }
 
 }
