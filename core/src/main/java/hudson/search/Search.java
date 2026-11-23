@@ -57,12 +57,15 @@ import jenkins.search.SearchGroup;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.MemoryReductionUtil;
 import jenkins.util.SystemProperties;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.Ancestor;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.Stapler;
 import org.kohsuke.stapler.StaplerProxy;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerRequest2;
@@ -171,7 +174,7 @@ public class Search implements StaplerProxy {
     public void doSuggest(StaplerRequest2 req, StaplerResponse2 rsp, @QueryParameter String query) throws IOException, ServletException {
         Result r = new Result();
         boolean scoped = isScoped(req);
-        String scopePrefix = scoped ? scopePrefix(req) : null;
+        SearchableModelObject scope = scoped ? findClosestSearchableModelObject(req) : null;
         for (SuggestedItem curItem : getSuggestions(req, query)) {
             String iconName = curItem.item.getSearchIcon();
 
@@ -181,10 +184,8 @@ public class Search implements StaplerProxy {
                 iconName = "symbol-search";
             }
 
-            String name = curItem.getPath();
-            if (scopePrefix != null && name.startsWith(scopePrefix)) {
-                name = name.substring(scopePrefix.length());
-            }
+            List<String> segments = getSegments(curItem, scope, scoped);
+            String name = segments.removeLast();
 
             Item item;
             if (iconName.startsWith("symbol")) {
@@ -194,6 +195,7 @@ public class Search implements StaplerProxy {
                 item = new Item(name, curItem.getUrl(), iconName, "image", curItem.item.getSearchGroup().getDisplayName());
             }
             item.drillable = isDrillable(curItem.item);
+            item.parent = segments.isEmpty() ? null : String.join(" / ", segments);
             r.suggestions.add(item);
         }
 
@@ -207,7 +209,7 @@ public class Search implements StaplerProxy {
                 ));
         Comparator<Item> byGroup = Comparator.comparingDouble((Item item) -> searchGroupOrdinal.getOrDefault(item.getGroup(), Double.MAX_VALUE))
                 .reversed();
-        r.suggestions.sort(scoped ? byGroup : byGroup.thenComparing(item -> item.name));
+        r.suggestions.sort(scoped ? byGroup : byGroup.thenComparing(item -> item.parent == null ? item.name : item.parent + " / " + item.name));
 
         rsp.serveExposedBean(req, r, new ExportConfig());
     }
@@ -261,12 +263,43 @@ public class Search implements StaplerProxy {
         return Boolean.parseBoolean(req.getParameter("scoped"));
     }
 
-    private @CheckForNull String scopePrefix(StaplerRequest2 req) {
-        SearchableModelObject smo = findClosestSearchableModelObject(req);
-        if (smo == null) {
-            return null;
+    private static List<String> getSegments(SuggestedItem suggestedItem, @CheckForNull SearchableModelObject scope, boolean scoped) {
+        if (suggestedItem.item instanceof hudson.model.Item item) {
+            List<String> segments = new ArrayList<>();
+            segments.add(item.getDisplayName());
+            ItemGroup<?> group = item.getParent();
+            while (group instanceof hudson.model.Item parent && parent != scope) {
+                segments.addFirst(parent.getDisplayName());
+                group = parent.getParent();
+            }
+            return segments;
         }
-        return SuggestedItem.build(null, smo).getPath() + " » ";
+
+        if (scoped) {
+            return new ArrayList<>(List.of(suggestedItem.item.getSearchName()));
+        }
+
+        return new ArrayList<>(List.of(suggestedItem.getPath().split(" » ")));
+    }
+
+    @Restricted(NoExternalUse.class)
+    public static String getPageScopes() {
+        StaplerRequest2 req = Stapler.getCurrentRequest2();
+        JSONArray scopes = new JSONArray();
+        if (req == null) {
+            return scopes.toString();
+        }
+
+        for (Ancestor a : req.getAncestors()) {
+            if (a.getObject() instanceof Jenkins || !(a.getObject() instanceof SearchableModelObject smo) || !isDrillable(smo)) {
+                continue;
+            }
+            JSONObject scope = new JSONObject();
+            scope.put("label", smo.getDisplayName());
+            scope.put("url", a.getUrl() + "/");
+            scopes.add(scope);
+        }
+        return scopes.toString();
     }
 
     private static boolean isDrillable(SearchItem item) {
@@ -361,6 +394,9 @@ public class Search implements StaplerProxy {
 
         @Exported
         public boolean drillable;
+
+        @Exported
+        public String parent;
 
         private final String url;
 

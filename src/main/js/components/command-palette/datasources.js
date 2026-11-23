@@ -27,6 +27,7 @@ export const JenkinsSearchSource = {
             url: correctAddress(e.url),
             group: e.group,
             drillable: e.drillable,
+            parent: e.parent,
           }),
         );
       });

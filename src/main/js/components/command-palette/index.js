@@ -32,6 +32,7 @@ function init() {
 
   const hoverClass = "jenkins-command-palette__results__item--hover";
 
+  const pageScopes = JSON.parse(commandPalette.dataset.scopes || "[]");
   const scopes = [];
   const renderedResults = new WeakMap();
   let latestRequest = 0;
@@ -111,6 +112,12 @@ function init() {
   }
 
   function updateScopes() {
+    updateScopeChips();
+    debouncedLoad.cancel();
+    renderResults();
+  }
+
+  function updateScopeChips() {
     scopesContainer.innerHTML = "";
     scopes.forEach((scope) => {
       const chip = document.createElement("span");
@@ -118,9 +125,6 @@ function init() {
       chip.textContent = scope.label;
       scopesContainer.append(chip);
     });
-
-    debouncedLoad.cancel();
-    renderResults();
   }
 
   function renderResults() {
@@ -213,7 +217,8 @@ function init() {
   // Helper methods for visibility of command palette
   function showCommandPalette() {
     scopes.length = 0;
-    scopesContainer.innerHTML = "";
+    scopes.push(...pageScopes);
+    updateScopeChips();
     commandPalette.showModal();
     commandPaletteInput.focus();
     commandPaletteInput.setSelectionRange(0, commandPaletteInput.value.length);

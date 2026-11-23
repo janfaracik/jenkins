@@ -121,6 +121,7 @@
     max-width: 12rem;
     padding: 0.25rem 0.625rem;
     border-radius: 100px;
+    border: var(--jenkins-border--subtle);
     background: color-mix(
       in sRGB,
       var(--text-color-secondary) 15%,
@@ -209,11 +210,26 @@
         }
       }
 
+      &__parent {
+        margin-left: auto;
+        padding-left: 1rem;
+        color: var(--text-color-secondary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+      }
+
       &__hint {
         margin-left: auto;
+        flex-shrink: 0;
         color: var(--text-color-secondary);
         opacity: 0;
         transition: var(--standard-transition);
+      }
+
+      &__parent + &__hint {
+        margin-left: 0.75rem;
       }
 
       &--hover &__hint {
