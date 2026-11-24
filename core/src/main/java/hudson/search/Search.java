@@ -60,6 +60,7 @@ import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.Tab;
+import jenkins.model.dashboard.Dashboard;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.BaseUrlAction;
 import jenkins.model.menu.event.LinkEvent;
@@ -376,7 +377,7 @@ public class Search implements StaplerProxy {
 
         @Override
         public String getSearchUrl() {
-            return tab.getUrlName() == null ? "" : tab.getUrlName() + "/";
+            return tab.getUrlName() == null ? "" : tab.getUrlName();
         }
 
         @Override
@@ -397,7 +398,16 @@ public class Search implements StaplerProxy {
 
     private static List<SearchItem> getPageActions(SearchableModelObject scope, String token) {
         List<Action> actions;
-        if (scope instanceof View view) {
+        if (scope instanceof Jenkins jenkins) {
+            View primaryView = jenkins.getPrimaryView();
+            if (Dashboard.isEnabled()) {
+                actions = Dashboard.get().getAppBarActions();
+            } else if (primaryView != null) {
+                actions = primaryView.getAppBarActions();
+            } else {
+                return List.of();
+            }
+        } else if (scope instanceof View view) {
             actions = view.getAppBarActions();
         } else if (scope instanceof Actionable actionable) {
             actions = actionable.getAppBarActions();
@@ -491,7 +501,7 @@ public class Search implements StaplerProxy {
             index = new RunSearchIndex(job);
         } else if (scope instanceof ManageJenkinsAction manageJenkins) {
             index = manageJenkins.getScopedSearchIndex();
-        } else if (scope instanceof Run) {
+        } else if (scope instanceof Run || scope instanceof Jenkins) {
             index = SearchIndex.EMPTY;
         } else {
             index = scope.getSearchIndex();
@@ -499,7 +509,12 @@ public class Search implements StaplerProxy {
         String token = query == null ? "" : query.trim();
         List<SearchItem> items = new ArrayList<>(getPageTabs(scope, token));
         items.addAll(getPageActions(scope, token));
-        index.suggest(token, items);
+        List<SearchItem> indexed = new ArrayList<>();
+        index.suggest(token, indexed);
+        if (scope instanceof View) {
+            indexed.removeIf(item -> !(item instanceof hudson.model.Item));
+        }
+        items.addAll(indexed);
 
         SuggestedItem scopeItem = scope instanceof Run<?, ?> run
                 ? new SuggestedItem(SuggestedItem.build(null, run.getParent()), run)

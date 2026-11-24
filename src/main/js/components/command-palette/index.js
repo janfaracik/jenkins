@@ -57,6 +57,7 @@ function init() {
   const hoverClass = "jenkins-command-palette__results__item--hover";
 
   const pageScopes = JSON.parse(commandPalette.dataset.scopes || "[]");
+  const rootScope = { url: document.head.dataset.rooturl + "/" };
   recordVisit(pageScopes);
   const scopes = [];
   const renderedResults = new WeakMap();
@@ -201,17 +202,21 @@ function init() {
           group: i18n.dataset.recent,
         }),
       );
-      results = Promise.all([
-        ...recent,
-        LinkResult({
-          icon: Symbols.HELP,
-          type: "symbol",
-          label: i18n.dataset.getHelp,
-          url: document.querySelector("body").dataset.searchHelpUrl,
-          isExternal: true,
-          group: recent.length > 0 ? i18n.dataset.help : null,
-        }),
-      ]);
+      results = JenkinsSearchSource.execute("", rootScope)
+        .catch(() => [])
+        .then((actions) => [
+          ...recent,
+          ...actions,
+          LinkResult({
+            icon: Symbols.HELP,
+            type: "symbol",
+            label: i18n.dataset.getHelp,
+            url: document.querySelector("body").dataset.searchHelpUrl,
+            isExternal: true,
+            group:
+              recent.length + actions.length > 0 ? i18n.dataset.help : null,
+          }),
+        ]);
     } else {
       results = Promise.all(datasources.map((ds) => ds.execute(query))).then(
         (e) => e.flat(),
@@ -254,7 +259,9 @@ function init() {
               if (obj.menuItem && obj.url === "#") {
                 link.addEventListener("click", (e) => {
                   e.preventDefault();
-                  hideCommandPalette(() => runAction(obj.menuItem, scope.url));
+                  hideCommandPalette(() =>
+                    runAction(obj.menuItem, (scope ?? rootScope).url),
+                  );
                 });
               }
               searchResults.append(link);
