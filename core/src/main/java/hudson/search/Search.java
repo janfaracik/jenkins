@@ -58,6 +58,8 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.model.Jenkins;
 import jenkins.model.Tab;
+import jenkins.model.menu.action.BaseUrlAction;
+import jenkins.model.menu.event.LinkEvent;
 import jenkins.search.SearchGroup;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.MemoryReductionUtil;
@@ -195,7 +197,14 @@ public class Search implements StaplerProxy {
             List<String> segments = getSegments(curItem, scope, scoped);
             String name = segments.removeLast();
 
-            String url = curItem.item instanceof PageActionSearchItem ? "#" : curItem.getUrl();
+            String url = curItem.getUrl();
+            if (curItem.item instanceof PageActionSearchItem pageAction) {
+                if (pageAction.link() == null) {
+                    url = "#";
+                } else if (pageAction.link().startsWith("http://") || pageAction.link().startsWith("https://")) {
+                    url = pageAction.link();
+                }
+            }
             Item item;
             if (iconName.startsWith("symbol")) {
                 item = new Item(name, url,
@@ -389,7 +398,7 @@ public class Search implements StaplerProxy {
             if (name == null || !name.toLowerCase(Locale.ROOT).contains(needle)) {
                 continue;
             }
-            result.add(new PageActionSearchItem(action, name));
+            result.add(new PageActionSearchItem(action, name, getLink(action)));
             if (result.size() >= MAX_PAGE_ACTIONS) {
                 break;
             }
@@ -399,7 +408,27 @@ public class Search implements StaplerProxy {
 
     private static final int MAX_PAGE_ACTIONS = 5;
 
-    private record PageActionSearchItem(Action action, String name) implements SearchItem {
+    private static @CheckForNull String getLink(Action action) {
+        if (!(action.getEvent() instanceof LinkEvent linkEvent) || linkEvent.getType() != LinkEvent.LinkEventType.GET) {
+            return null;
+        }
+
+        String url = Util.fixEmptyAndTrim(linkEvent.getUrl());
+        if (url == null || url.startsWith("http://") || url.startsWith("https://")) {
+            return url;
+        }
+
+        if (!(action instanceof BaseUrlAction baseUrlAction)) {
+            return url;
+        }
+
+        StaplerRequest2 req = Stapler.getCurrentRequest2();
+        String contextPath = req == null ? "" : req.getContextPath();
+        String absolute = url.startsWith("/") ? url : Util.ensureEndsWith(baseUrlAction.getBaseUrl(), "/") + url;
+        return absolute.startsWith(contextPath + "/") ? absolute.substring(contextPath.length()) : absolute;
+    }
+
+    private record PageActionSearchItem(Action action, String name, @CheckForNull String link) implements SearchItem {
         @Override
         public String getSearchName() {
             return name;
@@ -407,7 +436,7 @@ public class Search implements StaplerProxy {
 
         @Override
         public String getSearchUrl() {
-            return "";
+            return link == null ? "" : link;
         }
 
         @Override

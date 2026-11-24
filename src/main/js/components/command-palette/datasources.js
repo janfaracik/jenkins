@@ -6,7 +6,7 @@ export const JenkinsSearchSource = {
     const rootUrl = document.head.dataset.rooturl;
 
     function correctAddress(url) {
-      if (url === "#") {
+      if (url === "#" || /^https?:\/\//.test(url)) {
         return url;
       }
 
