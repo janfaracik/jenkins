@@ -111,26 +111,25 @@ $command-palette-padding: 0.375rem;
   &__scopes {
     display: flex;
     align-items: center;
-    gap: 0.375rem;
+    gap: 0.25rem;
 
     &:not(:empty) {
-      margin-right: 0.25rem;
+      margin-right: 0.5rem;
     }
   }
 
   &__scope {
     flex-shrink: 0;
     max-width: 12rem;
-    padding: 0.25rem 0.625rem;
-    border-radius: 100px;
-    border: var(--jenkins-border--subtle);
+    padding: 0.125rem 0.375rem;
+    border-radius: var(--form-input-border-radius);
+    border: var(--jenkins-border);
     background: color-mix(
       in sRGB,
-      var(--text-color-secondary) 15%,
+      var(--text-color-secondary) 10%,
       transparent
     );
     font-size: var(--font-size-sm);
-    font-weight: var(--font-bold-weight);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
