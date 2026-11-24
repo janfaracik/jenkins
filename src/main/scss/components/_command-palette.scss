@@ -85,7 +85,7 @@ $command-palette-padding: 0.375rem;
 
     --search-bar-height: 3rem !important;
     --input-border: transparent;
-    --input-border-hover: transparent;
+    --input-border-hover: color-mix(in sRGB, var(--white) 15%, transparent);
 
     margin-bottom: var(--section-padding);
     border-radius: 1rem;
@@ -232,9 +232,9 @@ $command-palette-padding: 0.375rem;
 
         &::after {
           content: "";
-          width: 1.25rem;
-          height: 1.25rem;
-          margin-inline: 0.125rem;
+          width: 1.125rem;
+          height: 1.125rem;
+          margin-left: -0.125rem;
           mask: url("../images/svgs/mask-breadcrumbs__separator.svg") center /
             contain no-repeat;
           background: color-mix(
