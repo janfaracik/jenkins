@@ -198,7 +198,7 @@ public class Search implements StaplerProxy {
                 item = new Item(name, curItem.getUrl(), iconName, "image", group, description);
             }
             item.drillable = isDrillable(curItem.item);
-            item.parent = segments.isEmpty() ? null : String.join(" / ", segments);
+            item.parent = segments.isEmpty() ? null : segments;
             r.suggestions.add(item);
         }
 
@@ -212,7 +212,7 @@ public class Search implements StaplerProxy {
                 ));
         Comparator<Item> byGroup = Comparator.comparingDouble((Item item) -> searchGroupOrdinal.getOrDefault(item.getGroup(), Double.MAX_VALUE))
                 .reversed();
-        r.suggestions.sort(scoped ? byGroup : byGroup.thenComparing(item -> item.parent == null ? item.name : item.parent + " / " + item.name));
+        r.suggestions.sort(scoped ? byGroup : byGroup.thenComparing(item -> item.parent == null ? item.name : String.join(" / ", item.parent) + " / " + item.name));
 
         rsp.serveExposedBean(req, r, new ExportConfig());
     }
@@ -422,7 +422,7 @@ public class Search implements StaplerProxy {
         public boolean drillable;
 
         @Exported
-        public String parent;
+        public List<String> parent;
 
         private final String url;
 
