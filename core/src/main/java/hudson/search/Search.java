@@ -216,9 +216,11 @@ public class Search implements StaplerProxy {
             }
             item.drillable = isDrillable(curItem.item);
             item.tab = curItem.item instanceof PageTabSearchItem;
-            if (curItem.item instanceof PageTabSearchItem pageTab) {
-                Semantic semantic = pageTab.tab().getSemantic();
+            if (curItem.item instanceof PageActionSearchItem actionItem) {
+                Semantic semantic = actionItem.action().getSemantic();
                 item.semantic = semantic == null ? null : semantic.name().toLowerCase(Locale.ROOT);
+            }
+            if (curItem.item instanceof PageTabSearchItem pageTab) {
                 item.badge = pageTab.tab().getBadge();
             }
             item.parent = segments.isEmpty() ? null : segments;
