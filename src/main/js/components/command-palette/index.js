@@ -93,7 +93,34 @@ function init() {
     () => commandPalette.open,
   );
 
+  const selectedScopesClass = "jenkins-command-palette__scopes--selected";
+
+  function setScopesSelected(selected) {
+    scopesContainer.classList.toggle(selectedScopesClass, selected);
+  }
+
   commandPaletteInput.addEventListener("keydown", (e) => {
+    const scopesSelected =
+      scopesContainer.classList.contains(selectedScopesClass);
+    const isDelete = e.key === "Backspace" || e.key === "Delete";
+
+    if (e.key.toLowerCase() === "a" && (e.metaKey || e.ctrlKey)) {
+      setScopesSelected(scopes.length > 0);
+      return;
+    }
+
+    if (scopesSelected && isDelete) {
+      e.preventDefault();
+      commandPaletteInput.value = "";
+      scopes.length = 0;
+      updateScopes();
+      return;
+    }
+
+    if (!["Shift", "Meta", "Control", "Alt"].includes(e.key)) {
+      setScopesSelected(false);
+    }
+
     if (e.key !== "Backspace" || commandPaletteInput.value !== "") {
       return;
     }
@@ -106,6 +133,10 @@ function init() {
     scopes.pop();
     updateScopes();
   });
+
+  commandPaletteInput.addEventListener("mousedown", () =>
+    setScopesSelected(false),
+  );
 
   commandPalette.addEventListener("cancel", (e) => {
     if (scopes.length === 0) {
@@ -159,6 +190,7 @@ function init() {
   }
 
   function updateScopeChips() {
+    setScopesSelected(false);
     scopesContainer.innerHTML = "";
     scopes.forEach((scope) => {
       const chip = document.createElement("span");
