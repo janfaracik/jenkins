@@ -27,6 +27,7 @@ import jenkins.model.experimentalflags.NewBuildPageUserExperimentalFlag;
 import jenkins.model.experimentalflags.NewDashboardPageUserExperimentalFlag;
 import jenkins.model.experimentalflags.NewJobPageUserExperimentalFlag;
 import jenkins.model.menu.Group;
+import jenkins.model.menu.MenuActions;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.BaseUrlAction;
 import jenkins.model.menu.event.ConfirmationEvent;
@@ -350,10 +351,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
             boolean menuOnly = Boolean.parseBoolean(request.getParameter("menu-only"));
 
             List<Action> actions = appBarActions.stream()
-                    .filter(action ->
-                            action.getIconFileName() != null
-                                    || (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null)
-                    )
+                    .filter(MenuActions::hasIcon)
                     .filter(action -> !menuOnly || action.getGroup().getOrder() >= Group.FIRST_IN_MENU.getOrder())
                     .filter(action -> menuOnly || action.isVisibleInContextMenu())
                     .toList();

@@ -61,6 +61,7 @@ import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.Tab;
 import jenkins.model.dashboard.Dashboard;
+import jenkins.model.menu.MenuActions;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.BaseUrlAction;
 import jenkins.model.menu.event.DropdownEvent;
@@ -419,7 +420,7 @@ public class Search implements StaplerProxy {
         String needle = token.toLowerCase(Locale.ROOT);
         List<SearchItem> result = new ArrayList<>();
         for (Action action : actions) {
-            if (action.getEvent() instanceof DropdownEvent) {
+            if (action.getEvent() instanceof DropdownEvent || !MenuActions.isShownInMenu(action)) {
                 continue;
             }
             String name = Util.fixEmptyAndTrim(action.getDisplayName());
