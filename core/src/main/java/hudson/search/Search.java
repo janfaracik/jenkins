@@ -360,11 +360,12 @@ public class Search implements StaplerProxy {
             return List.of();
         }
 
-        String needle = token.toLowerCase(Locale.ROOT);
+        boolean caseInsensitive = UserSearchProperty.isCaseInsensitive();
+        String needle = SearchNames.normalize(token, caseInsensitive);
         List<SearchItem> result = new ArrayList<>();
         for (Tab tab : run.getRunTabs()) {
             String name = Util.fixEmptyAndTrim(tab.getDisplayName());
-            if (name == null || !name.toLowerCase(Locale.ROOT).contains(needle)) {
+            if (!SearchNames.contains(name, needle, caseInsensitive)) {
                 continue;
             }
             result.add(new PageTabSearchItem(tab, name));
@@ -423,14 +424,15 @@ public class Search implements StaplerProxy {
             return List.of();
         }
 
-        String needle = token.toLowerCase(Locale.ROOT);
+        boolean caseInsensitive = UserSearchProperty.isCaseInsensitive();
+        String needle = SearchNames.normalize(token, caseInsensitive);
         List<SearchItem> result = new ArrayList<>();
         for (Action action : actions) {
             if (action.getEvent() instanceof DropdownEvent || !MenuActions.isShownInMenu(action)) {
                 continue;
             }
             String name = Util.fixEmptyAndTrim(action.getDisplayName());
-            if (name == null || !name.toLowerCase(Locale.ROOT).contains(needle)) {
+            if (!SearchNames.contains(name, needle, caseInsensitive)) {
                 continue;
             }
             result.add(new PageActionSearchItem(action, name, getLink(action)));
@@ -552,13 +554,14 @@ public class Search implements StaplerProxy {
 
         @Override
         public void suggest(String token, List<SearchItem> result) {
-            String needle = token.toLowerCase(Locale.ROOT);
+            boolean caseInsensitive = UserSearchProperty.isCaseInsensitive();
+            String needle = SearchNames.normalize(token, caseInsensitive);
             int matches = 0;
             for (Run<?, ?> run : job.getBuilds().limit(MAX_SEARCH_SIZE)) {
                 if (matches >= MAX_BUILD_RESULTS) {
                     return;
                 }
-                if (run.getDisplayName().toLowerCase(Locale.ROOT).contains(needle)) {
+                if (SearchNames.contains(run.getDisplayName(), needle, caseInsensitive)) {
                     result.add(run);
                     matches++;
                 }

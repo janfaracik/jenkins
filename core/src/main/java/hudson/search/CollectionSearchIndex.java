@@ -28,7 +28,6 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -64,14 +63,9 @@ public abstract class CollectionSearchIndex<SMT extends SearchableModelObject> i
     @Override
     public void suggest(String token, List<SearchItem> result) {
         boolean caseInsensitive = UserSearchProperty.isCaseInsensitive();
-        if (caseInsensitive) {
-          token = token.toLowerCase(Locale.ROOT);
-        }
+        String normalizedToken = SearchNames.normalize(token, caseInsensitive);
         for (SMT o : allAsIterable()) {
-            String name = getName(o);
-            if (caseInsensitive)
-                name = name.toLowerCase(Locale.ROOT);
-            if (o != null && name.contains(token))
+            if (o != null && SearchNames.contains(getName(o), normalizedToken, caseInsensitive))
                 result.add(o);
         }
     }
