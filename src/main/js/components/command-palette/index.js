@@ -55,6 +55,7 @@ function init() {
   );
 
   const hoverClass = "jenkins-command-palette__results__item--hover";
+  const resultSelector = ".jenkins-command-palette__results__item";
 
   const pageScopes = JSON.parse(commandPalette.dataset.scopes || "[]");
   const rootScope = { url: document.head.dataset.rooturl + "/" };
@@ -69,7 +70,7 @@ function init() {
 
   makeKeyboardNavigable(
     searchResultsContainer,
-    () => searchResults.querySelectorAll("a"),
+    () => searchResults.querySelectorAll(resultSelector),
     hoverClass,
     (selectedItem, key, e) => {
       if (key !== "Tab" || e.shiftKey) {
@@ -288,7 +289,7 @@ function init() {
               const link = createElementFromHtml(obj.render());
               renderedResults.set(link, obj);
               link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
-              if (obj.menuItem && obj.url === "#") {
+              if (obj.runsAction) {
                 link.addEventListener("click", (e) => {
                   e.preventDefault();
                   hideCommandPalette(() =>
@@ -369,7 +370,7 @@ function init() {
   }
 
   function updateSelectedItem(index, scrollIntoView = false) {
-    const maxLength = searchResults.getElementsByTagName("a").length;
+    const maxLength = searchResults.querySelectorAll(resultSelector).length;
     const hoveredItem = document.querySelector("." + hoverClass);
 
     if (hoveredItem) {
@@ -377,9 +378,9 @@ function init() {
     }
 
     if (index < maxLength) {
-      const element = Array.from(searchResults.getElementsByTagName("a"))[
-        index
-      ];
+      const element = Array.from(
+        searchResults.querySelectorAll(resultSelector),
+      )[index];
       element.classList.add(hoverClass);
 
       if (scrollIntoView) {

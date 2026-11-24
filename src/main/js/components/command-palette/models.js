@@ -17,6 +17,8 @@ import { xmlEscape } from "@/util/security";
  * @param {string[] | string | null | undefined} params.parent
  */
 export function LinkResult(params) {
+  const runsAction = Boolean(params.menuItem) && params.url === "#";
+
   return {
     label: params.label,
     url: params.url,
@@ -26,11 +28,15 @@ export function LinkResult(params) {
     drillable: params.drillable === true,
     tab: params.tab === true,
     menuItem: params.menuItem,
+    runsAction,
     render: () => {
       const semantic = params.semantic
         ? ` jenkins-!-${xmlEscape(params.semantic)}-color`
         : "";
-      return `<a class="jenkins-command-palette__results__item${semantic}" href="${xmlEscape(params.url)}">
+      const opening = runsAction
+        ? `<button type="button" class="jenkins-command-palette__results__item${semantic}">`
+        : `<a class="jenkins-command-palette__results__item${semantic}" href="${xmlEscape(params.url)}">`;
+      return `${opening}
         ${params.type === "image" ? `<img alt="${xmlEscape(params.label)}" class="jenkins-command-palette__results__item__icon jenkins-avatar" src="${params.icon}" />` : ""}
         ${params.type !== "image" ? `<div class="jenkins-command-palette__results__item__icon">${params.icon}</div>` : ""}
         ${[]
@@ -45,7 +51,7 @@ export function LinkResult(params) {
         ${params.description ? `<span class="jenkins-command-palette__results__item__description">${xmlEscape(params.description)}</span>` : ""}
         ${params.isExternal ? Symbols.EXTERNAL_LINK : ""}
         ${params.drillable ? `<span class="jenkins-command-palette__results__item__hint jenkins-keyboard-shortcut">Tab</span>` : ""}
-    </a>`;
+    ${runsAction ? "</button>" : "</a>"}`;
     },
   };
 }
