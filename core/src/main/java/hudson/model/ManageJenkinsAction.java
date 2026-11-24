@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.management.Badge;
+import jenkins.model.Badgeable;
 import jenkins.model.Jenkins;
 import jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag;
 import jenkins.search.SearchGroup;
@@ -123,7 +124,12 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, Searcha
         return new FixedSet(items);
     }
 
-    private record ManagementLinkSearchItem(ManagementLink link, SearchGroup group) implements SearchItem {
+    private record ManagementLinkSearchItem(ManagementLink link, SearchGroup group) implements SearchItem, Badgeable {
+        @Override
+        public Badge getBadge() {
+            return link.getBadge();
+        }
+
         @Override
         public String getSearchName() {
             return link.getDisplayName();

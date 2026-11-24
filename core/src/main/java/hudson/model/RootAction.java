@@ -28,6 +28,7 @@ import edu.umd.cs.findbugs.annotations.CheckForNull;
 import hudson.Extension;
 import hudson.ExtensionPoint;
 import jenkins.management.Badge;
+import jenkins.model.Badgeable;
 
 /**
  * Marker interface for actions that are added to {@link jenkins.model.Jenkins}.
@@ -39,7 +40,7 @@ import jenkins.management.Badge;
  * @author Kohsuke Kawaguchi
  * @since 1.311
  */
-public interface RootAction extends Action, ExtensionPoint {
+public interface RootAction extends Action, ExtensionPoint, Badgeable {
 
     /**
      * A {@link Badge} shown on the button for the action.
@@ -47,6 +48,7 @@ public interface RootAction extends Action, ExtensionPoint {
      * @return badge or {@code null} if no badge should be shown.
      * @since 2.507
      */
+    @Override
     default @CheckForNull Badge getBadge() {
         return null;
     }

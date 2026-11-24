@@ -278,6 +278,7 @@ import jenkins.agents.CloudSet;
 import jenkins.diagnostics.URICheckEncodingMonitor;
 import jenkins.install.InstallState;
 import jenkins.install.SetupWizard;
+import jenkins.management.Badge;
 import jenkins.model.ProjectNamingStrategy.DefaultProjectNamingStrategy;
 import jenkins.model.dashboard.Dashboard;
 import jenkins.search.SearchItemProvider;
@@ -2401,31 +2402,38 @@ public class Jenkins extends AbstractCIBase implements DirectlyModifiableTopLeve
         return "";
     }
 
+    private record ActionSearchItem(Action action) implements SearchItem, Badgeable {
+        @Override
+        public String getSearchName() {
+            return action.getDisplayName();
+        }
+
+        @Override
+        public String getSearchUrl() {
+            return action.getUrlName();
+        }
+
+        @Override
+        public String getSearchIcon() {
+            return action.getIconFileName();
+        }
+
+        @Override
+        public SearchIndex getSearchIndex() {
+            return SearchIndex.EMPTY;
+        }
+
+        @Override
+        public Badge getBadge() {
+            return action instanceof Badgeable badgeable ? badgeable.getBadge() : null;
+        }
+    }
+
     @Override
     public SearchIndexBuilder makeSearchIndex() {
         SearchIndexBuilder builder = super.makeSearchIndex();
 
-        this.actions.stream().filter(e -> !(e.getIconFileName() == null || e.getUrlName() == null)).forEach(action -> builder.add(action instanceof SearchItem searchItem ? searchItem : new SearchItem() {
-            @Override
-            public String getSearchName() {
-                return action.getDisplayName();
-            }
-
-            @Override
-            public String getSearchUrl() {
-                return action.getUrlName();
-            }
-
-            @Override
-            public String getSearchIcon() {
-                return action.getIconFileName();
-            }
-
-            @Override
-            public SearchIndex getSearchIndex() {
-                return SearchIndex.EMPTY;
-            }
-        }));
+        this.actions.stream().filter(e -> !(e.getIconFileName() == null || e.getUrlName() == null)).forEach(action -> builder.add(action instanceof SearchItem searchItem ? searchItem : new ActionSearchItem(action)));
 
         for (SearchItemProvider provider : SearchItemProvider.all()) {
             try {

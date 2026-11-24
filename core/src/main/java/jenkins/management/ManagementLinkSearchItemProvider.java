@@ -6,6 +6,7 @@ import hudson.model.ManagementLink;
 import hudson.search.SearchIndex;
 import hudson.search.SearchItem;
 import java.util.Collection;
+import jenkins.model.Badgeable;
 import jenkins.search.SearchGroup;
 import jenkins.search.SearchItemProvider;
 import org.kohsuke.accmod.Restricted;
@@ -26,7 +27,12 @@ public class ManagementLinkSearchItemProvider implements SearchItemProvider {
                 .toList();
     }
 
-    private record ManagementLinkSearchItem(ManagementLink link, String urlName) implements SearchItem {
+    private record ManagementLinkSearchItem(ManagementLink link, String urlName) implements SearchItem, Badgeable {
+        @Override
+        public Badge getBadge() {
+            return link.getBadge();
+        }
+
 
         @Override
         public String getSearchName() {

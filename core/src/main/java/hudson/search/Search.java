@@ -57,6 +57,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.management.Badge;
+import jenkins.model.Badgeable;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.Tab;
@@ -225,8 +226,8 @@ public class Search implements StaplerProxy {
                 item.semantic = semantic == null ? null : semantic.name().toLowerCase(Locale.ROOT);
                 item.menuItem = toMenuItemJson(actionItem.action());
             }
-            if (curItem.item instanceof PageTabSearchItem pageTab) {
-                item.badge = pageTab.tab().getBadge();
+            if (curItem.item instanceof Badgeable badgeable) {
+                item.badge = badgeable.getBadge();
             }
             item.parent = segments.isEmpty() ? null : segments;
             r.suggestions.add(item);
@@ -371,7 +372,12 @@ public class Search implements StaplerProxy {
         return result;
     }
 
-    private record PageTabSearchItem(Tab tab, String name) implements SearchItem {
+    private record PageTabSearchItem(Tab tab, String name) implements SearchItem, Badgeable {
+        @Override
+        public Badge getBadge() {
+            return tab.getBadge();
+        }
+
         @Override
         public String getSearchName() {
             return name;
