@@ -25,20 +25,18 @@
 package hudson.model;
 
 import hudson.Extension;
+import hudson.ExtensionList;
 import hudson.search.FixedSet;
 import hudson.search.Search;
 import hudson.search.SearchIndex;
 import hudson.search.SearchItem;
 import hudson.search.SearchableModelObject;
-import hudson.util.HudsonIsLoading;
-import hudson.util.HudsonIsRestarting;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jenkins.management.Badge;
+import jenkins.management.ConfigureLink;
 import jenkins.model.Badgeable;
 import jenkins.model.Jenkins;
 import jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag;
@@ -58,8 +56,6 @@ import org.kohsuke.stapler.StaplerResponse2;
  */
 @Extension(ordinal = 998) @Symbol("manageJenkins")
 public class ManageJenkinsAction implements RootAction, StaplerFallback, SearchableModelObject {
-
-    private static final Logger LOGGER = Logger.getLogger(ManageJenkinsAction.class.getName());
 
     @Override
     public String getIconFileName() {
@@ -181,36 +177,9 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, Searcha
         return Jenkins.get();
     }
 
-    /** Unlike {@link Jenkins#getActiveAdministrativeMonitors} this checks for activation lazily. */
     @Override
     public Badge getBadge() {
-        if (!(AdministrativeMonitor.hasPermissionToDisplay())) {
-            return null;
-        }
-
-        var app = Jenkins.get().getServletContext().getAttribute("app");
-        if (app instanceof HudsonIsLoading || app instanceof HudsonIsRestarting) {
-            return null;
-        }
-
-        if (Jenkins.get().administrativeMonitors.stream().anyMatch(m -> m.isSecurity() && isActive(m))) {
-            return new Badge("1+", Messages.ManageJenkinsAction_notifications(),
-                    Badge.Severity.DANGER);
-        } else if (Jenkins.get().administrativeMonitors.stream().anyMatch(m -> !m.isSecurity() && isActive(m))) {
-            return new Badge("1+", Messages.ManageJenkinsAction_notifications(),
-                    Badge.Severity.WARNING);
-        } else {
-            return null;
-        }
-    }
-
-    private static boolean isActive(AdministrativeMonitor m) {
-        try {
-            return !m.isActivationFake() && m.hasRequiredPermission() && m.isEnabled() && m.isActivated();
-        } catch (Throwable x) {
-            LOGGER.log(Level.WARNING, null, x);
-            return false;
-        }
+        return ExtensionList.lookupSingleton(ConfigureLink.class).getBadge();
     }
 
 }
