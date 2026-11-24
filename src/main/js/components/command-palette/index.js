@@ -14,6 +14,23 @@ function startsWithQuery(result, query) {
   return result.label.toLowerCase().startsWith(query.toLowerCase());
 }
 
+function withTrailingSlash(path) {
+  return path.endsWith("/") ? path : path + "/";
+}
+
+function isCurrentTab(result, scope) {
+  if (!result.tab) {
+    return false;
+  }
+
+  const current = withTrailingSlash(window.location.pathname);
+  const tabUrl = withTrailingSlash(result.url);
+  if (tabUrl === withTrailingSlash(scope.url)) {
+    return current === tabUrl;
+  }
+  return current.startsWith(tabUrl);
+}
+
 function init() {
   const i18n = document.getElementById("command-palette-i18n");
   const headerCommandPaletteButton = document.getElementById(
@@ -191,7 +208,9 @@ function init() {
         return;
       }
 
-      results = groupResultsByCategory(results);
+      results = groupResultsByCategory(
+        results.filter((result) => !isCurrentTab(result, scope)),
+      );
 
       // Clear current search results
       searchResults.innerHTML = "";

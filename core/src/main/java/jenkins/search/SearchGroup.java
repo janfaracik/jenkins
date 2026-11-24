@@ -1,9 +1,11 @@
 package jenkins.search;
 
+import static jenkins.search.Messages.SearchGroup_ActionSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_ComputerSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_ItemSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_ManagementLinkSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_RunSearchGroup_DisplayName;
+import static jenkins.search.Messages.SearchGroup_TabSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_UnclassifiedSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_UserSearchGroup_DisplayName;
 import static jenkins.search.Messages.SearchGroup_ViewSearchGroup_DisplayName;
@@ -34,6 +36,24 @@ public interface SearchGroup extends ExtensionPoint, ModelObject {
         @Override
         public String getDisplayName() {
             return SearchGroup_UnclassifiedSearchGroup_DisplayName();
+        }
+    }
+
+    @Extension(ordinal = -0.1)
+    class TabSearchGroup implements SearchGroup {
+
+        @Override
+        public String getDisplayName() {
+            return SearchGroup_TabSearchGroup_DisplayName();
+        }
+    }
+
+    @Extension(ordinal = -0.2)
+    class ActionSearchGroup implements SearchGroup {
+
+        @Override
+        public String getDisplayName() {
+            return SearchGroup_ActionSearchGroup_DisplayName();
         }
     }
 

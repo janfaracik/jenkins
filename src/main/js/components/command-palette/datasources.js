@@ -6,6 +6,10 @@ export const JenkinsSearchSource = {
     const rootUrl = document.head.dataset.rooturl;
 
     function correctAddress(url) {
+      if (url === "#") {
+        return url;
+      }
+
       if (url.startsWith("/")) {
         url = url.substring(1);
       }
@@ -29,6 +33,7 @@ export const JenkinsSearchSource = {
             group: e.group,
             drillable: e.drillable,
             parent: e.parent,
+            tab: e.tab,
           }),
         );
       });

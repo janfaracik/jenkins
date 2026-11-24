@@ -21,10 +21,9 @@ export function LinkResult(params) {
     icon: params.icon,
     type: params.type,
     drillable: params.drillable === true,
+    tab: params.tab === true,
     render: () => {
-      return `<a class="jenkins-command-palette__results__item" href="${xmlEscape(
-        params.url,
-      )}">
+      return `<a class="jenkins-command-palette__results__item" href="${xmlEscape(params.url)}">
         ${params.type === "image" ? `<img alt="${xmlEscape(params.label)}" class="jenkins-command-palette__results__item__icon jenkins-avatar" src="${params.icon}" />` : ""}
         ${params.type !== "image" ? `<div class="jenkins-command-palette__results__item__icon">${params.icon}</div>` : ""}
         ${[]

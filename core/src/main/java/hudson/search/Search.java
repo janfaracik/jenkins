@@ -32,10 +32,13 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.ExtensionComponent;
 import hudson.ExtensionList;
 import hudson.Util;
+import hudson.model.Action;
+import hudson.model.Actionable;
 import hudson.model.ItemGroup;
 import hudson.model.Job;
 import hudson.model.ManageJenkinsAction;
 import hudson.model.Run;
+import hudson.model.View;
 import hudson.util.EditDistance;
 import io.jenkins.servlet.ServletExceptionWrapper;
 import jakarta.servlet.ServletException;
@@ -54,12 +57,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.model.Jenkins;
+import jenkins.model.Tab;
 import jenkins.search.SearchGroup;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.MemoryReductionUtil;
 import jenkins.util.SystemProperties;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import org.jenkins.ui.icon.IconSpec;
 import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
@@ -190,14 +195,16 @@ public class Search implements StaplerProxy {
             List<String> segments = getSegments(curItem, scope, scoped);
             String name = segments.removeLast();
 
+            String url = curItem.item instanceof PageActionSearchItem ? "#" : curItem.getUrl();
             Item item;
             if (iconName.startsWith("symbol")) {
-                item = new Item(name, curItem.getUrl(),
+                item = new Item(name, url,
                         Symbol.get(new SymbolRequest.Builder().withRaw(iconName).build()), "symbol", group, description);
             } else {
-                item = new Item(name, curItem.getUrl(), iconName, "image", group, description);
+                item = new Item(name, url, iconName, "image", group, description);
             }
             item.drillable = isDrillable(curItem.item);
+            item.tab = curItem.item instanceof PageTabSearchItem;
             item.parent = segments.isEmpty() ? null : segments;
             r.suggestions.add(item);
         }
@@ -321,8 +328,109 @@ public class Search implements StaplerProxy {
         return scopes.toString();
     }
 
+    private static List<SearchItem> getPageTabs(SearchableModelObject scope, String token) {
+        if (!(scope instanceof Run<?, ?> run)) {
+            return List.of();
+        }
+
+        String needle = token.toLowerCase(Locale.ROOT);
+        List<SearchItem> result = new ArrayList<>();
+        for (Tab tab : run.getRunTabs()) {
+            String name = Util.fixEmptyAndTrim(tab.getDisplayName());
+            if (name == null || !name.toLowerCase(Locale.ROOT).contains(needle)) {
+                continue;
+            }
+            result.add(new PageTabSearchItem(tab, name));
+        }
+        return result;
+    }
+
+    private record PageTabSearchItem(Tab tab, String name) implements SearchItem {
+        @Override
+        public String getSearchName() {
+            return name;
+        }
+
+        @Override
+        public String getSearchUrl() {
+            return tab.getUrlName() == null ? "" : tab.getUrlName() + "/";
+        }
+
+        @Override
+        public String getSearchIcon() {
+            return tab.getIconFileName();
+        }
+
+        @Override
+        public SearchGroup getSearchGroup() {
+            return SearchGroup.get(SearchGroup.TabSearchGroup.class);
+        }
+
+        @Override
+        public SearchIndex getSearchIndex() {
+            return SearchIndex.EMPTY;
+        }
+    }
+
+    private static List<SearchItem> getPageActions(SearchableModelObject scope, String token) {
+        List<Action> actions;
+        if (scope instanceof View view) {
+            actions = view.getAppBarActions();
+        } else if (scope instanceof Actionable actionable) {
+            actions = actionable.getAppBarActions();
+        } else {
+            return List.of();
+        }
+
+        String needle = token.toLowerCase(Locale.ROOT);
+        List<SearchItem> result = new ArrayList<>();
+        for (Action action : actions) {
+            String name = Util.fixEmptyAndTrim(action.getDisplayName());
+            if (name == null || !name.toLowerCase(Locale.ROOT).contains(needle)) {
+                continue;
+            }
+            result.add(new PageActionSearchItem(action, name));
+            if (result.size() >= MAX_PAGE_ACTIONS) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    private static final int MAX_PAGE_ACTIONS = 5;
+
+    private record PageActionSearchItem(Action action, String name) implements SearchItem {
+        @Override
+        public String getSearchName() {
+            return name;
+        }
+
+        @Override
+        public String getSearchUrl() {
+            return "";
+        }
+
+        @Override
+        public String getSearchIcon() {
+            if (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null) {
+                return iconSpec.getIconClassName();
+            }
+            return action.getIconFileName();
+        }
+
+        @Override
+        public SearchGroup getSearchGroup() {
+            return SearchGroup.get(SearchGroup.ActionSearchGroup.class);
+        }
+
+        @Override
+        public SearchIndex getSearchIndex() {
+            return SearchIndex.EMPTY;
+        }
+    }
+
     private static boolean isDrillable(SearchItem item) {
-        return item instanceof ItemGroup || item instanceof Job || item instanceof ManageJenkinsAction;
+        return item instanceof ItemGroup || item instanceof Job || item instanceof Run || item instanceof View || item instanceof ManageJenkinsAction;
     }
 
     private static List<SuggestedItem> suggestScoped(SearchableModelObject scope, String query) {
@@ -331,13 +439,19 @@ public class Search implements StaplerProxy {
             index = new RunSearchIndex(job);
         } else if (scope instanceof ManageJenkinsAction manageJenkins) {
             index = manageJenkins.getScopedSearchIndex();
+        } else if (scope instanceof Run) {
+            index = SearchIndex.EMPTY;
         } else {
             index = scope.getSearchIndex();
         }
-        List<SearchItem> items = new ArrayList<>();
-        index.suggest(query == null ? "" : query.trim(), items);
+        String token = query == null ? "" : query.trim();
+        List<SearchItem> items = new ArrayList<>(getPageTabs(scope, token));
+        items.addAll(getPageActions(scope, token));
+        index.suggest(token, items);
 
-        SuggestedItem scopeItem = SuggestedItem.build(null, scope);
+        SuggestedItem scopeItem = scope instanceof Run<?, ?> run
+                ? new SuggestedItem(SuggestedItem.build(null, run.getParent()), run)
+                : SuggestedItem.build(null, scope);
         List<SuggestedItem> result = new ArrayList<>();
         for (SearchItem item : items) {
             result.add(item instanceof hudson.model.Item ? SuggestedItem.build(scope, item) : new SuggestedItem(scopeItem, item));
@@ -427,6 +541,9 @@ public class Search implements StaplerProxy {
 
         @Exported
         public boolean drillable;
+
+        @Exported
+        public boolean tab;
 
         @Exported
         public List<String> parent;
