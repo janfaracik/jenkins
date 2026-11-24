@@ -56,8 +56,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import jenkins.management.Badge;
 import jenkins.model.Jenkins;
 import jenkins.model.Tab;
+import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.BaseUrlAction;
 import jenkins.model.menu.event.LinkEvent;
 import jenkins.search.SearchGroup;
@@ -214,6 +216,11 @@ public class Search implements StaplerProxy {
             }
             item.drillable = isDrillable(curItem.item);
             item.tab = curItem.item instanceof PageTabSearchItem;
+            if (curItem.item instanceof PageTabSearchItem pageTab) {
+                Semantic semantic = pageTab.tab().getSemantic();
+                item.semantic = semantic == null ? null : semantic.name().toLowerCase(Locale.ROOT);
+                item.badge = pageTab.tab().getBadge();
+            }
             item.parent = segments.isEmpty() ? null : segments;
             r.suggestions.add(item);
         }
@@ -573,6 +580,12 @@ public class Search implements StaplerProxy {
 
         @Exported
         public boolean tab;
+
+        @Exported
+        public String semantic;
+
+        @Exported
+        public Badge badge;
 
         @Exported
         public List<String> parent;

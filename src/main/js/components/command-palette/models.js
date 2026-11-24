@@ -11,6 +11,8 @@ import { xmlEscape } from "@/util/security";
  * @param {string | null} params.group
  * @param {boolean | undefined} params.isExternal
  * @param {boolean | undefined} params.drillable
+ * @param {string | null | undefined} params.semantic
+ * @param {{text: string, tooltip: string, severity: string} | null | undefined} params.badge
  * @param {string[] | string | null | undefined} params.parent
  */
 export function LinkResult(params) {
@@ -23,7 +25,10 @@ export function LinkResult(params) {
     drillable: params.drillable === true,
     tab: params.tab === true,
     render: () => {
-      return `<a class="jenkins-command-palette__results__item" href="${xmlEscape(params.url)}">
+      const semantic = params.semantic
+        ? ` jenkins-!-${xmlEscape(params.semantic)}-color`
+        : "";
+      return `<a class="jenkins-command-palette__results__item${semantic}" href="${xmlEscape(params.url)}">
         ${params.type === "image" ? `<img alt="${xmlEscape(params.label)}" class="jenkins-command-palette__results__item__icon jenkins-avatar" src="${params.icon}" />` : ""}
         ${params.type !== "image" ? `<div class="jenkins-command-palette__results__item__icon">${params.icon}</div>` : ""}
         ${[]
@@ -34,6 +39,7 @@ export function LinkResult(params) {
           )
           .join("")}
         ${xmlEscape(params.label)}
+        ${params.badge ? `<span class="jenkins-command-palette__results__item__badge jenkins-badge jenkins-!-${xmlEscape(params.badge.severity)}-color" tooltip="${xmlEscape(params.badge.tooltip ?? "")}">${xmlEscape(params.badge.text)}</span>` : ""}
         ${params.description ? `<span class="jenkins-command-palette__results__item__description">${xmlEscape(params.description)}</span>` : ""}
         ${params.isExternal ? Symbols.EXTERNAL_LINK : ""}
         ${params.drillable ? `<span class="jenkins-command-palette__results__item__hint jenkins-keyboard-shortcut">Tab</span>` : ""}

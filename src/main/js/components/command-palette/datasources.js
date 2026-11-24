@@ -34,6 +34,8 @@ export const JenkinsSearchSource = {
             drillable: e.drillable,
             parent: e.parent,
             tab: e.tab,
+            semantic: e.semantic,
+            badge: e.badge,
           }),
         );
       });

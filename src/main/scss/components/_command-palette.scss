@@ -196,13 +196,28 @@ $command-palette-padding: 0.375rem;
       justify-content: flex-start;
       padding: 0.625rem;
       border-radius: calc(1rem - $command-palette-padding);
-      color: var(--text-color) !important;
+
+      &:not([class*="-color"]) {
+        color: var(--text-color) !important;
+      }
 
       &--hover {
         &::before {
           background-color: var(--item-background--hover);
           border: var(--jenkins-border) !important;
         }
+
+        &[class*="-color"]::before {
+          border: var(--jenkins-border--inherit-subtle) !important;
+        }
+      }
+
+      &__badge {
+        margin-left: 0.5rem;
+      }
+
+      &[class*="-color"] &__icon {
+        color: inherit;
       }
 
       &__icon {
