@@ -2,6 +2,7 @@ import { LinkResult } from "@/components/command-palette/models";
 import { JenkinsSearchSource } from "./datasources";
 import debounce from "lodash/debounce";
 import { runAction } from "./actions";
+import { getRecentVisits, recordVisit } from "./recent";
 import * as Symbols from "./symbols";
 import makeKeyboardNavigable from "@/util/keyboard";
 import { xmlEscape } from "@/util/security";
@@ -56,6 +57,7 @@ function init() {
   const hoverClass = "jenkins-command-palette__results__item--hover";
 
   const pageScopes = JSON.parse(commandPalette.dataset.scopes || "[]");
+  recordVisit(pageScopes);
   const scopes = [];
   const renderedResults = new WeakMap();
   let latestRequest = 0;
@@ -188,14 +190,26 @@ function init() {
         datasources.map((ds) => ds.execute(query, scope)),
       ).then((e) => e.flat());
     } else if (query.length === 0) {
+      const recent = getRecentVisits().map((visit) =>
+        LinkResult({
+          icon: visit.icon || "",
+          type: "symbol",
+          label: visit.label,
+          url: visit.url,
+          parent: visit.parent,
+          drillable: true,
+          group: i18n.dataset.recent,
+        }),
+      );
       results = Promise.all([
+        ...recent,
         LinkResult({
           icon: Symbols.HELP,
           type: "symbol",
           label: i18n.dataset.getHelp,
           url: document.querySelector("body").dataset.searchHelpUrl,
           isExternal: true,
-          group: null,
+          group: recent.length > 0 ? i18n.dataset.help : null,
         }),
       ]);
     } else {

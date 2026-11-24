@@ -201,6 +201,12 @@ $command-palette-padding: 0.375rem;
         color: var(--text-color) !important;
       }
 
+      &[class*="-color"] {
+        --item-background--hover: oklch(from currentColor l c h / 0.15);
+        --item-background--active: oklch(from currentColor l c h / 0.25);
+        --item-box-shadow--focus: oklch(from currentColor l c h / 0.125);
+      }
+
       &--hover {
         &::before {
           background-color: var(--item-background--hover);

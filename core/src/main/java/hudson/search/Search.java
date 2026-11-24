@@ -336,6 +336,9 @@ public class Search implements StaplerProxy {
             if (a.getObject() instanceof Jenkins || !(a.getObject() instanceof SearchableModelObject smo) || !isDrillable(smo)) {
                 continue;
             }
+            if (smo instanceof View && a.getPrev() != null && a.getPrev().getUrl().equals(a.getUrl())) {
+                continue;
+            }
             JSONObject scope = new JSONObject();
             scope.put("label", smo.getDisplayName());
             scope.put("url", a.getUrl() + "/");
