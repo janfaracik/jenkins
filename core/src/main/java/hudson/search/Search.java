@@ -63,6 +63,7 @@ import jenkins.model.Tab;
 import jenkins.model.dashboard.Dashboard;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.BaseUrlAction;
+import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.LinkEvent;
 import jenkins.search.SearchGroup;
 import jenkins.security.stapler.StaplerNotDispatchable;
@@ -418,6 +419,9 @@ public class Search implements StaplerProxy {
         String needle = token.toLowerCase(Locale.ROOT);
         List<SearchItem> result = new ArrayList<>();
         for (Action action : actions) {
+            if (action.getEvent() instanceof DropdownEvent) {
+                continue;
+            }
             String name = Util.fixEmptyAndTrim(action.getDisplayName());
             if (name == null || !name.toLowerCase(Locale.ROOT).contains(needle)) {
                 continue;
