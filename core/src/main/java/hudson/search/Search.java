@@ -326,7 +326,14 @@ public class Search implements StaplerProxy {
     }
 
     private static List<SuggestedItem> suggestScoped(SearchableModelObject scope, String query) {
-        SearchIndex index = scope instanceof Job<?, ?> job ? new RunSearchIndex(job) : scope.getSearchIndex();
+        SearchIndex index;
+        if (scope instanceof Job<?, ?> job) {
+            index = new RunSearchIndex(job);
+        } else if (scope instanceof ManageJenkinsAction manageJenkins) {
+            index = manageJenkins.getScopedSearchIndex();
+        } else {
+            index = scope.getSearchIndex();
+        }
         List<SearchItem> items = new ArrayList<>();
         index.suggest(query == null ? "" : query.trim(), items);
 

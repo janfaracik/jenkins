@@ -43,6 +43,8 @@ import jenkins.model.Jenkins;
 import jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag;
 import jenkins.search.SearchGroup;
 import org.jenkinsci.Symbol;
+import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpRedirect;
 import org.kohsuke.stapler.StaplerFallback;
 import org.kohsuke.stapler.StaplerRequest2;
@@ -103,6 +105,11 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, Searcha
 
     @Override
     public SearchIndex getSearchIndex() {
+        return SearchIndex.EMPTY;
+    }
+
+    @Restricted(NoExternalUse.class)
+    public SearchIndex getScopedSearchIndex() {
         List<SearchItem> items = new ArrayList<>();
         Jenkins.get().getCategorizedManagementLinks().forEach((category, links) -> {
             SearchGroup group = category::getLabel;
