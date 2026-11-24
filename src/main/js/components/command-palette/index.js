@@ -56,11 +56,17 @@ function init() {
       }
 
       const result = selectedItem && renderedResults.get(selectedItem);
-      if (!result?.drillable) {
+      if (!result) {
         return;
       }
 
       e.preventDefault();
+
+      if (!result.drillable) {
+        fillQuery(result.label);
+        return;
+      }
+
       drillInto(result);
     },
     () => commandPalette.open,
@@ -111,9 +117,18 @@ function init() {
     scopes.push({
       label: result.label,
       url: result.url.endsWith("/") ? result.url : result.url + "/",
+      icon: result.type === "image" ? null : result.icon,
     });
     commandPaletteInput.value = "";
     updateScopes();
+  }
+
+  function fillQuery(text) {
+    commandPaletteInput.value = text;
+    commandPaletteInput.focus();
+    commandPaletteInput.setSelectionRange(text.length, text.length);
+    debouncedLoad.cancel();
+    renderResults();
   }
 
   function updateScopes() {
@@ -127,7 +142,19 @@ function init() {
     scopes.forEach((scope) => {
       const chip = document.createElement("span");
       chip.className = "jenkins-command-palette__scope";
-      chip.textContent = scope.label;
+
+      if (scope.icon) {
+        const icon = document.createElement("span");
+        icon.className = "jenkins-command-palette__scope__icon";
+        icon.innerHTML = scope.icon;
+        chip.append(icon);
+      }
+
+      const label = document.createElement("span");
+      label.className = "jenkins-command-palette__scope__label";
+      label.textContent = scope.label;
+      chip.append(label);
+
       scopesContainer.append(chip);
     });
   }

@@ -312,6 +312,10 @@ public class Search implements StaplerProxy {
             JSONObject scope = new JSONObject();
             scope.put("label", smo.getDisplayName());
             scope.put("url", a.getUrl() + "/");
+            String icon = smo.getSearchIcon();
+            if (icon != null && icon.startsWith("symbol-")) {
+                scope.put("icon", Symbol.get(new SymbolRequest.Builder().withRaw(icon).build()));
+            }
             scopes.add(scope);
         }
         return scopes.toString();
@@ -335,6 +339,8 @@ public class Search implements StaplerProxy {
     }
 
     private static final class RunSearchIndex implements SearchIndex {
+        private static final int MAX_BUILD_RESULTS = 10;
+
         private final Job<?, ?> job;
 
         RunSearchIndex(Job<?, ?> job) {
@@ -348,9 +354,14 @@ public class Search implements StaplerProxy {
         @Override
         public void suggest(String token, List<SearchItem> result) {
             String needle = token.toLowerCase(Locale.ROOT);
+            int matches = 0;
             for (Run<?, ?> run : job.getBuilds().limit(MAX_SEARCH_SIZE)) {
+                if (matches >= MAX_BUILD_RESULTS) {
+                    return;
+                }
                 if (run.getDisplayName().toLowerCase(Locale.ROOT).contains(needle)) {
                     result.add(run);
+                    matches++;
                 }
             }
         }
