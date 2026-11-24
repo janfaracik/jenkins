@@ -24,13 +24,13 @@
 
 package hudson.model;
 
+import edu.umd.cs.findbugs.annotations.NonNull;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.search.FixedSet;
 import hudson.search.Search;
 import hudson.search.SearchIndex;
 import hudson.search.SearchItem;
-import hudson.search.SearchableModelObject;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,9 +41,8 @@ import jenkins.model.Badgeable;
 import jenkins.model.Jenkins;
 import jenkins.model.experimentalflags.NewManageJenkinsUserExperimentalFlag;
 import jenkins.search.SearchGroup;
+import jenkins.search.SearchScope;
 import org.jenkinsci.Symbol;
-import org.kohsuke.accmod.Restricted;
-import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.HttpRedirect;
 import org.kohsuke.stapler.StaplerFallback;
 import org.kohsuke.stapler.StaplerRequest2;
@@ -55,7 +54,7 @@ import org.kohsuke.stapler.StaplerResponse2;
  * @author Kohsuke Kawaguchi
  */
 @Extension(ordinal = 998) @Symbol("manageJenkins")
-public class ManageJenkinsAction implements RootAction, StaplerFallback, SearchableModelObject {
+public class ManageJenkinsAction implements RootAction, StaplerFallback, SearchScope {
 
     @Override
     public String getIconFileName() {
@@ -105,7 +104,8 @@ public class ManageJenkinsAction implements RootAction, StaplerFallback, Searcha
         return SearchIndex.EMPTY;
     }
 
-    @Restricted(NoExternalUse.class)
+    @NonNull
+    @Override
     public SearchIndex getScopedSearchIndex() {
         List<SearchItem> items = new ArrayList<>();
         Jenkins.get().getCategorizedManagementLinks().forEach((category, links) -> {

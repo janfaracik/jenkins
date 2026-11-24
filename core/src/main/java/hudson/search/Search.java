@@ -36,7 +36,6 @@ import hudson.model.Action;
 import hudson.model.Actionable;
 import hudson.model.ItemGroup;
 import hudson.model.Job;
-import hudson.model.ManageJenkinsAction;
 import hudson.model.Run;
 import hudson.model.View;
 import hudson.util.EditDistance;
@@ -68,6 +67,7 @@ import jenkins.model.menu.action.BaseUrlAction;
 import jenkins.model.menu.event.DropdownEvent;
 import jenkins.model.menu.event.LinkEvent;
 import jenkins.search.SearchGroup;
+import jenkins.search.SearchScope;
 import jenkins.security.stapler.StaplerNotDispatchable;
 import jenkins.util.MemoryReductionUtil;
 import jenkins.util.SystemProperties;
@@ -503,15 +503,15 @@ public class Search implements StaplerProxy {
     }
 
     private static boolean isDrillable(SearchItem item) {
-        return item instanceof ItemGroup || item instanceof Job || item instanceof Run || item instanceof View || item instanceof ManageJenkinsAction;
+        return item instanceof ItemGroup || item instanceof Job || item instanceof Run || item instanceof View || item instanceof SearchScope;
     }
 
     private static List<SuggestedItem> suggestScoped(SearchableModelObject scope, String query) {
         SearchIndex index;
         if (scope instanceof Job<?, ?> job) {
             index = new RunSearchIndex(job);
-        } else if (scope instanceof ManageJenkinsAction manageJenkins) {
-            index = manageJenkins.getScopedSearchIndex();
+        } else if (scope instanceof SearchScope searchScope) {
+            index = searchScope.getScopedSearchIndex();
         } else if (scope instanceof Run || scope instanceof Jenkins) {
             index = SearchIndex.EMPTY;
         } else {
