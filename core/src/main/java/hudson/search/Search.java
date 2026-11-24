@@ -58,6 +58,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
+import jenkins.model.ModelObjectWithContextMenu;
 import jenkins.model.Tab;
 import jenkins.model.menu.Semantic;
 import jenkins.model.menu.action.BaseUrlAction;
@@ -219,6 +220,7 @@ public class Search implements StaplerProxy {
             if (curItem.item instanceof PageActionSearchItem actionItem) {
                 Semantic semantic = actionItem.action().getSemantic();
                 item.semantic = semantic == null ? null : semantic.name().toLowerCase(Locale.ROOT);
+                item.menuItem = toMenuItemJson(actionItem.action());
             }
             if (curItem.item instanceof PageTabSearchItem pageTab) {
                 item.badge = pageTab.tab().getBadge();
@@ -417,6 +419,15 @@ public class Search implements StaplerProxy {
 
     private static final int MAX_PAGE_ACTIONS = 5;
 
+    private static @CheckForNull String toMenuItemJson(Action action) {
+        ModelObjectWithContextMenu.ContextMenu menu = new ModelObjectWithContextMenu.ContextMenu().add(action);
+        JSONArray items = JSONObject.fromObject(menu).optJSONArray("items");
+        if (items == null || items.isEmpty()) {
+            return null;
+        }
+        return items.getJSONObject(0).toString();
+    }
+
     private static @CheckForNull String getLink(Action action) {
         if (!(action.getEvent() instanceof LinkEvent linkEvent) || linkEvent.getType() != LinkEvent.LinkEventType.GET) {
             return null;
@@ -588,6 +599,9 @@ public class Search implements StaplerProxy {
 
         @Exported
         public Badge badge;
+
+        @Exported
+        public String menuItem;
 
         @Exported
         public List<String> parent;

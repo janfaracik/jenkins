@@ -11,6 +11,7 @@ import { xmlEscape } from "@/util/security";
  * @param {string | null} params.group
  * @param {boolean | undefined} params.isExternal
  * @param {boolean | undefined} params.drillable
+ * @param {Object | null | undefined} params.menuItem
  * @param {string | null | undefined} params.semantic
  * @param {{text: string, tooltip: string, severity: string} | null | undefined} params.badge
  * @param {string[] | string | null | undefined} params.parent
@@ -24,6 +25,7 @@ export function LinkResult(params) {
     type: params.type,
     drillable: params.drillable === true,
     tab: params.tab === true,
+    menuItem: params.menuItem,
     render: () => {
       const semantic = params.semantic
         ? ` jenkins-!-${xmlEscape(params.semantic)}-color`

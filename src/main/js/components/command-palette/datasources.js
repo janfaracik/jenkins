@@ -36,6 +36,7 @@ export const JenkinsSearchSource = {
             tab: e.tab,
             semantic: e.semantic,
             badge: e.badge,
+            menuItem: e.menuItem ? JSON.parse(e.menuItem) : null,
           }),
         );
       });

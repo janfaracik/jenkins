@@ -1,6 +1,7 @@
 import { LinkResult } from "@/components/command-palette/models";
 import { JenkinsSearchSource } from "./datasources";
 import debounce from "lodash/debounce";
+import { runAction } from "./actions";
 import * as Symbols from "./symbols";
 import makeKeyboardNavigable from "@/util/keyboard";
 import { xmlEscape } from "@/util/security";
@@ -236,6 +237,12 @@ function init() {
               const link = createElementFromHtml(obj.render());
               renderedResults.set(link, obj);
               link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
+              if (obj.menuItem && obj.url === "#") {
+                link.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  hideCommandPalette(() => runAction(obj.menuItem, scope.url));
+                });
+              }
               searchResults.append(link);
             });
         }
@@ -285,7 +292,7 @@ function init() {
     renderResults();
   }
 
-  function hideCommandPalette() {
+  function hideCommandPalette(afterClose) {
     commandPalette.setAttribute("closing", "");
 
     commandPalette.addEventListener(
@@ -293,6 +300,7 @@ function init() {
       () => {
         commandPalette.removeAttribute("closing");
         commandPalette.close();
+        afterClose?.();
       },
       { once: true },
     );
