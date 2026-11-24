@@ -73,7 +73,6 @@ import jenkins.util.MemoryReductionUtil;
 import jenkins.util.SystemProperties;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import org.jenkins.ui.icon.IconSpec;
 import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
@@ -487,10 +486,7 @@ public class Search implements StaplerProxy {
 
         @Override
         public String getSearchIcon() {
-            if (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null) {
-                return iconSpec.getIconClassName();
-            }
-            return action.getIconFileName();
+            return MenuActions.getIcon(action);
         }
 
         @Override

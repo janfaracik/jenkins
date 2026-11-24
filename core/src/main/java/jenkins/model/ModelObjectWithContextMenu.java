@@ -42,7 +42,6 @@ import org.apache.commons.jelly.Script;
 import org.apache.commons.jelly.XMLOutput;
 import org.jenkins.ui.icon.Icon;
 import org.jenkins.ui.icon.IconSet;
-import org.jenkins.ui.icon.IconSpec;
 import org.jenkins.ui.symbol.Symbol;
 import org.jenkins.ui.symbol.SymbolRequest;
 import org.kohsuke.accmod.Restricted;
@@ -162,16 +161,7 @@ public interface ModelObjectWithContextMenu extends ModelObject {
                 menuItem.withBaseUrl(baseUrlAction.getBaseUrl());
             }
 
-            // Set icon
-            String icon = action.getIconFileName();
-            if (action instanceof IconSpec iconSpec && iconSpec.getIconClassName() != null) {
-                icon = iconSpec.getIconClassName();
-            } else {
-                Icon tmpIcon = Functions.tryGetIcon(icon);
-                if (tmpIcon != null) {
-                    icon = IconSet.tryTranslateTangoIconToSymbol(tmpIcon.getClassSpec());
-                }
-            }
+            String icon = MenuActions.getIcon(action);
             menuItem.icon = icon;
 
             // If Symbol, set iconXml
