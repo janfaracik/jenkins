@@ -58,6 +58,8 @@ function init() {
   const resultSelector = ".jenkins-command-palette__results__item";
 
   const pageScopes = JSON.parse(commandPalette.dataset.scopes || "[]");
+  const defaultPlaceholder = commandPaletteInput.placeholder;
+
   const rootScope = { url: document.head.dataset.rooturl + "/" };
   recordVisit(pageScopes);
   const scopes = [];
@@ -92,6 +94,7 @@ function init() {
       drillInto(result);
     },
     () => commandPalette.open,
+    updatePlaceholder,
   );
 
   const selectedScopesClass = "jenkins-command-palette__scopes--selected";
@@ -267,6 +270,7 @@ function init() {
 
       // Clear current search results
       searchResults.innerHTML = "";
+      updatePlaceholder(null);
 
       if ((!scope && query.length === 0) || Object.keys(results).length > 0) {
         for (const [group, items] of Object.entries(results)) {
@@ -367,6 +371,12 @@ function init() {
     }
 
     item.target.classList.add(hoverClass);
+    updatePlaceholder(item.target);
+  }
+
+  function updatePlaceholder(element) {
+    const result = element && renderedResults.get(element);
+    commandPaletteInput.placeholder = result?.label ?? defaultPlaceholder;
   }
 
   function updateSelectedItem(index, scrollIntoView = false) {
@@ -382,6 +392,7 @@ function init() {
         searchResults.querySelectorAll(resultSelector),
       )[index];
       element.classList.add(hoverClass);
+      updatePlaceholder(element);
 
       if (scrollIntoView) {
         element.scrollIntoView();
