@@ -36,8 +36,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import jenkins.management.Badge;
 import jenkins.model.Jenkins;
+import jenkins.search.SearchScope;
 import org.jvnet.localizer.Localizable;
 import org.kohsuke.accmod.Restricted;
+import org.kohsuke.accmod.restrictions.Beta;
 import org.kohsuke.accmod.restrictions.NoExternalUse;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 
@@ -250,6 +252,11 @@ public abstract class ManagementLink implements ExtensionPoint, Action {
      * @return badge or {@code null} if no badge should be shown.
      * @since 2.385
      */
+    @Restricted(Beta.class)
+    public @CheckForNull SearchScope getSearchScope() {
+        return null;
+    }
+
     public @CheckForNull Badge getBadge() {
         return null;
     }

@@ -27,7 +27,7 @@ public class ManagementLinkSearchItemProvider implements SearchItemProvider {
                 .toList();
     }
 
-    private record ManagementLinkSearchItem(ManagementLink link, String urlName) implements SearchItem, Badgeable {
+    private record ManagementLinkSearchItem(ManagementLink link, String urlName) implements LinkSearchItem, Badgeable {
         @Override
         public Badge getBadge() {
             return link.getBadge();

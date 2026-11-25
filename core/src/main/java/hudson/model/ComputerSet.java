@@ -38,6 +38,8 @@ import hudson.init.Initializer;
 import hudson.model.Descriptor.FormException;
 import hudson.model.listeners.SaveableListener;
 import hudson.node_monitors.NodeMonitor;
+import hudson.search.CollectionSearchIndex;
+import hudson.search.SearchIndex;
 import hudson.slaves.NodeDescriptor;
 import hudson.triggers.SafeTimerTask;
 import hudson.util.DescribableList;
@@ -62,6 +64,7 @@ import jenkins.model.IComputer;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithChildren;
 import jenkins.model.ModelObjectWithContextMenu.ContextMenu;
+import jenkins.search.SearchScope;
 import jenkins.security.ExtendedReadRedaction;
 import jenkins.util.Timer;
 import jenkins.widgets.HasWidgets;
@@ -87,7 +90,7 @@ import org.springframework.security.access.AccessDeniedException;
  * @author Kohsuke Kawaguchi
  */
 @ExportedBean
-public final class ComputerSet extends AbstractModelObject implements Describable<ComputerSet>, ModelObjectWithChildren, HasWidgets {
+public final class ComputerSet extends AbstractModelObject implements Describable<ComputerSet>, ModelObjectWithChildren, HasWidgets, SearchScope {
     /**
      * This is the owner that persists {@link #monitors}.
      */
@@ -236,6 +239,22 @@ public final class ComputerSet extends AbstractModelObject implements Describabl
     @Override
     public String getSearchUrl() {
         return "/computers/";
+    }
+
+    @NonNull
+    @Override
+    public SearchIndex getScopedSearchIndex() {
+        return new CollectionSearchIndex<Computer>() {
+            @Override
+            protected Computer get(String key) {
+                return Jenkins.get().getComputer(key);
+            }
+
+            @Override
+            protected Collection<Computer> all() {
+                return Jenkins.get().getComputersCollection();
+            }
+        };
     }
 
     public Computer getDynamic(String token, StaplerRequest2 req, StaplerResponse2 rsp) {

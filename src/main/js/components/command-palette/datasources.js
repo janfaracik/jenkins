@@ -1,6 +1,13 @@
 import { LinkResult } from "./models";
 import Search from "@/api/search";
 
+function isExternal(url) {
+  if (!/^https?:\/\//.test(url)) {
+    return false;
+  }
+  return new URL(url).origin !== window.location.origin;
+}
+
 export const JenkinsSearchSource = {
   execute(query, scope) {
     const rootUrl = document.head.dataset.rooturl;
@@ -37,6 +44,7 @@ export const JenkinsSearchSource = {
             semantic: e.semantic,
             badge: e.badge,
             menuItem: e.menuItem ? JSON.parse(e.menuItem) : null,
+            isExternal: isExternal(e.url),
           }),
         );
       });

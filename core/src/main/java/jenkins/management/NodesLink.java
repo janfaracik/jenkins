@@ -29,6 +29,7 @@ import hudson.Extension;
 import hudson.model.ManagementLink;
 import hudson.security.Permission;
 import jenkins.model.Jenkins;
+import jenkins.search.SearchScope;
 import org.jenkinsci.Symbol;
 
 /**
@@ -67,5 +68,10 @@ public class NodesLink extends ManagementLink {
     @Override
     public Category getCategory() {
         return Category.CONFIGURATION;
+    }
+
+    @Override
+    public SearchScope getSearchScope() {
+        return Jenkins.get().getComputer();
     }
 }

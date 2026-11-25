@@ -34,6 +34,7 @@ import hudson.ExtensionList;
 import hudson.Util;
 import hudson.model.Action;
 import hudson.model.Actionable;
+import hudson.model.Computer;
 import hudson.model.ItemGroup;
 import hudson.model.Job;
 import hudson.model.Run;
@@ -56,6 +57,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import jenkins.management.Badge;
+import jenkins.management.LinkSearchItem;
 import jenkins.model.Badgeable;
 import jenkins.model.Jenkins;
 import jenkins.model.ModelObjectWithContextMenu;
@@ -435,7 +437,7 @@ public class Search implements StaplerProxy {
                 continue;
             }
             result.add(new PageActionSearchItem(action, name, getLink(action)));
-            if (result.size() >= MAX_PAGE_ACTIONS) {
+            if (!(scope instanceof Computer) && result.size() >= MAX_PAGE_ACTIONS) {
                 break;
             }
         }
@@ -501,7 +503,8 @@ public class Search implements StaplerProxy {
     }
 
     private static boolean isDrillable(SearchItem item) {
-        return item instanceof ItemGroup || item instanceof Job || item instanceof Run || item instanceof View || item instanceof SearchScope;
+        return item instanceof ItemGroup || item instanceof Job || item instanceof Run || item instanceof View || item instanceof Computer || item instanceof SearchScope
+                || (item instanceof LinkSearchItem linkItem && linkItem.link().getSearchScope() != null);
     }
 
     private static List<SuggestedItem> suggestScoped(SearchableModelObject scope, String query) {
@@ -510,7 +513,7 @@ public class Search implements StaplerProxy {
             index = new RunSearchIndex(job);
         } else if (scope instanceof SearchScope searchScope) {
             index = searchScope.getScopedSearchIndex();
-        } else if (scope instanceof Run || scope instanceof Jenkins) {
+        } else if (scope instanceof Run || scope instanceof Jenkins || scope instanceof Computer) {
             index = SearchIndex.EMPTY;
         } else {
             index = scope.getSearchIndex();
@@ -530,7 +533,13 @@ public class Search implements StaplerProxy {
                 : SuggestedItem.build(null, scope);
         List<SuggestedItem> result = new ArrayList<>();
         for (SearchItem item : items) {
-            result.add(item instanceof hudson.model.Item ? SuggestedItem.build(scope, item) : new SuggestedItem(scopeItem, item));
+            if (item instanceof hudson.model.Item) {
+                result.add(SuggestedItem.build(scope, item));
+            } else if (item instanceof Computer) {
+                result.add(new SuggestedItem(item));
+            } else {
+                result.add(new SuggestedItem(scopeItem, item));
+            }
         }
         return result;
     }
