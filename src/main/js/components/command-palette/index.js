@@ -65,6 +65,7 @@ function init() {
   const scopes = [];
   const renderedResults = new WeakMap();
   let latestRequest = 0;
+  let highlightOnRender = null;
 
   const scopesContainer = document.createElement("div");
   scopesContainer.className = "jenkins-command-palette__scopes";
@@ -134,8 +135,7 @@ function init() {
     }
 
     e.preventDefault();
-    scopes.pop();
-    updateScopes();
+    popScope();
   });
 
   commandPaletteInput.addEventListener("mousedown", () =>
@@ -148,8 +148,7 @@ function init() {
     }
 
     e.preventDefault();
-    scopes.pop();
-    updateScopes();
+    popScope();
   });
 
   // Events
@@ -172,11 +171,30 @@ function init() {
   function drillInto(result) {
     scopes.push({
       label: result.label,
-      url: result.url.endsWith("/") ? result.url : result.url + "/",
+      url: withTrailingSlash(result.url),
       icon: result.type === "image" ? null : result.icon,
+      parentQuery: commandPaletteInput.value,
     });
     commandPaletteInput.value = "";
     updateScopes();
+  }
+
+  function popScope() {
+    goToScope(scopes.length - 2);
+  }
+
+  function goToScope(index) {
+    const left = scopes[index + 1];
+    if (!left) {
+      commandPaletteInput.focus();
+      return;
+    }
+
+    scopes.length = index + 1;
+    commandPaletteInput.value = left.parentQuery ?? "";
+    highlightOnRender = left.url;
+    updateScopes();
+    commandPaletteInput.focus();
   }
 
   function fillQuery(text) {
@@ -196,9 +214,11 @@ function init() {
   function updateScopeChips() {
     setScopesSelected(false);
     scopesContainer.innerHTML = "";
-    scopes.forEach((scope) => {
-      const chip = document.createElement("span");
+    scopes.forEach((scope, index) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
       chip.className = "jenkins-command-palette__scope";
+      chip.addEventListener("click", () => goToScope(index));
 
       if (scope.icon) {
         const icon = document.createElement("span");
@@ -293,6 +313,14 @@ function init() {
               const link = createElementFromHtml(obj.render());
               renderedResults.set(link, obj);
               link.addEventListener("mouseenter", (e) => itemMouseEnter(e));
+              link
+                .querySelector(".jenkins-command-palette__results__item__hint")
+                ?.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  drillInto(obj);
+                  commandPaletteInput.focus();
+                });
               if (obj.runsAction) {
                 link.addEventListener("click", (e) => {
                   e.preventDefault();
@@ -305,7 +333,15 @@ function init() {
             });
         }
 
-        updateSelectedItem(0);
+        const rendered = Array.from(
+          searchResults.querySelectorAll(resultSelector),
+        );
+        const restored = rendered.findIndex(
+          (element) =>
+            withTrailingSlash(renderedResults.get(element)?.url ?? "") ===
+            highlightOnRender,
+        );
+        updateSelectedItem(Math.max(restored, 0), restored > 0);
       } else {
         const label = document.createElement("p");
         label.className = "jenkins-command-palette__info";
@@ -316,6 +352,8 @@ function init() {
           xmlEscape(commandPaletteInput.value);
         searchResults.append(label);
       }
+
+      highlightOnRender = null;
 
       searchResultsContainer.style.height = searchResults.offsetHeight + "px";
       debouncedSpinner.cancel();
@@ -395,7 +433,7 @@ function init() {
       updatePlaceholder(element);
 
       if (scrollIntoView) {
-        element.scrollIntoView();
+        element.scrollIntoView({ block: "nearest" });
       }
     }
   }

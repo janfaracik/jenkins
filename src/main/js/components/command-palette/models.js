@@ -50,7 +50,7 @@ export function LinkResult(params) {
         ${params.badge ? `<span class="jenkins-command-palette__results__item__badge jenkins-badge jenkins-!-${xmlEscape(params.badge.severity)}-color" tooltip="${xmlEscape(params.badge.tooltip ?? "")}">${xmlEscape(params.badge.text)}</span>` : ""}
         ${params.description ? `<span class="jenkins-command-palette__results__item__description">${xmlEscape(params.description)}</span>` : ""}
         ${params.isExternal ? Symbols.EXTERNAL_LINK : ""}
-        ${params.drillable ? `<span class="jenkins-command-palette__results__item__hint jenkins-keyboard-shortcut">Tab</span>` : ""}
+        ${params.drillable ? `<span class="jenkins-command-palette__results__item__hint jenkins-keyboard-shortcut"><span class="jenkins-command-palette__results__item__hint__label">Tab</span>${Symbols.CHEVRON_RIGHT}</span>` : ""}
     ${runsAction ? "</button>" : "</a>"}`;
     },
   };

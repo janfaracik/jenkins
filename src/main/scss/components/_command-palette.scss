@@ -123,8 +123,17 @@ $command-palette-padding: 0.375rem;
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    font: inherit;
     color: var(--text-color-secondary);
     white-space: nowrap;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-color);
+    }
 
     &:last-child {
       color: var(--text-color);
@@ -276,6 +285,22 @@ $command-palette-padding: 0.375rem;
         color: var(--text-color-secondary);
         opacity: 0;
         transition: var(--standard-transition);
+
+        &__chevron {
+          display: none;
+        }
+
+        @media (max-width: breakpoints.$tablet-breakpoint) {
+          opacity: 1;
+
+          &__label {
+            display: none;
+          }
+
+          &__chevron {
+            display: block;
+          }
+        }
       }
 
       &--hover &__hint {
