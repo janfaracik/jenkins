@@ -43,10 +43,10 @@ export function LinkResult(params) {
           .concat(params.parent ?? [])
           .map(
             (segment) =>
-              `<span class="jenkins-command-palette__results__item__parent">${xmlEscape(segment)}</span>`,
+              `<span class="jenkins-command-palette__results__item__parent"><span class="jenkins-command-palette__results__item__parent__name">${xmlEscape(segment)}</span></span>`,
           )
           .join("")}
-        ${xmlEscape(params.label)}
+        <span class="jenkins-command-palette__results__item__label">${xmlEscape(params.label)}</span>
         ${params.badge ? `<span class="jenkins-command-palette__results__item__badge jenkins-badge jenkins-!-${xmlEscape(params.badge.severity)}-color" tooltip="${xmlEscape(params.badge.tooltip ?? "")}">${xmlEscape(params.badge.text)}</span>` : ""}
         ${params.description ? `<span class="jenkins-command-palette__results__item__description">${xmlEscape(params.description)}</span>` : ""}
         ${params.isExternal ? Symbols.EXTERNAL_LINK : ""}

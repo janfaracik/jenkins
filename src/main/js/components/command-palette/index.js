@@ -355,7 +355,7 @@ function init() {
 
       highlightOnRender = null;
 
-      searchResultsContainer.style.height = searchResults.offsetHeight + "px";
+      syncResultsHeight();
       debouncedSpinner.cancel();
       commandPaletteSearchBarContainer.classList.remove(
         "jenkins-search--loading",
@@ -377,6 +377,17 @@ function init() {
   });
 
   // Helper methods for visibility of command palette
+  function syncResultsHeight() {
+    searchResultsContainer.style.height = searchResults.offsetHeight + "px";
+  }
+
+  window.addEventListener("resize", () => {
+    if (!commandPalette.open) {
+      return;
+    }
+    syncResultsHeight();
+  });
+
   function showCommandPalette() {
     scopes.length = 0;
     scopes.push(...pageScopes);
