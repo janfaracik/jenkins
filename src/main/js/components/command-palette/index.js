@@ -381,14 +381,24 @@ function init() {
     searchResultsContainer.style.height = searchResults.offsetHeight + "px";
   }
 
-  window.addEventListener("resize", () => {
+  function updateViewportHeight() {
+    const height = window.visualViewport?.height ?? window.innerHeight;
+    commandPalette.style.setProperty(
+      "--command-palette-viewport-height",
+      `${height}px`,
+    );
+
     if (!commandPalette.open) {
       return;
     }
     syncResultsHeight();
-  });
+  }
+
+  window.addEventListener("resize", updateViewportHeight);
+  window.visualViewport?.addEventListener("resize", updateViewportHeight);
 
   function showCommandPalette() {
+    updateViewportHeight();
     scopes.length = 0;
     scopes.push(...pageScopes);
     updateScopeChips();
